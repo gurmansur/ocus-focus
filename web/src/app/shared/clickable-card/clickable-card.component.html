@@ -1,0 +1,19 @@
+<div
+  (click)="(onClick)"
+  class="border-l-4 border-violet-800 shadow-md bg-white p-4 rounded-lg mb-5 grow group hover:bg-violet-800 hover:cursor-pointer"
+>
+  <h5
+    class="text-violet-700 text-xl lg:text-2xl font-medium group-hover:text-white"
+  >
+    {{ title }}
+  </h5>
+  <div class="flex items-center justify-between">
+    <h6
+      class="md:text-md lg:text-lg xl:text-xl text-gray-700 pr-3 group-hover:text-white"
+    >
+      {{ subtitle }}
+    </h6>
+
+    <ng-content></ng-content>
+  </div>
+</div>

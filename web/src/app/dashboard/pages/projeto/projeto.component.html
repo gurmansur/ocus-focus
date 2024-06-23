@@ -1,12 +1,15 @@
 <div class="py-5 px-8">
-  <div *ngIf="projeto" class="flex justify-between items-center pb-3 border-b border-gray-400">
+  <div
+    *ngIf="projeto"
+    class="flex justify-between items-center pb-3 border-b border-gray-400"
+  >
     <div class="flex items-center">
       <div
         class="w-10 h-10 rounded-full bg-violet-200 flex items-center text-xl justify-center"
       >
-        {{projeto.nome[0]}}
+        {{ projeto.nome[0] }}
       </div>
-      <h3 class="text-xl ms-3 font-medium">{{projeto.nome}}</h3>
+      <h3 class="text-xl ms-3 font-medium">{{ projeto.nome }}</h3>
     </div>
     <div class="flex ms-auto">
       <button
@@ -51,7 +54,8 @@
   </div>
   <h2 class="my-5 text-3xl font-medium">Geral</h2>
   <div class="flex flex-col md:flex-row gap-x-8 items-stretch">
-    <div (click)="openColaboradores()"
+    <div
+      (click)="openColaboradores()"
       class="border-l-4 border-violet-800 shadow-md bg-white p-4 rounded-lg mb-5 md:w-1/2 group hover:bg-violet-800 hover:cursor-pointer"
     >
       <h5
@@ -78,7 +82,8 @@
         </svg>
       </div>
     </div>
-    <div (click)="openRequisitos()"
+    <div
+      (click)="openRequisitos()"
       class="border-l-4 border-violet-800 shadow-md bg-white px-4 pb-4 pt-3 rounded-lg mb-5 md:w-1/2 group hover:bg-violet-800 hover:cursor-pointer"
     >
       <h5
@@ -118,7 +123,73 @@
     <div
       class="border-l-4 border-violet-700 w-full md:w-1/2 bg-white rounded-lg flex flex-col items-center shadow-md p-5"
     >
-      <img src="../../../../assets/img/prioreasy.svg" alt="" class="h-60" />
+      <img src="../../../../assets/img/prioreasy.svg" alt="" class="h-24" />
+      <h2 class="mt-5 text-xl text-gray-800 font-medium">
+        Gostaria de utilizar o <span class="text-violet-700">ArcaTest</span>
+      </h2>
+      <p class="text-gray-700 text-center text-sm mt-4 font-light">
+        Acesse as funcionalidades do
+        <span class="text-violet-700 font-medium">ArcaTest</span> para gerenciar
+        <span class="text-violet-700 font-medium">Casos de Teste</span> e
+        <span class="text-violet-700 font-medium">Executar Testes</span>
+        em seu projeto.
+      </p>
+      <a
+        href="/dashboard/projeto/{{ projeto.id }}/painel-arcatest"
+        class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 focus:outline-none hover:bg-violet-800 text-white mt-4"
+      >
+        Acessar ArcaTest
+        <svg
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          class="w-4 h-4 ml-1"
+          viewBox="0 0 24 24"
+        >
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+    <div
+      class="border-l-4 border-violet-700 w-full md:w-1/2 bg-white rounded-lg flex flex-col items-center shadow-md p-5"
+    >
+      <img src="../../../../assets/img/estima.svg" alt="" class="h-24" />
+      <h2 class="mt-5 text-xl text-gray-800 font-medium">
+        Gostaria de utilizar o <span class="text-violet-700">Flying Cards</span>
+      </h2>
+      <p class="text-gray-700 text-center text-sm mt-4 font-light">
+        Acesse as funcionalidades do
+        <span class="text-violet-700 font-medium">Flying Cards</span> para
+        realizar a
+        <span class="text-violet-700 font-medium">Gestão de Tarefas</span> e
+        <span class="text-violet-700 font-medium">Kanban</span> em seu projeto.
+      </p>
+      <a
+        href="/dashboard/projeto/{{ projeto.id }}/painel-flying-cards"
+        class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 focus:outline-none hover:bg-violet-800 text-white mt-4"
+      >
+        Acessar Flying Cards
+        <svg
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          class="w-4 h-4 ml-1"
+          viewBox="0 0 24 24"
+        >
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+  <div class="flex flex-col md:flex-row justify-center gap-8 mt-5">
+    <div
+      class="border-l-4 border-violet-700 w-full md:w-1/2 bg-white rounded-lg flex flex-col items-center shadow-md p-5"
+    >
+      <img src="../../../../assets/img/prioreasy.svg" alt="" class="h-24" />
       <h2 class="mt-5 text-xl text-gray-800 font-medium">
         Gostaria de utilizar o <span class="text-violet-700">Prioreasy</span>
       </h2>
@@ -133,7 +204,7 @@
         em seu projeto.
       </p>
       <a
-        href="/dashboard/projeto/{{projeto.id}}/painel-prioreasy"
+        href="/dashboard/projeto/{{ projeto.id }}/painel-prioreasy"
         class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 focus:outline-none hover:bg-violet-800 text-white mt-4"
       >
         Acessar Prioreasy
@@ -153,25 +224,23 @@
     <div
       class="border-l-4 border-violet-700 w-full md:w-1/2 bg-white rounded-lg flex flex-col items-center shadow-md p-5"
     >
-      <img src="../../../../assets/img/estima.svg" alt="" class="h-60" />
+      <img src="../../../../assets/img/estima.svg" alt="" class="h-24" />
       <h2 class="mt-5 text-xl text-gray-800 font-medium">
         Gostaria de utilizar o <span class="text-violet-700">Estima</span>
       </h2>
       <p class="text-gray-700 text-center text-sm mt-4 font-light">
         Acesse as funcionalidades do
-        <span class="text-violet-700 font-medium">Estima</span> para
-        gerenciar os
-        <span class="text-violet-700 font-medium">Casos de Uso</span> e realizar o processo de
-        <span class="text-violet-700 font-medium"
-          >Estima de Esforços</span
-        >
+        <span class="text-violet-700 font-medium">Estima</span> para gerenciar
+        os <span class="text-violet-700 font-medium">Casos de Uso</span> e
+        realizar o processo de
+        <span class="text-violet-700 font-medium">Estima de Esforços</span>
         de seu projeto.
       </p>
       <a
-        href="/dashboard/projeto/{{projeto.id}}/painel-estima"
+        href="/dashboard/projeto/{{ projeto.id }}/painel-estima"
         class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 focus:outline-none hover:bg-violet-800 text-white mt-4"
       >
-        Acessar o Estima
+        Acessar Estima
         <svg
           fill="none"
           stroke="currentColor"
