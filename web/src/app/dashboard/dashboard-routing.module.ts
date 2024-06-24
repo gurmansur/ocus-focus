@@ -2,6 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './containers/dashboard.component';
 import { colaboradorGuard, stakeholderGuard } from './guards/role.guard';
+import { ArcatestCasosComponent } from './pages/arcatest-casos/arcatest-casos.component';
+import { ArcatestExecucoesComponent } from './pages/arcatest-execucoes/arcatest-execucoes.component';
+import { ArcatestPlanosComponent } from './pages/arcatest-planos/arcatest-planos.component';
+import { ArcatestSuitesComponent } from './pages/arcatest-suites/arcatest-suites.component';
 import { AtoresComponent } from './pages/atores/atores.component';
 import { CasoDeUsoComponent } from './pages/caso-de-uso/caso-de-uso.component';
 import { CenariosComponent } from './pages/cenarios/cenarios.component';
@@ -223,6 +227,38 @@ const routes: Routes = [
       {
         path: 'projeto/:id/painel-arcatest',
         component: PainelArcatestComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Execuções de Teste
+
+      {
+        path: 'projeto/:id/execucoes-teste',
+        component: ArcatestExecucoesComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Casos de Teste
+
+      {
+        path: 'projeto/:id/casos-teste',
+        component: ArcatestCasosComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Planos de Teste
+
+      {
+        path: 'projeto/:id/planos-teste',
+        component: ArcatestPlanosComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Suites de Teste
+
+      {
+        path: 'projeto/:id/suites-teste',
+        component: ArcatestSuitesComponent,
         canActivate: [colaboradorGuard],
       },
     ],

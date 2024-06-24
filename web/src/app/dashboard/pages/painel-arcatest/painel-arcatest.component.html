@@ -1,4 +1,4 @@
-<app-project-header></app-project-header>
+<app-project-header (onBack)="navigateToHome()"></app-project-header>
 
 <div class="px-8 py-5">
   <h2 class="text-3xl font-medium mb-5">
@@ -8,7 +8,7 @@
     <app-clickable-card
       title="Execução de Testes"
       subtitle="Acompanhe e registre a execução dos testes"
-      (click)="navigateToTestExecution()"
+      (click)="navigateToTestExecutions()"
       style="flex: 1"
     >
       <app-execution-icon

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClickableCardComponent } from '../../../shared/clickable-card/clickable-card.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { TableComponent } from '../../../shared/table/table.component';
@@ -23,25 +24,45 @@ import { TestSuiteIconComponent } from './components/test-suite-icon/test-suite-
   ],
 })
 export class PainelArcatestComponent {
-  navigateTo(url: string) {
-    console.log('navigating to', url);
+  projectId!: number;
 
-    window.location.href = url;
+  constructor(private router: Router, private route: ActivatedRoute) {
+    this.projectId = this.route.snapshot.params['id'];
   }
 
-  navigateToTestExecution() {
-    this.navigateTo('/test-execution');
+  navigateToTestExecutions() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'execucoes-teste',
+    ]);
   }
 
   navigateToTestCases() {
-    this.navigateTo('/test-cases');
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'casos-teste',
+    ]);
   }
 
   navigateToTestPlans() {
-    this.navigateTo('/test-plans');
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'planos-teste',
+    ]);
   }
 
   navigateToTestSuites() {
-    this.navigateTo('/test-suites');
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'suites-teste',
+    ]);
+  }
+
+  navigateToHome() {
+    this.router.navigate(['/dashboard/projeto/', this.projectId]);
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Projeto } from 'src/app/dashboard/models/projeto';
 import { ProjetoService } from 'src/app/dashboard/services/projeto.service';
@@ -14,6 +14,8 @@ export class ProjectHeaderComponent {
   userId!: number;
   projectId!: number;
   projeto!: Projeto;
+  @Input() voltar = 'Voltar ao Início';
+  @Output() onBack = new EventEmitter<void>();
 
   constructor(
     private projetoService: ProjetoService,
@@ -34,7 +36,7 @@ export class ProjectHeaderComponent {
     });
   }
   openProjectHome() {
-    this.router.navigate(['/dashboard/projeto/', this.projectId]);
+    this.onBack.emit();
   }
   openAtores() {
     this.router.navigate(['/dashboard/projeto/', this.projectId, 'atores']);

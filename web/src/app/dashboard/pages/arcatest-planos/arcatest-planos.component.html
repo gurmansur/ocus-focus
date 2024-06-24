@@ -1,0 +1,36 @@
+<app-project-header
+  (onBack)="navigateToArcaTest()"
+  voltar="Voltar ao ArcaTest"
+></app-project-header>
+
+<div class="px-8 py-5">
+  <div class="flex justify-between items-center">
+    <h2 class="text-3xl font-medium mb-5">Planos de Teste</h2>
+    <app-button>
+      <app-plus-icon></app-plus-icon>
+      Adicionar Plano de Teste
+    </app-button>
+  </div>
+  <app-table
+    [columns]="['Nome', 'Descrição', 'Status']"
+    [data]="[
+      {
+        nome: 'Caso de Teste 1',
+        descricao: 'Descrição do Caso de Teste 1',
+        status: 'Ativo'
+      },
+      {
+        nome: 'Caso de Teste 2',
+        descricao: 'Descrição do Caso de Teste 2',
+        status: 'Inativo'
+      }
+    ]"
+    customEmptyMessage="'Nenhum caso de teste encontrado'"
+    addButtonLabel="'Adicionar Caso de Teste'"
+    [hasDelete]="true"
+    [hasEdit]="true"
+    [hasView]="true"
+    [hasUseCase]="true"
+    [entityAttributes]="['nome', 'descricao', 'status']"
+  ></app-table>
+</div>
