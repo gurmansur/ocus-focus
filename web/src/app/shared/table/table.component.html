@@ -1,29 +1,46 @@
 <table id="datatablesSimple" class="w-full rounded bg-white text-center">
   <thead>
     <tr class="text-white">
-      <th class="bg-violet-700 py-2" *ngFor="let column of columns">
+      @for (column of columns; track $index) {
+      <th
+        class="bg-violet-700 py-2 text-white"
+        [class.rounded-tl]="$index === 0"
+        [class.rounded-tr]="
+          $index === columns.length - 1 &&
+          !hasDelete &&
+          !hasView &&
+          !hasEdit &&
+          !hasAlert
+        "
+      >
         {{ column }}
       </th>
-      <th class="bg-violet-700 py-2">Ações</th>
+      } @if (hasDelete || hasView || hasEdit || hasAlert) {
+      <th class="bg-violet-700 py-2 rounded-tr">Ações</th>
+      }
     </tr>
   </thead>
   <tbody>
-    <tr *ngIf="data.length === 0">
+    @if (data.length === 0) {
+    <tr>
       <td class="p-4" [colSpan]="columns.length + 1">
         {{ customEmptyMessage || "Nenhum registro encontrado para o filtro" }}
       </td>
     </tr>
-    <tr *ngFor="let item of data" class="border-b">
-      <td class="p-3" *ngFor="let attribute of entityAttributes">
+    } @for (item of data; track $index) {
+    <tr [class.border-b]="$index !== data.length - 1">
+      @for (attribute of entityAttributes; track $index) {
+      <td class="p-3">
         {{
           attribute.includes(":")
             ? item[attribute.split(":")[0]][attribute.split(":")[1]] || "N/A"
             : item[attribute] || "N/A"
         }}
       </td>
+      } @if (hasDelete || hasView || hasEdit || hasAlert) {
       <td class="flex p-3 justify-center h-full">
+        @if (hasUseCase) {
         <button
-          *ngIf="hasUseCase"
           (click)="onUseCase(item)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
@@ -42,8 +59,8 @@
             />
           </svg>
         </button>
+        } @if (hasAlert) {
         <button
-          *ngIf="hasAlert"
           (click)="onAlert(item)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
@@ -63,8 +80,8 @@
             />
           </svg>
         </button>
+        } @if (hasView) {
         <button
-          *ngIf="hasView"
           (click)="onView(item)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
@@ -88,8 +105,8 @@
             />
           </svg>
         </button>
+        } @if (hasEdit && (item.admin === undefined || item.admin === 1)) {
         <button
-          *ngIf="hasEdit && (item.admin === undefined || item.admin === 1)"
           (click)="onEdit(item)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
@@ -104,8 +121,8 @@
             />
           </svg>
         </button>
+        } @if (hasDelete && (item.admin === undefined || item.admin === 1)) {
         <button
-          *ngIf="hasDelete && (item.admin === undefined || item.admin === 1)"
           (click)="onDelete(item)"
           data-bs-toggle="modal"
           data-bs-target="#modalConfirmacao"
@@ -124,10 +141,10 @@
             />
           </svg>
         </button>
-        <span *ngIf="!hasDelete && !hasView && !hasEdit && !hasAlert">
-          N/A
-        </span>
+        }
       </td>
+      }
     </tr>
+    }
   </tbody>
 </table>
