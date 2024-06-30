@@ -136,10 +136,6 @@ export class ArcatestCasosFormComponent {
         Validators.required
       ),
       suite: new FormControl(this.casoDeTeste?.suite || ''),
-      dataCriacao: new FormControl(
-        this.casoDeTeste?.dataCriacao || new Date().toISOString().split('T')[0],
-        Validators.required
-      ),
       observacoes: new FormControl(this.casoDeTeste?.observacoes || ''),
       resultadoEsperado: new FormControl(
         this.casoDeTeste?.resultadoEsperado || '',
