@@ -189,4 +189,11 @@ export class ArcatestCasosComponent {
     );
     this.openModal = false;
   }
+
+  navigateToExecutions(id: number) {
+    this.router.navigate(
+      ['/dashboard/projeto/', this.projectId, 'execucoes-teste'],
+      { queryParams: { casoId: id } }
+    );
+  }
 }

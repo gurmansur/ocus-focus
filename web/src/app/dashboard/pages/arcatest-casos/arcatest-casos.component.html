@@ -21,6 +21,7 @@
     [hasView]="true"
     (deleteClick)="openDeleteModal($event)"
     (editClick)="navigateToEditTestCase($event)"
+    (viewClick)="navigateToExecutions($event)"
     [entityAttributes]="['nome', 'descricao', 'status']"
   ></app-table>
 

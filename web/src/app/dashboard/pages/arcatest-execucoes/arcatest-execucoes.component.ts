@@ -25,6 +25,7 @@ export class ArcatestExecucoesComponent {
   projectId!: number;
   openModal: boolean = false;
   executionToDelete?: ExecucaoTeste;
+  casoId: string;
   casosDeTeste: CasoDeTeste[] = [
     {
       id: 1,
@@ -208,6 +209,19 @@ export class ArcatestExecucoesComponent {
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
+    this.casoId = this.route.snapshot.queryParams['casoId'];
+
+    if (this.casoId) {
+      this.filterTestCasesByCaso();
+    }
+  }
+
+  filterTestCasesByCaso() {
+    if (this.casoId !== undefined) {
+      this.mockupData = this.mockupData.filter(
+        (execution) => execution.casoDeTeste.id === Number(this.casoId)
+      );
+    }
   }
 
   navigateToArcaTest() {
