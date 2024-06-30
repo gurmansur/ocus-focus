@@ -13,26 +13,27 @@
   </div>
   <app-table
     [columns]="['Nome', 'Descrição', 'Status']"
-    [data]="[
-      {
-        id: 1,
-        nome: 'Caso de Teste 1',
-        descricao: 'Descrição do Caso de Teste 1',
-        status: 'Ativo'
-      },
-      {
-        id: 2,
-        nome: 'Caso de Teste 2',
-        descricao: 'Descrição do Caso de Teste 2',
-        status: 'Inativo'
-      }
-    ]"
+    [data]="mockupData"
     customEmptyMessage="'Nenhum caso de teste encontrado'"
     addButtonLabel="'Adicionar Caso de Teste'"
     [hasDelete]="true"
     [hasEdit]="true"
     [hasView]="true"
+    (deleteClick)="openDeleteModal($event)"
     (editClick)="navigateToEditTestCase($event)"
     [entityAttributes]="['nome', 'descricao', 'status']"
   ></app-table>
+
+  <app-modal
+    (close)="closeModal()"
+    [open]="openModal"
+    [title]="'Excluir Caso de Teste'"
+    (confirm)="deleteTestCase()"
+    [message]="
+      'Tem certeza que deseja excluir o caso de teste ' +
+      testCaseToDelete?.nome +
+      '?'
+    "
+  >
+  </app-modal>
 </div>

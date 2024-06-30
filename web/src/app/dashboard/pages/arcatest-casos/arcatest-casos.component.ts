@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
+import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { TableComponent } from '../../../shared/table/table.component';
+import { CasoDeTeste } from '../../models/casoDeTeste';
 
 @Component({
   selector: 'app-arcatest-casos',
@@ -15,10 +17,85 @@ import { TableComponent } from '../../../shared/table/table.component';
     TableComponent,
     ButtonComponent,
     PlusIconComponent,
+    ModalComponent,
   ],
 })
 export class ArcatestCasosComponent {
   projectId!: number;
+  openModal: boolean = false;
+  testCaseToDelete?: CasoDeTeste;
+  mockupData: CasoDeTeste[] = [
+    {
+      id: 1,
+      nome: 'Caso de Teste 1',
+      descricao: 'Descrição do Caso de Teste 1',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 1',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
+      passos: 'Passos do Caso de Teste 1',
+    },
+    {
+      id: 2,
+      nome: 'Caso de Teste 2',
+      descricao: 'Descrição do Caso de Teste 2',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 2',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
+      passos: 'Passos do Caso de Teste 2',
+    },
+    {
+      id: 3,
+      nome: 'Caso de Teste 3',
+      descricao: 'Descrição do Caso de Teste 3',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 3',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
+      passos: 'Passos do Caso de Teste 3',
+    },
+    {
+      id: 4,
+      nome: 'Caso de Teste 4',
+      descricao: 'Descrição do Caso de Teste 4',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 4',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
+      passos: 'Passos do Caso de Teste 4',
+    },
+    {
+      id: 5,
+      nome: 'Caso de Teste 5',
+      descricao: 'Descrição do Caso de Teste 5',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 5',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
+      passos: 'Passos do Caso de Teste 5',
+    },
+  ];
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
@@ -49,5 +126,23 @@ export class ArcatestCasosComponent {
       id,
       'editar',
     ]);
+  }
+
+  closeModal() {
+    this.openModal = false;
+  }
+
+  openDeleteModal(id: number) {
+    const testCase = this.mockupData.find((testCase) => testCase.id === id);
+    this.testCaseToDelete = testCase;
+    this.openModal = true;
+  }
+
+  deleteTestCase() {
+    console.log('Deleting test case', this.testCaseToDelete);
+    this.mockupData = this.mockupData.filter(
+      (testCase) => testCase.id !== this.testCaseToDelete?.id
+    );
+    this.openModal = false;
   }
 }

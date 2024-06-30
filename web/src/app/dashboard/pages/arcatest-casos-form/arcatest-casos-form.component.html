@@ -308,10 +308,7 @@
         Cancelar
       </app-button>
 
-      <app-button
-        (onClick)="createTestCase()"
-        [disabled]="casoDeTesteFormGroup.invalid"
-      >
+      <app-button (onClick)="createTestCase()" [disabled]="!isFormValid">
         @if (isEdit) { Editar Caso de Teste } @else {
         <app-plus-icon></app-plus-icon>
         Adicionar Caso de Teste }
