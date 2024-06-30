@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-table',
@@ -17,10 +17,30 @@ export class TableComponent {
   @Input() hasView?: boolean = false;
   @Input() hasEdit: boolean = true;
   @Input() hasDelete: boolean = true;
-  @Input() onUseCase: (item: any) => void = () => {};
-  @Input() onAlert: (item: any) => void = () => {};
-  @Input() onEdit: (item: any) => void = () => {};
-  @Input() onDelete: (item: any) => void = () => {};
-  @Input() onView: (item: any) => void = () => {};
+  @Output() useCaseClick = new EventEmitter<number>();
+  @Output() alertClick = new EventEmitter<number>();
+  @Output() viewClick = new EventEmitter<number>();
+  @Output() editClick = new EventEmitter<number>();
+  @Output() deleteClick = new EventEmitter<number>();
   @Input({ required: true }) customEmptyMessage!: string;
+
+  useCaseClicked(id: number) {
+    this.useCaseClick.emit(id);
+  }
+
+  alertClicked(id: number) {
+    this.alertClick.emit(id);
+  }
+
+  viewClicked(id: number) {
+    this.viewClick.emit(id);
+  }
+
+  editClicked(id: number) {
+    this.editClick.emit(id);
+  }
+
+  deleteClicked(id: number) {
+    this.deleteClick.emit(id);
+  }
 }

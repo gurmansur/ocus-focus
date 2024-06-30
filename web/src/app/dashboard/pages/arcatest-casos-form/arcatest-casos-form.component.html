@@ -1,0 +1,333 @@
+<app-project-header
+  (onBack)="navigateToArcaTest()"
+  voltar="Voltar ao ArcaTest"
+></app-project-header>
+
+<div class="container px-5 py-24 mx-auto">
+  <form
+    [formGroup]="casoDeTesteFormGroup"
+    class="border-l-4 border-violet-700 rounded-lg md:w-3/4 mx-auto flex flex-col items-center shadow-lg p-10"
+  >
+    <div class="rounded-full bg-violet-700 p-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="ws-10 h-10 text-white font-black"
+      >
+        <path
+          fillRule="evenodd"
+          d="M14.447 3.027a.75.75 0 01.527.92l-4.5 16.5a.75.75 0 01-1.448-.394l4.5-16.5a.75.75 0 01.921-.526zM16.72 6.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L21.44 12l-4.72-4.72a.75.75 0 010-1.06zm-9.44 0a.75.75 0 010 1.06L2.56 12l4.72 4.72a.75.75 0 11-1.06 1.06L.97 12.53a.75.75 0 010-1.06l5.25-5.25a.75.75 0 011.06 0z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </div>
+    <h2 class="my-4 text-xl text-center">
+      @if (isEdit) { Editar } @else { Inserir }
+      <span class="font-medium text-violet-700">Novo Caso de Teste</span>
+    </h2>
+    <div class="mb-4 flex flex-wrap" style="gap: 1rem 0">
+      <div class="relative w-full">
+        <label for="nome" class="leading-7 text-sm text-gray-600"
+          >Nome do Caso de Teste</label
+        >
+        <input
+          type="text"
+          id="nome"
+          name="nome"
+          formControlName="nome"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+        @if (casoDeTesteFormGroup.get('nome').invalid &&
+        casoDeTesteFormGroup.get('nome').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("nome").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-full">
+        <label for="suite" class="leading-7 text-sm text-gray-600"
+          >Suite de Teste</label
+        >
+        <select
+          id="suite"
+          name="suite"
+          formControlName="suite"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          <option value="" selected>Nenhuma</option>
+          <option value="Suite 1">Suite 1</option>
+          <option value="Suite 2">Suite 2</option>
+        </select>
+        @if (casoDeTesteFormGroup.get('suite').invalid &&
+        casoDeTesteFormGroup.get('suite').touched ) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("suite").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/5 pr-1">
+        <label for="status" class="leading-7 text-sm text-gray-600"
+          >Status de Teste</label
+        >
+        <select
+          id="status"
+          name="status"
+          formControlName="status"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          <option value="Ativo">Ativo</option>
+          <option value="Inativo">Inativo</option>
+        </select>
+        @if (casoDeTesteFormGroup.get('status').invalid &&
+        casoDeTesteFormGroup.get('status').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("status").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/5 px-1">
+        <label for="tipo" class="leading-7 text-sm text-gray-600"
+          >Tipo de Teste</label
+        >
+        <select
+          id="tipo"
+          name="tipo"
+          formControlName="tipo"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          <option value="Funcional">Funcional</option>
+          <option value="Não Funcional">Não Funcional</option>
+        </select>
+        @if (casoDeTesteFormGroup.get('tipo').invalid &&
+        casoDeTesteFormGroup.get('tipo').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("tipo").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/5 px-1">
+        <label for="prioridade" class="leading-7 text-sm text-gray-600"
+          >Prioridade</label
+        >
+        <select
+          id="prioridade"
+          name="prioridade"
+          formControlName="prioridade"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          <option value="Alta">Alta</option>
+          <option value="Média">Média</option>
+          <option value="Baixa">Baixa</option>
+        </select>
+        @if (casoDeTesteFormGroup.get('prioridade').invalid &&
+        casoDeTesteFormGroup.get('prioridade').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("prioridade").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/5 px-1">
+        <label for="complexidade" class="leading-7 text-sm text-gray-600"
+          >Complexidade</label
+        >
+        <select
+          id="complexidade"
+          name="complexidade"
+          formControlName="complexidade"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          <option value="Alta">Alta</option>
+          <option value="Média">Média</option>
+          <option value="Baixa">Baixa</option>
+        </select>
+        @if (casoDeTesteFormGroup.get('complexidade').invalid &&
+        casoDeTesteFormGroup.get('complexidade').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("complexidade").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/5 pl-1">
+        <label for="dataCriacao" class="leading-7 text-sm text-gray-600"
+          >Data de Criação</label
+        >
+        <input
+          type="date"
+          id="dataCriacao"
+          name="dataCriacao"
+          formControlName="dataCriacao"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+        @if (casoDeTesteFormGroup.get('dataCriacao').invalid &&
+        casoDeTesteFormGroup.get('dataCriacao').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("dataCriacao").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/2 pr-1">
+        <label for="descricao" class="leading-7 text-sm text-gray-600"
+          >Descrição</label
+        >
+        <textarea
+          id="descricao"
+          name="descricao"
+          formControlName="descricao"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
+        ></textarea>
+        @if (casoDeTesteFormGroup.get('descricao').invalid &&
+        casoDeTesteFormGroup.get('descricao').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("descricao").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/2 pl-1">
+        <label for="observacoes" class="leading-7 text-sm text-gray-600"
+          >Observações</label
+        >
+        <textarea
+          id="observacoes"
+          name="observacoes"
+          formControlName="observacoes"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
+        ></textarea>
+        @if (casoDeTesteFormGroup.get('observacoes').invalid &&
+        casoDeTesteFormGroup.get('observacoes').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("observacoes").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/2 pr-1">
+        <label for="preCondicoes" class="leading-7 text-sm text-gray-600"
+          >Pré-condições</label
+        >
+        <textarea
+          id="preCondicoes"
+          name="preCondicoes"
+          formControlName="preCondicoes"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
+        ></textarea>
+        @if (casoDeTesteFormGroup.get('preCondicoes').invalid &&
+        casoDeTesteFormGroup.get('preCondicoes').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("preCondicoes").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/2 pl-1">
+        <label for="posCondicoes" class="leading-7 text-sm text-gray-600"
+          >Pós-condições</label
+        >
+        <textarea
+          id="posCondicoes"
+          name="posCondicoes"
+          formControlName="posCondicoes"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
+        ></textarea>
+        @if (casoDeTesteFormGroup.get('posCondicoes').invalid &&
+        casoDeTesteFormGroup.get('posCondicoes').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("posCondicoes").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/2 pr-1">
+        <label for="passos" class="leading-7 text-sm text-gray-600"
+          >Passos</label
+        >
+        <textarea
+          id="passos"
+          name="passos"
+          formControlName="passos"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
+        ></textarea>
+        @if (casoDeTesteFormGroup.get('passos').invalid &&
+        casoDeTesteFormGroup.get('passos').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("passos").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-1/2 pl-1">
+        <label for="resultadoEsperado" class="leading-7 text-sm text-gray-600"
+          >Resultado Esperado</label
+        >
+        <textarea
+          id="resultadoEsperado"
+          name="resultadoEsperado"
+          formControlName="resultadoEsperado"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
+        ></textarea>
+        @if (casoDeTesteFormGroup.get('resultadoEsperado').invalid &&
+        casoDeTesteFormGroup.get('resultadoEsperado').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("resultadoEsperado").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+    </div>
+    <app-button
+      (onClick)="createTestCase()"
+      [disabled]="casoDeTesteFormGroup.invalid"
+    >
+      @if (isEdit) { Editar Caso de Teste } @else {
+      <app-plus-icon></app-plus-icon>
+      Adicionar Caso de Teste }
+    </app-button>
+  </form>
+</div>

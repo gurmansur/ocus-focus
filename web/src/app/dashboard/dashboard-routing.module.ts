@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './containers/dashboard.component';
 import { colaboradorGuard, stakeholderGuard } from './guards/role.guard';
+import { ArcatestCasosFormComponent } from './pages/arcatest-casos-form/arcatest-casos-form.component';
 import { ArcatestCasosComponent } from './pages/arcatest-casos/arcatest-casos.component';
 import { ArcatestExecucoesComponent } from './pages/arcatest-execucoes/arcatest-execucoes.component';
 import { ArcatestPlanosComponent } from './pages/arcatest-planos/arcatest-planos.component';
@@ -259,6 +260,22 @@ const routes: Routes = [
       {
         path: 'projeto/:id/suites-teste',
         component: ArcatestSuitesComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Criar Caso de Teste
+
+      {
+        path: 'projeto/:id/casos-teste/criar',
+        component: ArcatestCasosFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Editar Caso de Teste
+
+      {
+        path: 'projeto/:id/casos-teste/:idCaso/editar',
+        component: ArcatestCasosFormComponent,
         canActivate: [colaboradorGuard],
       },
     ],

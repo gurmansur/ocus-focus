@@ -31,4 +31,23 @@ export class ArcatestCasosComponent {
       'painel-arcatest',
     ]);
   }
+
+  navigateToCreateTestCase() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'casos-teste',
+      'criar',
+    ]);
+  }
+
+  navigateToEditTestCase(id: number) {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'casos-teste',
+      id,
+      'editar',
+    ]);
+  }
 }

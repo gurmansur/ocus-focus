@@ -41,7 +41,7 @@
       <td class="flex p-3 justify-center h-full">
         @if (hasUseCase) {
         <button
-          (click)="onUseCase(item)"
+          (click)="useCaseClicked(item.id)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
           <svg
@@ -61,7 +61,7 @@
         </button>
         } @if (hasAlert) {
         <button
-          (click)="onAlert(item)"
+          (click)="alertClicked(item.id)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
           <svg
@@ -82,7 +82,7 @@
         </button>
         } @if (hasView) {
         <button
-          (click)="onView(item)"
+          (click)="viewClicked(item.id)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
           <svg
@@ -107,7 +107,7 @@
         </button>
         } @if (hasEdit && (item.admin === undefined || item.admin === 1)) {
         <button
-          (click)="onEdit(item)"
+          (click)="editClicked(item.id)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
           <svg
@@ -123,7 +123,7 @@
         </button>
         } @if (hasDelete && (item.admin === undefined || item.admin === 1)) {
         <button
-          (click)="onDelete(item)"
+          (click)="deleteClicked(item.id)"
           data-bs-toggle="modal"
           data-bs-target="#modalConfirmacao"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md"

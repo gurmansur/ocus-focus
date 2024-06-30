@@ -6,7 +6,7 @@
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-medium mb-5">Casos de Teste</h2>
-    <app-button>
+    <app-button (onClick)="navigateToCreateTestCase()">
       <app-plus-icon></app-plus-icon>
       Adicionar Caso de Teste
     </app-button>
@@ -15,11 +15,13 @@
     [columns]="['Nome', 'Descrição', 'Status']"
     [data]="[
       {
+        id: 1,
         nome: 'Caso de Teste 1',
         descricao: 'Descrição do Caso de Teste 1',
         status: 'Ativo'
       },
       {
+        id: 2,
         nome: 'Caso de Teste 2',
         descricao: 'Descrição do Caso de Teste 2',
         status: 'Inativo'
@@ -30,7 +32,7 @@
     [hasDelete]="true"
     [hasEdit]="true"
     [hasView]="true"
-    [hasUseCase]="true"
+    (editClick)="navigateToEditTestCase($event)"
     [entityAttributes]="['nome', 'descricao', 'status']"
   ></app-table>
 </div>
