@@ -321,13 +321,23 @@
         }
       </div>
     </div>
-    <app-button
-      (onClick)="createTestCase()"
-      [disabled]="casoDeTesteFormGroup.invalid"
-    >
-      @if (isEdit) { Editar Caso de Teste } @else {
-      <app-plus-icon></app-plus-icon>
-      Adicionar Caso de Teste }
-    </app-button>
+    <div class="flex w-full justify-end gap-2">
+      <app-button
+        (onClick)="navigateToTestCases()"
+        class="mb-4"
+        color="secondary"
+      >
+        Cancelar
+      </app-button>
+
+      <app-button
+        (onClick)="createTestCase()"
+        [disabled]="casoDeTesteFormGroup.invalid"
+      >
+        @if (isEdit) { Editar Caso de Teste } @else {
+        <app-plus-icon></app-plus-icon>
+        Adicionar Caso de Teste }
+      </app-button>
+    </div>
   </form>
 </div>

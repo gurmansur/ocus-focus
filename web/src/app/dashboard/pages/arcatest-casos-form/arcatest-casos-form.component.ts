@@ -156,4 +156,68 @@ export class ArcatestCasosFormComponent {
     this.casoDeTesteFormGroup.controls['tipo'].setValue('Funcional');
     this.casoDeTesteFormGroup.controls['status'].setValue('Ativo');
   }
+
+  get nome() {
+    return this.casoDeTesteFormGroup.get('nome');
+  }
+
+  get descricao() {
+    return this.casoDeTesteFormGroup.get('descricao');
+  }
+
+  get preCondicoes() {
+    return this.casoDeTesteFormGroup.get('preCondicoes');
+  }
+
+  get posCondicoes() {
+    return this.casoDeTesteFormGroup.get('posCondicoes');
+  }
+
+  get prioridade() {
+    return this.casoDeTesteFormGroup.get('prioridade');
+  }
+
+  get complexidade() {
+    return this.casoDeTesteFormGroup.get('complexidade');
+  }
+
+  get tipo() {
+    return this.casoDeTesteFormGroup.get('tipo');
+  }
+
+  get status() {
+    return this.casoDeTesteFormGroup.get('status');
+  }
+
+  get suite() {
+    return this.casoDeTesteFormGroup.get('suite');
+  }
+
+  get dataCriacao() {
+    return this.casoDeTesteFormGroup.get('dataCriacao');
+  }
+
+  get observacoes() {
+    return this.casoDeTesteFormGroup.get('observacoes');
+  }
+
+  get resultadoEsperado() {
+    return this.casoDeTesteFormGroup.get('resultadoEsperado');
+  }
+
+  get passos() {
+    return this.casoDeTesteFormGroup.get('passos');
+  }
+
+  get isFormValid() {
+    return this.casoDeTesteFormGroup.valid;
+  }
+
+  navigateToTestCases() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'casos-teste',
+    ]);
+  }
 }
