@@ -49,6 +49,32 @@
         </p>
         }
       </div>
+      <div class="relative w-full mr-1">
+        <label for="casoDeTeste" class="leading-7 text-sm text-gray-600"
+          >Caso de Teste</label
+        >
+        <select
+          id="casoDeTeste"
+          name="casoDeTeste"
+          formControlName="casoDeTeste"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          <option value="" disabled selected>Selecione o Caso de Teste</option>
+          @for (caso of casosDeTeste; track $index) {
+          <option value="{{ caso.id }}">{{ caso.nome }}</option>
+          }
+        </select>
+        @if (execucaoFormGroup.get('casoDeTeste').invalid &&
+        execucaoFormGroup.get('casoDeTeste').touched ) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            execucaoFormGroup.get("status").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
       <div class="relative w-full flex">
         <div class="relative w-2/4 mr-1">
           <label for="status" class="leading-7 text-sm text-gray-600"

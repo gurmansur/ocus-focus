@@ -6,31 +6,35 @@
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-medium mb-5">Planos de Teste</h2>
-    <app-button>
+    <app-button (onClick)="navigateToCreatePlan()">
       <app-plus-icon></app-plus-icon>
       Adicionar Plano de Teste
     </app-button>
   </div>
   <app-table
-    [columns]="['Nome', 'Descrição', 'Status']"
-    [data]="[
-      {
-        nome: 'Caso de Teste 1',
-        descricao: 'Descrição do Caso de Teste 1',
-        status: 'Ativo'
-      },
-      {
-        nome: 'Caso de Teste 2',
-        descricao: 'Descrição do Caso de Teste 2',
-        status: 'Inativo'
-      }
-    ]"
+    [columns]="['Nome', 'Descrição', 'Observações', 'Status']"
+    [data]="mockupData"
     customEmptyMessage="'Nenhum caso de teste encontrado'"
     addButtonLabel="'Adicionar Caso de Teste'"
     [hasDelete]="true"
     [hasEdit]="true"
     [hasView]="true"
-    [hasUseCase]="true"
-    [entityAttributes]="['nome', 'descricao', 'status']"
+    (viewClick)="navigateToSuites($event)"
+    (editClick)="navigateToEditPlan($event)"
+    (deleteClick)="openDeleteModal($event)"
+    [entityAttributes]="['nome', 'descricao', 'observacoes', 'status']"
   ></app-table>
+
+  <app-modal
+    (close)="closeModal()"
+    [open]="openModal"
+    [title]="'Excluir Plano de Teste'"
+    (confirm)="deletePlan()"
+    [message]="
+      'Tem certeza que deseja excluir o plano de teste ' +
+      planToDelete?.nome +
+      '?'
+    "
+  >
+  </app-modal>
 </div>

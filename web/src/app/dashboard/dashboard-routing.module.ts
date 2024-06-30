@@ -6,7 +6,9 @@ import { ArcatestCasosFormComponent } from './pages/arcatest-casos-form/arcatest
 import { ArcatestCasosComponent } from './pages/arcatest-casos/arcatest-casos.component';
 import { ArcatestExecucoesFormComponent } from './pages/arcatest-execucoes-form/arcatest-execucoes-form.component';
 import { ArcatestExecucoesComponent } from './pages/arcatest-execucoes/arcatest-execucoes.component';
+import { ArcatestPlanosFormComponent } from './pages/arcatest-planos-form/arcatest-planos-form.component';
 import { ArcatestPlanosComponent } from './pages/arcatest-planos/arcatest-planos.component';
+import { ArcatestSuitesFormComponent } from './pages/arcatest-suites-form/arcatest-suites-form.component';
 import { ArcatestSuitesComponent } from './pages/arcatest-suites/arcatest-suites.component';
 import { AtoresComponent } from './pages/atores/atores.component';
 import { CasoDeUsoComponent } from './pages/caso-de-uso/caso-de-uso.component';
@@ -293,6 +295,38 @@ const routes: Routes = [
       {
         path: 'projeto/:id/execucoes-teste/:idExec/editar',
         component: ArcatestExecucoesFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Criar Plano de Teste
+
+      {
+        path: 'projeto/:id/planos-teste/criar',
+        component: ArcatestPlanosFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Editar Plano de Teste
+
+      {
+        path: 'projeto/:id/planos-teste/:idPlano/editar',
+        component: ArcatestPlanosFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Criar Suite de Teste
+
+      {
+        path: 'projeto/:id/suites-teste/criar',
+        component: ArcatestSuitesFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Editar Suite de Teste
+
+      {
+        path: 'projeto/:id/suites-teste/:idSuite/editar',
+        component: ArcatestSuitesFormComponent,
         canActivate: [colaboradorGuard],
       },
     ],

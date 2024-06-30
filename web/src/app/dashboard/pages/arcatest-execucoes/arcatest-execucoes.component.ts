@@ -5,6 +5,7 @@ import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.com
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { TableComponent } from '../../../shared/table/table.component';
+import { CasoDeTeste } from '../../models/casoDeTeste';
 import { ExecucaoTeste } from '../../models/execucaoTeste';
 
 @Component({
@@ -24,12 +25,115 @@ export class ArcatestExecucoesComponent {
   projectId!: number;
   openModal: boolean = false;
   executionToDelete?: ExecucaoTeste;
+  casosDeTeste: CasoDeTeste[] = [
+    {
+      id: 1,
+      nome: 'Caso de Teste 1',
+      descricao: 'Descrição do Caso de Teste 1',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 1',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
+      passos: 'Passos do Caso de Teste 1',
+    },
+    {
+      id: 2,
+      nome: 'Caso de Teste 2',
+      descricao: 'Descrição do Caso de Teste 2',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 2',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
+      passos: 'Passos do Caso de Teste 2',
+    },
+    {
+      id: 3,
+      nome: 'Caso de Teste 3',
+      descricao: 'Descrição do Caso de Teste 3',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 2,
+        nome: 'Suite 2',
+        descricao: 'Descrição da Suite 2',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 2',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 3',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
+      passos: 'Passos do Caso de Teste 3',
+    },
+    {
+      id: 4,
+      nome: 'Caso de Teste 4',
+      descricao: 'Descrição do Caso de Teste 4',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 2,
+        nome: 'Suite 2',
+        descricao: 'Descrição da Suite 2',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 2',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 4',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
+      passos: 'Passos do Caso de Teste 4',
+    },
+    {
+      id: 5,
+      nome: 'Caso de Teste 5',
+      descricao: 'Descrição do Caso de Teste 5',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 3,
+        nome: 'Suite 3',
+        descricao: 'Descrição da Suite 3',
+        status: 'Inativo',
+        observacoes: 'Observações da Suite 3',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 5',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
+      passos: 'Passos do Caso de Teste 5',
+    },
+  ];
+
   mockupData: ExecucaoTeste[] = [
     {
       id: 1,
       nome: 'Execução 1',
       status: 'Aprovado',
-      data: '01/01/2021',
+      data: '2021-01-01',
       hora: '10:00',
       colaborador: {
         nome: 'Usuário 1',
@@ -38,12 +142,13 @@ export class ArcatestExecucoesComponent {
         cargo: 'Cargo 1',
         id: 1,
       },
+      casoDeTeste: this.casosDeTeste[0],
     },
     {
       id: 2,
       nome: 'Execução 2',
       status: 'Pendente',
-      data: '02/01/2021',
+      data: '2021-01-02',
       hora: '11:00',
       colaborador: {
         nome: 'Usuário 2',
@@ -52,12 +157,13 @@ export class ArcatestExecucoesComponent {
         cargo: 'Cargo 2',
         id: 2,
       },
+      casoDeTeste: this.casosDeTeste[1],
     },
     {
       id: 3,
       nome: 'Execução 3',
       status: 'Aprovado',
-      data: '03/01/2021',
+      data: '2021-01-03',
       hora: '12:00',
       colaborador: {
         nome: 'Usuário 3',
@@ -66,12 +172,13 @@ export class ArcatestExecucoesComponent {
         cargo: 'Cargo 3',
         id: 3,
       },
+      casoDeTeste: this.casosDeTeste[2],
     },
     {
       id: 4,
       nome: 'Execução 4',
       status: 'Pendente',
-      data: '04/01/2021',
+      data: '2021-01-04',
       hora: '13:00',
       colaborador: {
         nome: 'Usuário 4',
@@ -80,12 +187,13 @@ export class ArcatestExecucoesComponent {
         cargo: 'Cargo 4',
         id: 4,
       },
+      casoDeTeste: this.casosDeTeste[3],
     },
     {
       id: 5,
       nome: 'Execução 5',
       status: 'Reprovado',
-      data: '05/01/2021',
+      data: '2021-01-05',
       hora: '14:00',
       colaborador: {
         nome: 'Usuário 5',
@@ -94,6 +202,7 @@ export class ArcatestExecucoesComponent {
         cargo: 'Cargo 5',
         id: 5,
       },
+      casoDeTeste: this.casosDeTeste[4],
     },
   ];
 

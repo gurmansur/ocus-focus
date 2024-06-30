@@ -1,30 +1,41 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
-import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
-import { TableComponent } from '../../../shared/table/table.component';
 import { PlanoDeTeste } from '../../models/planoDeTeste';
 import { SuiteDeTeste } from '../../models/suiteDeTeste';
 
 @Component({
-  selector: 'app-arcatest-suites',
+  selector: 'app-arcatest-suites-form',
   standalone: true,
-  templateUrl: './arcatest-suites.component.html',
-  styleUrl: './arcatest-suites.component.css',
+  templateUrl: './arcatest-suites-form.component.html',
+  styleUrl: './arcatest-suites-form.component.css',
   imports: [
-    ProjectHeaderComponent,
-    TableComponent,
-    PlusIconComponent,
     ButtonComponent,
-    ModalComponent,
+    PlusIconComponent,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ProjectHeaderComponent,
   ],
 })
-export class ArcatestSuitesComponent {
+export class ArcatestSuitesFormComponent {
   projectId!: number;
+  suiteId!: number;
+  suite!: SuiteDeTeste;
   openModal: boolean = false;
-  planoId!: number;
+  isEdit: boolean = false;
+  suiteFormGroup: any;
+  formBuilder: FormBuilder = new FormBuilder();
   suiteToDelete?: SuiteDeTeste;
   planosDeTeste: PlanoDeTeste[] = [
     {
@@ -47,55 +58,6 @@ export class ArcatestSuitesComponent {
       descricao: 'Descrição da Plano 3',
       status: 'Inativo',
       observacoes: 'Observações da Plano 3',
-    },
-    {
-      id: 4,
-      nome: 'Plano 4',
-      descricao: 'Descrição da Plano 4',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 4',
-    },
-    {
-      id: 5,
-      nome: 'Plano 5',
-      descricao: 'Descrição da Plano 5',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 5',
-    },
-    {
-      id: 6,
-      nome: 'Plano 6',
-      descricao: 'Descrição da Plano 6',
-      status: 'Inativo',
-      observacoes: 'Observações da Plano 6',
-    },
-    {
-      id: 7,
-      nome: 'Plano 7',
-      descricao: 'Descrição da Plano 7',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 7',
-    },
-    {
-      id: 8,
-      nome: 'Plano 8',
-      descricao: 'Descrição da Plano 8',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 8',
-    },
-    {
-      id: 9,
-      nome: 'Plano 9',
-      descricao: 'Descrição da Plano 9',
-      status: 'Inativo',
-      observacoes: 'Observações da Plano 9',
-    },
-    {
-      id: 10,
-      nome: 'Plano 10',
-      descricao: 'Descrição da Plano 10',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 10',
     },
   ];
   mockupData: SuiteDeTeste[] = [
@@ -127,20 +89,24 @@ export class ArcatestSuitesComponent {
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
-    this.planoId = this.route.snapshot.queryParams['planoId'];
-
-    if (this.planoId) {
-      this.filterTestCasesByPlano();
-    }
+    this.suiteId = this.route.snapshot.params['idSuite'];
+    this.isEdit = !!this.suiteId;
+    this.suite = this.mockupData[this.suiteId - 1];
   }
 
-  filterTestCasesByPlano() {
-    if (this.planoId !== undefined) {
-      this.mockupData = this.mockupData.filter(
-        (suite) => suite.planoDeTeste?.id === +this.planoId
-      );
-    }
+  ngOnInit(): void {
+    this.suiteFormGroup = this.formBuilder.group({
+      nome: new FormControl(this.suite?.nome || '', Validators.required),
+      descricao: new FormControl(
+        this.suite?.descricao || '',
+        Validators.required
+      ),
+      status: new FormControl(this.suite?.status || '', Validators.required),
+      observacoes: new FormControl(this.suite?.observacoes || ''),
+      planoDeTeste: new FormControl(this.suite?.planoDeTeste?.id || ''),
+    });
   }
+
   navigateToArcaTest() {
     this.router.navigate([
       '/dashboard/projeto/',
@@ -153,7 +119,7 @@ export class ArcatestSuitesComponent {
     this.openModal = false;
   }
 
-  deleteSuite() {
+  deleteTestSuite() {
     this.mockupData = this.mockupData.filter(
       (suite) => suite.id !== this.suiteToDelete?.id
     );
@@ -165,29 +131,35 @@ export class ArcatestSuitesComponent {
     this.openModal = true;
   }
 
-  navigateToEditSuite(id: number) {
+  navigateToTestSuites() {
     this.router.navigate([
       '/dashboard/projeto/',
       this.projectId,
       'suites-teste',
-      id,
-      'editar',
     ]);
   }
 
-  navigateToCreateSuite() {
-    this.router.navigate([
-      '/dashboard/projeto/',
-      this.projectId,
-      'suites-teste',
-      'criar',
-    ]);
+  createTestSuite() {
+    console.log(this.suiteFormGroup.value);
   }
 
-  navigateToCases(id: number) {
-    this.router.navigate(
-      ['/dashboard/projeto/', this.projectId, 'casos-teste'],
-      { queryParams: { suiteId: id } }
-    );
+  get nome() {
+    return this.suiteFormGroup.get('nome');
+  }
+
+  get descricao() {
+    return this.suiteFormGroup.get('descricao');
+  }
+
+  get status() {
+    return this.suiteFormGroup.get('status');
+  }
+
+  get observacoes() {
+    return this.suiteFormGroup.get('observacoes');
+  }
+
+  get isFormValid() {
+    return this.suiteFormGroup.valid;
   }
 }

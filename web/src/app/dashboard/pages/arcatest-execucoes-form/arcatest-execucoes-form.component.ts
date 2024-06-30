@@ -12,6 +12,7 @@ import { ButtonComponent } from 'src/app/shared/button/button.component';
 import { CardComponent } from 'src/app/shared/card/card.component';
 import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
+import { CasoDeTeste } from '../../models/casoDeTeste';
 import { ExecucaoTeste } from '../../models/execucaoTeste';
 
 @Component({
@@ -36,6 +37,109 @@ export class ArcatestExecucoesFormComponent {
   execucaoFormGroup: any;
   formBuilder: FormBuilder = new FormBuilder();
   execucaoDeTeste?: ExecucaoTeste;
+  casosDeTeste: CasoDeTeste[] = [
+    {
+      id: 1,
+      nome: 'Caso de Teste 1',
+      descricao: 'Descrição do Caso de Teste 1',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 1',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
+      passos: 'Passos do Caso de Teste 1',
+    },
+    {
+      id: 2,
+      nome: 'Caso de Teste 2',
+      descricao: 'Descrição do Caso de Teste 2',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 2',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
+      passos: 'Passos do Caso de Teste 2',
+    },
+    {
+      id: 3,
+      nome: 'Caso de Teste 3',
+      descricao: 'Descrição do Caso de Teste 3',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 2,
+        nome: 'Suite 2',
+        descricao: 'Descrição da Suite 2',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 2',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 3',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
+      passos: 'Passos do Caso de Teste 3',
+    },
+    {
+      id: 4,
+      nome: 'Caso de Teste 4',
+      descricao: 'Descrição do Caso de Teste 4',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 2,
+        nome: 'Suite 2',
+        descricao: 'Descrição da Suite 2',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 2',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 4',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
+      passos: 'Passos do Caso de Teste 4',
+    },
+    {
+      id: 5,
+      nome: 'Caso de Teste 5',
+      descricao: 'Descrição do Caso de Teste 5',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: {
+        id: 3,
+        nome: 'Suite 3',
+        descricao: 'Descrição da Suite 3',
+        status: 'Inativo',
+        observacoes: 'Observações da Suite 3',
+      },
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 5',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
+      passos: 'Passos do Caso de Teste 5',
+    },
+  ];
+
   mockupData: ExecucaoTeste[] = [
     {
       id: 1,
@@ -50,6 +154,7 @@ export class ArcatestExecucoesFormComponent {
         cargo: 'Cargo 1',
         id: 1,
       },
+      casoDeTeste: this.casosDeTeste[0],
     },
     {
       id: 2,
@@ -64,6 +169,7 @@ export class ArcatestExecucoesFormComponent {
         cargo: 'Cargo 2',
         id: 2,
       },
+      casoDeTeste: this.casosDeTeste[1],
     },
     {
       id: 3,
@@ -78,6 +184,7 @@ export class ArcatestExecucoesFormComponent {
         cargo: 'Cargo 3',
         id: 3,
       },
+      casoDeTeste: this.casosDeTeste[2],
     },
     {
       id: 4,
@@ -92,6 +199,7 @@ export class ArcatestExecucoesFormComponent {
         cargo: 'Cargo 4',
         id: 4,
       },
+      casoDeTeste: this.casosDeTeste[3],
     },
     {
       id: 5,
@@ -106,6 +214,7 @@ export class ArcatestExecucoesFormComponent {
         cargo: 'Cargo 5',
         id: 5,
       },
+      casoDeTeste: this.casosDeTeste[4],
     },
   ];
 
@@ -118,8 +227,6 @@ export class ArcatestExecucoesFormComponent {
   }
 
   ngOnInit(): void {
-    console.log(new Date().toISOString().split('T')[0]);
-
     this.execucaoFormGroup = this.formBuilder.group({
       nome: new FormControl(
         this.execucaoDeTeste?.nome || '',
@@ -136,6 +243,10 @@ export class ArcatestExecucoesFormComponent {
       hora: new FormControl(
         this.execucaoDeTeste?.hora ||
           new Date().toISOString().split('T')[1].split('.')[0],
+        Validators.required
+      ),
+      casoDeTeste: new FormControl(
+        this.execucaoDeTeste?.casoDeTeste.id || '',
         Validators.required
       ),
     });

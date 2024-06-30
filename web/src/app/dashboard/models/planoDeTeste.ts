@@ -1,0 +1,9 @@
+export class PlanoDeTeste {
+  constructor(
+    public nome: string,
+    public descricao: string,
+    public status: string,
+    public observacoes?: string,
+    public id?: number
+  ) {}
+}

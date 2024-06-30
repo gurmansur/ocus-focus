@@ -1,3 +1,5 @@
+import { SuiteDeTeste } from './suiteDeTeste';
+
 export class CasoDeTeste {
   constructor(
     public nome: string,
@@ -12,7 +14,7 @@ export class CasoDeTeste {
     public observacoes?: string,
     public preCondicoes?: string,
     public posCondicoes?: string,
-    public suite?: string,
+    public suite?: SuiteDeTeste,
     public id?: number
   ) {}
 }

@@ -24,6 +24,7 @@ export class ArcatestCasosComponent {
   projectId!: number;
   openModal: boolean = false;
   testCaseToDelete?: CasoDeTeste;
+  suiteId: number;
   mockupData: CasoDeTeste[] = [
     {
       id: 1,
@@ -33,7 +34,13 @@ export class ArcatestCasosComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 1',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
@@ -47,7 +54,13 @@ export class ArcatestCasosComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 2',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
@@ -61,7 +74,13 @@ export class ArcatestCasosComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: {
+        id: 2,
+        nome: 'Suite 2',
+        descricao: 'Descrição da Suite 2',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 2',
+      },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 3',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
@@ -75,7 +94,13 @@ export class ArcatestCasosComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: {
+        id: 2,
+        nome: 'Suite 2',
+        descricao: 'Descrição da Suite 2',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 2',
+      },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 4',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
@@ -89,7 +114,13 @@ export class ArcatestCasosComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: {
+        id: 3,
+        nome: 'Suite 3',
+        descricao: 'Descrição da Suite 3',
+        status: 'Inativo',
+        observacoes: 'Observações da Suite 3',
+      },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 5',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
@@ -99,6 +130,19 @@ export class ArcatestCasosComponent {
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
+    this.suiteId = this.route.snapshot.queryParams['suiteId'];
+
+    if (this.suiteId) {
+      this.filterTestCasesBySuite();
+    }
+  }
+
+  filterTestCasesBySuite() {
+    if (this.suiteId !== undefined) {
+      this.mockupData = this.mockupData.filter(
+        (testCase) => testCase.suite?.id === +this.suiteId
+      );
+    }
   }
 
   navigateToArcaTest() {

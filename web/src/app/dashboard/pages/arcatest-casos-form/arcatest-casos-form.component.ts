@@ -13,6 +13,8 @@ import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { CasoDeTeste } from '../../models/casoDeTeste';
+import { PlanoDeTeste } from '../../models/planoDeTeste';
+import { SuiteDeTeste } from '../../models/suiteDeTeste';
 
 @Component({
   selector: 'app-arcatest-casos-form',
@@ -36,6 +38,55 @@ export class ArcatestCasosFormComponent {
   casoDeTesteFormGroup: any;
   formBuilder: FormBuilder = new FormBuilder();
   casoDeTeste?: CasoDeTeste;
+  planosDeTeste: PlanoDeTeste[] = [
+    {
+      id: 1,
+      nome: 'Plano 1',
+      descricao: 'Descrição da Plano 1',
+      status: 'Ativo',
+      observacoes: 'Observações da Plano 1',
+    },
+    {
+      id: 2,
+      nome: 'Plano 2',
+      descricao: 'Descrição da Plano 2',
+      status: 'Ativo',
+      observacoes: 'Observações da Plano 2',
+    },
+    {
+      id: 3,
+      nome: 'Plano 3',
+      descricao: 'Descrição da Plano 3',
+      status: 'Inativo',
+      observacoes: 'Observações da Plano 3',
+    },
+  ];
+  suites: SuiteDeTeste[] = [
+    {
+      id: 1,
+      nome: 'Suite 1',
+      descricao: 'Descrição da Suite 1',
+      status: 'Ativo',
+      planoDeTeste: this.planosDeTeste[0],
+      observacoes: 'Observações da Suite 1',
+    },
+    {
+      id: 2,
+      nome: 'Suite 2',
+      descricao: 'Descrição da Suite 2',
+      status: 'Ativo',
+      planoDeTeste: this.planosDeTeste[1],
+      observacoes: 'Observações da Suite 2',
+    },
+    {
+      id: 3,
+      nome: 'Suite 3',
+      descricao: 'Descrição da Suite 3',
+      status: 'Inativo',
+      planoDeTeste: this.planosDeTeste[0],
+      observacoes: 'Observações da Suite 3',
+    },
+  ];
   mockupData: CasoDeTeste[] = [
     {
       id: 1,
@@ -45,13 +96,11 @@ export class ArcatestCasosFormComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: this.suites[0],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 1',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
       passos: 'Passos do Caso de Teste 1',
-      preCondicoes: 'Pré-condições do Caso de Teste 1',
-      posCondicoes: 'Pós-condições do Caso de Teste 1',
     },
     {
       id: 2,
@@ -61,13 +110,11 @@ export class ArcatestCasosFormComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: this.suites[0],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 2',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
       passos: 'Passos do Caso de Teste 2',
-      preCondicoes: 'Pré-condições do Caso de Teste 2',
-      posCondicoes: 'Pós-condições do Caso de Teste 2',
     },
     {
       id: 3,
@@ -77,13 +124,11 @@ export class ArcatestCasosFormComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: this.suites[1],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 3',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
       passos: 'Passos do Caso de Teste 3',
-      preCondicoes: 'Pré-condições do Caso de Teste 3',
-      posCondicoes: 'Pós-condições do Caso de Teste 3',
     },
     {
       id: 4,
@@ -93,13 +138,11 @@ export class ArcatestCasosFormComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: this.suites[1],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 4',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
       passos: 'Passos do Caso de Teste 4',
-      preCondicoes: 'Pré-condições do Caso de Teste 4',
-      posCondicoes: 'Pós-condições do Caso de Teste 4',
     },
     {
       id: 5,
@@ -109,13 +152,11 @@ export class ArcatestCasosFormComponent {
       complexidade: 'Baixa',
       prioridade: 'Baixa',
       tipo: 'Funcional',
-      suite: 'Suite 1',
+      suite: this.suites[2],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 5',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
       passos: 'Passos do Caso de Teste 5',
-      preCondicoes: 'Pré-condições do Caso de Teste 5',
-      posCondicoes: 'Pós-condições do Caso de Teste 5',
     },
   ];
 
@@ -149,19 +190,22 @@ export class ArcatestCasosFormComponent {
       preCondicoes: new FormControl(this.casoDeTeste?.preCondicoes || ''),
       posCondicoes: new FormControl(this.casoDeTeste?.posCondicoes || ''),
       prioridade: new FormControl(
-        this.casoDeTeste?.prioridade || '',
+        this.casoDeTeste?.prioridade || 'Baixa',
         Validators.required
       ),
       complexidade: new FormControl(
-        this.casoDeTeste?.complexidade || '',
+        this.casoDeTeste?.complexidade || 'Baixa',
         Validators.required
       ),
-      tipo: new FormControl(this.casoDeTeste?.tipo || '', Validators.required),
+      tipo: new FormControl(
+        this.casoDeTeste?.tipo || 'Funcional',
+        Validators.required
+      ),
       status: new FormControl(
-        this.casoDeTeste?.status || '',
+        this.casoDeTeste?.status || 'Ativo',
         Validators.required
       ),
-      suite: new FormControl(this.casoDeTeste?.suite || ''),
+      suite: new FormControl(this.casoDeTeste?.suite?.id || ''),
       observacoes: new FormControl(this.casoDeTeste?.observacoes || ''),
       resultadoEsperado: new FormControl(
         this.casoDeTeste?.resultadoEsperado || '',
@@ -172,11 +216,6 @@ export class ArcatestCasosFormComponent {
         Validators.required
       ),
     });
-
-    this.casoDeTesteFormGroup.controls['prioridade'].setValue('Baixa');
-    this.casoDeTesteFormGroup.controls['complexidade'].setValue('Baixa');
-    this.casoDeTesteFormGroup.controls['tipo'].setValue('Funcional');
-    this.casoDeTesteFormGroup.controls['status'].setValue('Ativo');
   }
 
   get nome() {

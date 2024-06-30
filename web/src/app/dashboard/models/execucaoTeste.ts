@@ -1,3 +1,4 @@
+import { CasoDeTeste } from './casoDeTeste';
 import { Colaborador } from './colaborador';
 
 export class ExecucaoTeste {
@@ -7,6 +8,7 @@ export class ExecucaoTeste {
     public status: string,
     public data: string,
     public hora: string,
-    public colaborador: Colaborador
+    public colaborador: Colaborador,
+    public casoDeTeste: CasoDeTeste
   ) {}
 }
