@@ -36,54 +36,86 @@ export class ArcatestCasosFormComponent {
   casoDeTesteFormGroup: any;
   formBuilder: FormBuilder = new FormBuilder();
   casoDeTeste?: CasoDeTeste;
-  mockups: CasoDeTeste[] = [
+  mockupData: CasoDeTeste[] = [
     {
       id: 1,
       nome: 'Caso de Teste 1',
       descricao: 'Descrição do Caso de Teste 1',
-      preCondicoes: 'Pré condição do Caso de Teste 1',
-      posCondicoes: 'Pós condição do Caso de Teste 1',
-      prioridade: 'Baixa',
-      complexidade: 'Baixa',
-      tipo: 'Funcional',
       status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
       suite: 'Suite 1',
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 1',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
       passos: 'Passos do Caso de Teste 1',
+      preCondicoes: 'Pré-condições do Caso de Teste 1',
+      posCondicoes: 'Pós-condições do Caso de Teste 1',
     },
     {
       id: 2,
       nome: 'Caso de Teste 2',
       descricao: 'Descrição do Caso de Teste 2',
-      preCondicoes: 'Pré condição do Caso de Teste 2',
-      posCondicoes: 'Pós condição do Caso de Teste 2',
-      prioridade: 'Média',
-      complexidade: 'Média',
-      tipo: 'Funcional',
       status: 'Ativo',
-      suite: 'Suite 2',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 2',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
       passos: 'Passos do Caso de Teste 2',
+      preCondicoes: 'Pré-condições do Caso de Teste 2',
+      posCondicoes: 'Pós-condições do Caso de Teste 2',
     },
     {
       id: 3,
       nome: 'Caso de Teste 3',
       descricao: 'Descrição do Caso de Teste 3',
-      preCondicoes: 'Pré condição do Caso de Teste 3',
-      posCondicoes: 'Pós condição do Caso de Teste 3',
-      prioridade: 'Alta',
-      complexidade: 'Alta',
-      tipo: 'Funcional',
       status: 'Ativo',
-      suite: 'Suite 3',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 3',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
       passos: 'Passos do Caso de Teste 3',
+      preCondicoes: 'Pré-condições do Caso de Teste 3',
+      posCondicoes: 'Pós-condições do Caso de Teste 3',
+    },
+    {
+      id: 4,
+      nome: 'Caso de Teste 4',
+      descricao: 'Descrição do Caso de Teste 4',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 4',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
+      passos: 'Passos do Caso de Teste 4',
+      preCondicoes: 'Pré-condições do Caso de Teste 4',
+      posCondicoes: 'Pós-condições do Caso de Teste 4',
+    },
+    {
+      id: 5,
+      nome: 'Caso de Teste 5',
+      descricao: 'Descrição do Caso de Teste 5',
+      status: 'Ativo',
+      complexidade: 'Baixa',
+      prioridade: 'Baixa',
+      tipo: 'Funcional',
+      suite: 'Suite 1',
+      dataCriacao: new Date().toISOString().split('T')[0],
+      observacoes: 'Observações do Caso de Teste 5',
+      resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
+      passos: 'Passos do Caso de Teste 5',
+      preCondicoes: 'Pré-condições do Caso de Teste 5',
+      posCondicoes: 'Pós-condições do Caso de Teste 5',
     },
   ];
 
@@ -92,7 +124,7 @@ export class ArcatestCasosFormComponent {
     this.idCaso = this.route.snapshot.params['idCaso'];
     this.isEdit = !!this.idCaso;
 
-    this.casoDeTeste = this.mockups[this.idCaso - 1];
+    this.casoDeTeste = this.mockupData[this.idCaso - 1];
   }
 
   navigateToArcaTest() {
@@ -114,14 +146,8 @@ export class ArcatestCasosFormComponent {
         this.casoDeTeste?.descricao || '',
         Validators.required
       ),
-      preCondicoes: new FormControl(
-        this.casoDeTeste?.preCondicoes || '',
-        Validators.required
-      ),
-      posCondicoes: new FormControl(
-        this.casoDeTeste?.posCondicoes || '',
-        Validators.required
-      ),
+      preCondicoes: new FormControl(this.casoDeTeste?.preCondicoes || ''),
+      posCondicoes: new FormControl(this.casoDeTeste?.posCondicoes || ''),
       prioridade: new FormControl(
         this.casoDeTeste?.prioridade || '',
         Validators.required

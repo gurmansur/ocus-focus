@@ -6,31 +6,33 @@
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-medium mb-5">Execuções de Teste</h2>
-    <app-button>
+    <app-button (click)="navigateToCreateExecution()">
       <app-plus-icon></app-plus-icon>
       Executar Teste
     </app-button>
   </div>
   <app-table
-    [columns]="['Nome', 'Descrição', 'Status']"
-    [data]="[
-      {
-        nome: 'Caso de Teste 1',
-        descricao: 'Descrição do Caso de Teste 1',
-        status: 'Ativo'
-      },
-      {
-        nome: 'Caso de Teste 2',
-        descricao: 'Descrição do Caso de Teste 2',
-        status: 'Inativo'
-      }
-    ]"
+    [columns]="['Nome', 'Status', 'Data de Execução', 'Hora', 'Colaborador']"
+    [data]="mockupData"
     customEmptyMessage="'Nenhum caso de teste encontrado'"
     addButtonLabel="'Adicionar Caso de Teste'"
     [hasDelete]="true"
     [hasEdit]="true"
-    [hasView]="true"
-    [hasUseCase]="true"
-    [entityAttributes]="['nome', 'descricao', 'status']"
+    (editClick)="navigateToEditExecution($event)"
+    (deleteClick)="openDeleteModal($event)"
+    [entityAttributes]="['nome', 'status', 'data', 'hora', 'colaborador:nome']"
   ></app-table>
+
+  <app-modal
+    (close)="closeModal()"
+    [open]="openModal"
+    [title]="'Excluir Execução de Teste'"
+    (confirm)="deleteExecution()"
+    [message]="
+      'Tem certeza que deseja excluir a execução de teste ' +
+      executionToDelete?.nome +
+      '?'
+    "
+  >
+  </app-modal>
 </div>

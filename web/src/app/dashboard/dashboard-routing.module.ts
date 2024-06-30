@@ -4,6 +4,7 @@ import { DashboardComponent } from './containers/dashboard.component';
 import { colaboradorGuard, stakeholderGuard } from './guards/role.guard';
 import { ArcatestCasosFormComponent } from './pages/arcatest-casos-form/arcatest-casos-form.component';
 import { ArcatestCasosComponent } from './pages/arcatest-casos/arcatest-casos.component';
+import { ArcatestExecucoesFormComponent } from './pages/arcatest-execucoes-form/arcatest-execucoes-form.component';
 import { ArcatestExecucoesComponent } from './pages/arcatest-execucoes/arcatest-execucoes.component';
 import { ArcatestPlanosComponent } from './pages/arcatest-planos/arcatest-planos.component';
 import { ArcatestSuitesComponent } from './pages/arcatest-suites/arcatest-suites.component';
@@ -276,6 +277,22 @@ const routes: Routes = [
       {
         path: 'projeto/:id/casos-teste/:idCaso/editar',
         component: ArcatestCasosFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Criar Execução de Teste
+
+      {
+        path: 'projeto/:id/execucoes-teste/criar',
+        component: ArcatestExecucoesFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      //ArcaTest - Editar Execução de Teste
+
+      {
+        path: 'projeto/:id/execucoes-teste/:idExec/editar',
+        component: ArcatestExecucoesFormComponent,
         canActivate: [colaboradorGuard],
       },
     ],
