@@ -22,6 +22,7 @@ import { EditarRequisitoComponent } from './pages/editar-requisito/editar-requis
 import { EstimativaComponent } from './pages/estimativa/estimativa.component';
 import { FatoresAmbientaisComponent } from './pages/fatores-ambientais/fatores-ambientais.component';
 import { FatoresTecnicosComponent } from './pages/fatores-tecnicos/fatores-tecnicos.component';
+import { FlyingcardsKanbanComponent } from './pages/flyingcards-kanban/flyingcards-kanban.component';
 import { InserirAtoresComponent } from './pages/inserir-atores/inserir-atores.component';
 import { InserirCasoComponent } from './pages/inserir-caso/inserir-caso.component';
 import { InserirCenariosComponent } from './pages/inserir-cenarios/inserir-cenarios.component';
@@ -33,6 +34,7 @@ import { InserirRequisitoComponent } from './pages/inserir-requisito/inserir-req
 import { InserirStakeholderComponent } from './pages/inserir-stakeholder/inserir-stakeholder.component';
 import { PainelArcatestComponent } from './pages/painel-arcatest/painel-arcatest.component';
 import { PainelEstimaComponent } from './pages/painel-estima/painel-estima.component';
+import { PainelFlyingcardsComponent } from './pages/painel-flyingcards/painel-flyingcards.component';
 import { PainelPrioreasyComponent } from './pages/painel-prioreasy/painel-prioreasy.component';
 import { PainelStakeholderComponent } from './pages/painel-stakeholder/painel-stakeholder.component';
 import { PriorizarRequisitosComponent } from './pages/priorizar-requisitos/priorizar-requisitos.component';
@@ -327,6 +329,22 @@ const routes: Routes = [
       {
         path: 'projeto/:id/suites-teste/:idSuite/editar',
         component: ArcatestSuitesFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      // Flying Cards - Painel
+
+      {
+        path: 'projeto/:id/painel-flyingcards',
+        component: PainelFlyingcardsComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      // Flying Cards - Kanban
+
+      {
+        path: 'projeto/:id/kanban',
+        component: FlyingcardsKanbanComponent,
         canActivate: [colaboradorGuard],
       },
     ],
