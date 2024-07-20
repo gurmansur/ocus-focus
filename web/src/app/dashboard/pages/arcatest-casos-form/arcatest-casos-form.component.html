@@ -50,6 +50,32 @@
         }
       </div>
       <div class="relative w-full">
+        <label for="testador" class="leading-7 text-sm text-gray-600"
+          >Testador Designado</label
+        >
+        <select
+          id="testador"
+          name="testador"
+          formControlName="testador"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          <option value="" selected>Nenhuma</option>
+          @for (testador of testadores; track $index) {
+          <option value="{{ testador.id }}">{{ testador.nome }}</option>
+          }
+        </select>
+        @if (casoDeTesteFormGroup.get('testador').invalid &&
+        casoDeTesteFormGroup.get('testador').touched ) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            casoDeTesteFormGroup.get("testador").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      <div class="relative w-full">
         <label for="suite" class="leading-7 text-sm text-gray-600"
           >Suite de Teste</label
         >

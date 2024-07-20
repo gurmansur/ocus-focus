@@ -13,6 +13,7 @@ import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { CasoDeTeste } from '../../models/casoDeTeste';
+import { Colaborador } from '../../models/colaborador';
 import { PlanoDeTeste } from '../../models/planoDeTeste';
 import { SuiteDeTeste } from '../../models/suiteDeTeste';
 
@@ -87,6 +88,31 @@ export class ArcatestCasosFormComponent {
       observacoes: 'Observações da Suite 3',
     },
   ];
+
+  testadores: Colaborador[] = [
+    {
+      id: 1,
+      nome: 'Colaborador 1',
+      email: 'a@a.a',
+      empresa: 'Empresa 1',
+      cargo: 'Cargo 1',
+    },
+    {
+      id: 2,
+      nome: 'Colaborador 2',
+      email: 'b@b.b',
+      empresa: 'Empresa 2',
+      cargo: 'Cargo 2',
+    },
+    {
+      id: 3,
+      nome: 'Colaborador 3',
+      email: 'c@c.c',
+      empresa: 'Empresa 3',
+      cargo: 'Cargo 3',
+    },
+  ];
+
   mockupData: CasoDeTeste[] = [
     {
       id: 1,
@@ -97,6 +123,7 @@ export class ArcatestCasosFormComponent {
       prioridade: 'Baixa',
       tipo: 'Funcional',
       suite: this.suites[0],
+      testador: this.testadores[0],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 1',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
@@ -111,6 +138,7 @@ export class ArcatestCasosFormComponent {
       prioridade: 'Baixa',
       tipo: 'Funcional',
       suite: this.suites[0],
+      testador: this.testadores[0],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 2',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
@@ -125,6 +153,7 @@ export class ArcatestCasosFormComponent {
       prioridade: 'Baixa',
       tipo: 'Funcional',
       suite: this.suites[1],
+      testador: this.testadores[1],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 3',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
@@ -139,6 +168,7 @@ export class ArcatestCasosFormComponent {
       prioridade: 'Baixa',
       tipo: 'Funcional',
       suite: this.suites[1],
+      testador: this.testadores[1],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 4',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
@@ -153,6 +183,7 @@ export class ArcatestCasosFormComponent {
       prioridade: 'Baixa',
       tipo: 'Funcional',
       suite: this.suites[2],
+      testador: this.testadores[2],
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 5',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
@@ -206,6 +237,7 @@ export class ArcatestCasosFormComponent {
         Validators.required
       ),
       suite: new FormControl(this.casoDeTeste?.suite?.id || ''),
+      testador: new FormControl(this.casoDeTeste?.testador?.id || ''),
       observacoes: new FormControl(this.casoDeTeste?.observacoes || ''),
       resultadoEsperado: new FormControl(
         this.casoDeTeste?.resultadoEsperado || '',
@@ -252,6 +284,10 @@ export class ArcatestCasosFormComponent {
 
   get suite() {
     return this.casoDeTesteFormGroup.get('suite');
+  }
+
+  get testador() {
+    return this.casoDeTesteFormGroup.get('testador');
   }
 
   get dataCriacao() {

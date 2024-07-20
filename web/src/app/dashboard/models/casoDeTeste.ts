@@ -1,3 +1,4 @@
+import { Colaborador } from './colaborador';
 import { SuiteDeTeste } from './suiteDeTeste';
 
 export class CasoDeTeste {
@@ -15,6 +16,7 @@ export class CasoDeTeste {
     public preCondicoes?: string,
     public posCondicoes?: string,
     public suite?: SuiteDeTeste,
+    public testador?: Colaborador,
     public id?: number
   ) {}
 }

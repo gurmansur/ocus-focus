@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ContentModalComponent } from 'src/app/shared/content-modal/content-modal.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
@@ -18,11 +20,14 @@ import { CasoDeTeste } from '../../models/casoDeTeste';
     ButtonComponent,
     PlusIconComponent,
     ModalComponent,
+    NgxChartsModule,
+    ContentModalComponent,
   ],
 })
 export class ArcatestCasosComponent {
   projectId!: number;
-  openModal: boolean = false;
+  openCoverage: boolean = false;
+  openDelete: boolean = false;
   testCaseToDelete?: CasoDeTeste;
   suiteId: number;
   mockupData: CasoDeTeste[] = [
@@ -172,14 +177,14 @@ export class ArcatestCasosComponent {
     ]);
   }
 
-  closeModal() {
-    this.openModal = false;
+  closeDeleteModal() {
+    this.openDelete = false;
   }
 
   openDeleteModal(id: number) {
     const testCase = this.mockupData.find((testCase) => testCase.id === id);
     this.testCaseToDelete = testCase;
-    this.openModal = true;
+    this.openDelete = true;
   }
 
   deleteTestCase() {
@@ -187,7 +192,7 @@ export class ArcatestCasosComponent {
     this.mockupData = this.mockupData.filter(
       (testCase) => testCase.id !== this.testCaseToDelete?.id
     );
-    this.openModal = false;
+    this.openDelete = false;
   }
 
   navigateToExecutions(id: number) {
@@ -195,5 +200,13 @@ export class ArcatestCasosComponent {
       ['/dashboard/projeto/', this.projectId, 'execucoes-teste'],
       { queryParams: { casoId: id } }
     );
+  }
+
+  openCoverageModal() {
+    this.openCoverage = true;
+  }
+
+  closeCoverageModal() {
+    this.openCoverage = false;
   }
 }

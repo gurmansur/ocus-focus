@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ContentModalComponent } from 'src/app/shared/content-modal/content-modal.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
@@ -19,11 +21,14 @@ import { SuiteDeTeste } from '../../models/suiteDeTeste';
     PlusIconComponent,
     ButtonComponent,
     ModalComponent,
+    NgxChartsModule,
+    ContentModalComponent,
   ],
 })
 export class ArcatestSuitesComponent {
   projectId!: number;
-  openModal: boolean = false;
+  openDelete: boolean = false;
+  openCoverage: boolean = false;
   planoId!: number;
   suiteToDelete?: SuiteDeTeste;
   planosDeTeste: PlanoDeTeste[] = [
@@ -149,20 +154,20 @@ export class ArcatestSuitesComponent {
     ]);
   }
 
-  closeModal() {
-    this.openModal = false;
+  closeDeleteModal() {
+    this.openDelete = false;
   }
 
   deleteSuite() {
     this.mockupData = this.mockupData.filter(
       (suite) => suite.id !== this.suiteToDelete?.id
     );
-    this.openModal = false;
+    this.openDelete = false;
   }
 
   openDeleteModal(id: number) {
     this.suiteToDelete = this.mockupData.find((suite) => suite.id === id);
-    this.openModal = true;
+    this.openDelete = true;
   }
 
   navigateToEditSuite(id: number) {
@@ -189,5 +194,13 @@ export class ArcatestSuitesComponent {
       ['/dashboard/projeto/', this.projectId, 'casos-teste'],
       { queryParams: { suiteId: id } }
     );
+  }
+
+  openCoverageModal() {
+    this.openCoverage = true;
+  }
+
+  closeCoverageModal() {
+    this.openCoverage = false;
   }
 }

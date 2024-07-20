@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ContentModalComponent } from 'src/app/shared/content-modal/content-modal.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
@@ -18,11 +20,15 @@ import { PlanoDeTeste } from '../../models/planoDeTeste';
     PlusIconComponent,
     ButtonComponent,
     ModalComponent,
+    NgxChartsModule,
+    ContentModalComponent,
   ],
 })
 export class ArcatestPlanosComponent {
   projectId!: number;
-  openModal: boolean = false;
+  openCoverage: boolean = false;
+  openDelete: boolean = false;
+  planToDelete?: PlanoDeTeste;
   mockupData: PlanoDeTeste[] = [
     {
       id: 1,
@@ -95,7 +101,6 @@ export class ArcatestPlanosComponent {
       observacoes: 'Observações da Plano 10',
     },
   ];
-  planToDelete: any;
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
@@ -109,20 +114,20 @@ export class ArcatestPlanosComponent {
     ]);
   }
 
-  closeModal() {
-    this.openModal = false;
+  closeDeleteModal() {
+    this.openDelete = false;
   }
 
   deletePlan() {
     this.mockupData = this.mockupData.filter(
       (plano) => plano.id !== this.planToDelete?.id
     );
-    this.openModal = false;
+    this.openDelete = false;
   }
 
   openDeleteModal(id: number) {
     this.planToDelete = this.mockupData.find((plano) => plano.id === id);
-    this.openModal = true;
+    this.openDelete = true;
   }
 
   navigateToEditPlan(id: number) {
@@ -149,5 +154,13 @@ export class ArcatestPlanosComponent {
       ['/dashboard/projeto/', this.projectId, 'suites-teste'],
       { queryParams: { planoId: id } }
     );
+  }
+
+  openCoverageModal() {
+    this.openCoverage = true;
+  }
+
+  closeCoverageModal() {
+    this.openCoverage = false;
   }
 }

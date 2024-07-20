@@ -6,10 +6,15 @@
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-medium mb-5">Suites de Teste</h2>
-    <app-button (onClick)="navigateToCreateSuite()">
-      <app-plus-icon></app-plus-icon>
-      Adicionar Suite de Teste
-    </app-button>
+    <div class="flex gap-4">
+      <app-button (click)="openCoverageModal()">
+        Cobertura de Testes
+      </app-button>
+      <app-button (onClick)="navigateToCreateSuite()">
+        <app-plus-icon></app-plus-icon>
+        Adicionar Suite de Teste
+      </app-button>
+    </div>
   </div>
   <app-table
     [columns]="['Nome', 'Descrição', 'Observações', 'Status']"
@@ -26,8 +31,8 @@
   ></app-table>
 
   <app-modal
-    (close)="closeModal()"
-    [open]="openModal"
+    (close)="closeDeleteModal()"
+    [open]="openDelete"
     [title]="'Excluir Suite de Teste'"
     (confirm)="deleteSuite()"
     [message]="
@@ -37,4 +42,51 @@
     "
   >
   </app-modal>
+
+  <app-content-modal
+    (close)="closeCoverageModal()"
+    [open]="openCoverage"
+    [title]="'Cobertura de Testes'"
+    (confirm)="closeCoverageModal()"
+    confirmText="Fechar"
+  >
+    <ngx-charts-pie-chart
+      [results]="[
+      {
+        name: 'Passou',
+        value: 5,
+      },
+      {
+        name: 'Falhou',
+        value: 2,
+      },
+      {
+        name: 'Em Execução',
+        value: 1,
+      },
+    ]"
+      [customColors]="[
+      {
+        name: 'Passou',
+        value: '#6B46C1',
+      },
+      {
+        name: 'Falhou',
+        value: '#A786DB',
+      },
+      {
+        name: 'Em Execução',
+        value: '#C2B3E5',
+      },
+    ]"
+      [labels]="true"
+      [legend]="true"
+      [doughnut]="true"
+      [explodeSlices]="false"
+      [gradient]="false"
+      [animations]="true"
+      [legendTitle]="'Legenda'"
+      style="margin-bottom: -70px"
+    ></ngx-charts-pie-chart>
+  </app-content-modal>
 </div>

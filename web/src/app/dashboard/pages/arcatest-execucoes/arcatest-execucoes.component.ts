@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ButtonComponent } from '../../../shared/button/button.component';
+import { ContentModalComponent } from '../../../shared/content-modal/content-modal.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
@@ -19,11 +21,14 @@ import { ExecucaoTeste } from '../../models/execucaoTeste';
     PlusIconComponent,
     ButtonComponent,
     ModalComponent,
+    NgxChartsModule,
+    ContentModalComponent,
   ],
 })
 export class ArcatestExecucoesComponent {
   projectId!: number;
-  openModal: boolean = false;
+  openDelete: boolean = false;
+  openCoverage: boolean = false;
   executionToDelete?: ExecucaoTeste;
   casoId: string;
   casosDeTeste: CasoDeTeste[] = [
@@ -232,22 +237,22 @@ export class ArcatestExecucoesComponent {
     ]);
   }
 
-  closeModal() {
-    this.openModal = false;
+  closeDeleteModal() {
+    this.openDelete = false;
   }
 
   deleteExecution() {
     this.mockupData = this.mockupData.filter(
       (execution) => execution.id !== this.executionToDelete?.id
     );
-    this.openModal = false;
+    this.openDelete = false;
   }
 
   openDeleteModal(id: number) {
     this.executionToDelete = this.mockupData.find(
       (execution) => execution.id === id
     );
-    this.openModal = true;
+    this.openDelete = true;
   }
 
   navigateToEditExecution(id: number) {
@@ -267,5 +272,13 @@ export class ArcatestExecucoesComponent {
       'execucoes-teste',
       'criar',
     ]);
+  }
+
+  openCoverageModal() {
+    this.openCoverage = true;
+  }
+
+  closeCoverageModal() {
+    this.openCoverage = false;
   }
 }
