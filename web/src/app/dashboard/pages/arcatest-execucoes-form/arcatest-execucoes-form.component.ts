@@ -12,7 +12,14 @@ import { ButtonComponent } from 'src/app/shared/button/button.component';
 import { CardComponent } from 'src/app/shared/card/card.component';
 import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
-import { CasoDeTeste } from '../../models/casoDeTeste';
+import {
+  CasoDeTeste,
+  ECategoria,
+  EComplexidade,
+  EPrioridade,
+  EStatus,
+  ETecnica,
+} from '../../models/casoDeTeste';
 import { ExecucaoTeste } from '../../models/execucaoTeste';
 
 @Component({
@@ -42,10 +49,10 @@ export class ArcatestExecucoesFormComponent {
       id: 1,
       nome: 'Caso de Teste 1',
       descricao: 'Descrição do Caso de Teste 1',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
       suite: {
         id: 1,
         nome: 'Suite 1',
@@ -56,16 +63,23 @@ export class ArcatestExecucoesFormComponent {
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 1',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
-      passos: 'Passos do Caso de Teste 1',
+      entrada: 'Passos do Caso de Teste 1',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
+      },
     },
     {
       id: 2,
       nome: 'Caso de Teste 2',
       descricao: 'Descrição do Caso de Teste 2',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
       suite: {
         id: 1,
         nome: 'Suite 1',
@@ -76,67 +90,41 @@ export class ArcatestExecucoesFormComponent {
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 2',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
-      passos: 'Passos do Caso de Teste 2',
+      entrada: 'Passos do Caso de Teste 2',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
+      },
     },
     {
       id: 3,
       nome: 'Caso de Teste 3',
       descricao: 'Descrição do Caso de Teste 3',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
       suite: {
-        id: 2,
-        nome: 'Suite 2',
-        descricao: 'Descrição da Suite 2',
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
         status: 'Ativo',
-        observacoes: 'Observações da Suite 2',
+        observacoes: 'Observações da Suite 1',
       },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 3',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
-      passos: 'Passos do Caso de Teste 3',
-    },
-    {
-      id: 4,
-      nome: 'Caso de Teste 4',
-      descricao: 'Descrição do Caso de Teste 4',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: {
-        id: 2,
-        nome: 'Suite 2',
-        descricao: 'Descrição da Suite 2',
-        status: 'Ativo',
-        observacoes: 'Observações da Suite 2',
+      entrada: 'Passos do Caso de Teste 3',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
       },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 4',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
-      passos: 'Passos do Caso de Teste 4',
-    },
-    {
-      id: 5,
-      nome: 'Caso de Teste 5',
-      descricao: 'Descrição do Caso de Teste 5',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: {
-        id: 3,
-        nome: 'Suite 3',
-        descricao: 'Descrição da Suite 3',
-        status: 'Inativo',
-        observacoes: 'Observações da Suite 3',
-      },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 5',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
-      passos: 'Passos do Caso de Teste 5',
     },
   ];
 
@@ -232,10 +220,6 @@ export class ArcatestExecucoesFormComponent {
         this.execucaoDeTeste?.nome || '',
         Validators.required
       ),
-      status: new FormControl(
-        this.execucaoDeTeste?.status || '',
-        Validators.required
-      ),
       data: new FormControl(
         this.execucaoDeTeste?.data || new Date().toISOString().split('T')[0],
         Validators.required
@@ -274,10 +258,6 @@ export class ArcatestExecucoesFormComponent {
 
   get nome() {
     return this.execucaoFormGroup.get('nome');
-  }
-
-  get status() {
-    return this.execucaoFormGroup.get('status');
   }
 
   get data() {

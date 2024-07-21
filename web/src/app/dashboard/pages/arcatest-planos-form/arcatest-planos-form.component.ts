@@ -40,6 +40,7 @@ export class ArcatestPlanosFormComponent {
     {
       id: 1,
       nome: 'Plano 1',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 1',
       status: 'Ativo',
       observacoes: 'Observações da Plano 1',
@@ -47,6 +48,7 @@ export class ArcatestPlanosFormComponent {
     {
       id: 2,
       nome: 'Plano 2',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 2',
       status: 'Ativo',
       observacoes: 'Observações da Plano 2',
@@ -54,6 +56,7 @@ export class ArcatestPlanosFormComponent {
     {
       id: 3,
       nome: 'Plano 3',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 3',
       status: 'Inativo',
       observacoes: 'Observações da Plano 3',
@@ -73,6 +76,10 @@ export class ArcatestPlanosFormComponent {
       nome: new FormControl(this.plano?.nome || '', Validators.required),
       descricao: new FormControl(
         this.plano?.descricao || '',
+        Validators.required
+      ),
+      dataLimite: new FormControl(
+        this.plano?.data || new Date().toISOString().split('T')[0],
         Validators.required
       ),
       status: new FormControl(this.plano?.status || '', Validators.required),
@@ -118,6 +125,10 @@ export class ArcatestPlanosFormComponent {
 
   get nome() {
     return this.planoFormGroup.get('nome');
+  }
+
+  get dataLimite() {
+    return this.planoFormGroup.get('dataLimite');
   }
 
   get descricao() {

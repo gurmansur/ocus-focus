@@ -23,8 +23,10 @@
     addButtonLabel="'Adicionar Caso de Teste'"
     [hasDelete]="true"
     [hasEdit]="true"
+    [hasExecute]="true"
     (editClick)="navigateToEditExecution($event)"
     (deleteClick)="openDeleteModal($event)"
+    (executeClick)="openExecutionModal()"
     [entityAttributes]="['nome', 'status', 'data', 'hora', 'colaborador:nome']"
   ></app-table>
 
@@ -53,14 +55,23 @@
       {
         name: 'Passou',
         value: 5,
+        extra: {
+          percentage: '50%',
+        },
       },
       {
         name: 'Falhou',
-        value: 2,
+        value: 3,
+        extra: {
+          percentage: '30%',
+        },
       },
       {
-        name: 'Em Execução',
-        value: 1,
+        name: 'Executando',
+        value: 2,
+        extra: {
+          percentage: '20%',
+        },
       },
     ]"
       [customColors]="[
@@ -73,18 +84,26 @@
         value: '#A786DB',
       },
       {
-        name: 'Em Execução',
+        name: 'Executando',
         value: '#C2B3E5',
       },
     ]"
       [labels]="true"
       [legend]="true"
+      [legendPosition]="legendPosition"
       [doughnut]="true"
       [explodeSlices]="false"
       [gradient]="false"
       [animations]="true"
       [legendTitle]="'Legenda'"
-      style="margin-bottom: -70px"
+      [margins]="[50, 20, 50, 20]"
+      style="padding-bottom: 50px"
     ></ngx-charts-pie-chart>
   </app-content-modal>
+
+  <app-arcatest-execucoes-modal
+    (cancel)="closeExecutionModal()"
+    [open]="openExecution"
+    (confirm)="closeExecutionModal()"
+  ></app-arcatest-execucoes-modal>
 </div>

@@ -68,7 +68,7 @@
         execucaoFormGroup.get('casoDeTeste').touched ) {
         <p class="text-red-500 text-xs italic">
           {{
-            execucaoFormGroup.get("status").errors.required
+            execucaoFormGroup.get("caso").errors.required
               ? "Campo obrigatório"
               : ""
           }}
@@ -76,38 +76,9 @@
         }
       </div>
       <div class="relative w-full flex">
-        <div class="relative w-2/4 mr-1">
-          <label for="status" class="leading-7 text-sm text-gray-600"
-            >Status</label
-          >
-          <select
-            id="status"
-            name="status"
-            formControlName="status"
-            class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-          >
-            <option value="" disabled selected>
-              Selecione o status da execução
-            </option>
-            <option value="Aprovado">Aprovado</option>
-            <option value="Reprovado">Reprovado</option>
-            <option value="Em andamento">Em andamento</option>
-            <option value="Pendente">Pendente</option>
-          </select>
-          @if (execucaoFormGroup.get('status').invalid &&
-          execucaoFormGroup.get('status').touched ) {
-          <p class="text-red-500 text-xs italic">
-            {{
-              execucaoFormGroup.get("status").errors.required
-                ? "Campo obrigatório"
-                : ""
-            }}
-          </p>
-          }
-        </div>
-        <div class="relative w-1/4 mx-1">
+        <div class="relative w-1/2 mr-1">
           <label for="data" class="leading-7 text-sm text-gray-600"
-            >Data de Execução</label
+            >Data de Criação</label
           >
           <input
             type="date"
@@ -119,17 +90,13 @@
           @if (execucaoFormGroup.get('data').invalid &&
           execucaoFormGroup.get('data').touched) {
           <p class="text-red-500 text-xs italic">
-            {{
-              execucaoFormGroup.get("data").errors.required
-                ? "Campo obrigatório"
-                : ""
-            }}
+            {{ data.errors.required ? "Campo obrigatório" : "" }}
           </p>
           }
         </div>
-        <div class="relative w-1/4 mx-1">
+        <div class="relative w-1/2 mx-1">
           <label for="hora" class="leading-7 text-sm text-gray-600"
-            >Hora de Execução</label
+            >Hora de Criação</label
           >
           <input
             type="time"

@@ -12,7 +12,15 @@ import { CardComponent } from 'src/app/shared/card/card.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
-import { CasoDeTeste } from '../../models/casoDeTeste';
+import {
+  CasoDeTeste,
+  ECategoria,
+  EComplexidade,
+  EPrioridade,
+  EStatus,
+  ETecnica,
+} from '../../models/casoDeTeste';
+import { casoUso } from '../../models/casoUso';
 import { Colaborador } from '../../models/colaborador';
 import { PlanoDeTeste } from '../../models/planoDeTeste';
 import { SuiteDeTeste } from '../../models/suiteDeTeste';
@@ -43,6 +51,7 @@ export class ArcatestCasosFormComponent {
     {
       id: 1,
       nome: 'Plano 1',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 1',
       status: 'Ativo',
       observacoes: 'Observações da Plano 1',
@@ -50,6 +59,7 @@ export class ArcatestCasosFormComponent {
     {
       id: 2,
       nome: 'Plano 2',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 2',
       status: 'Ativo',
       observacoes: 'Observações da Plano 2',
@@ -57,6 +67,7 @@ export class ArcatestCasosFormComponent {
     {
       id: 3,
       nome: 'Plano 3',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 3',
       status: 'Inativo',
       observacoes: 'Observações da Plano 3',
@@ -118,76 +129,102 @@ export class ArcatestCasosFormComponent {
       id: 1,
       nome: 'Caso de Teste 1',
       descricao: 'Descrição do Caso de Teste 1',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: this.suites[0],
-      testador: this.testadores[0],
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 1',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
-      passos: 'Passos do Caso de Teste 1',
+      entrada: 'Passos do Caso de Teste 1',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
+      },
     },
     {
       id: 2,
       nome: 'Caso de Teste 2',
       descricao: 'Descrição do Caso de Teste 2',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: this.suites[0],
-      testador: this.testadores[0],
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 2',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
-      passos: 'Passos do Caso de Teste 2',
+      entrada: 'Passos do Caso de Teste 2',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
+      },
     },
     {
       id: 3,
       nome: 'Caso de Teste 3',
       descricao: 'Descrição do Caso de Teste 3',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: this.suites[1],
-      testador: this.testadores[1],
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
+      suite: {
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
+        status: 'Ativo',
+        observacoes: 'Observações da Suite 1',
+      },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 3',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
-      passos: 'Passos do Caso de Teste 3',
+      entrada: 'Passos do Caso de Teste 3',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
+      },
+    },
+  ];
+  casosDeUso: casoUso[] = [
+    {
+      id: 1,
+      nome: 'Caso de Uso 1',
+      descricao: 'Descrição do Caso de Uso 1',
+      complexidade: EComplexidade.BAIXA,
     },
     {
-      id: 4,
-      nome: 'Caso de Teste 4',
-      descricao: 'Descrição do Caso de Teste 4',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: this.suites[1],
-      testador: this.testadores[1],
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 4',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
-      passos: 'Passos do Caso de Teste 4',
+      id: 2,
+      nome: 'Caso de Uso 2',
+      descricao: 'Descrição do Caso de Uso 2',
+      complexidade: EComplexidade.BAIXA,
     },
     {
-      id: 5,
-      nome: 'Caso de Teste 5',
-      descricao: 'Descrição do Caso de Teste 5',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: this.suites[2],
-      testador: this.testadores[2],
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 5',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
-      passos: 'Passos do Caso de Teste 5',
+      id: 3,
+      nome: 'Caso de Uso 3',
+      descricao: 'Descrição do Caso de Uso 3',
+      complexidade: EComplexidade.BAIXA,
     },
   ];
 
@@ -221,19 +258,23 @@ export class ArcatestCasosFormComponent {
       preCondicoes: new FormControl(this.casoDeTeste?.preCondicoes || ''),
       posCondicoes: new FormControl(this.casoDeTeste?.posCondicoes || ''),
       prioridade: new FormControl(
-        this.casoDeTeste?.prioridade || 'Baixa',
+        this.casoDeTeste?.prioridade || EPrioridade.BAIXA,
         Validators.required
       ),
       complexidade: new FormControl(
-        this.casoDeTeste?.complexidade || 'Baixa',
+        this.casoDeTeste?.complexidade || EComplexidade.BAIXA,
         Validators.required
       ),
-      tipo: new FormControl(
-        this.casoDeTeste?.tipo || 'Funcional',
+      tecnica: new FormControl(
+        this.casoDeTeste?.tecnica || ETecnica.FUNCIONAL,
         Validators.required
       ),
       status: new FormControl(
-        this.casoDeTeste?.status || 'Ativo',
+        this.casoDeTeste?.status || EStatus.ATIVO,
+        Validators.required
+      ),
+      categoria: new FormControl(
+        this.casoDeTeste?.categoria || ECategoria.MANUAL,
         Validators.required
       ),
       suite: new FormControl(this.casoDeTeste?.suite?.id || ''),
@@ -243,8 +284,12 @@ export class ArcatestCasosFormComponent {
         this.casoDeTeste?.resultadoEsperado || '',
         Validators.required
       ),
-      passos: new FormControl(
-        this.casoDeTeste?.passos || '',
+      entrada: new FormControl(
+        this.casoDeTeste?.entrada || '',
+        Validators.required
+      ),
+      casoDeUso: new FormControl(
+        this.casoDeTeste?.casoDeUso.id || '',
         Validators.required
       ),
     });
@@ -274,8 +319,8 @@ export class ArcatestCasosFormComponent {
     return this.casoDeTesteFormGroup.get('complexidade');
   }
 
-  get tipo() {
-    return this.casoDeTesteFormGroup.get('tipo');
+  get tecnica() {
+    return this.casoDeTesteFormGroup.get('tecnica');
   }
 
   get status() {
@@ -302,8 +347,8 @@ export class ArcatestCasosFormComponent {
     return this.casoDeTesteFormGroup.get('resultadoEsperado');
   }
 
-  get passos() {
-    return this.casoDeTesteFormGroup.get('passos');
+  get entrada() {
+    return this.casoDeTesteFormGroup.get('entrada');
   }
 
   get isFormValid() {

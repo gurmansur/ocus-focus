@@ -1,54 +1,59 @@
-<app-project-header (onBack)="navigateToHome()"></app-project-header>
+<div class="flex" style="height: 100%">
+  <!-- TODO: Colocar sidebar aqui -->
+  <div style="width: 100%">
+    <app-project-header (onBack)="navigateToHome()"></app-project-header>
 
-<div class="px-8 py-5">
-  <h2 class="text-3xl font-medium mb-5">
-    Ferramentas do <span class="text-violet-700 font-medium">ArcaTest</span>
-  </h2>
-  <div class="flex flex-col md:flex-row gap-x-8 items-stretch">
-    <app-clickable-card
-      title="Execução de Testes"
-      subtitle="Acompanhe e registre a execução dos testes"
-      (click)="navigateToTestExecutions()"
-      style="flex: 1"
-    >
-      <app-execution-icon
-        class="text-violet-700 font-black group-hover:text-white w-16 h-16"
-      ></app-execution-icon>
-    </app-clickable-card>
+    <div class="px-8 py-5">
+      <h2 class="text-3xl font-medium mb-5">
+        Ferramentas do <span class="text-violet-700 font-medium">ArcaTest</span>
+      </h2>
+      <div class="flex flex-col md:flex-row gap-x-8 items-stretch">
+        <app-clickable-card
+          title="Execução de Testes"
+          subtitle="Acompanhe e registre a execução dos testes"
+          (click)="navigateToTestExecutions()"
+          style="flex: 1"
+        >
+          <app-execution-icon
+            class="text-violet-700 font-black group-hover:text-white w-16 h-16"
+          ></app-execution-icon>
+        </app-clickable-card>
 
-    <app-clickable-card
-      title="Casos de Teste"
-      subtitle="Gerencie os casos de teste do projeto"
-      (click)="navigateToTestCases()"
-      style="flex: 1"
-    >
-      <app-test-case-icon
-        class="text-violet-700 font-black group-hover:text-white w-16 h-16"
-      ></app-test-case-icon>
-    </app-clickable-card>
-  </div>
+        <app-clickable-card
+          title="Casos de Teste"
+          subtitle="Gerencie os casos de teste do projeto"
+          (click)="navigateToTestCases()"
+          style="flex: 1"
+        >
+          <app-test-case-icon
+            class="text-violet-700 font-black group-hover:text-white w-16 h-16"
+          ></app-test-case-icon>
+        </app-clickable-card>
+      </div>
 
-  <div class="flex flex-col md:flex-row gap-x-8 items-stretch">
-    <app-clickable-card
-      title="Suites de Teste"
-      subtitle="Gerencie as suites de teste do projeto"
-      (click)="navigateToTestSuites()"
-      style="flex: 1"
-    >
-      <app-test-suite-icon
-        class="text-violet-700 font-black group-hover:text-white w-16 h-16"
-      ></app-test-suite-icon>
-    </app-clickable-card>
+      <div class="flex flex-col md:flex-row gap-x-8 items-stretch">
+        <app-clickable-card
+          title="Suites de Teste"
+          subtitle="Gerencie as suites de teste do projeto"
+          (click)="navigateToTestSuites()"
+          style="flex: 1"
+        >
+          <app-test-suite-icon
+            class="text-violet-700 font-black group-hover:text-white w-16 h-16"
+          ></app-test-suite-icon>
+        </app-clickable-card>
 
-    <app-clickable-card
-      title="Planos de Teste"
-      subtitle="Gerencie os planos de teste do projeto"
-      (click)="navigateToTestPlans()"
-      style="flex: 1"
-    >
-      <app-test-plan-icon
-        class="text-violet-700 font-black group-hover:text-white w-16 h-16"
-      ></app-test-plan-icon>
-    </app-clickable-card>
+        <app-clickable-card
+          title="Planos de Teste"
+          subtitle="Gerencie os planos de teste do projeto"
+          (click)="navigateToTestPlans()"
+          style="flex: 1"
+        >
+          <app-test-plan-icon
+            class="text-violet-700 font-black group-hover:text-white w-16 h-16"
+          ></app-test-plan-icon>
+        </app-clickable-card>
+      </div>
+    </div>
   </div>
 </div>

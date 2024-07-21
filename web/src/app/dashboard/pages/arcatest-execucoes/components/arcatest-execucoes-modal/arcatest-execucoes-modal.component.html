@@ -1,0 +1,63 @@
+<app-content-modal
+  (close)="onCancel()"
+  [open]="open"
+  [title]="'Executar Teste'"
+  (confirm)="onConfirm()"
+  confirmText="Confirmar"
+  [showCancel]="true"
+>
+  <div class="flex flex-col w-full">
+    <form [formGroup]="executarFormGroup" class="flex flex-col w-full">
+      <div class="relative w-full mr-1">
+        <label for="status" class="leading-7 text-sm text-gray-600"
+          >Status</label
+        >
+        <select
+          id="status"
+          name="status"
+          formControlName="status"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          <option value="" disabled selected>
+            Selecione o status da execução
+          </option>
+          <option value="Aprovado">Aprovado</option>
+          <option value="Reprovado">Reprovado</option>
+        </select>
+        @if (executarFormGroup.get('status').invalid &&
+        executarFormGroup.get('status').touched ) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            executarFormGroup.get("status").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      @if (isReprovado) {
+      <div class="relative w-full pl-1">
+        <label for="observacoes" class="leading-7 text-sm text-gray-600"
+          >Observações</label
+        >
+        <textarea
+          id="observacoes"
+          name="observacoes"
+          formControlName="observacoes"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
+        ></textarea>
+        @if (executarFormGroup.get('observacoes').invalid &&
+        executarFormGroup.get('observacoes').touched) {
+        <p class="text-red-500 text-xs italic">
+          {{
+            executarFormGroup.get("observacoes").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+      }
+    </form>
+  </div>
+</app-content-modal>

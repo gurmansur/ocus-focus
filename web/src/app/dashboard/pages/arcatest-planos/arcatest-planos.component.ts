@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { ContentModalComponent } from 'src/app/shared/content-modal/content-modal.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
@@ -26,6 +26,7 @@ import { PlanoDeTeste } from '../../models/planoDeTeste';
 })
 export class ArcatestPlanosComponent {
   projectId!: number;
+  legendPosition: LegendPosition = LegendPosition.Below;
   openCoverage: boolean = false;
   openDelete: boolean = false;
   planToDelete?: PlanoDeTeste;
@@ -33,6 +34,7 @@ export class ArcatestPlanosComponent {
     {
       id: 1,
       nome: 'Plano 1',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 1',
       status: 'Ativo',
       observacoes: 'Observações da Plano 1',
@@ -40,6 +42,7 @@ export class ArcatestPlanosComponent {
     {
       id: 2,
       nome: 'Plano 2',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 2',
       status: 'Ativo',
       observacoes: 'Observações da Plano 2',
@@ -47,58 +50,10 @@ export class ArcatestPlanosComponent {
     {
       id: 3,
       nome: 'Plano 3',
+      data: '2021-09-01',
       descricao: 'Descrição da Plano 3',
       status: 'Inativo',
       observacoes: 'Observações da Plano 3',
-    },
-    {
-      id: 4,
-      nome: 'Plano 4',
-      descricao: 'Descrição da Plano 4',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 4',
-    },
-    {
-      id: 5,
-      nome: 'Plano 5',
-      descricao: 'Descrição da Plano 5',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 5',
-    },
-    {
-      id: 6,
-      nome: 'Plano 6',
-      descricao: 'Descrição da Plano 6',
-      status: 'Inativo',
-      observacoes: 'Observações da Plano 6',
-    },
-    {
-      id: 7,
-      nome: 'Plano 7',
-      descricao: 'Descrição da Plano 7',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 7',
-    },
-    {
-      id: 8,
-      nome: 'Plano 8',
-      descricao: 'Descrição da Plano 8',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 8',
-    },
-    {
-      id: 9,
-      nome: 'Plano 9',
-      descricao: 'Descrição da Plano 9',
-      status: 'Inativo',
-      observacoes: 'Observações da Plano 9',
-    },
-    {
-      id: 10,
-      nome: 'Plano 10',
-      descricao: 'Descrição da Plano 10',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 10',
     },
   ];
 

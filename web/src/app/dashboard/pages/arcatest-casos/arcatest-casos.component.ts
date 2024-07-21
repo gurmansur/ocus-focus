@@ -1,13 +1,20 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { ContentModalComponent } from 'src/app/shared/content-modal/content-modal.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { TableComponent } from '../../../shared/table/table.component';
-import { CasoDeTeste } from '../../models/casoDeTeste';
+import {
+  CasoDeTeste,
+  ECategoria,
+  EComplexidade,
+  EPrioridade,
+  EStatus,
+  ETecnica,
+} from '../../models/casoDeTeste';
 
 @Component({
   selector: 'app-arcatest-casos',
@@ -26,6 +33,7 @@ import { CasoDeTeste } from '../../models/casoDeTeste';
 })
 export class ArcatestCasosComponent {
   projectId!: number;
+  legendPosition: LegendPosition = LegendPosition.Below;
   openCoverage: boolean = false;
   openDelete: boolean = false;
   testCaseToDelete?: CasoDeTeste;
@@ -35,10 +43,10 @@ export class ArcatestCasosComponent {
       id: 1,
       nome: 'Caso de Teste 1',
       descricao: 'Descrição do Caso de Teste 1',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
       suite: {
         id: 1,
         nome: 'Suite 1',
@@ -49,16 +57,23 @@ export class ArcatestCasosComponent {
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 1',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
-      passos: 'Passos do Caso de Teste 1',
+      entrada: 'Passos do Caso de Teste 1',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
+      },
     },
     {
       id: 2,
       nome: 'Caso de Teste 2',
       descricao: 'Descrição do Caso de Teste 2',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
       suite: {
         id: 1,
         nome: 'Suite 1',
@@ -69,67 +84,41 @@ export class ArcatestCasosComponent {
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 2',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
-      passos: 'Passos do Caso de Teste 2',
+      entrada: 'Passos do Caso de Teste 2',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
+      },
     },
     {
       id: 3,
       nome: 'Caso de Teste 3',
       descricao: 'Descrição do Caso de Teste 3',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
+      status: EStatus.ATIVO,
+      complexidade: EComplexidade.BAIXA,
+      prioridade: EPrioridade.BAIXA,
+      tecnica: ETecnica.FUNCIONAL,
       suite: {
-        id: 2,
-        nome: 'Suite 2',
-        descricao: 'Descrição da Suite 2',
+        id: 1,
+        nome: 'Suite 1',
+        descricao: 'Descrição da Suite 1',
         status: 'Ativo',
-        observacoes: 'Observações da Suite 2',
+        observacoes: 'Observações da Suite 1',
       },
       dataCriacao: new Date().toISOString().split('T')[0],
       observacoes: 'Observações do Caso de Teste 3',
       resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
-      passos: 'Passos do Caso de Teste 3',
-    },
-    {
-      id: 4,
-      nome: 'Caso de Teste 4',
-      descricao: 'Descrição do Caso de Teste 4',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: {
-        id: 2,
-        nome: 'Suite 2',
-        descricao: 'Descrição da Suite 2',
-        status: 'Ativo',
-        observacoes: 'Observações da Suite 2',
+      entrada: 'Passos do Caso de Teste 3',
+      categoria: ECategoria.MANUAL,
+      casoDeUso: {
+        id: 1,
+        nome: 'Caso de Uso 1',
+        descricao: 'Descrição do Caso de Uso 1',
+        complexidade: EComplexidade.BAIXA,
       },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 4',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 4',
-      passos: 'Passos do Caso de Teste 4',
-    },
-    {
-      id: 5,
-      nome: 'Caso de Teste 5',
-      descricao: 'Descrição do Caso de Teste 5',
-      status: 'Ativo',
-      complexidade: 'Baixa',
-      prioridade: 'Baixa',
-      tipo: 'Funcional',
-      suite: {
-        id: 3,
-        nome: 'Suite 3',
-        descricao: 'Descrição da Suite 3',
-        status: 'Inativo',
-        observacoes: 'Observações da Suite 3',
-      },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 5',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 5',
-      passos: 'Passos do Caso de Teste 5',
     },
   ];
 
@@ -200,6 +189,10 @@ export class ArcatestCasosComponent {
       ['/dashboard/projeto/', this.projectId, 'execucoes-teste'],
       { queryParams: { casoId: id } }
     );
+  }
+
+  navigateToUseCase(id: number) {
+    console.log('Navigating to use case', id);
   }
 
   openCoverageModal() {

@@ -52,41 +52,52 @@
   >
     <ngx-charts-pie-chart
       [results]="[
-      {
-        name: 'Passou',
-        value: 5,
-      },
-      {
-        name: 'Falhou',
-        value: 2,
-      },
-      {
-        name: 'Em Execução',
-        value: 1,
-      },
-    ]"
+  {
+    name: 'Passou',
+    value: 5,
+    extra: {
+      percentage: '50%',
+    },
+  },
+  {
+    name: 'Falhou',
+    value: 3,
+    extra: {
+      percentage: '30%',
+    },
+  },
+  {
+    name: 'Executando',
+    value: 2,
+    extra: {
+      percentage: '20%',
+    },
+  },
+]"
       [customColors]="[
-      {
-        name: 'Passou',
-        value: '#6B46C1',
-      },
-      {
-        name: 'Falhou',
-        value: '#A786DB',
-      },
-      {
-        name: 'Em Execução',
-        value: '#C2B3E5',
-      },
-    ]"
+  {
+    name: 'Passou',
+    value: '#6B46C1',
+  },
+  {
+    name: 'Falhou',
+    value: '#A786DB',
+  },
+  {
+    name: 'Executando',
+    value: '#C2B3E5',
+  },
+]"
       [labels]="true"
       [legend]="true"
+      [legendPosition]="legendPosition"
       [doughnut]="true"
       [explodeSlices]="false"
       [gradient]="false"
       [animations]="true"
       [legendTitle]="'Legenda'"
-      style="margin-bottom: -70px"
+      [margins]="[50, 20, 50, 20]"
+      style="padding-bottom: 50px"
     ></ngx-charts-pie-chart>
   </app-content-modal>
 </div>

@@ -37,9 +37,36 @@
             : item[attribute] || "N/A"
         }}
       </td>
-      } @if (hasDelete || hasView || hasEdit || hasAlert) {
+      } @if (hasDelete || hasView || hasEdit || hasAlert || hasUseCase ||
+      hasAlert || hasExecute) {
       <td class="flex p-3 justify-center h-full">
-        @if (hasUseCase) {
+        @if (hasExecute) {
+        <button
+          (click)="executeClicked(item.id)"
+          class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
+        >
+          <div class="flex items-center w-6 h-6 justify-center">
+            <svg
+              version="1.1"
+              id="Layer_1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 512 512"
+              enable-background="new 0 0 512 512"
+              xml:space="preserve"
+              class="w-4 h-4"
+              fill="#ffffff"
+            >
+              <path
+                d="M464.7,221.5L86.1,7.3C52.5-11.7,25,7.5,25,50v412c0,42.5,27.5,61.7,61.1,42.7l378.6-214.1
+            C498.2,271.5,498.2,240.5,464.7,221.5z"
+              ></path>
+            </svg>
+          </div>
+        </button>
+        } @if (hasUseCase) {
         <button
           (click)="useCaseClicked(item.id)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
