@@ -1,0 +1,59 @@
+<app-content-modal
+  (close)="onCancel()"
+  [open]="open"
+  [title]="'Configuração Geral das Sprints'"
+  (confirm)="onConfirm()"
+  confirmText="Confirmar"
+  [showCancel]="true"
+>
+  <div class="flex flex-col">
+    <form [formGroup]="configureFormGroup" class="flex flex-col mt-10">
+      <div class="gap-2 flex items-center">
+        <label for="tempo" class="w-1/2">Prazo das Sprints:</label>
+        <select
+          name="tempo"
+          id="tempo"
+          formControlName="tempo"
+          class="bg-slate-200 p-2 rounded-sm w-1/4 focus:ring-violet-400 focus:ring-2"
+        >
+          <option value="1">1 semana</option>
+          <option value="2">2 semanas</option>
+          <option value="3">3 semanas</option>
+          <option value="4">4 semanas</option>
+        </select>
+        @if (configureFormGroup.get('tempo').invalid &&
+        configureFormGroup.get('tempo').touched) {
+        <p class="text-red-500 text-xs font-semibold">
+          {{
+            configureFormGroup.get("tempo").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+
+      <div class="gap-2 flex items-center mt-2">
+        <label for="maximo" class="w-1/2"
+          >Valor máximo de horas por Sprint:</label
+        >
+        <input
+          id="maximo"
+          name="maximo"
+          type="text"
+          class="bg-slate-200 p-2 rounded-sm w-1/4"
+        />
+        @if (configureFormGroup.get('maximo').invalid &&
+        configureFormGroup.get('maximo').touched) {
+        <p class="text-red-500 text-xs font-semibold">
+          {{
+            configureFormGroup.get("maximo").errors.required
+              ? "Campo obrigatório"
+              : ""
+          }}
+        </p>
+        }
+      </div>
+    </form>
+  </div>
+</app-content-modal>

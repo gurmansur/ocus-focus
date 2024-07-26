@@ -23,6 +23,8 @@ import { EstimativaComponent } from './pages/estimativa/estimativa.component';
 import { FatoresAmbientaisComponent } from './pages/fatores-ambientais/fatores-ambientais.component';
 import { FatoresTecnicosComponent } from './pages/fatores-tecnicos/fatores-tecnicos.component';
 import { FlyingcardsKanbanComponent } from './pages/flyingcards-kanban/flyingcards-kanban.component';
+import { FlyingcardsSprintsComponent } from './pages/flyingcards-sprints/flyingcards-sprints.component';
+import { FlyingcardsUserstoryFormComponent } from './pages/flyingcards-userstory-form/flyingcards-userstory-form.component';
 import { InserirAtoresComponent } from './pages/inserir-atores/inserir-atores.component';
 import { InserirCasoComponent } from './pages/inserir-caso/inserir-caso.component';
 import { InserirCenariosComponent } from './pages/inserir-cenarios/inserir-cenarios.component';
@@ -347,6 +349,22 @@ const routes: Routes = [
         component: FlyingcardsKanbanComponent,
         canActivate: [colaboradorGuard],
       },
+
+      // Flying Cards - Criar User Story
+
+      {
+        path: 'projeto/:id/kanban/criar-us',
+        component: FlyingcardsUserstoryFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      // Flying Cards - Gerenciar Sprints
+
+      {
+        path: 'projeto/:id/kanban/sprints',
+        component: FlyingcardsSprintsComponent,
+        canActivate: [colaboradorGuard]
+      }
     ],
   },
 ];

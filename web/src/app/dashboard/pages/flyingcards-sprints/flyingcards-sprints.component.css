@@ -1,0 +1,8 @@
+.card-tasks {
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  background: white;
+  padding: 0.5rem;
+  margin: 0.5rem;
+}

@@ -1,0 +1,66 @@
+<app-project-header
+  (onBack)="navigateToKanban()"
+  voltar="Voltar ao Kanban"
+></app-project-header>
+
+<div class="flex justify-end my-2 mr-8 gap-4">
+  <app-button (onClick)="openConfigModal()">
+    <app-gear-icon></app-gear-icon>
+    Configurar Sprints
+  </app-button>
+
+  <app-button (onClick)="runSprint()">
+    <app-sprint-icon></app-sprint-icon>
+    Começar Sprint
+  </app-button>
+</div>
+
+<div class="w-auto h-fit flex flex-col items-center gap-10 font-sans">
+  <!-- Primeiro sprint -->
+  <div class="w-3/4 h-1/3 m-2">
+    <span class="font-bold">Primeiro Sprint</span> <br />
+    <span class="text-sm"
+      >{{ qtdDone }} US / {{ timeDone }} Horas de trabalho</span
+    >
+    <div
+      class="w-full h-full bg-slate-200 flex flex-col min-h-[2rem]"
+      cdkDropList
+      #todoList="cdkDropList"
+      [cdkDropListData]="done"
+      [cdkDropListConnectedTo]="[doneList]"
+      (cdkDropListDropped)="drop($event)"
+    >
+      @for (item of done; track item) {
+      <div class="card-tasks" cdkDrag>{{ item }}</div>
+      }
+    </div>
+  </div>
+
+  <!-- Backlog -->
+  <div class="w-3/4 h-1/3 m-2">
+    <span class="font-bold font-sans">Backlog</span> <br />
+
+    <span class="text-sm">
+      {{ qtdTodo }} US / {{ timeTodo }} Horas de trabalho
+    </span>
+    <div
+      class="w-full h-full bg-slate-200 flex flex-col min-h-[2rem]"
+      cdkDropList
+      #doneList="cdkDropList"
+      [cdkDropListData]="todo"
+      [cdkDropListConnectedTo]="[todoList]"
+      (cdkDropListDropped)="drop($event)"
+    >
+      @for (item of todo; track item) {
+      <div class="card-tasks" cdkDrag>{{ item }}</div>
+      }
+    </div>
+  </div>
+
+  <app-flyingcards-configure-modal
+    (cancel)="closeConfigModal()"
+    [open]="openConfigure"
+    (confirm)="openConfigModal()"
+  >
+  </app-flyingcards-configure-modal>
+</div>
