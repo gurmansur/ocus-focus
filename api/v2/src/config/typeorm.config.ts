@@ -22,11 +22,11 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   private getDevConfig(): TypeOrmModuleOptions {
     return {
       type: 'mysql',
-      host: this.configService.get<string>('DB_HOST'),
-      port: this.configService.get<number>('DB_PORT'),
-      username: this.configService.get<string>('DB_USERNAME'),
-      password: this.configService.get<string>('DB_PASSWORD'),
-      database: this.configService.get<string>('DB_DATABASE'),
+      host: this.configService.get<string>('localhost'),
+      port: this.configService.get<number>('3306'),
+      username: this.configService.get<string>('root'),
+      password: this.configService.get<string>('root'),
+      database: this.configService.get<string>('BANCO'),
       autoLoadEntities: true,
       synchronize: false,
     };
