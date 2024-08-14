@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "vivaxy.vscode-conventional-commits",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint"
+  ]
+}
