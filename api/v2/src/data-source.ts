@@ -5,7 +5,7 @@ export const appDataSource = new DataSource({
   host: 'localhost',
   port: 3306,
   username: 'root',
-  password: '',
+  password: 'root',
   database: 'prioreasy_estima',
   entities: ['**/*.entity*{.js,.ts}'],
   migrations: [__dirname + '/migrations/*{.js,.ts}'],

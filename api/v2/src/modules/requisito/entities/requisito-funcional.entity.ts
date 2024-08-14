@@ -1,15 +1,17 @@
 import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
 import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
+import { ResultadoRequisito } from 'src/modules/resultado-requisito/entities/resultado-requisito.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('requisitos_funcionais')
-export class Requisito {
+@Entity('REQUISITOS_FUNCIONAIS')
+export class RequisitoFuncional {
   @PrimaryGeneratedColumn({ type: 'int', name: 'REQ_ID' })
   id: number;
 
@@ -23,8 +25,15 @@ export class Requisito {
   numeroIdentificador: number;
 
   @ManyToOne(() => Projeto, (projeto) => projeto.requisitos)
+  @JoinColumn({ name: 'FK_PROJETOS_PRO_ID' })
   projeto: Projeto;
 
   @OneToMany(() => CasoUso, (casoUso) => casoUso.requisitoFuncional)
   casosDeUso: CasoUso[];
+
+  @OneToMany(
+    () => ResultadoRequisito,
+    (resultadoRequisito) => resultadoRequisito.requisitoFuncional,
+  )
+  resultados: ResultadoRequisito[];
 }

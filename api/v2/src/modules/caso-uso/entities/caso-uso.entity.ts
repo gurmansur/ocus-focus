@@ -1,15 +1,15 @@
 import { Cenario } from 'src/modules/cenarios/entities/cenario.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { Requisito } from 'src/modules/requisito/entities/requisito.entity';
+import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('casos_de_uso')
+@Entity('CASOS_DE_USO')
 export class CasoUso {
   @PrimaryGeneratedColumn({ type: 'int', name: 'CAS_ID' })
   id: number;
@@ -23,19 +23,18 @@ export class CasoUso {
   @Column('enum', {
     name: 'CAS_COMPLEXIDADE',
     enum: ['SIMPLES', 'MEDIO', 'COMPLEXO'],
-    default: () => "'SIMPLES'",
+    default: 'SIMPLES',
   })
   complexidade: 'SIMPLES' | 'MEDIO' | 'COMPLEXO';
 
   @ManyToOne(
-    () => Requisito,
-    (requisitoFuncional) => requisitoFuncional.casosDeUso,
+    () => RequisitoFuncional,
+    (requisitoFuncional: RequisitoFuncional) => requisitoFuncional.casosDeUso,
   )
-  requisitoFuncional: Requisito;
-
-  @ManyToOne(() => Projeto, (projeto) => projeto.casosDeUso)
-  projeto: Projeto;
+  @JoinColumn({ name: 'FK_REQUISITOS_FUNCIONAIS_REQ_ID' })
+  requisitoFuncional: RequisitoFuncional;
 
   @OneToMany(() => Cenario, (cenario) => cenario.casoUso)
+  @JoinColumn({ name: 'FK_CASOS_DE_USO_CAS_ID' })
   cenarios: Cenario[];
 }

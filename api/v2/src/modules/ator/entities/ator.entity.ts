@@ -3,27 +3,29 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-@Entity('atores')
+@Entity('ATORES')
 export class Ator extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'ato_id' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'ATO_ID' })
   id: number;
 
-  @Column('varchar', { name: 'ato_nome', length: 255 })
+  @Column('varchar', { name: 'ATO_NOME', length: 255 })
   nome: string;
 
   @Column('enum', {
-    name: 'ato_complexidade',
+    name: 'ATO_COMPLEXIDADE',
     enum: ['SIMPLES', 'MEDIO', 'COMPLEXO'],
-    default: () => "'SIMPLES'",
+    default: 'SIMPLES',
   })
   complexidade: 'SIMPLES' | 'MEDIO' | 'COMPLEXO';
 
-  @Column('varchar', { name: 'ato_descricao', length: 255 })
+  @Column('varchar', { name: 'ATO_DESCRICAO', length: 255 })
   descricao: string;
 
   @ManyToOne(() => Projeto, (projeto) => projeto.atores)
+  @JoinColumn({ name: 'FK_PROJETOS_PRO_ID' })
   projeto: Projeto;
 }

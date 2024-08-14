@@ -1,10 +1,14 @@
 import { Ator } from 'src/modules/ator/entities/ator.entity';
-import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
+import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
+import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
 import { Estimativa } from 'src/modules/estimativa/entities/estimativa.entity';
-import { Requisito } from 'src/modules/requisito/entities/requisito.entity';
+import { FatorAmbientalProjeto } from 'src/modules/fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
+import { FatorTecnicoProjeto } from 'src/modules/fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
+import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
+import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('projetos')
+@Entity('PROJETOS')
 export class Projeto {
   @PrimaryGeneratedColumn({ type: 'int', name: 'PRO_ID' })
   id: number;
@@ -27,7 +31,7 @@ export class Projeto {
   @Column('enum', {
     name: 'PRO_STATUS',
     enum: ['EM ANDAMENTO', 'CONCLUIDO', 'CANCELADO'],
-    default: () => "'EM ANDAMENTO'",
+    default: 'EM ANDAMENTO',
   })
   status: 'EM ANDAMENTO' | 'CONCLUIDO' | 'CANCELADO';
 
@@ -40,12 +44,27 @@ export class Projeto {
   @OneToMany(() => Ator, (ator) => ator.projeto)
   atores: Ator[];
 
-  @OneToMany(() => CasoUso, (casoUso) => casoUso.projeto)
-  casosDeUso: CasoUso[];
-
-  @OneToMany(() => Requisito, (requisito) => requisito.projeto)
-  requisitos: Requisito[];
+  @OneToMany(() => RequisitoFuncional, (requisito) => requisito.projeto)
+  requisitos: RequisitoFuncional[];
 
   @OneToMany(() => Estimativa, (estimativa) => estimativa.projeto)
   estimativas: Estimativa[];
+
+  @OneToMany(() => Stakeholder, (stakeholder) => stakeholder.projeto)
+  stakeholders: Stakeholder[];
+
+  @OneToMany(
+    () => FatorTecnicoProjeto,
+    (fatorTecnicoProjeto) => fatorTecnicoProjeto.projeto,
+  )
+  fatoresTecnicos: FatorTecnicoProjeto[];
+
+  @OneToMany(
+    () => FatorAmbientalProjeto,
+    (fatorAmbientalProjeto) => fatorAmbientalProjeto.projeto,
+  )
+  fatoresAmbientais: FatorAmbientalProjeto[];
+
+  @OneToMany(() => ColaboradorProjeto, (colaborador) => colaborador.projeto)
+  colaboradores: Colaborador[]
 }

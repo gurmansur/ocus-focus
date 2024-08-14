@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { FatorAmbientalProjeto } from 'src/modules/fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('fatores_ambientais')
-export class FatoresAmbientais {
+@Entity('FATORES_AMBIENTAIS')
+export class FatorAmbiental {
   @PrimaryGeneratedColumn({ type: 'int', name: 'AMB_ID' })
   id: number;
 
@@ -10,4 +11,10 @@ export class FatoresAmbientais {
 
   @Column('double', { name: 'AMB_PESO', precision: 4, scale: 2 })
   peso: number;
+
+  @OneToMany(
+    () => FatorAmbientalProjeto,
+    (fatorAmbientalProjeto) => fatorAmbientalProjeto.fatorAmbiental,
+  )
+  projetos: FatorAmbientalProjeto[];
 }

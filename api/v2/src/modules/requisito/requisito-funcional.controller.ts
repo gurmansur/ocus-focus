@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RequisitoService } from './requisito.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateRequisitoDto } from './dto/create-requisito.dto';
 import { UpdateRequisitoDto } from './dto/update-requisito.dto';
+import { RequisitoService } from './requisito-funcional.service';
 
 @Controller('requisito')
 export class RequisitoController {
@@ -23,7 +31,10 @@ export class RequisitoController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRequisitoDto: UpdateRequisitoDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRequisitoDto: UpdateRequisitoDto,
+  ) {
     return this.requisitoService.update(+id, updateRequisitoDto);
   }
 

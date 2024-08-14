@@ -1,7 +1,7 @@
 import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('estimativas_esforcos')
+@Entity('ESTIMATIVAS_ESFORCOS')
 export class Estimativa {
   @PrimaryGeneratedColumn({ type: 'int', name: 'EST_ID' })
   id: number;

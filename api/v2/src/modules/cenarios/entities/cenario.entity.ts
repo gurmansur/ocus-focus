@@ -1,7 +1,7 @@
 import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('cenarios')
+@Entity('CENARIOS')
 export class Cenario {
   @PrimaryGeneratedColumn({ type: 'int', name: 'CEN_ID' })
   id: number;
@@ -15,10 +15,11 @@ export class Cenario {
   @Column('enum', {
     name: 'CEN_TIPO',
     enum: ['PRINCIPAL', 'ALTERNATIVO'],
-    default: () => "'PRINCIPAL'",
+    default: 'PRINCIPAL',
   })
   tipo: 'PRINCIPAL' | 'ALTERNATIVO';
 
   @ManyToOne(() => CasoUso, (casoUso) => casoUso.cenarios)
+  @JoinColumn({ name: 'FK_CASOS_DE_USO_CAS_ID' })
   casoUso: CasoUso;
 }

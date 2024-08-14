@@ -5,7 +5,7 @@ import { UpdateFatoresTecnicoDto } from './dto/update-fatores-tecnico.dto';
 @Injectable()
 export class FatoresTecnicosService {
   create(createFatoresTecnicoDto: CreateFatoresTecnicoDto) {
-    return 'This action adds a new fatoresTecnico';
+    return 'This action adds a new FatorTecnico';
   }
 
   findAll() {
@@ -13,14 +13,14 @@ export class FatoresTecnicosService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} fatoresTecnico`;
+    return `This action returns a #${id} FatorTecnico`;
   }
 
   update(id: number, updateFatoresTecnicoDto: UpdateFatoresTecnicoDto) {
-    return `This action updates a #${id} fatoresTecnico`;
+    return `This action updates a #${id} FatorTecnico`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} fatoresTecnico`;
+    return `This action removes a #${id} FatorTecnico`;
   }
 }

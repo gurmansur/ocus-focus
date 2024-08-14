@@ -1,24 +1,56 @@
-import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
+import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity('colaboradores')
+@Entity('COLABORADORES')
 export class Colaborador {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'CEN_ID' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'COL_ID' })
   id: number;
 
-  @Column('varchar', { name: 'CEN_NOME', length: 50 })
+  @Column('varchar', { name: 'COL_NOME', length: 100 })
   nome: string;
 
-  @Column('varchar', { name: 'CEN_DESCRICAO', length: 255 })
-  descricao: string;
+  @Column('varchar', { name: 'COL_EMAIL', length: 255 })
+  email: string;
+
+  @Column('varchar', { name: 'COL_SENHA', length: 100 })
+  senha: string;
+
+  @Column('varchar', { name: 'COL_EMPRESA', length: 30 })
+  empresa: string;
 
   @Column('enum', {
-    name: 'CEN_TIPO',
-    enum: ['PRINCIPAL', 'ALTERNATIVO'],
-    default: () => "'PRINCIPAL'",
+    name: 'COL_CARGO',
+    enum: [
+      'Gerente de Projeto',
+      'Analista de Sistemas',
+      'Desenvolvedor',
+      'Product Owner',
+      'Scrum Master',
+    ],
+    default: 'Desenvolvedor',
   })
-  tipo: 'PRINCIPAL' | 'ALTERNATIVO';
+  cargo:
+    | 'Gerente de Projeto'
+    | 'Analista de Sistemas'
+    | 'Desenvolvedor'
+    | 'Product Owner'
+    | 'Scrum Master';
 
-  @ManyToOne(() => CasoUso, (casoUso) => casoUso.cenarios)
-  casoUso: CasoUso;
+  @ManyToOne(() => Usuario, (usuario) => usuario.colaboradores)
+  @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
+  usuario: Usuario;
+
+  @OneToMany(
+    () => ColaboradorProjeto,
+    (colaboradorProjeto) => colaboradorProjeto.colaborador,
+  )
+  projetos: ColaboradorProjeto[];
 }

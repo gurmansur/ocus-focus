@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { FatorTecnicoProjeto } from 'src/modules/fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('fatores_tecnicos')
-export class FatoresTecnico {
+@Entity('FATORES_TECNICOS')
+export class FatorTecnico {
   @PrimaryGeneratedColumn({ type: 'int', name: 'TEC_ID' })
   id: number;
 
@@ -10,4 +11,10 @@ export class FatoresTecnico {
 
   @Column('double', { name: 'TEC_PESO', precision: 4, scale: 2 })
   peso: number;
+
+  @OneToMany(
+    () => FatorTecnicoProjeto,
+    (fatorTecnicoProjeto) => fatorTecnicoProjeto.fatorTecnico,
+  )
+  projetos: FatorTecnicoProjeto[];
 }

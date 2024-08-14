@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RequisitoController } from './requisito.controller';
-import { RequisitoService } from './requisito.service';
+import { RequisitoController } from './requisito-funcional.controller';
+import { RequisitoService } from './requisito-funcional.service';
 
 describe('RequisitoController', () => {
   let controller: RequisitoController;

@@ -15,9 +15,15 @@ import { FatoresAmbientaisModule } from './modules/fatores-ambientais/fatores-am
 import { FatoresTecnicosModule } from './modules/fatores-tecnicos/fatores-tecnicos.module';
 import { PriorizacaoModule } from './modules/priorizacao/priorizacao.module';
 import { ProjetoModule } from './modules/projeto/projeto.module';
-import { RequisitoModule } from './modules/requisito/requisito.module';
+import { RequisitoModule } from './modules/requisito/requisito-funcional.module';
 import { StakeholderModule } from './modules/stakeholder/stakeholder.module';
 import { TypeOrmConfigService } from './config/typeorm.config';
+import { UsuarioModule } from './modules/usuario/usuario.module';
+import { FatorTecnicoProjetoModule } from './modules/fator-tecnico-projeto/fator-tecnico-projeto.module';
+import { FatorAmbientalProjetoModule } from './modules/fator-ambiental-projeto/fator-ambiental-projeto.module';
+import { ColaboradorProjetoModule } from './modules/colaborador-projeto/colaborador-projeto.module';
+import { StatusPriorizacaoModule } from './modules/status-priorizacao/status-priorizacao.module';
+import { ResultadoRequisitoModule } from './modules/resultado-requisito/resultado-requisito.module';
 
 @Module({
   imports: [
@@ -45,6 +51,12 @@ import { TypeOrmConfigService } from './config/typeorm.config';
     ProjetoModule,
     RequisitoModule,
     StakeholderModule,
+    UsuarioModule,
+    FatorTecnicoProjetoModule,
+    FatorAmbientalProjetoModule,
+    ColaboradorProjetoModule,
+    StatusPriorizacaoModule,
+    ResultadoRequisitoModule,
   ],
   controllers: [AppController],
   providers: [
