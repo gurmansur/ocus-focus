@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateAtorDto } from './dto/create-ator.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
+import { Ator } from './entities/ator.entity';
 
 @Injectable()
 export class AtorService {
-  create(createAtorDto: CreateAtorDto) {
-    return 'This action adds a new ator';
+  constructor(
+    @InjectRepository(Ator) private readonly atorRepository: Repository<Ator>,
+  ) {}
+
+  async create(createAtorDto: CreateAtorDto) {
+    const ator = this.atorRepository.create(createAtorDto);
+    return await this.atorRepository.save(ator);
   }
 
-  findAll() {
-    return `This action returns all ator`;
+  async findAll() {
+    return await this.atorRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ator`;
+  async findOne(id: number) {
+    return await this.atorRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateAtorDto: UpdateAtorDto) {
-    return `This action updates a #${id} ator`;
+    return this.atorRepository.update(id, updateAtorDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} ator`;
+    return this.atorRepository.delete(id);
   }
 }

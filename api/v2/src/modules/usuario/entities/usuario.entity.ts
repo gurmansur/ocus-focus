@@ -3,7 +3,16 @@ import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity
 import { Priorizacao } from 'src/modules/priorizacao/entities/priorizacao.entity';
 import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
 import { StatusPriorizacao } from 'src/modules/status-priorizacao/entities/status-priorizacao.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  AfterInsert,
+  AfterLoad,
+  AfterUpdate,
+  BeforeRemove,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('USUARIOS')
 export class Usuario {
@@ -30,4 +39,24 @@ export class Usuario {
     (statusPriorizacao) => statusPriorizacao.usuario,
   )
   statusPriorizacao: StatusPriorizacao[];
+
+  @AfterInsert()
+  async afterInsert() {
+    console.log('Inserted usuario with id:', this.id);
+  }
+
+  @AfterUpdate()
+  async afterUpdate() {
+    console.log('Updated usuario with id:', this.id);
+  }
+
+  @BeforeRemove()
+  async beforeRemove() {
+    console.log('Removing usuario with id:', this.id);
+  }
+
+  @AfterLoad()
+  async afterLoad() {
+    console.log('Loaded usuario with id:', this.id);
+  }
 }

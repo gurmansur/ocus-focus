@@ -12,7 +12,7 @@ export class Ator extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int', name: 'ATO_ID' })
   id: number;
 
-  @Column('varchar', { name: 'ATO_NOME', length: 255 })
+  @Column('varchar', { name: 'ATO_NOME', length: 30 })
   nome: string;
 
   @Column('enum', {
