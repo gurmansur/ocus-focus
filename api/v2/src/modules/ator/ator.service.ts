@@ -16,8 +16,16 @@ export class AtorService {
     return await this.atorRepository.save(ator);
   }
 
-  async findAll() {
-    return await this.atorRepository.find();
+  async findAll(paginated = false, page = 1) {
+    if (paginated) {
+      const take = 10;
+      const skip = (page - 1) * take;
+      return await this.atorRepository.findAndCount({
+        take,
+        skip,
+      });
+    }
+    return await this.atorRepository.findAndCount();
   }
 
   async findOne(id: number) {

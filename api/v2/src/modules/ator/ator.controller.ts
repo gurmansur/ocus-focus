@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { AtorService } from './ator.service';
 import { CreateAtorDto } from './dto/create-ator.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
@@ -13,8 +22,10 @@ export class AtorController {
   }
 
   @Get()
-  findAll() {
-    return this.atorService.findAll();
+  findAll(
+    @Query() { paginated, page }: { paginated?: boolean; page?: number },
+  ) {
+    return this.atorService.findAll(paginated, page);
   }
 
   @Get(':id')

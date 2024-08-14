@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -21,8 +22,10 @@ export class UsuarioController {
   }
 
   @Get()
-  findAll() {
-    return this.usuarioService.findAll();
+  findAll(
+    @Query() { paginated, page }: { paginated?: boolean; page?: number },
+  ) {
+    return this.usuarioService.findAll(paginated, page);
   }
 
   @Get(':id')

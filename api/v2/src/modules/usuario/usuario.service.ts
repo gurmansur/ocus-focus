@@ -17,8 +17,16 @@ export class UsuarioService {
     return await this.usuarioRepository.save(usuario);
   }
 
-  async findAll() {
-    return await this.usuarioRepository.find();
+  async findAll(paginated = false, page = 1) {
+    if (paginated) {
+      const take = 10;
+      const skip = (page - 1) * take;
+      return await this.usuarioRepository.findAndCount({
+        take,
+        skip,
+      });
+    }
+    return await this.usuarioRepository.findAndCount();
   }
 
   async findOne(id: number): Promise<Usuario> {
