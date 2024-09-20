@@ -35,10 +35,20 @@ export class Projeto {
   })
   status: 'EM ANDAMENTO' | 'CONCLUIDO' | 'CANCELADO';
 
-  @Column('double', { name: 'PRO_RESTFACTOR', precision: 4, scale: 2 })
+  @Column('double', {
+    name: 'PRO_RESTFACTOR',
+    precision: 4,
+    scale: 2,
+    nullable: true,
+  })
   restFactor: number;
 
-  @Column('double', { name: 'PRO_RESEFACTOR', precision: 4, scale: 2 })
+  @Column('double', {
+    name: 'PRO_RESEFACTOR',
+    precision: 4,
+    scale: 2,
+    nullable: true,
+  })
   reseFactor: number;
 
   @OneToMany(() => Ator, (ator) => ator.projeto)
@@ -66,5 +76,5 @@ export class Projeto {
   fatoresAmbientais: FatorAmbientalProjeto[];
 
   @OneToMany(() => ColaboradorProjeto, (colaborador) => colaborador.projeto)
-  colaboradores: Colaborador[]
+  colaboradores: Colaborador[];
 }
