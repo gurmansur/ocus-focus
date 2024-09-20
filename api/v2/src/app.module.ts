@@ -21,8 +21,10 @@ import { PriorizacaoModule } from './modules/priorizacao/priorizacao.module';
 import { ProjetoModule } from './modules/projeto/projeto.module';
 import { RequisitoModule } from './modules/requisito/requisito-funcional.module';
 import { ResultadoRequisitoModule } from './modules/resultado-requisito/resultado-requisito.module';
+import { SprintModule } from './modules/sprint/sprint.module';
 import { StakeholderModule } from './modules/stakeholder/stakeholder.module';
 import { StatusPriorizacaoModule } from './modules/status-priorizacao/status-priorizacao.module';
+import { UserStoryModule } from './modules/user-story/user-story.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
 
 @Module({
@@ -57,6 +59,8 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     ColaboradorProjetoModule,
     StatusPriorizacaoModule,
     ResultadoRequisitoModule,
+    SprintModule,
+    UserStoryModule,
   ],
   controllers: [AppController],
   providers: [
