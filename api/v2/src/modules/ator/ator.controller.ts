@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
   Query,
@@ -12,11 +11,11 @@ import { AtorService } from './ator.service';
 import { CreateAtorDto } from './dto/create-ator.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
 
-@Controller('ator')
+@Controller('atores')
 export class AtorController {
   constructor(private readonly atorService: AtorService) {}
 
-  @Post()
+  @Post('new')
   create(@Body() createAtorDto: CreateAtorDto) {
     return this.atorService.create(createAtorDto);
   }
@@ -28,18 +27,48 @@ export class AtorController {
     return this.atorService.findAll(paginated, page);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get('findById')
+  findOne(@Query('id') id: string) {
     return this.atorService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAtorDto: UpdateAtorDto) {
-    return this.atorService.update(+id, updateAtorDto);
+  @Get('findByNome')
+  findByNome(@Query('nome') nome: string) {
+    return this.atorService.findByNome(nome);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  // ? Atores recebe o ID do projeto ?????????????
+  @Get('metrics/total')
+  getTotal(@Query('atores') atores: number) {
+    return this.atorService.getMetrics(atores);
+  }
+
+  @Get('metrics/simples')
+  getTotalSimples(@Query('atores') atores: number) {
+    return this.atorService.getMetrics(atores, 'SIMPLES');
+  }
+
+  @Get('metrics/medios')
+  getTotalMedio(@Query('atores') atores: number) {
+    return this.atorService.getMetrics(atores, 'MEDIO');
+  }
+
+  @Get('metrics/complexos')
+  getTotalComplexo(@Query('atores') atores: number) {
+    return this.atorService.getMetrics(atores, 'COMPLEXO');
+  }
+
+  @Patch('update')
+  update(
+    @Query('id') id: string,
+    @Query('projeto') projectId: string,
+    @Body() updateAtorDto: UpdateAtorDto,
+  ) {
+    return this.atorService.update(+id, +projectId, updateAtorDto);
+  }
+
+  @Delete('delete')
+  remove(@Query('id') id: string) {
     return this.atorService.remove(+id);
   }
 }

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ProjetoService } from '../projeto/projeto.service';
 import { CreateAtorDto } from './dto/create-ator.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
 import { Ator } from './entities/ator.entity';
@@ -9,6 +10,7 @@ import { Ator } from './entities/ator.entity';
 export class AtorService {
   constructor(
     @InjectRepository(Ator) private readonly atorRepository: Repository<Ator>,
+    @Inject() private readonly projetoService: ProjetoService,
   ) {}
 
   async create(createAtorDto: CreateAtorDto) {
@@ -32,7 +34,21 @@ export class AtorService {
     return await this.atorRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateAtorDto: UpdateAtorDto) {
+  async findByNome(nome: string) {
+    return await this.atorRepository.find({ where: { nome } });
+  }
+
+  getMetrics(projectId: number, option?: 'SIMPLES' | 'MEDIO' | 'COMPLEXO') {
+    return this.atorRepository.count({
+      where: { projeto: { id: projectId }, complexidade: option },
+    });
+  }
+
+  async update(id: number, projectId: number, updateAtorDto: UpdateAtorDto) {
+    const projeto = await this.projetoService.findOne(projectId);
+    if (!projeto) return 'Projeto não encontrado';
+    updateAtorDto.projeto = projeto;
+
     return this.atorRepository.update(id, updateAtorDto);
   }
 
