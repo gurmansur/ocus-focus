@@ -1,6 +1,5 @@
 import { Ator } from 'src/modules/ator/entities/ator.entity';
 import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
-import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
 import { Estimativa } from 'src/modules/estimativa/entities/estimativa.entity';
 import { FatorAmbientalProjeto } from 'src/modules/fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 import { FatorTecnicoProjeto } from 'src/modules/fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
@@ -76,5 +75,5 @@ export class Projeto {
   fatoresAmbientais: FatorAmbientalProjeto[];
 
   @OneToMany(() => ColaboradorProjeto, (colaborador) => colaborador.projeto)
-  colaboradores: Colaborador[];
+  colaboradores: ColaboradorProjeto[];
 }

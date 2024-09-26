@@ -7,6 +7,7 @@ import { Colaborador } from './entities/colaborador.entity';
 @Module({
   controllers: [ColaboradorController],
   providers: [ColaboradorService],
+  exports: [ColaboradorService],
   imports: [TypeOrmModule.forFeature([Colaborador])],
 })
 export class ColaboradorModule {}

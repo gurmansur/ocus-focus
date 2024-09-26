@@ -7,6 +7,7 @@ import { StakeholderService } from './stakeholder.service';
 @Module({
   controllers: [StakeholderController],
   providers: [StakeholderService],
+  exports: [StakeholderService],
   imports: [TypeOrmModule.forFeature([Stakeholder])],
 })
 export class StakeholderModule {}
