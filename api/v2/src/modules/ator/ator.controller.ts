@@ -19,15 +19,20 @@ export class AtorController {
   constructor(private readonly atorService: AtorService) {}
 
   @Post('new')
-  create(@Body() createAtorDto: CreateAtorDto) {
-    return this.atorService.create(createAtorDto);
+  create(
+    @Body() createAtorDto: CreateAtorDto,
+    @Query('projeto') projetoId: string,
+  ) {
+    return this.atorService.create(createAtorDto, +projetoId);
   }
 
   @Get()
   findAll(
-    @Query() { paginated, page }: { paginated?: boolean; page?: number },
+    @Query('projeto') projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
-    return this.atorService.findAll(paginated, page);
+    return this.atorService.findAll(projetoId, page, pageSize);
   }
 
   @Get('findById')
@@ -36,8 +41,13 @@ export class AtorController {
   }
 
   @Get('findByNome')
-  findByNome(@Query('nome') nome: string) {
-    return this.atorService.findByNome(nome);
+  findByNome(
+    @Query('nome') nome: string,
+    @Query('projeto') projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.atorService.findByNome(nome, projetoId, page, pageSize);
   }
 
   // ? Atores recebe o ID do projeto ?????????????
@@ -63,7 +73,7 @@ export class AtorController {
 
   @Patch('update')
   update(
-    @Query('id') id: string,
+    @Query('atores') id: string,
     @Query('projeto') projectId: string,
     @Body() updateAtorDto: UpdateAtorDto,
   ) {
@@ -71,7 +81,7 @@ export class AtorController {
   }
 
   @Delete('delete')
-  remove(@Query('id') id: string) {
+  remove(@Query('atores') id: number) {
     return this.atorService.remove(+id);
   }
 }

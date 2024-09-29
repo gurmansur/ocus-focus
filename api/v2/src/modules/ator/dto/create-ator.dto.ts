@@ -1,11 +1,4 @@
-import {
-  IsEnum,
-  IsObject,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
+import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateAtorDto {
   @IsString()
@@ -20,7 +13,4 @@ export class CreateAtorDto {
   @MinLength(5)
   @MaxLength(255)
   descricao: string;
-
-  @IsObject()
-  projeto: Projeto;
 }
