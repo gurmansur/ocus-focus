@@ -14,35 +14,40 @@ import { UpdateStakeholderDto } from './dto/update-stakeholder.dto';
 import { StakeholderService } from './stakeholder.service';
 
 @UseGuards(AuthGuard)
-@Controller('stakeholder')
+@Controller()
 export class StakeholderController {
   constructor(private readonly stakeholderService: StakeholderService) {}
 
-  @Post()
+  @Post('create-stakeholder')
   create(@Body() createStakeholderDto: CreateStakeholderDto) {
     return this.stakeholderService.create(createStakeholderDto);
   }
 
-  @Get()
-  findAll() {
+  @Get('stakeholders/findByProjeto')
+  findByProjeto() {
     return this.stakeholderService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.stakeholderService.findOne(+id);
+  @Get('stakeholders/findByNome')
+  findByNome() {
+    return this.stakeholderService.findAll();
   }
 
-  @Patch(':id')
+  @Get('stakeholders/verifyParticipation')
+  verifyParticipation() {
+    return this.stakeholderService.findAll();
+  }
+
+  @Delete('stakeholders/delete')
+  remove(@Param('id') id: string) {
+    return this.stakeholderService.remove(+id);
+  }
+
+  @Patch('stakeholders/alert')
   update(
     @Param('id') id: string,
     @Body() updateStakeholderDto: UpdateStakeholderDto,
   ) {
     return this.stakeholderService.update(+id, updateStakeholderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.stakeholderService.remove(+id);
   }
 }

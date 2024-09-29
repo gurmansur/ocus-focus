@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignInDto } from './dto/sign-in.dto';
+import { SignInColaboradorDto } from './dto/sign-in-colaborador.dto';
+import { SignInStakeholderDto } from './dto/sign-in-stakeholder.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { UserTokenDto } from './dto/user-token.dto';
 
@@ -15,12 +16,14 @@ export class AuthController {
 
   @HttpCode(200)
   @Post('/signin-colaborador')
-  signInColaborador(@Body() signInDto: SignInDto): Promise<UserTokenDto> {
+  signInColaborador(
+    @Body() signInDto: SignInColaboradorDto,
+  ): Promise<UserTokenDto> {
     return this.authService.signInColaborador(signInDto);
   }
 
   @Post('/signin-stakeholder')
-  signInStakeholder(@Body() signInDto: SignInDto) {
+  signInStakeholder(@Body() signInDto: SignInStakeholderDto) {
     return this.authService.signInStakeholder(signInDto);
   }
 

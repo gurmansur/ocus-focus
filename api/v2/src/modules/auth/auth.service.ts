@@ -6,7 +6,8 @@ import * as bcrypt from 'bcrypt';
 import { ColaboradorService } from '../colaborador/colaborador.service';
 import { StakeholderService } from '../stakeholder/stakeholder.service';
 import { AuthMapper } from './auth.mapper';
-import { SignInDto } from './dto/sign-in.dto';
+import { SignInColaboradorDto } from './dto/sign-in-colaborador.dto';
+import { SignInStakeholderDto } from './dto/sign-in-stakeholder.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 // const scrypt = promisify(_scrypt);
 
@@ -31,7 +32,7 @@ export class AuthService {
     );
   }
 
-  async signInColaborador(signInDto: SignInDto) {
+  async signInColaborador(signInDto: SignInColaboradorDto) {
     const user = await this.colaboradorService.findByEmail(signInDto.email);
     if (!user) {
       throw new BadRequestException('Usuário não encontrado!');
@@ -55,8 +56,8 @@ export class AuthService {
     }
   }
 
-  async signInStakeholder(signInDto: SignInDto) {
-    const user = await this.stakeholderService.findByEmail(signInDto.email);
+  async signInStakeholder(signInDto: SignInStakeholderDto) {
+    const user = await this.stakeholderService.findByChave(signInDto.chave);
     if (!user) {
       throw new BadRequestException('Usuário não encontrado!');
     }

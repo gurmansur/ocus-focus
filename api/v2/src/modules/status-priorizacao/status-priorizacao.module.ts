@@ -8,5 +8,6 @@ import { StatusPriorizacaoService } from './status-priorizacao.service';
   controllers: [StatusPriorizacaoController],
   providers: [StatusPriorizacaoService],
   imports: [TypeOrmModule.forFeature([StatusPriorizacao])],
+  exports: [StatusPriorizacaoService],
 })
 export class StatusPriorizacaoModule {}

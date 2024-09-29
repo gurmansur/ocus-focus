@@ -8,7 +8,7 @@ import {
   AfterLoad,
   AfterUpdate,
   BeforeRemove,
-  Column,
+  CreateDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -19,7 +19,7 @@ export class Usuario {
   @PrimaryGeneratedColumn({ type: 'int', name: 'USU_ID' })
   id: number;
 
-  @Column('date', { name: 'USU_DATA_CADASTRO' })
+  @CreateDateColumn({ type: 'timestamp', name: 'USU_DATA_CADASTRO' })
   dataCadastro: Date;
 
   @OneToMany(() => Colaborador, (colaborador) => colaborador.usuario)

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { ColaboradorProjetoService } from '../colaborador-projeto/colaborador-projeto.service';
 import { ColaboradorService } from '../colaborador/colaborador.service';
+import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { Projeto } from './entities/projeto.entity';
@@ -85,7 +86,7 @@ export class ProjetoService {
             previsaoFim: new Date(item.previsaoFim).toLocaleDateString('pt-BR'),
             status: item.status,
             admin: item.colaboradores.find(
-              (colaborador) => colaborador.administrador,
+              (colaborador) => colaborador.colaborador.id === colaboradorId,
             ).administrador,
           };
         }),
@@ -112,9 +113,9 @@ export class ProjetoService {
         dataInicio: new Date(item.dataInicio).toLocaleDateString('pt-BR'),
         previsaoFim: new Date(item.previsaoFim).toLocaleDateString('pt-BR'),
         status: item.status,
-        admin: item.colaboradores.flatMap(
+        admin: item.colaboradores.find(
           (colaborador) => colaborador.administrador,
-        ),
+        ).administrador,
       };
     });
   }
@@ -169,6 +170,10 @@ export class ProjetoService {
       where: { id, colaboradores: { colaborador: { id: colaboradorId } } },
       relations: ['colaboradores', 'colaboradores.colaborador'],
     });
+
+    if (!item) {
+      return null;
+    }
 
     return {
       id: item.id,
@@ -318,7 +323,18 @@ export class ProjetoService {
     });
   }
 
-  removeColaborador(projetoId: number, colaboradorId: number) {
+  removeColaborador(
+    projetoId: number,
+    colaboradorId: number,
+    user: ColaboradorDto,
+  ) {
+    console.log(user);
+    console.log(colaboradorId);
+
+    if (user.id === colaboradorId) {
+      throw new Error('Você não pode remover a si mesmo');
+    }
+
     return this.colaboradorProjetoService.removeByProjetoAndColaborador(
       projetoId,
       colaboradorId,

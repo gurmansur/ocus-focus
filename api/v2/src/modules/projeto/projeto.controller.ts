@@ -9,7 +9,9 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ColaboradorAtual } from 'src/decorators/colaborador-atual.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { ProjetoService } from './projeto.service';
@@ -146,7 +148,12 @@ export class ProjetoController {
   removeColaborador(
     @Query('projeto') projetoId: number,
     @Query('colaborador') colaboradorId: number,
+    @ColaboradorAtual() user: ColaboradorDto,
   ) {
-    return this.projetoService.removeColaborador(projetoId, colaboradorId);
+    return this.projetoService.removeColaborador(
+      projetoId,
+      colaboradorId,
+      user,
+    );
   }
 }

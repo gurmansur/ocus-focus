@@ -5,11 +5,9 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { CreateStatusPriorizacaoDto } from './dto/create-status-priorizacao.dto';
 import { UpdateStatusPriorizacaoDto } from './dto/update-status-priorizacao.dto';
 import { StatusPriorizacaoService } from './status-priorizacao.service';
 
@@ -20,10 +18,10 @@ export class StatusPriorizacaoController {
     private readonly statusPriorizacaoService: StatusPriorizacaoService,
   ) {}
 
-  @Post()
-  create(@Body() createStatusPriorizacaoDto: CreateStatusPriorizacaoDto) {
-    return this.statusPriorizacaoService.create(createStatusPriorizacaoDto);
-  }
+  // @Post()
+  // create(@Body() createStatusPriorizacaoDto: CreateStatusPriorizacaoDto) {
+  //   return this.statusPriorizacaoService.create(createStatusPriorizacaoDto);
+  // }
 
   @Get()
   findAll() {

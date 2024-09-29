@@ -1,11 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { CreateStatusPriorizacaoDto } from './dto/create-status-priorizacao.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Stakeholder } from '../stakeholder/entities/stakeholder.entity';
 import { UpdateStatusPriorizacaoDto } from './dto/update-status-priorizacao.dto';
+import { StatusPriorizacao } from './entities/status-priorizacao.entity';
 
 @Injectable()
 export class StatusPriorizacaoService {
-  create(createStatusPriorizacaoDto: CreateStatusPriorizacaoDto) {
-    return 'This action adds a new statusPriorizacao';
+  constructor(
+    @InjectRepository(StatusPriorizacao)
+    private readonly statusPriorizacaoRepository: Repository<StatusPriorizacao>,
+  ) {}
+
+  create(stakeholder: Stakeholder) {
+    return this.statusPriorizacaoRepository.save({
+      stakeholder: stakeholder,
+      usuario: stakeholder.usuario,
+    });
   }
 
   findAll() {
