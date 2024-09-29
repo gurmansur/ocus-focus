@@ -1,3 +1,4 @@
+import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
 import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
 import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
@@ -73,4 +74,11 @@ export class Priorizacao {
   @ManyToOne(() => Usuario, (usuario) => usuario.priorizacoes)
   @JoinColumn({ name: 'FK_STAKEHOLDERS_FK_USUARIOS_USU_ID' })
   usuario: Usuario;
+
+  @ManyToOne(
+    () => RequisitoFuncional,
+    (requisitoFuncional) => requisitoFuncional.priorizacoes,
+  )
+  @JoinColumn({ name: 'FK_REQUISITOS_FUNCIONAIS_REQ_ID' })
+  requisitoFuncional: RequisitoFuncional;
 }

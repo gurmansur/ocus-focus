@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { StakeholderAtualMiddleware } from 'src/middlewares/stakeholder-atual.middleware';
 import { ProjetoModule } from '../projeto/projeto.module';
 import { StatusPriorizacaoModule } from '../status-priorizacao/status-priorizacao.module';
 import { UsuarioModule } from '../usuario/usuario.module';
@@ -18,4 +19,8 @@ import { StakeholderService } from './stakeholder.service';
     StatusPriorizacaoModule,
   ],
 })
-export class StakeholderModule {}
+export class StakeholderModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(StakeholderAtualMiddleware).forRoutes('*');
+  }
+}

@@ -6,6 +6,7 @@ import { ResultadoRequisitoService } from './resultado-requisito.service';
 @Module({
   controllers: [ResultadoRequisitoController],
   providers: [ResultadoRequisitoService],
+  exports: [ResultadoRequisitoService],
   imports: [TypeOrmModule.forFeature([ResultadoRequisito])],
 })
 export class ResultadoRequisitoModule {}

@@ -62,4 +62,15 @@ export class StatusPriorizacaoService {
       },
     });
   }
+
+  updateParticipation(stakeholderId: number) {
+    return this.statusPriorizacaoRepository.update(
+      {
+        stakeholder: { id: stakeholderId },
+      },
+      {
+        participacaoRealizada: true,
+      },
+    );
+  }
 }

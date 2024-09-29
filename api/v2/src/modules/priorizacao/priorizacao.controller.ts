@@ -1,48 +1,59 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreatePriorizacaoDto } from './dto/create-priorizacao.dto';
-import { UpdatePriorizacaoDto } from './dto/update-priorizacao.dto';
 import { PriorizacaoService } from './priorizacao.service';
 
 @UseGuards(AuthGuard)
-@Controller('priorizacao')
+@Controller('priorizacao-stakeholders')
 export class PriorizacaoController {
   constructor(private readonly priorizacaoService: PriorizacaoService) {}
 
-  @Post()
-  create(@Body() createPriorizacaoDto: CreatePriorizacaoDto) {
-    return this.priorizacaoService.create(createPriorizacaoDto);
+  @Post('new')
+  createPriorizacao(
+    @Body() createPriorizacaoDto: CreatePriorizacaoDto,
+    @Query('stakeholder') stakeholderId: number,
+  ) {
+    return this.priorizacaoService.createPriorizacao(
+      createPriorizacaoDto,
+      stakeholderId,
+    );
+  }
+
+  @Post('result')
+  createResultado(
+    @Query('requisito') requisitoId: number,
+    @Query('resultado')
+    resultadoFinal:
+      | 'DEVE SER FEITO'
+      | 'PERFORMANCE'
+      | 'ATRATIVO'
+      | 'INDIFERENTE'
+      | 'QUESTIONAVEL'
+      | 'REVERSO',
+  ) {
+    return this.priorizacaoService.createResultado(requisitoId, resultadoFinal);
   }
 
   @Get()
-  findAll() {
-    return this.priorizacaoService.findAll();
+  findByProjeto(@Query('projeto') projetoId: number) {
+    return this.priorizacaoService.findByProjeto(projetoId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.priorizacaoService.findOne(+id);
+  @Patch('complete')
+  update(@Query('stakeholder') stakeholderId: number) {
+    return this.priorizacaoService.update(stakeholderId);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updatePriorizacaoDto: UpdatePriorizacaoDto,
-  ) {
-    return this.priorizacaoService.update(+id, updatePriorizacaoDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.priorizacaoService.remove(+id);
+  @Get('getRequirementFinalClassification')
+  getRequirementFinalClassification(@Query('requisito') requisitoId: number) {
+    return this.priorizacaoService.getMostFrequentClassification(requisitoId);
   }
 }

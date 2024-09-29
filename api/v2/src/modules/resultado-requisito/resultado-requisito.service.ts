@@ -1,11 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { CreateResultadoRequisitoDto } from './dto/create-resultado-requisito.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UpdateResultadoRequisitoDto } from './dto/update-resultado-requisito.dto';
+import { ResultadoRequisito } from './entities/resultado-requisito.entity';
 
 @Injectable()
 export class ResultadoRequisitoService {
-  create(createResultadoRequisitoDto: CreateResultadoRequisitoDto) {
-    return 'This action adds a new resultadoRequisito';
+  constructor(
+    @InjectRepository(ResultadoRequisito)
+    private resultadoRequisitoRepository: Repository<ResultadoRequisito>,
+  ) {}
+
+  create(
+    requisitoId: number,
+    resultadoFinal:
+      | 'DEVE SER FEITO'
+      | 'PERFORMANCE'
+      | 'ATRATIVO'
+      | 'INDIFERENTE'
+      | 'QUESTIONAVEL'
+      | 'REVERSO',
+  ) {
+    return this.resultadoRequisitoRepository.save({
+      requisito: { id: requisitoId },
+      resultadoFinal,
+    });
   }
 
   findAll() {

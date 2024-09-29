@@ -61,7 +61,7 @@ export class StakeholderService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} stakeholder`;
+    return this.stakeholderRepository.findOne({ where: { id } });
   }
 
   findByChave(chave: string) {
@@ -90,18 +90,18 @@ export class StakeholderService {
 
     return {
       items: items.map((item) => {
+        const status = item.statusPriorizacao.find(
+          (status) => status?.stakeholder?.id === item.id,
+        );
+
         return {
           id: item.id,
           nome: item.nome,
           email: item.email,
           cargo: item.cargo,
           chave: item.chave,
-          alertaEmitido: item.statusPriorizacao[0].alertaEmitido
-            ? 'Sim'
-            : 'Não',
-          participacaoRealizada: item.statusPriorizacao[0].participacaoRealizada
-            ? 'Sim'
-            : 'Não',
+          alertaEmitido: status?.alertaEmitido ? 'Sim' : 'Não',
+          participacaoRealizada: status?.participacaoRealizada ? 'Sim' : 'Não',
         };
       }),
       page: {

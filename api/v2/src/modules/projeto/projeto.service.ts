@@ -192,11 +192,9 @@ export class ProjetoService {
   }
 
   findByStakeholderId(stakeholderId: number) {
-    return this.projetoRepository
-      .createQueryBuilder('projeto')
-      .leftJoinAndSelect('projeto.stakeholders', 'stakeholder')
-      .where('stakeholder.id = :stakeholderId', { stakeholderId })
-      .getMany();
+    return this.projetoRepository.findOne({
+      where: { stakeholders: { id: stakeholderId } },
+    });
   }
 
   async findTotal(user: number) {

@@ -21,9 +21,7 @@ export class ResultadoRequisitoController {
   ) {}
 
   @Post()
-  create(@Body() createResultadoRequisitoDto: CreateResultadoRequisitoDto) {
-    return this.resultadoRequisitoService.create(createResultadoRequisitoDto);
-  }
+  create(@Body() createResultadoRequisitoDto: CreateResultadoRequisitoDto) {}
 
   @Get()
   findAll() {
