@@ -1,9 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { ColaboradorService } from './colaborador.service';
+import { ColaboradorDto } from './dto/colaborador.dto';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 
-@Controller('colaborador')
+@Serialize(ColaboradorDto)
+@UseGuards(AuthGuard)
+@Controller('colaboradores')
 export class ColaboradorController {
   constructor(private readonly colaboradorService: ColaboradorService) {}
 
@@ -13,8 +28,11 @@ export class ColaboradorController {
   }
 
   @Get()
-  findAll() {
-    return this.colaboradorService.findAll();
+  findAll(@Query('name') name: string, @Query('projeto') projetoId: number) {
+    return this.colaboradorService.findAll(
+      name,
+      projetoId ? projetoId : undefined,
+    );
   }
 
   @Get(':id')
@@ -23,7 +41,10 @@ export class ColaboradorController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateColaboradorDto: UpdateColaboradorDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateColaboradorDto: UpdateColaboradorDto,
+  ) {
     return this.colaboradorService.update(+id, updateColaboradorDto);
   }
 

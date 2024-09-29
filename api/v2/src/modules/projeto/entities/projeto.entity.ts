@@ -29,10 +29,10 @@ export class Projeto {
 
   @Column('enum', {
     name: 'PRO_STATUS',
-    enum: ['EM ANDAMENTO', 'CONCLUIDO', 'CANCELADO'],
+    enum: ['EM ANDAMENTO', 'FINALIZADO', 'CANCELADO'],
     default: 'EM ANDAMENTO',
   })
-  status: 'EM ANDAMENTO' | 'CONCLUIDO' | 'CANCELADO';
+  status: 'EM ANDAMENTO' | 'FINALIZADO' | 'CANCELADO';
 
   @Column('double', {
     name: 'PRO_RESTFACTOR',

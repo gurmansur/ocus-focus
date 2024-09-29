@@ -1,11 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { StatusPriorizacaoService } from './status-priorizacao.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateStatusPriorizacaoDto } from './dto/create-status-priorizacao.dto';
 import { UpdateStatusPriorizacaoDto } from './dto/update-status-priorizacao.dto';
+import { StatusPriorizacaoService } from './status-priorizacao.service';
 
+@UseGuards(AuthGuard)
 @Controller('status-priorizacao')
 export class StatusPriorizacaoController {
-  constructor(private readonly statusPriorizacaoService: StatusPriorizacaoService) {}
+  constructor(
+    private readonly statusPriorizacaoService: StatusPriorizacaoService,
+  ) {}
 
   @Post()
   create(@Body() createStatusPriorizacaoDto: CreateStatusPriorizacaoDto) {
@@ -23,8 +36,14 @@ export class StatusPriorizacaoController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStatusPriorizacaoDto: UpdateStatusPriorizacaoDto) {
-    return this.statusPriorizacaoService.update(+id, updateStatusPriorizacaoDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateStatusPriorizacaoDto: UpdateStatusPriorizacaoDto,
+  ) {
+    return this.statusPriorizacaoService.update(
+      +id,
+      updateStatusPriorizacaoDto,
+    );
   }
 
   @Delete(':id')

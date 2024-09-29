@@ -6,11 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateRequisitoDto } from './dto/create-requisito.dto';
 import { UpdateRequisitoDto } from './dto/update-requisito.dto';
 import { RequisitoService } from './requisito-funcional.service';
 
+@UseGuards(AuthGuard)
 @Controller('requisito')
 export class RequisitoController {
   constructor(private readonly requisitoService: RequisitoService) {}

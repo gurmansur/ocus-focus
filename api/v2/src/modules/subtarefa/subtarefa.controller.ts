@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SubtarefaService } from './subtarefa.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateSubtarefaDto } from './dto/create-subtarefa.dto';
 import { UpdateSubtarefaDto } from './dto/update-subtarefa.dto';
+import { SubtarefaService } from './subtarefa.service';
 
+@UseGuards(AuthGuard)
 @Controller('subtarefa')
 export class SubtarefaController {
   constructor(private readonly subtarefaService: SubtarefaService) {}
@@ -23,7 +34,10 @@ export class SubtarefaController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubtarefaDto: UpdateSubtarefaDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSubtarefaDto: UpdateSubtarefaDto,
+  ) {
     return this.subtarefaService.update(+id, updateSubtarefaDto);
   }
 

@@ -19,10 +19,10 @@ export class AuthController {
     return this.authService.signInColaborador(signInDto);
   }
 
-  // @Post('/signin-stakeholder')
-  // signInStakeholder(@Body() signInDto: SignInDto) {
-  //   return this.authService.signInStakeholder();
-  // }
+  @Post('/signin-stakeholder')
+  signInStakeholder(@Body() signInDto: SignInDto) {
+    return this.authService.signInStakeholder(signInDto);
+  }
 
   @Get('/verify')
   verifyToken(@Req() req) {

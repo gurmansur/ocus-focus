@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ColaboradorProjetoModule } from '../colaborador-projeto/colaborador-projeto.module';
+import { ColaboradorModule } from '../colaborador/colaborador.module';
 import { Projeto } from './entities/projeto.entity';
 import { ProjetoController } from './projeto.controller';
 import { ProjetoService } from './projeto.service';
@@ -8,6 +10,10 @@ import { ProjetoService } from './projeto.service';
   controllers: [ProjetoController],
   providers: [ProjetoService],
   exports: [ProjetoService],
-  imports: [TypeOrmModule.forFeature([Projeto])],
+  imports: [
+    TypeOrmModule.forFeature([Projeto]),
+    ColaboradorModule,
+    ColaboradorProjetoModule,
+  ],
 })
 export class ProjetoModule {}

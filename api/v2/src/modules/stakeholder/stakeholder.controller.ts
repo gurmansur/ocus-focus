@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { StakeholderService } from './stakeholder.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateStakeholderDto } from './dto/create-stakeholder.dto';
 import { UpdateStakeholderDto } from './dto/update-stakeholder.dto';
+import { StakeholderService } from './stakeholder.service';
 
+@UseGuards(AuthGuard)
 @Controller('stakeholder')
 export class StakeholderController {
   constructor(private readonly stakeholderService: StakeholderService) {}
@@ -23,7 +34,10 @@ export class StakeholderController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStakeholderDto: UpdateStakeholderDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateStakeholderDto: UpdateStakeholderDto,
+  ) {
     return this.stakeholderService.update(+id, updateStakeholderDto);
   }
 

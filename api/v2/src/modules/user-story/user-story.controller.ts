@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UserStoryService } from './user-story.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateUserStoryDto } from './dto/create-user-story.dto';
 import { UpdateUserStoryDto } from './dto/update-user-story.dto';
+import { UserStoryService } from './user-story.service';
 
+@UseGuards(AuthGuard)
 @Controller('user-story')
 export class UserStoryController {
   constructor(private readonly userStoryService: UserStoryService) {}
@@ -23,7 +34,10 @@ export class UserStoryController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserStoryDto: UpdateUserStoryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserStoryDto: UpdateUserStoryDto,
+  ) {
     return this.userStoryService.update(+id, updateUserStoryDto);
   }
 

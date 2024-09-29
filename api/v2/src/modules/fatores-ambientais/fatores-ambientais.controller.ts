@@ -1,11 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { FatoresAmbientaisService } from './fatores-ambientais.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateFatoresAmbientaiDto } from './dto/create-fatores-ambientai.dto';
 import { UpdateFatoresAmbientaiDto } from './dto/update-fatores-ambientai.dto';
+import { FatoresAmbientaisService } from './fatores-ambientais.service';
 
+@UseGuards(AuthGuard)
 @Controller('fatores-ambientais')
 export class FatoresAmbientaisController {
-  constructor(private readonly fatoresAmbientaisService: FatoresAmbientaisService) {}
+  constructor(
+    private readonly fatoresAmbientaisService: FatoresAmbientaisService,
+  ) {}
 
   @Post()
   create(@Body() createFatoresAmbientaiDto: CreateFatoresAmbientaiDto) {
@@ -23,7 +36,10 @@ export class FatoresAmbientaisController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFatoresAmbientaiDto: UpdateFatoresAmbientaiDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateFatoresAmbientaiDto: UpdateFatoresAmbientaiDto,
+  ) {
     return this.fatoresAmbientaisService.update(+id, updateFatoresAmbientaiDto);
   }
 

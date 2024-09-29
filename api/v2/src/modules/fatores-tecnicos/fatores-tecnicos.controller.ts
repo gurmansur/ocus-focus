@@ -1,11 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { FatoresTecnicosService } from './fatores-tecnicos.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateFatoresTecnicoDto } from './dto/create-fatores-tecnico.dto';
 import { UpdateFatoresTecnicoDto } from './dto/update-fatores-tecnico.dto';
+import { FatoresTecnicosService } from './fatores-tecnicos.service';
 
+@UseGuards(AuthGuard)
 @Controller('fatores-tecnicos')
 export class FatoresTecnicosController {
-  constructor(private readonly fatoresTecnicosService: FatoresTecnicosService) {}
+  constructor(
+    private readonly fatoresTecnicosService: FatoresTecnicosService,
+  ) {}
 
   @Post()
   create(@Body() createFatoresTecnicoDto: CreateFatoresTecnicoDto) {
@@ -23,7 +36,10 @@ export class FatoresTecnicosController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFatoresTecnicoDto: UpdateFatoresTecnicoDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateFatoresTecnicoDto: UpdateFatoresTecnicoDto,
+  ) {
     return this.fatoresTecnicosService.update(+id, updateFatoresTecnicoDto);
   }
 

@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CasoUsoService } from './caso-uso.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';
 import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
 
+@UseGuards(AuthGuard)
 @Controller('caso-uso')
 export class CasoUsoController {
   constructor(private readonly casoUsoService: CasoUsoService) {}

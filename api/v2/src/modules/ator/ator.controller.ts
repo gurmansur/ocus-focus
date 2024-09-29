@@ -6,11 +6,14 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { AtorService } from './ator.service';
 import { CreateAtorDto } from './dto/create-ator.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
 
+@UseGuards(AuthGuard)
 @Controller('atores')
 export class AtorController {
   constructor(private readonly atorService: AtorService) {}

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Like, Not, Repository } from 'typeorm';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 import { Colaborador } from './entities/colaborador.entity';
@@ -17,8 +17,21 @@ export class ColaboradorService {
     return this.colaboradorRepository.save(colaborador);
   }
 
-  findAll() {
-    return `This action returns all colaborador`;
+  async findAll(name?: string, projetoId?: number) {
+    const inProject = await this.colaboradorRepository.find({
+      where: {
+        projetos: projetoId ? { projeto: { id: projetoId } } : undefined,
+      },
+    });
+
+    const notInProject = await this.colaboradorRepository.find({
+      where: {
+        id: Not(In(inProject.map((colaborador) => colaborador.id))),
+        nome: name ? Like(`%${name}%`) : undefined,
+      },
+    });
+
+    return notInProject;
   }
 
   findByEmail(email: string) {
@@ -26,7 +39,7 @@ export class ColaboradorService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} colaborador`;
+    return this.colaboradorRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateColaboradorDto: UpdateColaboradorDto) {

@@ -3,23 +3,28 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   ParseIntPipe,
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { ProjetoService } from './projeto.service';
 
+@UseGuards(AuthGuard)
 @Controller('projetos')
 export class ProjetoController {
   constructor(private readonly projetoService: ProjetoService) {}
 
-  @Post()
-  create(@Body() createProjetoDto: CreateProjetoDto) {
-    return this.projetoService.create(createProjetoDto);
+  @Post('new')
+  create(
+    @Body() createProjetoDto: CreateProjetoDto,
+    @Query('user') user: number,
+  ) {
+    return this.projetoService.create(createProjetoDto, user);
   }
 
   @Get()
@@ -43,24 +48,45 @@ export class ProjetoController {
     );
   }
 
+  @Get('findById')
+  findById(
+    @Query('projeto') id: number,
+    @Query('colaborador') colaboradorId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.projetoService.findById(
+      id,
+      colaboradorId,
+      !!pageSize,
+      page,
+      pageSize,
+    );
+  }
+
+  @Get('findByIdStakeholder')
+  findByIdStakeholder(@Query('stakeholder') stakeholderId: number) {
+    return this.projetoService.findByStakeholderId(stakeholderId);
+  }
+
   @Get('metrics/total')
-  findTotal() {
-    return this.projetoService.findTotal();
+  findTotal(@Query('user') user: number) {
+    return this.projetoService.findTotal(user);
   }
 
   @Get('metrics/ongoing')
-  findOngoingCount() {
-    return this.projetoService.findOngoingCount();
+  findOngoingCount(@Query('user') user: number) {
+    return this.projetoService.findOngoingCount(user);
   }
 
   @Get('metrics/finished')
-  findFinishedCount() {
-    return this.projetoService.findFinishedCount();
+  findFinishedCount(@Query('user') user: number) {
+    return this.projetoService.findFinishedCount(user);
   }
 
   @Get('metrics/new')
-  findNewCount() {
-    return this.projetoService.findNewCount();
+  findNewCount(@Query('user') user: number) {
+    return this.projetoService.findNewCount(user);
   }
 
   @Get('recentes')
@@ -71,18 +97,56 @@ export class ProjetoController {
     return this.projetoService.findRecentes(user, limit);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projetoService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjetoDto: UpdateProjetoDto) {
+  @Patch('update')
+  update(
+    @Query('projeto') id: number,
+    @Body() updateProjetoDto: UpdateProjetoDto,
+  ) {
     return this.projetoService.update(+id, updateProjetoDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('delete')
+  remove(@Query('projeto') id: number) {
     return this.projetoService.remove(+id);
+  }
+
+  @Get('colaboradores')
+  findColaboradores(
+    @Query('projeto') projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.projetoService.findColaboradores(projetoId, page, pageSize);
+  }
+
+  @Get('colaboradores/findByNome')
+  findColaboradoresByNome(
+    @Query('projeto') projetoId: number,
+    @Query('nome') nome: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.projetoService.findColaboradoresByNome(
+      projetoId,
+      nome,
+      page,
+      pageSize,
+    );
+  }
+
+  @Post('addColaborador')
+  addColaborador(
+    @Query('projeto') projetoId: number,
+    @Query('colaborador') colaboradorId: number,
+  ) {
+    return this.projetoService.addColaborador(projetoId, colaboradorId);
+  }
+
+  @Delete('removeColaborador')
+  removeColaborador(
+    @Query('projeto') projetoId: number,
+    @Query('colaborador') colaboradorId: number,
+  ) {
+    return this.projetoService.removeColaborador(projetoId, colaboradorId);
   }
 }

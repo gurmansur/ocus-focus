@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { EstimativaService } from './estimativa.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateEstimativaDto } from './dto/create-estimativa.dto';
 import { UpdateEstimativaDto } from './dto/update-estimativa.dto';
+import { EstimativaService } from './estimativa.service';
 
+@UseGuards(AuthGuard)
 @Controller('estimativa')
 export class EstimativaController {
   constructor(private readonly estimativaService: EstimativaService) {}
@@ -23,7 +34,10 @@ export class EstimativaController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEstimativaDto: UpdateEstimativaDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateEstimativaDto: UpdateEstimativaDto,
+  ) {
     return this.estimativaService.update(+id, updateEstimativaDto);
   }
 

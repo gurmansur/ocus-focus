@@ -1,11 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { FatorTecnicoProjetoService } from './fator-tecnico-projeto.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateFatorTecnicoProjetoDto } from './dto/create-fator-tecnico-projeto.dto';
 import { UpdateFatorTecnicoProjetoDto } from './dto/update-fator-tecnico-projeto.dto';
+import { FatorTecnicoProjetoService } from './fator-tecnico-projeto.service';
 
+@UseGuards(AuthGuard)
 @Controller('fator-tecnico-projeto')
 export class FatorTecnicoProjetoController {
-  constructor(private readonly fatorTecnicoProjetoService: FatorTecnicoProjetoService) {}
+  constructor(
+    private readonly fatorTecnicoProjetoService: FatorTecnicoProjetoService,
+  ) {}
 
   @Post()
   create(@Body() createFatorTecnicoProjetoDto: CreateFatorTecnicoProjetoDto) {
@@ -23,8 +36,14 @@ export class FatorTecnicoProjetoController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFatorTecnicoProjetoDto: UpdateFatorTecnicoProjetoDto) {
-    return this.fatorTecnicoProjetoService.update(+id, updateFatorTecnicoProjetoDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateFatorTecnicoProjetoDto: UpdateFatorTecnicoProjetoDto,
+  ) {
+    return this.fatorTecnicoProjetoService.update(
+      +id,
+      updateFatorTecnicoProjetoDto,
+    );
   }
 
   @Delete(':id')
