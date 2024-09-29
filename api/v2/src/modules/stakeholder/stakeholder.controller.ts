@@ -3,14 +3,15 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  HttpCode,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateStakeholderDto } from './dto/create-stakeholder.dto';
-import { UpdateStakeholderDto } from './dto/update-stakeholder.dto';
 import { StakeholderService } from './stakeholder.service';
 
 @UseGuards(AuthGuard)
@@ -24,30 +25,37 @@ export class StakeholderController {
   }
 
   @Get('stakeholders/findByProjeto')
-  findByProjeto() {
-    return this.stakeholderService.findAll();
+  findByProjeto(
+    @Query('projeto') projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.stakeholderService.findByProjeto(projetoId, page, pageSize);
   }
 
   @Get('stakeholders/findByNome')
-  findByNome() {
-    return this.stakeholderService.findAll();
+  findByNome(
+    @Query('nome') nome: string,
+    @Query('projeto') projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.stakeholderService.findByNome(nome, projetoId, page, pageSize);
   }
 
+  @HttpCode(200)
   @Get('stakeholders/verifyParticipation')
-  verifyParticipation() {
-    return this.stakeholderService.findAll();
+  verifyParticipation(@Query('projetoId') projetoId: number) {
+    return this.stakeholderService.verifyParticipation(projetoId);
   }
 
   @Delete('stakeholders/delete')
-  remove(@Param('id') id: string) {
+  remove(@Query('stakeholder', ParseIntPipe) id: number) {
     return this.stakeholderService.remove(+id);
   }
 
   @Patch('stakeholders/alert')
-  update(
-    @Param('id') id: string,
-    @Body() updateStakeholderDto: UpdateStakeholderDto,
-  ) {
-    return this.stakeholderService.update(+id, updateStakeholderDto);
+  update(@Query('id', ParseIntPipe) id: number) {
+    return this.stakeholderService.updateAlert(+id);
   }
 }

@@ -38,10 +38,7 @@ export class StatusPriorizacaoController {
     @Param('id') id: string,
     @Body() updateStatusPriorizacaoDto: UpdateStatusPriorizacaoDto,
   ) {
-    return this.statusPriorizacaoService.update(
-      +id,
-      updateStatusPriorizacaoDto,
-    );
+    return this.statusPriorizacaoService.update(+id);
   }
 
   @Delete(':id')

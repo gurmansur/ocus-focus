@@ -1,13 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
 import { randomBytes } from 'crypto';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { ProjetoService } from '../projeto/projeto.service';
 import { StatusPriorizacaoService } from '../status-priorizacao/status-priorizacao.service';
 import { UsuarioService } from '../usuario/usuario.service';
 import { CreateStakeholderDto } from './dto/create-stakeholder.dto';
-import { UpdateStakeholderDto } from './dto/update-stakeholder.dto';
 import { Stakeholder } from './entities/stakeholder.entity';
 import { StakeholderBuilder } from './stakeholder.builder';
 
@@ -69,11 +68,101 @@ export class StakeholderService {
     return this.stakeholderRepository.findOne({ where: { chave } });
   }
 
-  update(id: number, updateStakeholderDto: UpdateStakeholderDto) {
-    return `This action updates a #${id} stakeholder`;
+  updateAlert(id: number) {
+    return this.statusPriorizacaoService.update(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} stakeholder`;
+  async remove(id: number) {
+    await this.statusPriorizacaoService.deleteByStakeholder(id);
+
+    return this.stakeholderRepository.delete(id);
+  }
+
+  async findByProjeto(projetoId: number, page: number, pageSize: number) {
+    const take = pageSize ? pageSize : 5;
+    const skip = page ? page * take : 0;
+    const [items, count] = await this.stakeholderRepository.findAndCount({
+      relations: ['statusPriorizacao', 'statusPriorizacao.stakeholder'],
+      where: { projeto: { id: projetoId } },
+      take,
+      skip,
+    });
+
+    return {
+      items: items.map((item) => {
+        return {
+          id: item.id,
+          nome: item.nome,
+          email: item.email,
+          cargo: item.cargo,
+          chave: item.chave,
+          alertaEmitido: item.statusPriorizacao[0].alertaEmitido
+            ? 'Sim'
+            : 'Não',
+          participacaoRealizada: item.statusPriorizacao[0].participacaoRealizada
+            ? 'Sim'
+            : 'Não',
+        };
+      }),
+      page: {
+        size: take,
+        number: page,
+        totalElements: count,
+        totalPages: Math.ceil(count / take),
+      },
+    };
+  }
+
+  async findByNome(
+    nome: string,
+    projetoId: number,
+    page: number,
+    pageSize: number,
+  ) {
+    const take = pageSize ? pageSize : 5;
+    const skip = page ? page * take : 0;
+    const [items, count] = await this.stakeholderRepository.findAndCount({
+      relations: ['statusPriorizacao', 'statusPriorizacao.stakeholder'],
+      where: { projeto: { id: projetoId }, nome: Like(`%${nome}%`) },
+      take,
+      skip,
+    });
+
+    return {
+      items: items.map((item) => {
+        return {
+          id: item.id,
+          nome: item.nome,
+          email: item.email,
+          cargo: item.cargo,
+          chave: item.chave,
+          alertaEmitido: item.statusPriorizacao[0].alertaEmitido
+            ? 'Sim'
+            : 'Não',
+          participacaoRealizada: item.statusPriorizacao[0].participacaoRealizada
+            ? 'Sim'
+            : 'Não',
+        };
+      }),
+      page: {
+        size: take,
+        number: page,
+        totalElements: count,
+        totalPages: Math.ceil(count / take),
+      },
+    };
+  }
+
+  async verifyParticipation(projetoId: number) {
+    const notParticipated =
+      await this.statusPriorizacaoService.verifyParticipation(projetoId);
+
+    if (notParticipated.length > 0) {
+      throw new BadRequestException(
+        'Nem todos os stakeholders participaram da priorização.',
+      );
+    }
+
+    return { message: 'Todos os stakeholders participaram da priorização.' };
   }
 }
