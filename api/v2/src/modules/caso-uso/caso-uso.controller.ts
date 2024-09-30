@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
   Query,
@@ -72,7 +71,7 @@ export class CasoUsoController {
   }
 
   @Delete('delete')
-  remove(@Param('id') id: string) {
+  remove(@Query('id') id: string) {
     return this.casoUsoService.remove(+id);
   }
 }
