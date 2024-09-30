@@ -14,17 +14,24 @@ export class CenariosService {
     @Inject() private readonly casosUsoService: CasoUsoService,
   ) {}
 
-  async findAll(paginated = false, page = 1) {
-    if (paginated) {
-      const take = 10;
-      const skip = (page - 1) * take;
-      return await this.cenarioRepository.findAndCount({
-        take,
-        skip,
-      });
-    }
+  async findAll(casoId: number, page = 0, pageSize = 10) {
+    const take = pageSize ? pageSize : 10;
+    const skip = page ? page * take : 0;
+    const [items, count] = await this.cenarioRepository.findAndCount({
+      where: { casoUso: { id: casoId } },
+      take,
+      skip,
+    });
 
-    return await this.cenarioRepository.findAndCount();
+    return {
+      items,
+      page: {
+        size: take,
+        totalElements: count,
+        totalPages: Math.ceil(count / take),
+        number: page ? page : 0,
+      },
+    };
   }
 
   async findOne(id: number) {

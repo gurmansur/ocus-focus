@@ -20,9 +20,11 @@ export class CasoUsoController {
 
   @Get()
   findAll(
-    @Query() { paginated, page }: { paginated?: boolean; page?: number },
+    @Query('requisito') requisito: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
-    return this.casoUsoService.findAll(paginated, page);
+    return this.casoUsoService.findAll(requisito, page, pageSize);
   }
 
   @Get('findByNome')

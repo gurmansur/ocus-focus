@@ -19,16 +19,24 @@ export class CasoUsoService {
     return await this.casoUsoRepository.save(casoUso);
   }
 
-  async findAll(paginated = false, page = 1) {
-    if (paginated) {
-      const take = 10;
-      const skip = (page - 1) * take;
-      return await this.casoUsoRepository.findAndCount({
-        take,
-        skip,
-      });
-    }
-    return await this.casoUsoRepository.findAndCount();
+  async findAll(requisitoId: number, page = 0, pageSize = 10) {
+    const take = pageSize ? pageSize : 10;
+    const skip = page ? page * take : 0;
+    const [items, count] = await this.casoUsoRepository.findAndCount({
+      where: { requisitoFuncional: { id: requisitoId } },
+      take,
+      skip,
+    });
+
+    return {
+      items,
+      page: {
+        size: take,
+        totalElements: count,
+        totalPages: Math.ceil(count / take),
+        number: page ? page : 0,
+      },
+    };
   }
 
   async findByNome(nome: string) {

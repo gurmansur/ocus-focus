@@ -20,9 +20,11 @@ export class CenariosController {
 
   @Get()
   findAll(
-    @Query() { paginated, page }: { paginated?: boolean; page?: number },
+    @Query('caso') caso: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
-    return this.cenariosService.findAll(paginated, page);
+    return this.cenariosService.findAll(caso, page, pageSize);
   }
 
   @Get('findById')
