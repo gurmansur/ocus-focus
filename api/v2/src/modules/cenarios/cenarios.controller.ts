@@ -3,9 +3,9 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -18,28 +18,39 @@ import { UpdateCenarioDto } from './dto/update-cenario.dto';
 export class CenariosController {
   constructor(private readonly cenariosService: CenariosService) {}
 
-  @Post()
+  @Get()
+  findAll(
+    @Query() { paginated, page }: { paginated?: boolean; page?: number },
+  ) {
+    return this.cenariosService.findAll(paginated, page);
+  }
+
+  @Get('findById')
+  findById(@Query('id') id: string) {
+    return this.cenariosService.findOne(+id);
+  }
+
+  @Get('findByNome')
+  findByNome(@Query('nome') nome: string) {
+    return this.cenariosService.findByNome(nome);
+  }
+
+  @Post('new')
   create(@Body() createCenarioDto: CreateCenarioDto) {
     return this.cenariosService.create(createCenarioDto);
   }
 
-  @Get()
-  findAll() {
-    return this.cenariosService.findAll();
+  @Patch('update')
+  update(
+    @Query('id') id: string,
+    @Query('caso') casoId: string,
+    @Body() updateCenarioDto: UpdateCenarioDto,
+  ) {
+    return this.cenariosService.update(+id, +casoId, updateCenarioDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cenariosService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCenarioDto: UpdateCenarioDto) {
-    return this.cenariosService.update(+id, updateCenarioDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('delete')
+  remove(@Query('id') id: string) {
     return this.cenariosService.remove(+id);
   }
 }

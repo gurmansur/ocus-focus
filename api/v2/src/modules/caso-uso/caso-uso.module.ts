@@ -8,6 +8,7 @@ import { CasoUso } from './entities/caso-uso.entity';
 @Module({
   controllers: [CasoUsoController],
   providers: [CasoUsoService],
+  exports: [CasoUsoService],
   imports: [TypeOrmModule.forFeature([CasoUso]), RequisitoModule],
 })
 export class CasoUsoModule {}
