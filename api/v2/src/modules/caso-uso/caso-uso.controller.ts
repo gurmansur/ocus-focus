@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -18,27 +19,59 @@ import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
 export class CasoUsoController {
   constructor(private readonly casoUsoService: CasoUsoService) {}
 
-  @Post()
+  @Get()
+  findAll(
+    @Query() { paginated, page }: { paginated?: boolean; page?: number },
+  ) {
+    return this.casoUsoService.findAll(paginated, page);
+  }
+
+  @Get('findByNome')
+  findByNome(@Query('nome') nome: string) {
+    return this.casoUsoService.findByNome(nome);
+  }
+
+  @Get('findById')
+  findOne(@Query('id') id: string) {
+    return this.casoUsoService.findOne(+id);
+  }
+
+  // aqui ele recebe o id de requisito funcional
+  @Get('metrics/total')
+  getTotal(@Query('caso') caso: number) {
+    return this.casoUsoService.getMetrics(caso);
+  }
+
+  @Get('metrics/simples')
+  getTotalSimples(@Query('caso') caso: number) {
+    return this.casoUsoService.getMetrics(caso, 'SIMPLES');
+  }
+
+  @Get('metrics/medios')
+  getTotalMedios(@Query('caso') caso: number) {
+    return this.casoUsoService.getMetrics(caso, 'MEDIO');
+  }
+
+  @Get('metrics/complexos')
+  getTotalComplexos(@Query('caso') caso: number) {
+    return this.casoUsoService.getMetrics(caso, 'COMPLEXO');
+  }
+
+  @Post('new')
   create(@Body() createCasoUsoDto: CreateCasoUsoDto) {
     return this.casoUsoService.create(createCasoUsoDto);
   }
 
-  @Get()
-  findAll() {
-    return this.casoUsoService.findAll();
+  @Patch('update')
+  update(
+    @Query('caso') id: string,
+    @Query('requisito') requisito: number,
+    @Body() updateCasoUsoDto: UpdateCasoUsoDto,
+  ) {
+    return this.casoUsoService.update(+id, +requisito, updateCasoUsoDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.casoUsoService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCasoUsoDto: UpdateCasoUsoDto) {
-    return this.casoUsoService.update(+id, updateCasoUsoDto);
-  }
-
-  @Delete(':id')
+  @Delete('delete')
   remove(@Param('id') id: string) {
     return this.casoUsoService.remove(+id);
   }
