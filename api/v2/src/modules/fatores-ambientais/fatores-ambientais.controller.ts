@@ -14,6 +14,7 @@ import { UpdateFatoresAmbientaiDto } from './dto/update-fatores-ambientai.dto';
 import { FatoresAmbientaisService } from './fatores-ambientais.service';
 
 @UseGuards(AuthGuard)
+// esse tem que tirar pq não usa essa rota, usa só a Fator-Ambiental-Projeto
 @Controller('fatores-ambientais')
 export class FatoresAmbientaisController {
   constructor(

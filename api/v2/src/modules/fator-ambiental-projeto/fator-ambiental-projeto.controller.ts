@@ -3,9 +3,9 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -20,28 +20,34 @@ export class FatorAmbientalProjetoController {
     private readonly fatorAmbientalProjetoService: FatorAmbientalProjetoService,
   ) {}
 
+  @Get()
+  findAll(
+    @Query('projeto') projeto: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.fatorAmbientalProjetoService.findAll(projeto, page, pageSize);
+  }
+
+  @Get('findById')
+  findOne(@Query('fator') id: string) {
+    return this.fatorAmbientalProjetoService.getById(+id);
+  }
+
   @Post()
   create(
+    @Query('projeto') projeto: number,
     @Body() createFatorAmbientalProjetoDto: CreateFatorAmbientalProjetoDto,
   ) {
     return this.fatorAmbientalProjetoService.create(
+      projeto,
       createFatorAmbientalProjetoDto,
     );
   }
 
-  @Get()
-  findAll() {
-    return this.fatorAmbientalProjetoService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.fatorAmbientalProjetoService.findOne(+id);
-  }
-
-  @Patch(':id')
+  @Patch('update')
   update(
-    @Param('id') id: string,
+    @Query('fatores') id: string,
     @Body() updateFatorAmbientalProjetoDto: UpdateFatorAmbientalProjetoDto,
   ) {
     return this.fatorAmbientalProjetoService.update(
@@ -50,8 +56,8 @@ export class FatorAmbientalProjetoController {
     );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('delete')
+  remove(@Query('idFat') id: string) {
     return this.fatorAmbientalProjetoService.remove(+id);
   }
 }
