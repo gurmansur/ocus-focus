@@ -8,12 +8,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CasoUsoService } from './caso-uso.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';
 import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
 
 @UseGuards(AuthGuard)
+@ApiTags('Caso de Uso')
 @Controller('caso-uso')
 export class CasoUsoController {
   constructor(private readonly casoUsoService: CasoUsoService) {}

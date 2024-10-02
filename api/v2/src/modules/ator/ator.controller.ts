@@ -8,12 +8,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AtorService } from './ator.service';
 import { CreateAtorDto } from './dto/create-ator.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
 
 @UseGuards(AuthGuard)
+@ApiTags('Atores')
 @Controller('atores')
 export class AtorController {
   constructor(private readonly atorService: AtorService) {}

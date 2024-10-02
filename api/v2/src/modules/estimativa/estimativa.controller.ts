@@ -1,8 +1,10 @@
 import { Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { EstimativaService } from './estimativa.service';
 
 @UseGuards(AuthGuard)
+@ApiTags('Estimativa')
 @Controller('estimativa')
 export class EstimativaController {
   constructor(private readonly estimativaService: EstimativaService) {}

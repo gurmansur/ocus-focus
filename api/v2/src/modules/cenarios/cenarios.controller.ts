@@ -8,12 +8,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CenariosService } from './cenarios.service';
 import { CreateCenarioDto } from './dto/create-cenario.dto';
 import { UpdateCenarioDto } from './dto/update-cenario.dto';
 
 @UseGuards(AuthGuard)
+@ApiTags('Cenários')
 @Controller('cenarios')
 export class CenariosController {
   constructor(private readonly cenariosService: CenariosService) {}
