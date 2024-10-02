@@ -3,41 +3,57 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateFatorTecnicoProjetoDto } from './dto/create-fator-tecnico-projeto.dto';
 import { UpdateFatorTecnicoProjetoDto } from './dto/update-fator-tecnico-projeto.dto';
 import { FatorTecnicoProjetoService } from './fator-tecnico-projeto.service';
 
 @UseGuards(AuthGuard)
-@Controller('fator-tecnico-projeto')
+@ApiTags('Fatores Técnicos')
+@Controller('fatores-tecnicos')
 export class FatorTecnicoProjetoController {
   constructor(
     private readonly fatorTecnicoProjetoService: FatorTecnicoProjetoService,
   ) {}
 
-  @Post()
-  create(@Body() createFatorTecnicoProjetoDto: CreateFatorTecnicoProjetoDto) {
-    return this.fatorTecnicoProjetoService.create(createFatorTecnicoProjetoDto);
-  }
-
   @Get()
-  findAll() {
-    return this.fatorTecnicoProjetoService.findAll();
+  findAll(
+    @Query('projeto') projetoId: string,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+  ) {
+    return this.fatorTecnicoProjetoService.findAll(
+      +projetoId,
+      +page,
+      +pageSize,
+    );
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.fatorTecnicoProjetoService.findOne(+id);
+  @Get('getById')
+  findOne(@Query('fator') id: string) {
+    return this.fatorTecnicoProjetoService.getById(+id);
   }
 
-  @Patch(':id')
+  @Post()
+  create(
+    @Query('projeto') projetoId: number,
+    @Body() createFatorTecnicoProjetoDto: CreateFatorTecnicoProjetoDto,
+  ) {
+    return this.fatorTecnicoProjetoService.create(
+      projetoId,
+      createFatorTecnicoProjetoDto,
+    );
+  }
+
+  @Patch('update')
   update(
-    @Param('id') id: string,
+    @Query('fatores') id: string,
     @Body() updateFatorTecnicoProjetoDto: UpdateFatorTecnicoProjetoDto,
   ) {
     return this.fatorTecnicoProjetoService.update(
@@ -46,8 +62,8 @@ export class FatorTecnicoProjetoController {
     );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('delete')
+  remove(@Query('idFat') id: string) {
     return this.fatorTecnicoProjetoService.remove(+id);
   }
 }

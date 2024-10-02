@@ -14,7 +14,8 @@ import { UpdateFatoresTecnicoDto } from './dto/update-fatores-tecnico.dto';
 import { FatoresTecnicosService } from './fatores-tecnicos.service';
 
 @UseGuards(AuthGuard)
-@Controller('fatores-tecnicos')
+// essa rota já existe, é do Fator-Tecnico-Projeto. Mudei pra Fatores apenas
+@Controller('fatores')
 export class FatoresTecnicosController {
   constructor(
     private readonly fatoresTecnicosService: FatoresTecnicosService,
