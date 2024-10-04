@@ -8,12 +8,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateSubtarefaDto } from './dto/create-subtarefa.dto';
 import { UpdateSubtarefaDto } from './dto/update-subtarefa.dto';
 import { SubtarefaService } from './subtarefa.service';
 
 @UseGuards(AuthGuard)
+@ApiTags('Subtarefa')
 @Controller('subtarefa')
 export class SubtarefaController {
   constructor(private readonly subtarefaService: SubtarefaService) {}

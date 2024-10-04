@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateFatoresTecnicoDto } from './dto/create-fatores-tecnico.dto';
 import { UpdateFatoresTecnicoDto } from './dto/update-fatores-tecnico.dto';
@@ -15,6 +16,7 @@ import { FatoresTecnicosService } from './fatores-tecnicos.service';
 
 @UseGuards(AuthGuard)
 // essa rota já existe, é do Fator-Tecnico-Projeto. Mudei pra Fatores apenas
+@ApiTags('Fatores - Não tem uso')
 @Controller('fatores')
 export class FatoresTecnicosController {
   constructor(

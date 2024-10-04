@@ -7,11 +7,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreatePriorizacaoDto } from './dto/create-priorizacao.dto';
 import { PriorizacaoService } from './priorizacao.service';
 
 @UseGuards(AuthGuard)
+@ApiTags('Priorização')
 @Controller('priorizacao-stakeholders')
 export class PriorizacaoController {
   constructor(private readonly priorizacaoService: PriorizacaoService) {}

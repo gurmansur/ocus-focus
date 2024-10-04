@@ -15,7 +15,7 @@ import { CreateCenarioDto } from './dto/create-cenario.dto';
 import { UpdateCenarioDto } from './dto/update-cenario.dto';
 
 @UseGuards(AuthGuard)
-@ApiTags('Cenários')
+@ApiTags('Cenário')
 @Controller('cenarios')
 export class CenariosController {
   constructor(private readonly cenariosService: CenariosService) {}

@@ -8,12 +8,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateResultadoRequisitoDto } from './dto/create-resultado-requisito.dto';
 import { UpdateResultadoRequisitoDto } from './dto/update-resultado-requisito.dto';
 import { ResultadoRequisitoService } from './resultado-requisito.service';
 
 @UseGuards(AuthGuard)
+@ApiTags('Resultado-Requisito')
 @Controller('resultado-requisito')
 export class ResultadoRequisitoController {
   constructor(

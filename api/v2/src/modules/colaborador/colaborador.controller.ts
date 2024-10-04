@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { ColaboradorService } from './colaborador.service';
@@ -18,6 +19,7 @@ import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 
 @Serialize(ColaboradorDto)
 @UseGuards(AuthGuard)
+@ApiTags('Colaborador')
 @Controller('colaboradores')
 export class ColaboradorController {
   constructor(private readonly colaboradorService: ColaboradorService) {}

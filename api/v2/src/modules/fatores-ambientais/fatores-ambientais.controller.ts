@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateFatoresAmbientaiDto } from './dto/create-fatores-ambientai.dto';
 import { UpdateFatoresAmbientaiDto } from './dto/update-fatores-ambientai.dto';
@@ -15,6 +16,7 @@ import { FatoresAmbientaisService } from './fatores-ambientais.service';
 
 @UseGuards(AuthGuard)
 // esse tem que tirar pq não usa essa rota, usa só a Fator-Ambiental-Projeto
+@ApiTags('Fatores Ambientais - Não tem uso')
 @Controller('fatores-ambientais')
 export class FatoresAmbientaisController {
   constructor(

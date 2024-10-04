@@ -8,12 +8,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateUserStoryDto } from './dto/create-user-story.dto';
 import { UpdateUserStoryDto } from './dto/update-user-story.dto';
 import { UserStoryService } from './user-story.service';
 
 @UseGuards(AuthGuard)
+@ApiTags('User Story')
 @Controller('user-story')
 export class UserStoryController {
   constructor(private readonly userStoryService: UserStoryService) {}
