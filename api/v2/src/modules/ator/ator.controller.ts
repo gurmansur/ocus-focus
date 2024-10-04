@@ -15,7 +15,7 @@ import { CreateAtorDto } from './dto/create-ator.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
 
 @UseGuards(AuthGuard)
-@ApiTags('Atores')
+@ApiTags('Ator')
 @Controller('atores')
 export class AtorController {
   constructor(private readonly atorService: AtorService) {}
