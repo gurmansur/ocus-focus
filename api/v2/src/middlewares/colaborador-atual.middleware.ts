@@ -23,13 +23,17 @@ export class ColaboradorAtualMiddleware implements NestMiddleware {
     const access_token = req.headers.authorization?.split(' ')[1];
 
     if (access_token) {
-      const payload = await this.jwtService.verifyAsync(access_token, {
-        secret: process.env.JWT_SECRET,
-      });
+      try {
+        const payload = await this.jwtService.verifyAsync(access_token, {
+          secret: process.env.JWT_SECRET,
+        });
 
-      req.currentColaborator = await this.colaboradorService.findOne(
-        payload.id,
-      );
+        req.currentColaborator = await this.colaboradorService.findOne(
+          payload.id,
+        );
+      } catch (error) {
+        req.currentColaborator = undefined;
+      }
     }
 
     next();

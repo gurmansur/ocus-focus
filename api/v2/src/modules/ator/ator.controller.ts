@@ -8,10 +8,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AtorService } from './ator.service';
 import { CreateAtorDto } from './dto/create-ator.dto';
+import { FindAtorByNomeQueryDto } from './dto/find-ator-by-nome-query.dto';
+import { FindAtorByNomeDto } from './dto/find-ator-by-nome.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
 
 @UseGuards(AuthGuard)
@@ -42,14 +44,18 @@ export class AtorController {
     return this.atorService.findOne(+id);
   }
 
+  @ApiTags('Ator')
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna a lista de atores',
+    type: FindAtorByNomeDto,
+  })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
   @Get('findByNome')
   findByNome(
-    @Query('nome') nome: string,
-    @Query('projeto') projetoId: number,
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
+    @Query() { nome, projeto, page, pageSize }: FindAtorByNomeQueryDto,
   ) {
-    return this.atorService.findByNome(nome, projetoId, page, pageSize);
+    return this.atorService.findByNome(nome, projeto, page, pageSize);
   }
 
   // ? Atores recebe o ID do projeto ?????????????

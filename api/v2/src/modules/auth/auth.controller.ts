@@ -31,7 +31,7 @@ export class AuthController {
 
   @Get('/verify')
   verifyToken(@Req() req) {
-    const token = req.headers.authorization.replace('Bearer ', '');
+    const token = req?.headers?.authorization?.replace('Bearer ', '');
     return this.authService.verifyToken(token);
   }
 }
