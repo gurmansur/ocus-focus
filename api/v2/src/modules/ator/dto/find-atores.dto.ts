@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { FindAtorByIdDto } from './find-ator-by-id.dto';
 
-export class FindAtorByNomeDto {
+export class FindAtoresDto {
   @ApiProperty({
     description: 'Itens encontrados na busca',
     example: [
@@ -18,12 +19,7 @@ export class FindAtorByNomeDto {
       },
     ],
   })
-  items: Array<{
-    id: number;
-    nome: string;
-    complexidade: string;
-    descricao: string;
-  }>;
+  items: Array<FindAtorByIdDto>;
 
   @ApiProperty({
     description: 'Informações da paginação',
