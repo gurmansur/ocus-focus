@@ -25,6 +25,9 @@ async function bootstrap() {
 
   await app.listen(3333);
 
-  Logger.log('Server running on http://localhost:3333', 'Bootstrap');
+  Logger.log(
+    'Server running on http://localhost:3333 | Check the documentation on http://localhost:3333/docs',
+    'Bootstrap',
+  );
 }
 bootstrap();

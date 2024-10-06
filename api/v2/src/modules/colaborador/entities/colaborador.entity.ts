@@ -1,3 +1,4 @@
+import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
 import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
 import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
@@ -53,4 +54,14 @@ export class Colaborador {
     (colaboradorProjeto) => colaboradorProjeto.colaborador,
   )
   projetos: ColaboradorProjeto[];
+
+  @OneToMany(
+    () => CasoDeTeste,
+    (casoDeTeste) => casoDeTeste.testadorDesignado,
+    {
+      nullable: true,
+    },
+  )
+  @JoinColumn({ name: 'FK_COLABORADORES_COL_ID' })
+  casosDeTeste: CasoDeTeste[];
 }

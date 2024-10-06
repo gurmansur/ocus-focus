@@ -1,3 +1,4 @@
+import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
 import { Cenario } from 'src/modules/cenarios/entities/cenario.entity';
 import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
 import {
@@ -37,4 +38,10 @@ export class CasoUso {
   @OneToMany(() => Cenario, (cenario) => cenario.casoUso)
   @JoinColumn({ name: 'FK_CASOS_DE_USO_CAS_ID' })
   cenarios: Cenario[];
+
+  @OneToMany(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.casoDeUso, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'FK_CASOS_DE_USO_CAS_ID' })
+  casosDeTeste: CasoDeTeste[];
 }

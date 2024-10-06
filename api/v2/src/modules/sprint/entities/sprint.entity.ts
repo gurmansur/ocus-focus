@@ -5,10 +5,10 @@ export class Sprint {
   @PrimaryGeneratedColumn({ type: 'int', name: 'spr_id' })
   id: number;
 
-  @Column({ type: 'string', name: 'spr_nome' })
+  @Column({ type: 'varchar', name: 'spr_nome' })
   nome: string;
 
-  @Column({ type: 'string', name: 'spr_descricao' })
+  @Column({ type: 'varchar', name: 'spr_descricao' })
   descricao: string;
 
   @Column({ type: 'int', name: 'spr_horas_previstas' })
