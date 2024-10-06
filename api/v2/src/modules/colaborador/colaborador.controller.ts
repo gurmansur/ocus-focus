@@ -10,14 +10,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Serialize } from 'src/decorators/serialize.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { ColaboradorService } from './colaborador.service';
-import { ColaboradorDto } from './dto/colaborador.dto';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 
-@Serialize(ColaboradorDto)
+@Serialize()
 @UseGuards(AuthGuard)
 @ApiTags('Colaborador')
 @Controller('colaboradores')

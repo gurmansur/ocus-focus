@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
 import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
 import { Priorizacao } from 'src/modules/priorizacao/entities/priorizacao.entity';
@@ -42,21 +43,21 @@ export class Usuario {
 
   @AfterInsert()
   async afterInsert() {
-    console.log('Inserted usuario with id:', this.id);
+    Logger.log('Inserted usuario with id: ' + this.id, 'Usuario');
   }
 
   @AfterUpdate()
   async afterUpdate() {
-    console.log('Updated usuario with id:', this.id);
+    Logger.log('Updated usuario with id: ' + this.id, 'Usuario');
   }
 
   @BeforeRemove()
   async beforeRemove() {
-    console.log('Removing usuario with id:', this.id);
+    Logger.log('Removed usuario with id: ' + this.id, 'Usuario');
   }
 
   @AfterLoad()
   async afterLoad() {
-    console.log('Loaded usuario with id:', this.id);
+    Logger.log('Loaded usuario with id: ' + this.id, 'Usuario');
   }
 }

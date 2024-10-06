@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Like, Not, Repository } from 'typeorm';
+import { Usuario } from '../usuario/entities/usuario.entity';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 import { Colaborador } from './entities/colaborador.entity';
@@ -12,8 +13,9 @@ export class ColaboradorService {
     private colaboradorRepository: Repository<Colaborador>,
   ) {}
 
-  create(createColaboradorDto: CreateColaboradorDto) {
+  create(createColaboradorDto: CreateColaboradorDto, usuario?: Usuario) {
     const colaborador = this.colaboradorRepository.create(createColaboradorDto);
+    colaborador.usuario = usuario;
     return this.colaboradorRepository.save(colaborador);
   }
 

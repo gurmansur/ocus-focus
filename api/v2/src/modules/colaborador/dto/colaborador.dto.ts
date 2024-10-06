@@ -1,21 +1,17 @@
-import { Expose } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 
 export class ColaboradorDto {
-  @Expose()
   id: number;
 
-  @Expose()
   nome: string;
 
-  @Expose()
   email: string;
 
+  @Exclude()
   senha: string;
 
-  @Expose()
   empresa: string;
 
-  @Expose()
   cargo:
     | 'Gerente de Projeto'
     | 'Analista de Sistemas'

@@ -5,31 +5,47 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ColaboradorService } from '../colaborador/colaborador.service';
 import { StakeholderService } from '../stakeholder/stakeholder.service';
+import { UsuarioService } from '../usuario/usuario.service';
 import { AuthMapper } from './auth.mapper';
 import { SignInColaboradorDto } from './dto/sign-in-colaborador.dto';
 import { SignInStakeholderDto } from './dto/sign-in-stakeholder.dto';
+import { SignUpResponseDto } from './dto/sign-up-response.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 // const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject() private readonly usuarioService: UsuarioService,
     @Inject() private readonly colaboradorService: ColaboradorService,
     @Inject() private readonly stakeholderService: StakeholderService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto) {
+  async signUp(signUpDto: SignUpDto): Promise<SignUpResponseDto> {
     const users = await this.colaboradorService.findByEmail(signUpDto.email);
     if (users) {
       throw new BadRequestException('Email já cadastrado!');
     }
 
-    signUpDto.senha = await bcrypt.hash(signUpDto.senha, 10);
+    const { senha, ...payload } = signUpDto;
 
-    return this.colaboradorService.create(
-      AuthMapper.signUpDtoToCreateColaboradorDto(signUpDto),
+    const senhaHashed = await bcrypt.hash(signUpDto.senha, 10);
+
+    const newUser = await this.usuarioService.create({
+      ...payload,
+      senha: senhaHashed,
+    });
+
+    const entity = await this.colaboradorService.create(
+      AuthMapper.signUpDtoToCreateColaboradorDto({
+        ...payload,
+        senha: senhaHashed,
+      }),
+      newUser,
     );
+
+    return AuthMapper.colaboradorEntityToSignUpResponseDto(entity);
   }
 
   async signInColaborador(signInDto: SignInColaboradorDto) {
