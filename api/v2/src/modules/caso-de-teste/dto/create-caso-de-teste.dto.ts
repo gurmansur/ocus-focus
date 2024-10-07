@@ -23,7 +23,7 @@ export class CreateCasoDeTesteDto {
     required: false,
   })
   @IsString()
-  observacao: string;
+  observacoes: string;
 
   @ApiProperty({
     description: 'Prioridade do caso de teste',

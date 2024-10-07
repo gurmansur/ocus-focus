@@ -17,7 +17,7 @@ export class CasoDeTesteMapper {
 
     bo.nome = dto.nome;
     bo.descricao = dto.descricao;
-    bo.observacao = dto.observacao;
+    bo.observacoes = dto.observacoes;
     bo.prioridade = dto.prioridade;
     bo.preCondicao = dto.preCondicao;
     bo.posCondicao = dto.posCondicao;
@@ -39,7 +39,7 @@ export class CasoDeTesteMapper {
 
     entity.nome = bo.nome;
     entity.descricao = bo.descricao;
-    entity.observacao = bo.observacao;
+    entity.observacoes = bo.observacoes;
     entity.prioridade = bo.prioridade;
     entity.preCondicao = bo.preCondicao;
     entity.posCondicao = bo.posCondicao;
@@ -63,7 +63,7 @@ export class CasoDeTesteMapper {
 
     bo.nome = dto.nome;
     bo.descricao = dto.descricao;
-    bo.observacao = dto.observacao;
+    bo.observacoes = dto.observacoes;
     bo.prioridade = dto.prioridade;
     bo.preCondicao = dto.preCondicao;
     bo.posCondicao = dto.posCondicao;
@@ -85,7 +85,7 @@ export class CasoDeTesteMapper {
 
     entity.nome = bo.nome;
     entity.descricao = bo.descricao;
-    entity.observacao = bo.observacao;
+    entity.observacoes = bo.observacoes;
     entity.prioridade = bo.prioridade;
     entity.preCondicao = bo.preCondicao;
     entity.posCondicao = bo.posCondicao;
@@ -108,7 +108,7 @@ export class CasoDeTesteMapper {
     bo.id = entity.id;
     bo.nome = entity.nome;
     bo.descricao = entity.descricao;
-    bo.observacao = entity.observacao;
+    bo.observacoes = entity.observacoes;
     bo.prioridade = entity.prioridade;
     bo.preCondicao = entity.preCondicao;
     bo.posCondicao = entity.posCondicao;
@@ -131,7 +131,7 @@ export class CasoDeTesteMapper {
     dto.id = bo.id;
     dto.nome = bo.nome;
     dto.descricao = bo.descricao;
-    dto.observacao = bo.observacao;
+    dto.observacoes = bo.observacoes;
     dto.prioridade = bo.prioridade;
     dto.preCondicao = bo.preCondicao;
     dto.posCondicao = bo.posCondicao;

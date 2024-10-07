@@ -34,7 +34,7 @@ export class AtorController {
 
   @ApiResponse({
     status: 200,
-    description: 'Retorna o ator criado',
+    description: 'Cria um novo ator e retorna o ator criado',
     type: FindAtorByIdDto,
   })
   @Post('new')

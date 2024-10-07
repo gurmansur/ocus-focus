@@ -35,7 +35,7 @@ export class CasoDeTesteDto {
     required: false,
     example: 'Observação do Caso de Teste 1',
   })
-  observacao: string;
+  observacoes: string;
 
   @ApiProperty({
     type: 'enum',

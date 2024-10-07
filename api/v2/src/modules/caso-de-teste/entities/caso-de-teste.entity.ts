@@ -1,11 +1,13 @@
 import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
 import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
+import { ExecucaoDeTeste } from 'src/modules/execucao-de-teste/entities/execucao-de-teste.entity';
 import { SuiteDeTeste } from 'src/modules/suite-de-teste/entities/suite-de-teste.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -55,8 +57,8 @@ export class CasoDeTeste {
   @Column('varchar', { name: 'CDT_DESCRICAO', length: 255 })
   descricao: string;
 
-  @Column('varchar', { name: 'CDT_OBSERVACAO', length: 255 })
-  observacao: string;
+  @Column('varchar', { name: 'CDT_OBSERVACOES', length: 255 })
+  observacoes: string;
 
   @Column('varchar', { name: 'CDT_PRE_CONDICAO', length: 255 })
   preCondicao: string;
@@ -90,4 +92,10 @@ export class CasoDeTeste {
   )
   @JoinColumn({ name: 'FK_COLABORADORES_COL_ID' })
   testadorDesignado: Colaborador;
+
+  @OneToMany(
+    () => ExecucaoDeTeste,
+    (execucaoDeTeste) => execucaoDeTeste.casoDeTeste,
+  )
+  execucoesDeTeste: ExecucaoDeTeste[];
 }

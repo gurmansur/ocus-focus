@@ -9,7 +9,7 @@ export class CasoDeTesteBo {
 
   descricao: string;
 
-  observacao: string;
+  observacoes: string;
 
   prioridade: 'ALTA' | 'MEDIA' | 'BAIXA';
 
