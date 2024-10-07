@@ -7,10 +7,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateSuiteDeTesteDto } from './dto/create-suite-de-teste.dto';
 import { UpdateSuiteDeTesteDto } from './dto/update-suite-de-teste.dto';
 import { SuiteDeTesteService } from './suite-de-teste.service';
 
+@ApiTags('Suite de Teste')
 @Controller('suite-de-teste')
 export class SuiteDeTesteController {
   constructor(private readonly suiteDeTesteService: SuiteDeTesteService) {}

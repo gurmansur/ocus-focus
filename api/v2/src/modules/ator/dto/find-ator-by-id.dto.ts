@@ -9,7 +9,7 @@ export class FindAtorByIdDto {
 
   @ApiProperty({
     description: 'Nome do ator',
-    example: 'João',
+    example: 'Jorge',
   })
   nome: string;
 

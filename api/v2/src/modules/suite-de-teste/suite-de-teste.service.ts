@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import * as fs from 'fs';
 import { Browser, Builder } from 'selenium-webdriver';
 import { CreateSuiteDeTesteDto } from './dto/create-suite-de-teste.dto';
 import { UpdateSuiteDeTesteDto } from './dto/update-suite-de-teste.dto';
@@ -26,23 +27,35 @@ export class SuiteDeTesteService {
   }
 
   async runSuite(id: number) {
+    const screenshots = [];
     const driver = new Builder().forBrowser(Browser.CHROME).build();
     await driver.get('http://www.google.com');
+    screenshots.push(await driver.takeScreenshot());
     await driver.findElement({ name: 'q' }).sendKeys('webdriver');
+    screenshots.push(await driver.takeScreenshot());
     await driver.findElement({ name: 'q' }).submit();
     try {
-      await driver.wait(
-        () =>
-          driver
-            .getTitle()
-            .then((title) => title === 'webdriver - Psquisa Google'),
-        5000,
-      );
+      await driver.wait(async () => {
+        screenshots.push(await driver.takeScreenshot());
+        return driver
+          .getPageSource()
+          .then((source) => source.includes('Selenium'));
+      }, 1000);
       await driver.quit();
       Logger.log('Teste finalizado com sucesso', 'SuiteDeTesteService');
     } catch (error) {
+      screenshots.push(await driver.takeScreenshot());
       Logger.error('Teste falhou', 'SuiteDeTesteService');
       await driver.quit();
     }
+    screenshots.forEach((screenshot, index) => {
+      fs.writeFileSync(
+        `./src/screenshots/screenshot-${index}.png`,
+        screenshot,
+        {
+          encoding: 'base64',
+        },
+      );
+    });
   }
 }

@@ -9,7 +9,11 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { ColaboradorAtual } from 'src/decorators/colaborador-atual.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
@@ -19,6 +23,8 @@ import { ProjetoService } from './projeto.service';
 
 @UseGuards(AuthGuard)
 @ApiTags('Projeto')
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Não autorizado' })
 @Controller('projetos')
 export class ProjetoController {
   constructor(private readonly projetoService: ProjetoService) {}
