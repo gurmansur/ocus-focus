@@ -21,5 +21,5 @@ export class FindAtoresQueryDto {
     example: 10,
   })
   @IsNumberString()
-  pageSize: number;
+  size: number;
 }

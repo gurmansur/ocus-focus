@@ -51,8 +51,8 @@ export class AtorController {
     type: FindAtoresDto,
   })
   @Get()
-  findAll(@Query() { projeto, page, pageSize }: FindAtoresQueryDto) {
-    return this.atorService.findAll(projeto, page, pageSize);
+  findAll(@Query() { projeto, page, size }: FindAtoresQueryDto) {
+    return this.atorService.findAll(projeto, page, size);
   }
 
   @ApiResponse({
