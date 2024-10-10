@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { CasoUsoDto } from 'src/modules/caso-uso/dto/caso-uso.dto';
 import { ColaboradorDto } from 'src/modules/colaborador/dto/colaborador.dto';
+import { ProjetoDto } from 'src/modules/projeto/dto/projeto.dto';
 import { SuiteDeTesteDto } from 'src/modules/suite-de-teste/dto/suite-de-teste.dto';
 
 export class CasoDeTesteDto {
@@ -137,4 +138,11 @@ export class CasoDeTesteDto {
   })
   @Type(() => ColaboradorDto)
   testadorDesignado?: ColaboradorDto;
+
+  @ApiProperty({
+    type: ProjetoDto,
+    description: 'Projeto do Caso de Teste',
+  })
+  @Type(() => ProjetoDto)
+  projeto: ProjetoDto;
 }

@@ -1,22 +1,18 @@
 import { Component } from '@angular/core';
 // import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ProjetoService } from '../../services/projeto.service';
 import { Projeto } from '../../models/projeto';
+import { ProjetoService } from '../../services/projeto.service';
 
 @Component({
   selector: 'app-projetos',
   templateUrl: './projetos.component.html',
-  styleUrls: ['./projetos.component.css']
+  styleUrls: ['./projetos.component.css'],
 })
 export class ProjetosComponent {
+  constructor(private projetoService: ProjetoService, private router: Router) {}
 
-  constructor(
-    private projetoService: ProjetoService,
-    private router: Router
-  ) {}
-
-  userId: number = +localStorage.getItem("usu_id")!;
+  userId: number = +localStorage.getItem('usu_id')!;
 
   // datasource
   projetos: Projeto[] = [];
@@ -39,7 +35,7 @@ export class ProjetosComponent {
   ];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -56,10 +52,11 @@ export class ProjetosComponent {
   // diálogo de confirmação
   showModal: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente excluir este projeto?";
-  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do projeto em questão serão excluídos do sistema.";
+  tituloDialogo: string = 'Deseja realmente excluir este projeto?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. Todos os dados do projeto em questão serão excluídos do sistema.';
 
-  ngOnInit(){
+  ngOnInit() {
     this.executarBusca();
     this.buscarMetricas();
   }
@@ -83,37 +80,27 @@ export class ProjetosComponent {
   }
 
   private buscarMetricas(): void {
-    this.projetoService
-    .getNumberOfProjetos(
-      this.userId
-    )
-    .subscribe((data) => {
+    this.projetoService.getNumberOfProjetos(this.userId).subscribe((data) => {
       this.quantidadeProjetos = data.totalCount;
     });
 
     this.projetoService
-    .getNumberOfNovosProjetos(
-      this.userId
-    )
-    .subscribe((data) => {
-      this.novosProjetos = data.totalCount;
-    });
+      .getNumberOfNovosProjetos(this.userId)
+      .subscribe((data) => {
+        this.novosProjetos = data.totalCount;
+      });
 
     this.projetoService
-    .getNumberOfProjetosEmAndamento(
-      this.userId
-    )
-    .subscribe((data) => {
-      this.projetosEmAndamento = data.totalCount;
-    });
+      .getNumberOfProjetosEmAndamento(this.userId)
+      .subscribe((data) => {
+        this.projetosEmAndamento = data.totalCount;
+      });
 
     this.projetoService
-    .getNumberOfProjetosConcluidos(
-      this.userId
-    )
-    .subscribe((data) => {
-      this.projetosConcluidos = data.totalCount;
-    });
+      .getNumberOfProjetosConcluidos(this.userId)
+      .subscribe((data) => {
+        this.projetosConcluidos = data.totalCount;
+      });
   }
 
   private processarResultado() {
@@ -127,6 +114,7 @@ export class ProjetosComponent {
   }
 
   visualizarItem(item: any) {
+    localStorage.setItem('projeto_id', item.id);
     this.router.navigate(['/dashboard/projeto/', item.id]);
   }
 

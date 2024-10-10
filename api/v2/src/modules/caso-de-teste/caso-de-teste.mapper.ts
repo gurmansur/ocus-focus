@@ -124,6 +124,7 @@ export class CasoDeTesteMapper {
       ? SuiteDeTesteMapper.entityToBo(entity.suiteDeTeste)
       : null;
     bo.testadorDesignado = entity.testadorDesignado;
+    bo.projeto = entity.projeto;
 
     return bo;
   }
@@ -147,6 +148,7 @@ export class CasoDeTesteMapper {
     dto.casoDeUso = bo.casoDeUso;
     dto.suiteDeTeste = bo.suiteDeTeste;
     dto.testadorDesignado = bo.testadorDesignado;
+    dto.projeto = bo.projeto;
 
     return dto;
   }

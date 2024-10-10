@@ -1,5 +1,6 @@
 import { CasoUsoBo } from 'src/modules/caso-uso/dto copy/caso-uso.bo';
 import { ColaboradorBo } from 'src/modules/colaborador/bo/colaborador.bo';
+import { ProjetoBo } from 'src/modules/projeto/bo/projeto.bo';
 import { SuiteDeTesteBo } from 'src/modules/suite-de-teste/bo/suite-de-teste.bo';
 
 export class CasoDeTesteBo {
@@ -34,4 +35,6 @@ export class CasoDeTesteBo {
   suiteDeTeste?: SuiteDeTesteBo;
 
   testadorDesignado?: ColaboradorBo;
+
+  projeto: ProjetoBo;
 }

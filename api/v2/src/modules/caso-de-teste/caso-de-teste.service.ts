@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateCasoDeTesteBo } from './bo/create-caso-de-teste.bo';
 import { UpdateCasoDeTesteBo } from './bo/update-caso-de-teste.bo';
 import { CasoDeTesteMapper } from './caso-de-teste.mapper';
@@ -13,11 +14,14 @@ export class CasoDeTesteService {
     private casoDeTesteRepository: Repository<CasoDeTeste>,
   ) {}
 
-  async create(createCasoDeTesteBo: CreateCasoDeTesteBo) {
+  async create(createCasoDeTesteBo: CreateCasoDeTesteBo, projeto: Projeto) {
+    const entity =
+      CasoDeTesteMapper.createCasoDeTesteBoToEntity(createCasoDeTesteBo);
+
+    entity.projeto = projeto;
+
     return CasoDeTesteMapper.entityToCasoDeTesteBo(
-      await this.casoDeTesteRepository.save(
-        CasoDeTesteMapper.createCasoDeTesteBoToEntity(createCasoDeTesteBo),
-      ),
+      await this.casoDeTesteRepository.save(entity),
     );
   }
 

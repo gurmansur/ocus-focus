@@ -1,10 +1,12 @@
 import { Ator } from 'src/modules/ator/entities/ator.entity';
+import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
 import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
 import { Estimativa } from 'src/modules/estimativa/entities/estimativa.entity';
 import { FatorAmbientalProjeto } from 'src/modules/fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 import { FatorTecnicoProjeto } from 'src/modules/fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
 import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
 import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
+import { SuiteDeTeste } from 'src/modules/suite-de-teste/entities/suite-de-teste.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('PROJETOS')
@@ -76,4 +78,10 @@ export class Projeto {
 
   @OneToMany(() => ColaboradorProjeto, (colaborador) => colaborador.projeto)
   colaboradores: ColaboradorProjeto[];
+
+  @OneToMany(() => SuiteDeTeste, (suiteDeTeste) => suiteDeTeste.projeto)
+  suitesDeTeste: SuiteDeTeste[];
+
+  @OneToMany(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.projeto)
+  casosDeTeste: CasoDeTeste[];
 }

@@ -11,14 +11,17 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiHeader,
   ApiOkResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ProjetoAtual } from 'src/decorators/projeto-atual.decorator';
 import { Serialize } from 'src/decorators/serialize.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { CasoDeTesteMapper } from './caso-de-teste.mapper';
 import { CasoDeTesteService } from './caso-de-teste.service';
 import { CasoDeTesteDto } from './dto/caso-de-teste.dto';
@@ -50,13 +53,21 @@ export class CasoDeTesteController {
       suiteDeTesteId: 1,
     },
   })
+  @ApiHeader({
+    name: 'projeto',
+    required: true,
+    description: 'Id do Projeto',
+    example: 1,
+  })
   @Post()
   async create(
     @Body() createCasoDeTesteDto: CreateCasoDeTesteDto,
+    @ProjetoAtual() projetoAtual: Projeto,
   ): Promise<CasoDeTesteDto> {
     return CasoDeTesteMapper.casoDeTesteBoToDto(
       await this.casoDeTesteService.create(
         CasoDeTesteMapper.createCasoDeTesteDtoToBo(createCasoDeTesteDto),
+        projetoAtual,
       ),
     );
   }

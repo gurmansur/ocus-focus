@@ -1,4 +1,5 @@
 import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
+import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
 import {
   Column,
   CreateDateColumn,
@@ -56,4 +57,8 @@ export class SuiteDeTeste {
   })
   @JoinColumn({ name: 'FK_SUITE_DE_TESTE_SDT_ID' })
   suitePai?: SuiteDeTeste;
+
+  @ManyToOne(() => Projeto, (projeto) => projeto.suitesDeTeste)
+  @JoinColumn({ name: 'FK_PROJETO_PRO_ID' })
+  projeto: Projeto;
 }

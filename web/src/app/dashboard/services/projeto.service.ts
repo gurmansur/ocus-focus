@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Projeto } from '../models/projeto';
 import { Colaborador } from '../models/colaborador';
+import { Projeto } from '../models/projeto';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,9 @@ export class ProjetoService {
 
   create(projeto: Projeto): Observable<any> {
     return this.httpClient.post<Projeto>(
-      `${this.servicesRootUrl}/projetos/new?user=${localStorage.getItem('usu_id')}`,
+      `${this.servicesRootUrl}/projetos/new?user=${localStorage.getItem(
+        'usu_id'
+      )}`,
       projeto,
       {
         headers: {
@@ -72,7 +74,9 @@ export class ProjetoService {
 
   findByColaborador(): Observable<GetResponseProjetos[]> {
     return this.httpClient.get<GetResponseProjetos[]>(
-      `${this.servicesRootUrl}/projetos/findByColaborador?user=${localStorage.getItem('usu_id')}`,
+      `${
+        this.servicesRootUrl
+      }/projetos/findByColaborador?user=${localStorage.getItem('usu_id')}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -128,10 +132,7 @@ export class ProjetoService {
     );
   }
 
-  addColaborador(
-    idProjeto: number,
-    idColaborador: number
-  ): Observable<any> {
+  addColaborador(idProjeto: number, idColaborador: number): Observable<any> {
     return this.httpClient.post<any>(
       `${this.servicesRootUrl}/projetos/addColaborador?projeto=${idProjeto}&colaborador=${idColaborador}`,
       {},
@@ -143,10 +144,7 @@ export class ProjetoService {
     );
   }
 
-  removeColaborador(
-    idProjeto: number,
-    idColaborador: number
-  ): Observable<any> {
+  removeColaborador(idProjeto: number, idColaborador: number): Observable<any> {
     return this.httpClient.delete<any>(
       `${this.servicesRootUrl}/projetos/removeColaborador?projeto=${idProjeto}&colaborador=${idColaborador}`,
       {

@@ -1,6 +1,7 @@
 import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
 import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
 import { ExecucaoDeTeste } from 'src/modules/execucao-de-teste/entities/execucao-de-teste.entity';
+import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
 import { SuiteDeTeste } from 'src/modules/suite-de-teste/entities/suite-de-teste.entity';
 import {
   Column,
@@ -110,4 +111,8 @@ export class CasoDeTeste {
     (execucaoDeTeste) => execucaoDeTeste.casoDeTeste,
   )
   execucoesDeTeste: ExecucaoDeTeste[];
+
+  @ManyToOne(() => Projeto, (projeto) => projeto.casosDeTeste)
+  @JoinColumn({ name: 'FK_PROJETO_PRO_ID' })
+  projeto: Projeto;
 }

@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProjetoAtualMiddleware } from 'src/middlewares/projeto-atual.middleware';
 import { ColaboradorProjetoModule } from '../colaborador-projeto/colaborador-projeto.module';
 import { ColaboradorModule } from '../colaborador/colaborador.module';
 import { Projeto } from './entities/projeto.entity';
@@ -16,4 +17,8 @@ import { ProjetoService } from './projeto.service';
     ColaboradorProjetoModule,
   ],
 })
-export class ProjetoModule {}
+export class ProjetoModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ProjetoAtualMiddleware).forRoutes('*');
+  }
+}
