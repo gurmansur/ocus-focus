@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateExecucaoDeTesteDto } from './dto/create-execucao-de-teste.dto';
-import { UpdateExecucaoDeTesteDto } from './dto/update-execucao-de-teste.dto';
+import { ChangeStatusExecucaoDeTesteBo } from './bo/change-status-execucao-de-teste.bo';
+import { CreateExecucaoDeTesteBo } from './bo/create-execucao-de-teste.bo';
+import { UpdateExecucaoDeTesteBo } from './bo/update-execucao-de-teste.bo';
 import { ExecucaoDeTeste } from './entities/execucao-de-teste.entity';
+import { ExecucaoDeTesteMapper } from './execucao-de-teste.mapper';
 
 @Injectable()
 export class ExecucaoDeTesteService {
@@ -12,20 +14,45 @@ export class ExecucaoDeTesteService {
     private execucaoDeTesteRepository: Repository<ExecucaoDeTeste>,
   ) {}
 
-  create(createExecucaoDeTesteDto: CreateExecucaoDeTesteDto) {
-    return 'This action adds a new execucaoDeTeste';
+  async create(createExecucaoDeTesteBo: CreateExecucaoDeTesteBo) {
+    const entity = ExecucaoDeTesteMapper.createBoToEntity(
+      createExecucaoDeTesteBo,
+    );
+
+    return ExecucaoDeTesteMapper.entityToBo(
+      await this.execucaoDeTesteRepository.save(entity),
+    );
   }
 
-  findAll() {
-    return this.execucaoDeTesteRepository.find();
+  async findAll() {
+    const entities = await this.execucaoDeTesteRepository.find();
+
+    return entities.map((entity) => ExecucaoDeTesteMapper.entityToBo(entity));
   }
 
-  findOne(id: number) {
-    return this.execucaoDeTesteRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+    return ExecucaoDeTesteMapper.entityToBo(
+      await this.execucaoDeTesteRepository.findOne({ where: { id } }),
+    );
   }
 
-  update(id: number, updateExecucaoDeTesteDto: UpdateExecucaoDeTesteDto) {
-    return `This action updates a #${id} execucaoDeTeste`;
+  update(id: number, updateExecucaoDeTesteBo: UpdateExecucaoDeTesteBo) {
+    const entity = ExecucaoDeTesteMapper.updateBoToEntity(
+      updateExecucaoDeTesteBo,
+    );
+
+    return this.execucaoDeTesteRepository.update(id, entity);
+  }
+
+  changeStatus(
+    id: number,
+    changeStatusExecucaoDeTesteBo: ChangeStatusExecucaoDeTesteBo,
+  ) {
+    const entity = ExecucaoDeTesteMapper.changeStatusBoToEntity(
+      changeStatusExecucaoDeTesteBo,
+    );
+
+    return this.execucaoDeTesteRepository.update(id, entity);
   }
 
   remove(id: number) {

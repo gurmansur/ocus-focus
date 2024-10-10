@@ -21,7 +21,7 @@ export class ExecucaoDeTeste {
   @Column('timestamp', { name: 'EDT_DATA_EXECUCAO' })
   dataExecucao: Date;
 
-  @Column('varchar', { name: 'EDT_RESPOSTA', length: 255 })
+  @Column('varchar', { name: 'EDT_RESPOSTA', length: 255, nullable: true })
   resposta: string;
 
   @Column('enum', {
@@ -30,6 +30,9 @@ export class ExecucaoDeTeste {
     default: 'PENDENTE',
   })
   resultado: 'SUCESSO' | 'FALHA' | 'PENDENTE';
+
+  @Column('varchar', { name: 'EDT_OBSERVACAO', length: 255, nullable: true })
+  observacao: string;
 
   @Column('enum', {
     name: 'EDT_METODO',
@@ -47,7 +50,9 @@ export class ExecucaoDeTeste {
   @DeleteDateColumn({ name: 'EDT_DATA_EXCLUSAO' })
   dataExclusao: Date;
 
-  @ManyToOne(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.execucoesDeTeste)
+  @ManyToOne(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.execucoesDeTeste, {
+    eager: true,
+  })
   @JoinColumn({ name: 'FK_CASO_DE_TESTE_CDT_ID' })
   casoDeTeste: CasoDeTeste;
 }
