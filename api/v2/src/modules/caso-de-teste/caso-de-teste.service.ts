@@ -52,6 +52,6 @@ export class CasoDeTesteService {
   }
 
   remove(id: number) {
-    return this.casoDeTesteRepository.delete(id);
+    return this.casoDeTesteRepository.softDelete(id);
   }
 }

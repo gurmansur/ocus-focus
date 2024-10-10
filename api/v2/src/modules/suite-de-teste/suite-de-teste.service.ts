@@ -1,29 +1,59 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { Browser, Builder } from 'selenium-webdriver';
-import { CreateSuiteDeTesteDto } from './dto/create-suite-de-teste.dto';
-import { UpdateSuiteDeTesteDto } from './dto/update-suite-de-teste.dto';
+import { Repository } from 'typeorm';
+import { CreateSuiteDeTesteBo } from './bo/create-suite-de-teste.bo';
+import { SuiteDeTesteBo } from './bo/suite-de-teste.bo';
+import { UpdateSuiteDeTesteBo } from './bo/update-suite-de-teste.bo';
+import { SuiteDeTeste } from './entities/suite-de-teste.entity';
+import { SuiteDeTesteMapper } from './suite-de-teste.mapper';
 
 @Injectable()
 export class SuiteDeTesteService {
-  create(createSuiteDeTesteDto: CreateSuiteDeTesteDto) {
-    return 'This action adds a new suiteDeTeste';
+  constructor(
+    @InjectRepository(SuiteDeTeste)
+    private suiteDeTesteRepository: Repository<SuiteDeTeste>,
+  ) {}
+
+  async create(
+    createSuiteDeTesteBo: CreateSuiteDeTesteBo,
+  ): Promise<SuiteDeTesteBo> {
+    const entity =
+      SuiteDeTesteMapper.createSuiteDeTesteBoToEntity(createSuiteDeTesteBo);
+
+    return SuiteDeTesteMapper.entityToBo(
+      await this.suiteDeTesteRepository.save(entity),
+    );
   }
 
   findAll() {
-    return `This action returns all suiteDeTeste`;
+    return this.suiteDeTesteRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} suiteDeTeste`;
+    return this.suiteDeTesteRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateSuiteDeTesteDto: UpdateSuiteDeTesteDto) {
-    return `This action updates a #${id} suiteDeTeste`;
+  async update(
+    id: number,
+    updateSuiteDeTesteBo: UpdateSuiteDeTesteBo,
+  ): Promise<SuiteDeTesteBo> {
+    const updateEntity =
+      SuiteDeTesteMapper.updateSuiteDeTesteBoToEntity(updateSuiteDeTesteBo);
+
+    const entity = await this.suiteDeTesteRepository.findOne({ where: { id } });
+
+    return SuiteDeTesteMapper.entityToBo(
+      await this.suiteDeTesteRepository.save({
+        ...entity,
+        ...updateEntity,
+      }),
+    );
   }
 
   remove(id: number) {
-    return `This action removes a #${id} suiteDeTeste`;
+    return this.suiteDeTesteRepository.softDelete(id);
   }
 
   async runSuite(id: number) {

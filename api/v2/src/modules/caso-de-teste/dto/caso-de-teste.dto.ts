@@ -123,7 +123,7 @@ export class CasoDeTesteDto {
   casoDeUso: CasoUsoDto;
 
   @ApiProperty({
-    type: SuiteDeTesteDto,
+    type: () => SuiteDeTesteDto,
     description: 'Suite de Teste do Caso de Teste',
     required: false,
   })

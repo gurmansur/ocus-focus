@@ -1,12 +1,14 @@
 import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
-import { PlanoDeTeste } from 'src/modules/plano-de-teste/entities/plano-de-teste.entity';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('SUITES_DE_TESTE')
@@ -30,11 +32,28 @@ export class SuiteDeTeste {
   @Column('varchar', { name: 'SDT_OBSERVACOES', length: 255 })
   observacoes: string;
 
+  @CreateDateColumn({ name: 'SDT_DATA_CRIACAO' })
+  dataCriacao: Date;
+
+  @UpdateDateColumn({ name: 'SDT_DATA_ATUALIZACAO' })
+  dataAtualizacao: Date;
+
+  @DeleteDateColumn({ name: 'SDT_DATA_EXCLUSAO' })
+  dataExclusao: Date;
+
   @OneToMany(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.suiteDeTeste)
   @JoinColumn({ name: 'FK_SUITE_DE_TESTE_SDT_ID' })
-  casosDeTeste: CasoDeTeste[];
+  casosDeTeste?: CasoDeTeste[];
 
-  @ManyToOne(() => PlanoDeTeste, (planoDeTeste) => planoDeTeste.suitesDeTeste)
-  @JoinColumn({ name: 'FK_PLANO_DE_TESTE_PDT_ID' })
-  planoDeTeste: PlanoDeTeste;
+  @OneToMany(() => SuiteDeTeste, (suiteDeTeste) => suiteDeTeste.suitePai, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'FK_SUITE_DE_TESTE_SDT_ID' })
+  suitesFilhas?: SuiteDeTeste[];
+
+  @ManyToOne(() => SuiteDeTeste, (suiteDeTeste) => suiteDeTeste.suitesFilhas, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'FK_SUITE_DE_TESTE_SDT_ID' })
+  suitePai?: SuiteDeTeste;
 }

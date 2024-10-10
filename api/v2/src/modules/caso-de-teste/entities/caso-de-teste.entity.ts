@@ -4,11 +4,14 @@ import { ExecucaoDeTeste } from 'src/modules/execucao-de-teste/entities/execucao
 import { SuiteDeTeste } from 'src/modules/suite-de-teste/entities/suite-de-teste.entity';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('CASOS_DE_TESTE')
@@ -75,6 +78,15 @@ export class CasoDeTeste {
   @ManyToOne(() => CasoUso, (casoUso: CasoUso) => casoUso.casosDeTeste)
   @JoinColumn({ name: 'FK_CASOS_DE_USO_CAS_ID' })
   casoDeUso: CasoUso;
+
+  @CreateDateColumn({ name: 'CDT_DATA_CRIACAO' })
+  dataCriacao: Date;
+
+  @UpdateDateColumn({ name: 'CDT_DATA_ATUALIZACAO' })
+  dataAtualizacao: Date;
+
+  @DeleteDateColumn({ name: 'CDT_DATA_EXCLUSAO' })
+  dataExclusao: Date;
 
   @ManyToOne(
     () => SuiteDeTeste,

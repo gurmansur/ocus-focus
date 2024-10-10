@@ -1,10 +1,13 @@
 import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('EXECUCOES_DE_TESTE')
@@ -34,6 +37,15 @@ export class ExecucaoDeTeste {
     default: 'MANUAL',
   })
   metodo: 'MANUAL' | 'AUTOMATIZADO';
+
+  @CreateDateColumn({ name: 'EDT_DATA_CRIACAO' })
+  dataCriacao: Date;
+
+  @UpdateDateColumn({ name: 'EDT_DATA_ATUALIZACAO' })
+  dataAtualizacao: Date;
+
+  @DeleteDateColumn({ name: 'EDT_DATA_EXCLUSAO' })
+  dataExclusao: Date;
 
   @ManyToOne(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.execucoesDeTeste)
   @JoinColumn({ name: 'FK_CASO_DE_TESTE_CDT_ID' })
