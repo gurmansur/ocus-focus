@@ -26,7 +26,7 @@ export class FatorAmbientalProjetoController {
   findAll(
     @Query('projeto') projeto: number,
     @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
+    @Query('size') pageSize: number,
   ) {
     return this.fatorAmbientalProjetoService.findAll(projeto, page, pageSize);
   }
@@ -36,7 +36,7 @@ export class FatorAmbientalProjetoController {
     return this.fatorAmbientalProjetoService.getById(+id);
   }
 
-  @Post()
+  @Post('new')
   create(
     @Query('projeto') projeto: number,
     @Body() createFatorAmbientalProjetoDto: CreateFatorAmbientalProjetoDto,

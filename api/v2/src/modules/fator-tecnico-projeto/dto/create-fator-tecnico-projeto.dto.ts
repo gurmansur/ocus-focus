@@ -1,9 +1,9 @@
-import { IsNumber } from 'class-validator';
+import { IsAlphanumeric } from 'class-validator';
 
 export class CreateFatorTecnicoProjetoDto {
-  @IsNumber()
+  @IsAlphanumeric()
   valor: number;
 
-  @IsNumber()
+  @IsAlphanumeric()
   fatorTec: number;
 }

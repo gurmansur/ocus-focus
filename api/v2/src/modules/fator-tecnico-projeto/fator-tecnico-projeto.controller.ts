@@ -26,7 +26,7 @@ export class FatorTecnicoProjetoController {
   findAll(
     @Query('projeto') projetoId: string,
     @Query('page') page?: string,
-    @Query('pageSize') pageSize?: string,
+    @Query('size') pageSize?: string,
   ) {
     return this.fatorTecnicoProjetoService.findAll(
       +projetoId,
@@ -40,7 +40,7 @@ export class FatorTecnicoProjetoController {
     return this.fatorTecnicoProjetoService.getById(+id);
   }
 
-  @Post()
+  @Post('new')
   create(
     @Query('projeto') projetoId: number,
     @Body() createFatorTecnicoProjetoDto: CreateFatorTecnicoProjetoDto,

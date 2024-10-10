@@ -8,7 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CasoUsoService } from './caso-uso.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';
@@ -16,10 +16,16 @@ import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
 
 @UseGuards(AuthGuard)
 @ApiTags('Caso de Uso')
+@ApiResponse({ status: 401, description: 'Não autorizado' })
+@ApiBearerAuth()
 @Controller('caso-uso')
 export class CasoUsoController {
   constructor(private readonly casoUsoService: CasoUsoService) {}
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna todos os casos de uso',
+  })
   @Get()
   findAll(
     @Query('requisito') requisito: number,
@@ -29,42 +35,78 @@ export class CasoUsoController {
     return this.casoUsoService.findAll(requisito, page, pageSize);
   }
 
+  // TODO fazer o DTO da resposta aqui e ver se o service retorna certo
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna um caso de uso buscando pelo nome',
+  })
   @Get('findByNome')
   findByNome(@Query('nome') nome: string) {
     return this.casoUsoService.findByNome(nome);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna um caso de uso buscando pelo id',
+  })
   @Get('findById')
   findOne(@Query('id') id: string) {
     return this.casoUsoService.findOne(+id);
   }
 
-  // aqui ele recebe o id de requisito funcional
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna a quantiade total de casos de uso',
+  })
+  // aqui ele recebe o id de requisito funcional, mas tá certo
+  // o nome da variável como caso
   @Get('metrics/total')
   getTotal(@Query('caso') caso: number) {
     return this.casoUsoService.getMetrics(caso);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna a quantidade de casos de uso simples',
+  })
   @Get('metrics/simples')
   getTotalSimples(@Query('caso') caso: number) {
     return this.casoUsoService.getMetrics(caso, 'SIMPLES');
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna a quantidade de casos de uso médios',
+  })
   @Get('metrics/medios')
   getTotalMedios(@Query('caso') caso: number) {
     return this.casoUsoService.getMetrics(caso, 'MEDIO');
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna a quantidade de casos de uso complexos',
+  })
   @Get('metrics/complexos')
   getTotalComplexos(@Query('caso') caso: number) {
     return this.casoUsoService.getMetrics(caso, 'COMPLEXO');
   }
 
+  @ApiResponse({
+    status: 201,
+    description: 'Cria um novo caso de uso',
+    type: CreateCasoUsoDto,
+  })
   @Post('new')
   create(@Body() createCasoUsoDto: CreateCasoUsoDto) {
     return this.casoUsoService.create(createCasoUsoDto);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Atualiza um caso de uso',
+    type: UpdateCasoUsoDto,
+  })
   @Patch('update')
   update(
     @Query('caso') id: string,
@@ -74,6 +116,10 @@ export class CasoUsoController {
     return this.casoUsoService.update(+id, +requisito, updateCasoUsoDto);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Remove um caso de uso',
+  })
   @Delete('delete')
   remove(@Query('id') id: string) {
     return this.casoUsoService.remove(+id);

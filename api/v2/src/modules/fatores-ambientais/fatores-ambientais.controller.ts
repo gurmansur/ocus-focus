@@ -17,7 +17,7 @@ import { FatoresAmbientaisService } from './fatores-ambientais.service';
 @UseGuards(AuthGuard)
 // esse tem que tirar pq não usa essa rota, usa só a Fator-Ambiental-Projeto
 @ApiTags('Fatores Ambientais - Não tem uso')
-@Controller('fatores-ambientais')
+@Controller('apagar-rota')
 export class FatoresAmbientaisController {
   constructor(
     private readonly fatoresAmbientaisService: FatoresAmbientaisService,

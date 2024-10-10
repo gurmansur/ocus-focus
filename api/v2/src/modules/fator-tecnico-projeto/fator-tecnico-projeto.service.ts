@@ -17,12 +17,20 @@ export class FatorTecnicoProjetoService {
     const skip = page ? page * take : 0;
     const [items, count] = await this.fatorTecnicoRepository.findAndCount({
       where: { projeto: { id: projetoId } },
+      relations: ['fatorTecnico'],
       take,
       skip,
     });
 
     return {
-      items,
+      items: items.map((item) => {
+        return {
+          id: item.id,
+          descricao: item.fatorTecnico.descricao,
+          peso: item.fatorTecnico.peso,
+          valor: item.valor,
+        };
+      }),
       page: {
         size: take,
         totalElements: count,

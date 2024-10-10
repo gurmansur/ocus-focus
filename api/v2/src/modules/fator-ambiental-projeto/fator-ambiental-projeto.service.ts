@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FatorAmbiental } from '../fatores-ambientais/entities/fatores-ambientais.entity';
 import { CreateFatorAmbientalProjetoDto } from './dto/create-fator-ambiental-projeto.dto';
 import { UpdateFatorAmbientalProjetoDto } from './dto/update-fator-ambiental-projeto.dto';
 import { FatorAmbientalProjeto } from './entities/fator-ambiental-projeto.entity';
@@ -10,26 +11,42 @@ export class FatorAmbientalProjetoService {
   constructor(
     @InjectRepository(FatorAmbientalProjeto)
     private readonly fatorAmbientalRepository: Repository<FatorAmbientalProjeto>,
+    @InjectRepository(FatorAmbiental)
+    private readonly fatoresAmbientais: Repository<FatorAmbiental>,
   ) {}
 
+  // TODO tem que pegar o ID do repository e não está pegando, talvez por ser um objeto
   async findAll(projetoId: number, page = 0, pageSize = 10) {
-    const take = pageSize ? pageSize : 10;
-    const skip = page ? page * take : 0;
-    const [items, count] = await this.fatorAmbientalRepository.findAndCount({
-      where: { projeto: { id: projetoId } },
-      take,
-      skip,
-    });
+    try {
+      const take = pageSize ? pageSize : 10;
+      const skip = page ? page * take : 0;
+      const [items, count] = await this.fatorAmbientalRepository.findAndCount({
+        where: { projeto: { id: projetoId } },
+        relations: ['fatorAmbiental'],
+        take,
+        skip,
+      });
 
-    return {
-      items,
-      page: {
-        size: take,
-        totalElements: count,
-        totalPages: Math.ceil(count / take),
-        number: page ? page : 0,
-      },
-    };
+      return {
+        items: items.map((item) => {
+          return {
+            id: item.id,
+            descricao: item.fatorAmbiental.descricao,
+            peso: item.fatorAmbiental.peso,
+            valor: item.valor,
+          };
+        }),
+        page: {
+          size: take,
+          totalElements: count,
+          totalPages: Math.ceil(count / take),
+          number: page ? page : 0,
+        },
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException();
+    }
   }
 
   async getById(id: number) {
