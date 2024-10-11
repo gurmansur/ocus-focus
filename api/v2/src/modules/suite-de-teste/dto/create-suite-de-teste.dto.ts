@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateSuiteDeTesteDto {
   @ApiProperty({
@@ -43,5 +43,6 @@ export class CreateSuiteDeTesteDto {
   })
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
+  @IsOptional()
   suitePaiId: number;
 }

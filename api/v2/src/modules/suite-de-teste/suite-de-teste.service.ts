@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { Browser, Builder } from 'selenium-webdriver';
-import { Repository } from 'typeorm';
+import { TreeRepository } from 'typeorm';
 import { CreateSuiteDeTesteBo } from './bo/create-suite-de-teste.bo';
 import { SuiteDeTesteBo } from './bo/suite-de-teste.bo';
 import { UpdateSuiteDeTesteBo } from './bo/update-suite-de-teste.bo';
@@ -13,7 +13,7 @@ import { SuiteDeTesteMapper } from './suite-de-teste.mapper';
 export class SuiteDeTesteService {
   constructor(
     @InjectRepository(SuiteDeTeste)
-    private suiteDeTesteRepository: Repository<SuiteDeTeste>,
+    private suiteDeTesteRepository: TreeRepository<SuiteDeTeste>,
   ) {}
 
   async create(
@@ -22,17 +22,29 @@ export class SuiteDeTesteService {
     const entity =
       SuiteDeTesteMapper.createSuiteDeTesteBoToEntity(createSuiteDeTesteBo);
 
+    console.log(entity);
+
     return SuiteDeTesteMapper.entityToBo(
       await this.suiteDeTesteRepository.save(entity),
     );
   }
 
-  findAll() {
-    return this.suiteDeTesteRepository.find();
+  async findAll() {
+    const entities = await this.suiteDeTesteRepository.find();
+
+    return entities.map((entity) => SuiteDeTesteMapper.entityToBo(entity));
   }
 
   findOne(id: number) {
     return this.suiteDeTesteRepository.findOne({ where: { id } });
+  }
+
+  async getFileTree() {
+    const entities = await this.suiteDeTesteRepository.findTrees({
+      relations: ['casosDeTeste'],
+    });
+
+    return entities.map((entity) => SuiteDeTesteMapper.entityToBo(entity));
   }
 
   async update(

@@ -53,7 +53,7 @@ export class ArcatestExecucoesFormComponent {
       complexidade: EComplexidade.BAIXA,
       prioridade: EPrioridade.BAIXA,
       tecnica: ETecnica.FUNCIONAL,
-      suite: {
+      suiteDeTeste: {
         id: 1,
         nome: 'Suite 1',
         descricao: 'Descrição da Suite 1',
@@ -80,7 +80,7 @@ export class ArcatestExecucoesFormComponent {
       complexidade: EComplexidade.BAIXA,
       prioridade: EPrioridade.BAIXA,
       tecnica: ETecnica.FUNCIONAL,
-      suite: {
+      suiteDeTeste: {
         id: 1,
         nome: 'Suite 1',
         descricao: 'Descrição da Suite 1',
@@ -107,7 +107,7 @@ export class ArcatestExecucoesFormComponent {
       complexidade: EComplexidade.BAIXA,
       prioridade: EPrioridade.BAIXA,
       tecnica: ETecnica.FUNCIONAL,
-      suite: {
+      suiteDeTeste: {
         id: 1,
         nome: 'Suite 1',
         descricao: 'Descrição da Suite 1',

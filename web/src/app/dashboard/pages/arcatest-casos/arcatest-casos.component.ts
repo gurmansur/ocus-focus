@@ -7,14 +7,8 @@ import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.com
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { TableComponent } from '../../../shared/table/table.component';
-import {
-  CasoDeTeste,
-  ECategoria,
-  EComplexidade,
-  EPrioridade,
-  EStatus,
-  ETecnica,
-} from '../../models/casoDeTeste';
+import { CasoDeTeste } from '../../models/casoDeTeste';
+import { CasoDeTesteService } from '../../services/casoDeTeste.service';
 
 @Component({
   selector: 'app-arcatest-casos',
@@ -38,105 +32,23 @@ export class ArcatestCasosComponent {
   openDelete: boolean = false;
   testCaseToDelete?: CasoDeTeste;
   suiteId: number;
-  mockupData: CasoDeTeste[] = [
-    {
-      id: 1,
-      nome: 'Caso de Teste 1',
-      descricao: 'Descrição do Caso de Teste 1',
-      status: EStatus.ATIVO,
-      complexidade: EComplexidade.BAIXA,
-      prioridade: EPrioridade.BAIXA,
-      tecnica: ETecnica.FUNCIONAL,
-      suite: {
-        id: 1,
-        nome: 'Suite 1',
-        descricao: 'Descrição da Suite 1',
-        status: 'Ativo',
-        observacoes: 'Observações da Suite 1',
-      },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 1',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
-      entrada: 'Passos do Caso de Teste 1',
-      categoria: ECategoria.MANUAL,
-      casoDeUso: {
-        id: 1,
-        nome: 'Caso de Uso 1',
-        descricao: 'Descrição do Caso de Uso 1',
-        complexidade: EComplexidade.BAIXA,
-      },
-    },
-    {
-      id: 2,
-      nome: 'Caso de Teste 2',
-      descricao: 'Descrição do Caso de Teste 2',
-      status: EStatus.ATIVO,
-      complexidade: EComplexidade.BAIXA,
-      prioridade: EPrioridade.BAIXA,
-      tecnica: ETecnica.FUNCIONAL,
-      suite: {
-        id: 1,
-        nome: 'Suite 1',
-        descricao: 'Descrição da Suite 1',
-        status: 'Ativo',
-        observacoes: 'Observações da Suite 1',
-      },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 2',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
-      entrada: 'Passos do Caso de Teste 2',
-      categoria: ECategoria.MANUAL,
-      casoDeUso: {
-        id: 1,
-        nome: 'Caso de Uso 1',
-        descricao: 'Descrição do Caso de Uso 1',
-        complexidade: EComplexidade.BAIXA,
-      },
-    },
-    {
-      id: 3,
-      nome: 'Caso de Teste 3',
-      descricao: 'Descrição do Caso de Teste 3',
-      status: EStatus.ATIVO,
-      complexidade: EComplexidade.BAIXA,
-      prioridade: EPrioridade.BAIXA,
-      tecnica: ETecnica.FUNCIONAL,
-      suite: {
-        id: 1,
-        nome: 'Suite 1',
-        descricao: 'Descrição da Suite 1',
-        status: 'Ativo',
-        observacoes: 'Observações da Suite 1',
-      },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 3',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
-      entrada: 'Passos do Caso de Teste 3',
-      categoria: ECategoria.MANUAL,
-      casoDeUso: {
-        id: 1,
-        nome: 'Caso de Uso 1',
-        descricao: 'Descrição do Caso de Uso 1',
-        complexidade: EComplexidade.BAIXA,
-      },
-    },
-  ];
+  casosDeTeste!: CasoDeTeste[];
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private casoDeTesteService: CasoDeTesteService
+  ) {
     this.projectId = this.route.snapshot.params['id'];
     this.suiteId = this.route.snapshot.queryParams['suiteId'];
-
-    if (this.suiteId) {
-      this.filterTestCasesBySuite();
-    }
   }
 
-  filterTestCasesBySuite() {
-    if (this.suiteId !== undefined) {
-      this.mockupData = this.mockupData.filter(
-        (testCase) => testCase.suite?.id === +this.suiteId
+  ngOnInit(): void {
+    this.casoDeTesteService.getAll().subscribe((data) => {
+      this.casosDeTeste = data.filter(
+        (testCase) => testCase.suiteDeTeste?.id === +this.suiteId
       );
-    }
+    });
   }
 
   navigateToArcaTest() {
@@ -171,14 +83,14 @@ export class ArcatestCasosComponent {
   }
 
   openDeleteModal(id: number) {
-    const testCase = this.mockupData.find((testCase) => testCase.id === id);
+    const testCase = this.casosDeTeste.find((testCase) => testCase.id === id);
     this.testCaseToDelete = testCase;
     this.openDelete = true;
   }
 
   deleteTestCase() {
     console.log('Deleting test case', this.testCaseToDelete);
-    this.mockupData = this.mockupData.filter(
+    this.casosDeTeste = this.casosDeTeste.filter(
       (testCase) => testCase.id !== this.testCaseToDelete?.id
     );
     this.openDelete = false;

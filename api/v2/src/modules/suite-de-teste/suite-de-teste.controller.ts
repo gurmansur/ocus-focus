@@ -16,6 +16,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Serialize } from 'src/decorators/serialize.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateSuiteDeTesteDto } from './dto/create-suite-de-teste.dto';
 import { SuiteDeTesteDto } from './dto/suite-de-teste.dto';
@@ -26,6 +27,7 @@ import { SuiteDeTesteService } from './suite-de-teste.service';
 @ApiTags('Suite de Teste')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
+@Serialize()
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
 @Controller('suite-de-teste')
 export class SuiteDeTesteController {
@@ -41,6 +43,7 @@ export class SuiteDeTesteController {
     const bo = SuiteDeTesteMapper.createSuiteDeTesteDtoToBo(
       createSuiteDeTesteDto,
     );
+
     const response = await this.suiteDeTesteService.create(bo);
     return SuiteDeTesteMapper.boToDto(response);
   }
@@ -51,8 +54,22 @@ export class SuiteDeTesteController {
     description: 'Lista de suites de teste',
     type: [SuiteDeTesteDto],
   })
-  findAll() {
-    return this.suiteDeTesteService.findAll();
+  async findAll() {
+    const response = await this.suiteDeTesteService.findAll();
+
+    return response.map((bo) => SuiteDeTesteMapper.boToDto(bo));
+  }
+
+  @Get('file-tree')
+  @ApiResponse({
+    status: 200,
+    description: 'Árvore de arquivos',
+    type: [SuiteDeTesteDto],
+  })
+  async getFileTree() {
+    const response = await this.suiteDeTesteService.getFileTree();
+
+    return response.map((bo) => SuiteDeTesteMapper.boToDto(bo));
   }
 
   @Get(':id')

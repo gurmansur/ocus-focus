@@ -26,8 +26,8 @@ export class ProjetoAtualMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     const projetoId = req.headers.projeto;
 
-    if (projetoId) {
-      req.currentProject = await this.projetoService.findOne(Number(projetoId));
+    if (projetoId !== undefined) {
+      req.currentProject = await this.projetoService.findOne(+projetoId);
     }
 
     next();

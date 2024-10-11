@@ -133,7 +133,7 @@ export class ArcatestCasosFormComponent {
       complexidade: EComplexidade.BAIXA,
       prioridade: EPrioridade.BAIXA,
       tecnica: ETecnica.FUNCIONAL,
-      suite: {
+      suiteDeTeste: {
         id: 1,
         nome: 'Suite 1',
         descricao: 'Descrição da Suite 1',
@@ -160,7 +160,7 @@ export class ArcatestCasosFormComponent {
       complexidade: EComplexidade.BAIXA,
       prioridade: EPrioridade.BAIXA,
       tecnica: ETecnica.FUNCIONAL,
-      suite: {
+      suiteDeTeste: {
         id: 1,
         nome: 'Suite 1',
         descricao: 'Descrição da Suite 1',
@@ -187,7 +187,7 @@ export class ArcatestCasosFormComponent {
       complexidade: EComplexidade.BAIXA,
       prioridade: EPrioridade.BAIXA,
       tecnica: ETecnica.FUNCIONAL,
-      suite: {
+      suiteDeTeste: {
         id: 1,
         nome: 'Suite 1',
         descricao: 'Descrição da Suite 1',
@@ -277,7 +277,7 @@ export class ArcatestCasosFormComponent {
         this.casoDeTeste?.categoria || ECategoria.MANUAL,
         Validators.required
       ),
-      suite: new FormControl(this.casoDeTeste?.suite?.id || ''),
+      suiteDeTeste: new FormControl(this.casoDeTeste?.suiteDeTeste?.id || ''),
       testador: new FormControl(this.casoDeTeste?.testador?.id || ''),
       observacoes: new FormControl(this.casoDeTeste?.observacoes || ''),
       resultadoEsperado: new FormControl(

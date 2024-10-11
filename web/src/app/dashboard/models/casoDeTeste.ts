@@ -45,7 +45,7 @@ export class CasoDeTeste {
     public observacoes?: string,
     public preCondicoes?: string,
     public posCondicoes?: string,
-    public suite?: SuiteDeTeste,
+    public suiteDeTeste?: SuiteDeTeste,
     public testador?: Colaborador,
     public id?: number
   ) {}

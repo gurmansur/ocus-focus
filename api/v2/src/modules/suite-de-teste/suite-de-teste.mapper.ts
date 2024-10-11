@@ -16,7 +16,7 @@ export class SuiteDeTesteMapper {
     bo.status = dto.status;
     bo.descricao = dto.descricao;
     bo.observacoes = dto.observacoes;
-    bo.suitePaiId = dto.suitePaiId;
+    bo.suitePaiId = dto.suitePaiId ? +dto.suitePaiId : null;
     return bo;
   }
 
@@ -26,7 +26,9 @@ export class SuiteDeTesteMapper {
     entity.status = bo.status;
     entity.descricao = bo.descricao;
     entity.observacoes = bo.observacoes;
-    entity.suitePai = { id: bo.suitePaiId } as SuiteDeTeste;
+    entity.suitePai = bo.suitePaiId
+      ? ({ id: bo.suitePaiId } as SuiteDeTeste)
+      : null;
     return entity;
   }
 
@@ -38,7 +40,7 @@ export class SuiteDeTesteMapper {
     bo.status = dto.status;
     bo.descricao = dto.descricao;
     bo.observacoes = dto.observacoes;
-    bo.suitePaiId = dto.suitePaiId;
+    bo.suitePaiId = dto.suitePaiId ? +dto.suitePaiId : null;
     return bo;
   }
 
@@ -48,12 +50,15 @@ export class SuiteDeTesteMapper {
     entity.status = bo.status;
     entity.descricao = bo.descricao;
     entity.observacoes = bo.observacoes;
-    entity.suitePai = { id: bo.suitePaiId } as SuiteDeTeste;
+    entity.suitePai = bo.suitePaiId
+      ? ({ id: bo.suitePaiId } as SuiteDeTeste)
+      : null;
     return entity;
   }
 
   static entityToBo(entity: SuiteDeTeste): SuiteDeTesteBo {
     const bo = new SuiteDeTesteBo();
+    bo.id = entity.id;
     bo.nome = entity.nome;
     bo.status = entity.status;
     bo.descricao = entity.descricao;

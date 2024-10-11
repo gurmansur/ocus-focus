@@ -9,12 +9,18 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Tree,
+  TreeChildren,
+  TreeParent,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('SUITES_DE_TESTE')
+@Tree('closure-table', {
+  closureTableName: 'SUITES_DE_TESTE_RELATION',
+})
 export class SuiteDeTeste {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'SDT_ID' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
   @Column('varchar', { name: 'SDT_NOME', length: 50 })
@@ -42,19 +48,15 @@ export class SuiteDeTeste {
   @DeleteDateColumn({ name: 'SDT_DATA_EXCLUSAO' })
   dataExclusao: Date;
 
-  @OneToMany(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.suiteDeTeste)
-  @JoinColumn({ name: 'FK_SUITE_DE_TESTE_SDT_ID' })
+  @OneToMany(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.suiteDeTeste, {
+    eager: true,
+  })
   casosDeTeste?: CasoDeTeste[];
 
-  @OneToMany(() => SuiteDeTeste, (suiteDeTeste) => suiteDeTeste.suitePai, {
-    nullable: true,
-  })
-  @JoinColumn({ name: 'FK_SUITE_DE_TESTE_SDT_ID' })
+  @TreeChildren()
   suitesFilhas?: SuiteDeTeste[];
 
-  @ManyToOne(() => SuiteDeTeste, (suiteDeTeste) => suiteDeTeste.suitesFilhas, {
-    nullable: true,
-  })
+  @TreeParent()
   @JoinColumn({ name: 'FK_SUITE_DE_TESTE_SDT_ID' })
   suitePai?: SuiteDeTeste;
 

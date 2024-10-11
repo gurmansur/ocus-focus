@@ -6,7 +6,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
-import { ProjetoInterceptorModule } from './dashboard/interceptors/projeto/projeto.module';
+import { InterceptorModule } from './dashboard/interceptors/interceptor.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,7 +16,7 @@ import { ProjetoInterceptorModule } from './dashboard/interceptors/projeto/proje
     HttpClientModule,
     AuthModule,
     DragDropModule,
-    ProjetoInterceptorModule,
+    InterceptorModule,
   ],
   providers: [
     { provide: 'servicesRootUrl', useValue: 'http://localhost:3333' },

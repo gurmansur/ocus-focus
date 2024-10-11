@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 import { CasoDeTesteDto } from 'src/modules/caso-de-teste/dto/caso-de-teste.dto';
 
 export class SuiteDeTesteDto {
@@ -44,6 +44,7 @@ export class SuiteDeTesteDto {
     description: 'Suite de teste pai',
   })
   @Type(() => SuiteDeTesteDto)
+  @Exclude()
   suitePai: SuiteDeTesteDto;
 
   @ApiPropertyOptional({
