@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { FileTree } from '../models/fileTree';
 import { SuiteDeTeste } from '../models/suiteDeTeste';
 
 @Injectable({
@@ -44,8 +45,8 @@ export class SuiteDeTesteService {
     );
   }
 
-  getFileTree(): Observable<SuiteDeTeste[]> {
-    return this.httpClient.get<SuiteDeTeste[]>(
+  getFileTree(): Observable<FileTree> {
+    return this.httpClient.get<FileTree>(
       `${this.servicesRootUrl}/suite-de-teste/file-tree`
     );
   }

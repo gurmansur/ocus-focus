@@ -69,7 +69,7 @@ export class SuiteDeTesteController {
   async getFileTree() {
     const response = await this.suiteDeTesteService.getFileTree();
 
-    return response.map((bo) => SuiteDeTesteMapper.boToDto(bo));
+    return SuiteDeTesteMapper.fileTreeBoToDto(response);
   }
 
   @Get(':id')

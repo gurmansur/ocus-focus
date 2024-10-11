@@ -1,12 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { Browser, Builder } from 'selenium-webdriver';
 import { TreeRepository } from 'typeorm';
+import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
 import { CreateSuiteDeTesteBo } from './bo/create-suite-de-teste.bo';
 import { SuiteDeTesteBo } from './bo/suite-de-teste.bo';
 import { UpdateSuiteDeTesteBo } from './bo/update-suite-de-teste.bo';
 import { SuiteDeTeste } from './entities/suite-de-teste.entity';
+import { SuiteDeTesteAdapter } from './suite-de-teste.adapter';
 import { SuiteDeTesteMapper } from './suite-de-teste.mapper';
 
 @Injectable()
@@ -14,6 +16,7 @@ export class SuiteDeTesteService {
   constructor(
     @InjectRepository(SuiteDeTeste)
     private suiteDeTesteRepository: TreeRepository<SuiteDeTeste>,
+    @Inject(CasoDeTesteService) private casoDeTesteService: CasoDeTesteService,
   ) {}
 
   async create(
@@ -21,8 +24,6 @@ export class SuiteDeTesteService {
   ): Promise<SuiteDeTesteBo> {
     const entity =
       SuiteDeTesteMapper.createSuiteDeTesteBoToEntity(createSuiteDeTesteBo);
-
-    console.log(entity);
 
     return SuiteDeTesteMapper.entityToBo(
       await this.suiteDeTesteRepository.save(entity),
@@ -44,7 +45,11 @@ export class SuiteDeTesteService {
       relations: ['casosDeTeste'],
     });
 
-    return entities.map((entity) => SuiteDeTesteMapper.entityToBo(entity));
+    const casos = await this.casoDeTesteService.findAllWithoutSuite();
+
+    const fileTree = SuiteDeTesteAdapter.makeFileTreeBo(entities, casos);
+
+    return fileTree;
   }
 
   async update(

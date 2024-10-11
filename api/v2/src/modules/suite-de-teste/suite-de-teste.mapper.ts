@@ -1,8 +1,10 @@
 import { CasoDeTesteMapper } from '../caso-de-teste/caso-de-teste.mapper';
 import { CreateSuiteDeTesteBo } from './bo/create-suite-de-teste.bo';
+import { FileTreeBo } from './bo/file-tree.bo';
 import { SuiteDeTesteBo } from './bo/suite-de-teste.bo';
 import { UpdateSuiteDeTesteBo } from './bo/update-suite-de-teste.bo';
 import { CreateSuiteDeTesteDto } from './dto/create-suite-de-teste.dto';
+import { FileTreeDto } from './dto/file-tree.dto';
 import { SuiteDeTesteDto } from './dto/suite-de-teste.dto';
 import { UpdateSuiteDeTesteDto } from './dto/update-suite-de-teste.dto';
 import { SuiteDeTeste } from './entities/suite-de-teste.entity';
@@ -83,6 +85,15 @@ export class SuiteDeTesteMapper {
     dto.suitePai = bo.suitePai ? this.boToDto(bo.suitePai) : null;
     dto.suitesFilhas = bo.suitesFilhas?.map((suite) => this.boToDto(suite));
     dto.casosDeTeste = bo.casosDeTeste?.map((caso) =>
+      CasoDeTesteMapper.casoDeTesteBoToDto(caso),
+    );
+    return dto;
+  }
+
+  static fileTreeBoToDto(bo: FileTreeBo): FileTreeDto {
+    const dto = new FileTreeDto();
+    dto.suites = bo.suites.map((suite) => this.boToDto(suite));
+    dto.casos = bo.casos.map((caso) =>
       CasoDeTesteMapper.casoDeTesteBoToDto(caso),
     );
     return dto;

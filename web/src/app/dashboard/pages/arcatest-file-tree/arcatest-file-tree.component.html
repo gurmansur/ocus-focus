@@ -5,20 +5,18 @@
 
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
-    <h2 class="text-3xl font-medium mb-5">Execuções de Teste</h2>
+    <h2 class="text-3xl font-medium mb-5">ArcaTest</h2>
     <div class="flex gap-4">
       <app-button (click)="openCoverageModal()">
         Cobertura de Testes
       </app-button>
-      <app-button>
-        <app-plus-icon></app-plus-icon>
-        Executar Teste
-      </app-button>
     </div>
   </div>
 
-  @for (file of fileTree; track $index) {
+  @for (file of fileTree.suites; track $index) {
   <app-arcatest-file [file]="file"></app-arcatest-file>
+  } @for (caso of fileTree.casos; track $index) {
+  <app-arcatest-caso [caso]="caso"></app-arcatest-caso>
   }
 
   <app-modal

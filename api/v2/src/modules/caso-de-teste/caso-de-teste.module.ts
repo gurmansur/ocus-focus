@@ -8,5 +8,6 @@ import { CasoDeTeste } from './entities/caso-de-teste.entity';
   controllers: [CasoDeTesteController],
   providers: [CasoDeTesteService],
   imports: [TypeOrmModule.forFeature([CasoDeTeste])],
+  exports: [CasoDeTesteService],
 })
 export class CasoDeTesteModule {}

@@ -6,8 +6,9 @@ import { ContentModalComponent } from '../../../shared/content-modal/content-mod
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
-import { SuiteDeTeste } from '../../models/suiteDeTeste';
+import { FileTree } from '../../models/fileTree';
 import { SuiteDeTesteService } from '../../services/suiteDeTeste.service';
+import { ArcatestCasoComponent } from './arcatest-caso/arcatest-caso.component';
 import { ArcatestFileComponent } from './arcatest-file/arcatest-file.component';
 
 @Component({
@@ -21,12 +22,13 @@ import { ArcatestFileComponent } from './arcatest-file/arcatest-file.component';
     ModalComponent,
     PlusIconComponent,
     ButtonComponent,
+    ArcatestCasoComponent,
   ],
   templateUrl: './arcatest-file-tree.component.html',
   styleUrl: './arcatest-file-tree.component.css',
 })
 export class ArcatestFileTreeComponent {
-  fileTree: SuiteDeTeste[] = [];
+  fileTree!: FileTree;
   projectId!: number;
   legendPosition: LegendPosition = LegendPosition.Below;
   openDelete: boolean = false;

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateCasoDeTesteBo } from './bo/create-caso-de-teste.bo';
 import { UpdateCasoDeTesteBo } from './bo/update-caso-de-teste.bo';
@@ -29,6 +29,17 @@ export class CasoDeTesteService {
     return (
       await this.casoDeTesteRepository.find({
         relations: ['testadorDesignado', 'suiteDeTeste', 'casoDeUso'],
+      })
+    ).map((casoDeTeste) =>
+      CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),
+    );
+  }
+
+  async findAllWithoutSuite() {
+    return (
+      await this.casoDeTesteRepository.find({
+        relations: ['testadorDesignado', 'suiteDeTeste', 'casoDeUso'],
+        where: { suiteDeTeste: IsNull() },
       })
     ).map((casoDeTeste) =>
       CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),
