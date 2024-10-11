@@ -6,6 +6,7 @@ import { ArcatestCasosFormComponent } from './pages/arcatest-casos-form/arcatest
 import { ArcatestCasosComponent } from './pages/arcatest-casos/arcatest-casos.component';
 import { ArcatestExecucoesFormComponent } from './pages/arcatest-execucoes-form/arcatest-execucoes-form.component';
 import { ArcatestExecucoesComponent } from './pages/arcatest-execucoes/arcatest-execucoes.component';
+import { ArcatestFileTreeComponent } from './pages/arcatest-file-tree/arcatest-file-tree.component';
 import { ArcatestPlanosFormComponent } from './pages/arcatest-planos-form/arcatest-planos-form.component';
 import { ArcatestPlanosComponent } from './pages/arcatest-planos/arcatest-planos.component';
 import { ArcatestSuitesFormComponent } from './pages/arcatest-suites-form/arcatest-suites-form.component';
@@ -234,7 +235,7 @@ const routes: Routes = [
 
       {
         path: 'projeto/:id/painel-arcatest',
-        component: PainelArcatestComponent,
+        component: ArcatestFileTreeComponent,
         canActivate: [colaboradorGuard],
       },
 
@@ -363,8 +364,8 @@ const routes: Routes = [
       {
         path: 'projeto/:id/kanban/sprints',
         component: FlyingcardsSprintsComponent,
-        canActivate: [colaboradorGuard]
-      }
+        canActivate: [colaboradorGuard],
+      },
     ],
   },
 ];

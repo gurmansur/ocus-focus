@@ -36,7 +36,7 @@ export class ArcatestPlanosComponent {
       nome: 'Plano 1',
       data: '2021-09-01',
       descricao: 'Descrição da Plano 1',
-      status: 'Ativo',
+      status: 'ATIVO',
       observacoes: 'Observações da Plano 1',
     },
     {
@@ -44,7 +44,7 @@ export class ArcatestPlanosComponent {
       nome: 'Plano 2',
       data: '2021-09-01',
       descricao: 'Descrição da Plano 2',
-      status: 'Ativo',
+      status: 'ATIVO',
       observacoes: 'Observações da Plano 2',
     },
     {

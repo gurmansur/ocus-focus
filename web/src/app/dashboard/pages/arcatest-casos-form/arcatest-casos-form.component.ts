@@ -47,193 +47,20 @@ export class ArcatestCasosFormComponent {
   casoDeTesteFormGroup: any;
   formBuilder: FormBuilder = new FormBuilder();
   casoDeTeste?: CasoDeTeste;
-  planosDeTeste: PlanoDeTeste[] = [
-    {
-      id: 1,
-      nome: 'Plano 1',
-      data: '2021-09-01',
-      descricao: 'Descrição da Plano 1',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 1',
-    },
-    {
-      id: 2,
-      nome: 'Plano 2',
-      data: '2021-09-01',
-      descricao: 'Descrição da Plano 2',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 2',
-    },
-    {
-      id: 3,
-      nome: 'Plano 3',
-      data: '2021-09-01',
-      descricao: 'Descrição da Plano 3',
-      status: 'Inativo',
-      observacoes: 'Observações da Plano 3',
-    },
-  ];
-  suites: SuiteDeTeste[] = [
-    {
-      id: 1,
-      nome: 'Suite 1',
-      descricao: 'Descrição da Suite 1',
-      status: 'Ativo',
-      planoDeTeste: this.planosDeTeste[0],
-      observacoes: 'Observações da Suite 1',
-    },
-    {
-      id: 2,
-      nome: 'Suite 2',
-      descricao: 'Descrição da Suite 2',
-      status: 'Ativo',
-      planoDeTeste: this.planosDeTeste[1],
-      observacoes: 'Observações da Suite 2',
-    },
-    {
-      id: 3,
-      nome: 'Suite 3',
-      descricao: 'Descrição da Suite 3',
-      status: 'Inativo',
-      planoDeTeste: this.planosDeTeste[0],
-      observacoes: 'Observações da Suite 3',
-    },
-  ];
+  planosDeTeste: PlanoDeTeste[] = [];
+  suites: SuiteDeTeste[] = [];
 
-  testadores: Colaborador[] = [
-    {
-      id: 1,
-      nome: 'Colaborador 1',
-      email: 'a@a.a',
-      empresa: 'Empresa 1',
-      cargo: 'Cargo 1',
-    },
-    {
-      id: 2,
-      nome: 'Colaborador 2',
-      email: 'b@b.b',
-      empresa: 'Empresa 2',
-      cargo: 'Cargo 2',
-    },
-    {
-      id: 3,
-      nome: 'Colaborador 3',
-      email: 'c@c.c',
-      empresa: 'Empresa 3',
-      cargo: 'Cargo 3',
-    },
-  ];
+  testadores: Colaborador[] = [];
 
-  mockupData: CasoDeTeste[] = [
-    {
-      id: 1,
-      nome: 'Caso de Teste 1',
-      descricao: 'Descrição do Caso de Teste 1',
-      status: EStatus.ATIVO,
-      complexidade: EComplexidade.BAIXA,
-      prioridade: EPrioridade.BAIXA,
-      tecnica: ETecnica.FUNCIONAL,
-      suiteDeTeste: {
-        id: 1,
-        nome: 'Suite 1',
-        descricao: 'Descrição da Suite 1',
-        status: 'Ativo',
-        observacoes: 'Observações da Suite 1',
-      },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 1',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 1',
-      entrada: 'Passos do Caso de Teste 1',
-      categoria: ECategoria.MANUAL,
-      casoDeUso: {
-        id: 1,
-        nome: 'Caso de Uso 1',
-        descricao: 'Descrição do Caso de Uso 1',
-        complexidade: EComplexidade.BAIXA,
-      },
-    },
-    {
-      id: 2,
-      nome: 'Caso de Teste 2',
-      descricao: 'Descrição do Caso de Teste 2',
-      status: EStatus.ATIVO,
-      complexidade: EComplexidade.BAIXA,
-      prioridade: EPrioridade.BAIXA,
-      tecnica: ETecnica.FUNCIONAL,
-      suiteDeTeste: {
-        id: 1,
-        nome: 'Suite 1',
-        descricao: 'Descrição da Suite 1',
-        status: 'Ativo',
-        observacoes: 'Observações da Suite 1',
-      },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 2',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 2',
-      entrada: 'Passos do Caso de Teste 2',
-      categoria: ECategoria.MANUAL,
-      casoDeUso: {
-        id: 1,
-        nome: 'Caso de Uso 1',
-        descricao: 'Descrição do Caso de Uso 1',
-        complexidade: EComplexidade.BAIXA,
-      },
-    },
-    {
-      id: 3,
-      nome: 'Caso de Teste 3',
-      descricao: 'Descrição do Caso de Teste 3',
-      status: EStatus.ATIVO,
-      complexidade: EComplexidade.BAIXA,
-      prioridade: EPrioridade.BAIXA,
-      tecnica: ETecnica.FUNCIONAL,
-      suiteDeTeste: {
-        id: 1,
-        nome: 'Suite 1',
-        descricao: 'Descrição da Suite 1',
-        status: 'Ativo',
-        observacoes: 'Observações da Suite 1',
-      },
-      dataCriacao: new Date().toISOString().split('T')[0],
-      observacoes: 'Observações do Caso de Teste 3',
-      resultadoEsperado: 'Resultado Esperado do Caso de Teste 3',
-      entrada: 'Passos do Caso de Teste 3',
-      categoria: ECategoria.MANUAL,
-      casoDeUso: {
-        id: 1,
-        nome: 'Caso de Uso 1',
-        descricao: 'Descrição do Caso de Uso 1',
-        complexidade: EComplexidade.BAIXA,
-      },
-    },
-  ];
-  casosDeUso: casoUso[] = [
-    {
-      id: 1,
-      nome: 'Caso de Uso 1',
-      descricao: 'Descrição do Caso de Uso 1',
-      complexidade: EComplexidade.BAIXA,
-    },
-    {
-      id: 2,
-      nome: 'Caso de Uso 2',
-      descricao: 'Descrição do Caso de Uso 2',
-      complexidade: EComplexidade.BAIXA,
-    },
-    {
-      id: 3,
-      nome: 'Caso de Uso 3',
-      descricao: 'Descrição do Caso de Uso 3',
-      complexidade: EComplexidade.BAIXA,
-    },
-  ];
+  mockupData: CasoDeTeste[] = [];
+  casosDeUso: casoUso[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
     this.idCaso = this.route.snapshot.params['idCaso'];
     this.isEdit = !!this.idCaso;
 
-    this.casoDeTeste = this.mockupData[this.idCaso - 1];
+    // this.casoDeTeste = this.mockupData[this.idCaso - 1];
   }
 
   navigateToArcaTest() {

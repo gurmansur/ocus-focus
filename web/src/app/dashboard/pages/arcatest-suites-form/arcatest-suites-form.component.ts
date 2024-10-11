@@ -37,58 +37,8 @@ export class ArcatestSuitesFormComponent {
   suiteFormGroup: any;
   formBuilder: FormBuilder = new FormBuilder();
   suiteToDelete?: SuiteDeTeste;
-  planosDeTeste: PlanoDeTeste[] = [
-    {
-      id: 1,
-      nome: 'Plano 1',
-      data: '2021-09-01',
-      descricao: 'Descrição da Plano 1',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 1',
-    },
-    {
-      id: 2,
-      nome: 'Plano 2',
-      data: '2021-09-01',
-      descricao: 'Descrição da Plano 2',
-      status: 'Ativo',
-      observacoes: 'Observações da Plano 2',
-    },
-    {
-      id: 3,
-      nome: 'Plano 3',
-      data: '2021-09-01',
-      descricao: 'Descrição da Plano 3',
-      status: 'Inativo',
-      observacoes: 'Observações da Plano 3',
-    },
-  ];
-  mockupData: SuiteDeTeste[] = [
-    {
-      id: 1,
-      nome: 'Suite 1',
-      descricao: 'Descrição da Suite 1',
-      status: 'Ativo',
-      planoDeTeste: this.planosDeTeste[0],
-      observacoes: 'Observações da Suite 1',
-    },
-    {
-      id: 2,
-      nome: 'Suite 2',
-      descricao: 'Descrição da Suite 2',
-      status: 'Ativo',
-      planoDeTeste: this.planosDeTeste[1],
-      observacoes: 'Observações da Suite 2',
-    },
-    {
-      id: 3,
-      nome: 'Suite 3',
-      descricao: 'Descrição da Suite 3',
-      status: 'Inativo',
-      planoDeTeste: this.planosDeTeste[0],
-      observacoes: 'Observações da Suite 3',
-    },
-  ];
+  planosDeTeste: PlanoDeTeste[] = [];
+  mockupData: SuiteDeTeste[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
@@ -106,7 +56,6 @@ export class ArcatestSuitesFormComponent {
       ),
       status: new FormControl(this.suite?.status || '', Validators.required),
       observacoes: new FormControl(this.suite?.observacoes || ''),
-      planoDeTeste: new FormControl(this.suite?.planoDeTeste?.id || ''),
     });
   }
 

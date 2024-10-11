@@ -15,7 +15,7 @@ export enum EComplexidade {
 }
 
 export enum EStatus {
-  ATIVO = 'Ativo',
+  ATIVO = 'ATIVO',
   INATIVO = 'Inativo',
 }
 

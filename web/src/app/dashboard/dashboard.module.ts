@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './containers/dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
+import { ArcatestFileTreeComponent } from './pages/arcatest-file-tree/arcatest-file-tree.component';
 import { AtoresComponent } from './pages/atores/atores.component';
 import { CasoDeUsoComponent } from './pages/caso-de-uso/caso-de-uso.component';
 import { CenariosComponent } from './pages/cenarios/cenarios.component';
@@ -87,6 +88,7 @@ import { TabelaComponent } from './shared/tabela/tabela.component';
     FormsModule,
     ReactiveFormsModule,
     PainelArcatestComponent,
+    ArcatestFileTreeComponent,
   ],
 })
 export class DashboardModule {}
