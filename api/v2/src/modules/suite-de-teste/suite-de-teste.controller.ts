@@ -83,6 +83,20 @@ export class SuiteDeTesteController {
     return this.suiteDeTesteService.findOne(+id);
   }
 
+  @Patch(':id/change-suite')
+  @ApiResponse({
+    status: 200,
+    description: 'Suite de teste atualizada',
+    type: SuiteDeTesteDto,
+  })
+  @ApiParam({ name: 'id', description: 'Id da suite de teste' })
+  changeSuite(
+    @Param('id') id: string,
+    @Body() { suiteId }: { suiteId: number },
+  ) {
+    return this.suiteDeTesteService.changeSuite(+id, suiteId);
+  }
+
   @Patch(':id')
   @ApiResponse({
     status: 200,

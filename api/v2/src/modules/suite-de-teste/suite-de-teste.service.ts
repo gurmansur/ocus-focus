@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { Browser, Builder } from 'selenium-webdriver';
@@ -16,7 +16,8 @@ export class SuiteDeTesteService {
   constructor(
     @InjectRepository(SuiteDeTeste)
     private suiteDeTesteRepository: TreeRepository<SuiteDeTeste>,
-    @Inject(CasoDeTesteService) private casoDeTesteService: CasoDeTesteService,
+    @Inject(forwardRef(() => CasoDeTesteService))
+    private casoDeTesteService: CasoDeTesteService,
   ) {}
 
   async create(
@@ -67,6 +68,27 @@ export class SuiteDeTesteService {
         ...updateEntity,
       }),
     );
+  }
+
+  async changeSuite(id: number, suiteId: number) {
+    const suite = await this.suiteDeTesteRepository.findOne({
+      where: { id },
+    });
+
+    let parentSuite: SuiteDeTeste;
+
+    if (suiteId) {
+      parentSuite = await this.suiteDeTesteRepository.findOne({
+        where: { id: suiteId },
+      });
+    }
+
+    if (!suite || (suiteId && !parentSuite)) {
+      throw new Error('Suite de teste não encontrada');
+    }
+    return this.suiteDeTesteRepository.update(id, {
+      suitePai: parentSuite || null,
+    });
   }
 
   remove(id: number) {

@@ -107,6 +107,14 @@ export class CasoDeTesteController {
     );
   }
 
+  @Patch(':id/change-suite')
+  changeSuite(
+    @Param('id') id: string,
+    @Body() { suiteId }: { suiteId: number },
+  ) {
+    return this.casoDeTesteService.changeSuite(+id, suiteId);
+  }
+
   @ApiResponse({
     status: 200,
     description: 'Caso de Teste atualizado com sucesso',

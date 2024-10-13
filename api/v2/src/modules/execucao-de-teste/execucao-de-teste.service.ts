@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
 import { ChangeStatusExecucaoDeTesteBo } from './bo/change-status-execucao-de-teste.bo';
 import { CreateExecucaoDeTesteBo } from './bo/create-execucao-de-teste.bo';
 import { UpdateExecucaoDeTesteBo } from './bo/update-execucao-de-teste.bo';
@@ -12,12 +13,23 @@ export class ExecucaoDeTesteService {
   constructor(
     @InjectRepository(ExecucaoDeTeste)
     private execucaoDeTesteRepository: Repository<ExecucaoDeTeste>,
+    private casoDeTesteService: CasoDeTesteService,
   ) {}
 
   async create(createExecucaoDeTesteBo: CreateExecucaoDeTesteBo) {
     const entity = ExecucaoDeTesteMapper.createBoToEntity(
       createExecucaoDeTesteBo,
     );
+
+    if (createExecucaoDeTesteBo.casoDeTesteId) {
+      const caso = await this.casoDeTesteService.findOne(
+        createExecucaoDeTesteBo.casoDeTesteId,
+      );
+
+      if (!caso) {
+        throw new BadRequestException('Caso de teste não encontrado');
+      }
+    }
 
     return ExecucaoDeTesteMapper.entityToBo(
       await this.execucaoDeTesteRepository.save(entity),

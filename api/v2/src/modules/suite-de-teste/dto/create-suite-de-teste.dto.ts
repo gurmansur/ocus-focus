@@ -34,6 +34,7 @@ export class CreateSuiteDeTesteDto {
     example: 'Observações da suite de teste 1',
   })
   @IsString()
+  @IsOptional()
   observacoes: string;
 
   @ApiProperty({

@@ -13,11 +13,22 @@
     </div>
   </div>
 
-  @for (file of fileTree.suites; track $index) {
-  <app-arcatest-file [file]="file"></app-arcatest-file>
-  } @for (caso of fileTree.casos; track $index) {
-  <app-arcatest-caso [caso]="caso"></app-arcatest-caso>
-  }
+  <div class="max-w rounded overflow-hidden shadow-lg p-4 bg-white">
+    <!-- @for (file of fileTree.suites; track $index) {
+    <app-arcatest-file [file]="file"></app-arcatest-file>
+    } @for (caso of fileTree.casos; track $index) {
+    <app-arcatest-caso [caso]="caso"></app-arcatest-caso>
+    } -->
+    <p-tree
+      [value]="fileTreeNodes"
+      [selectionMode]="'single'"
+      [draggableNodes]="true"
+      [droppableNodes]="true"
+      [validateDrop]="true"
+      (onNodeDrop)="onNodeDrop($event)"
+    >
+    </p-tree>
+  </div>
 
   <app-modal
     (close)="closeDeleteModal()"
@@ -86,3 +97,5 @@
     ></ngx-charts-pie-chart>
   </app-content-modal>
 </div>
+
+<script src="./node_modules/preline/dist/preline.js"></script>

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateCasoDeTesteDto {
   @ApiProperty({
@@ -23,6 +23,7 @@ export class CreateCasoDeTesteDto {
     required: false,
   })
   @IsString()
+  @IsOptional()
   observacoes: string;
 
   @ApiProperty({
@@ -40,6 +41,7 @@ export class CreateCasoDeTesteDto {
     required: false,
   })
   @IsString()
+  @IsOptional()
   preCondicao: string;
 
   @ApiProperty({
@@ -48,6 +50,7 @@ export class CreateCasoDeTesteDto {
     required: false,
   })
   @IsString()
+  @IsOptional()
   posCondicao: string;
 
   @ApiProperty({
@@ -106,6 +109,7 @@ export class CreateCasoDeTesteDto {
   })
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
+  @IsOptional()
   casoDeUsoId: number;
 
   @ApiProperty({
@@ -115,6 +119,7 @@ export class CreateCasoDeTesteDto {
   })
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
+  @IsOptional()
   suiteDeTesteId?: number;
 
   @ApiProperty({
@@ -124,5 +129,6 @@ export class CreateCasoDeTesteDto {
   })
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
+  @IsOptional()
   testadorDesignadoId?: number;
 }

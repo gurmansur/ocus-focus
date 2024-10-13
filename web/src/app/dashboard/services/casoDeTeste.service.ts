@@ -12,14 +12,14 @@ export class CasoDeTesteService {
     @Inject('servicesRootUrl') private servicesRootUrl: string
   ) {}
 
-  create(casoDeTeste: CasoDeTeste, projeto: number): Observable<any> {
+  create(casoDeTeste: CasoDeTeste): Observable<any> {
     return this.httpClient.post<CasoDeTeste>(
       `${this.servicesRootUrl}/caso-de-teste`,
       casoDeTeste
     );
   }
 
-  update(casoDeTeste: CasoDeTeste, projeto: number): Observable<any> {
+  update(casoDeTeste: CasoDeTeste): Observable<any> {
     return this.httpClient.patch<CasoDeTeste>(
       `${this.servicesRootUrl}/caso-de-teste/update/${casoDeTeste.id}`,
       casoDeTeste
@@ -41,6 +41,14 @@ export class CasoDeTesteService {
   getAll(): Observable<CasoDeTeste[]> {
     return this.httpClient.get<CasoDeTeste[]>(
       `${this.servicesRootUrl}/caso-de-teste`
+    );
+  }
+
+  changeSuite(idCasoDeTeste: number, suiteId: number): Observable<any> {
+    console.log('idCasoDeTeste', idCasoDeTeste);
+    return this.httpClient.patch<CasoDeTeste>(
+      `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}/change-suite`,
+      { suiteId }
     );
   }
 }

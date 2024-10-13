@@ -1,22 +1,11 @@
-<!-- <ul>
-  <li *ngFor="let node of nodes; trackBy: trackNode">
-    <ng-container *ngIf="node.children?.length>0">
-      <button class="folder-button" (click)="onFolderButtonClick(node)">
-        <label class="folder-button-label" *ngIf="!node.expand">+</label>
-        <label class="folder-button-label" *ngIf="node.expand">-</label>
-      </button>
-       <img src="https://cdn4.iconfinder.com/data/icons/Pretty_office_icon_part_2/256/folder.png" *ngIf="!node.expand" class="folder-icon">
-      <img src="https://png.pngtree.com/svg/20170614/68aed7bb8b.png" *ngIf="node.expand" class="folder-icon">
-    </ng-container>
-    <label [ngClass]="{'item-name': !node.children?.length }">{{node.name}}</label>
-    <tree *ngIf="node.children && node.expand" [nodes]="node.children"></tree>
-  </li>
-</ul> -->
-<!-- make this with divs -->
+<div class="flex items-center gap-2 items-center p-1">
+  <app-test-suite-icon class="text-violet-700" size="24" />
+  <p>
+    {{ file.nome }}
+  </p>
+</div>
 
-{{ file.nome }}
-
-<div class="flex flex-col" [style]="{ marginLeft: '20px' }">
+<div class="flex flex-col" [style]="{ marginLeft: '24px' }">
   @if (file.suitesFilhas.length > 0) { @for (file of file.suitesFilhas; track
   $index) {
   <app-arcatest-file [file]="file"></app-arcatest-file>

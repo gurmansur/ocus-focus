@@ -50,4 +50,11 @@ export class SuiteDeTesteService {
       `${this.servicesRootUrl}/suite-de-teste/file-tree`
     );
   }
+
+  changeSuite(idSuiteDeTeste: number, suiteId: number): Observable<any> {
+    return this.httpClient.patch<SuiteDeTeste>(
+      `${this.servicesRootUrl}/suite-de-teste/${idSuiteDeTeste}/change-suite`,
+      { suiteId }
+    );
+  }
 }
