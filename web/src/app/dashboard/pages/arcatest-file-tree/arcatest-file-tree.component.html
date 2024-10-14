@@ -35,9 +35,9 @@
   <app-modal
     (close)="closeDeleteModal()"
     [open]="openDelete"
-    [title]="'Excluir Execução de Teste'"
-    (confirm)="deleteExecution()"
-    [message]="'Tem certeza que deseja excluir a execução de teste ' + '?'"
+    [title]="deleteTitle"
+    (confirm)="deleteSelected()"
+    [message]="deleteMessage"
   >
   </app-modal>
 

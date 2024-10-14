@@ -43,6 +43,8 @@ export class ArcatestFileTreeComponent {
   fileTreeNodes: TreeNode[] = [];
   @ViewChild('contextMenu') contextMenu!: ContextMenu;
   selectedNode!: TreeNode;
+  deleteTitle!: string;
+  deleteMessage!: string;
   contextMenuItems = [
     {
       label: 'Detalhes',
@@ -119,7 +121,7 @@ export class ArcatestFileTreeComponent {
       style: { color: 'red' },
       styleClass: 'context-menu-delete',
       command: (event: any) => {
-        console.log(event);
+        this.openDeleteModal();
       },
     },
   ];
@@ -135,6 +137,10 @@ export class ArcatestFileTreeComponent {
   ngOnInit() {
     this.projectId = this.route.snapshot.params['id'];
 
+    this.getFileTree();
+  }
+
+  getFileTree() {
     this.suiteDeTesteService.getFileTree().subscribe((response) => {
       this.fileTree = response;
       this.fileTreeNodes = this.fileTreeToNodes(this.fileTree);
@@ -219,9 +225,32 @@ export class ArcatestFileTreeComponent {
     this.openDelete = false;
   }
 
-  deleteExecution() {}
+  deleteSelected() {
+    if (this.selectedNode.type === 'suite') {
+      this.suiteDeTesteService
+        .delete(this.selectedNode.data.id)
+        .subscribe(() => {
+          this.getFileTree();
+          this.openDelete = false;
+        });
+    } else if (this.selectedNode.type === 'case') {
+      this.casoDeTesteService
+        .delete(this.selectedNode.data.id)
+        .subscribe(() => {
+          this.getFileTree();
+          this.openDelete = false;
+        });
+    }
+  }
 
-  openDeleteModal(id: number) {
+  openDeleteModal() {
+    this.deleteTitle = `Excluir ${
+      this.selectedNode.type === 'suite' ? 'Suite' : 'Caso de Teste'
+    }`;
+    this.deleteMessage = `Tem certeza que deseja excluir ${
+      this.selectedNode.type === 'suite' ? 'a Suite' : 'o Caso de Teste'
+    } "${this.selectedNode.data.nome}"?`;
+
     this.openDelete = true;
   }
 

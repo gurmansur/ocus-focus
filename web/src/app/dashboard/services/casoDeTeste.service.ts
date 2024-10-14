@@ -28,7 +28,7 @@ export class CasoDeTesteService {
 
   delete(idCasoDeTeste: number): Observable<any> {
     return this.httpClient.delete<CasoDeTeste>(
-      `${this.servicesRootUrl}/caso-de-teste/delete/${idCasoDeTeste}`
+      `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}`
     );
   }
 
