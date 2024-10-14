@@ -66,6 +66,8 @@ export class SuiteDeTesteService {
 
     const entity = await this.suiteDeTesteRepository.findOne({ where: { id } });
 
+    updateEntity.suitePai = entity.suitePai;
+
     return SuiteDeTesteMapper.entityToBo(
       await this.suiteDeTesteRepository.save({
         ...entity,
