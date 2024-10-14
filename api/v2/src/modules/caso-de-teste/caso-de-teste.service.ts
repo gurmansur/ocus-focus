@@ -77,11 +77,15 @@ export class CasoDeTesteService {
     return CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste);
   }
 
-  update(id: number, updateCasoDeTesteBo: UpdateCasoDeTesteBo) {
-    return this.casoDeTesteRepository.update(
-      id,
-      CasoDeTesteMapper.updateCasoDeTesteBoToEntity(updateCasoDeTesteBo),
-    );
+  async update(id: number, updateCasoDeTesteBo: UpdateCasoDeTesteBo) {
+    const caso = await this.casoDeTesteRepository.findOne({ where: { id } });
+
+    const entity =
+      CasoDeTesteMapper.updateCasoDeTesteBoToEntity(updateCasoDeTesteBo);
+
+    entity.suiteDeTeste = caso.suiteDeTeste;
+
+    return this.casoDeTesteRepository.update(id, entity);
   }
 
   changeSuite(id: number, suiteId: number) {
