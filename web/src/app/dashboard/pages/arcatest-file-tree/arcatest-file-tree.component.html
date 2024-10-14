@@ -32,6 +32,112 @@
       [model]="contextMenuItems"
       [style]="{ 'white-space': 'nowrap', width: 'auto' }"
     ></p-contextMenu>
+    <p-sidebar
+      [(visible)]="displaySidebar"
+      [position]="'right'"
+      [style]="{ width: '70%' }"
+      [showCloseIcon]="true"
+      [baseZIndex]="10000"
+    >
+      <h3 class="text-2xl font-medium mb-5">
+        Detalhes @if (selectedNode?.type === 'case') { de Caso de Teste } @else
+        { de Suíte de Teste }
+      </h3>
+      @if (selectedNode?.type === 'case') {
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Nome</span>
+          <span>{{ selectedNode?.data.nome }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Descrição</span>
+          <span>{{ selectedNode?.data.descricao }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Observações</span>
+          <span>{{ selectedNode?.data.observacoes }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Prioridade</span>
+          <span>{{ selectedNode?.data.prioridade }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Pré-condições</span>
+          <span>{{ selectedNode?.data.preCondicao }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Pós-condições</span>
+          <span>{{ selectedNode?.data.posCondicao }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Complexidade</span>
+          <span>{{ selectedNode?.data.complexidade }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Status</span>
+          <span>{{ selectedNode?.data.status }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Resultado Esperado</span>
+          <span>{{ selectedNode?.data.resultadoEsperado }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Método</span>
+          <span>{{ selectedNode?.data.metodo }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Técnica</span>
+          <span>{{ selectedNode?.data.tecnica }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Dados de Entrada</span>
+          <span>{{ selectedNode?.data.dadosEntrada }}</span>
+        </div>
+      </div>
+      } @else {
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Nome</span>
+          <span>{{ selectedNode?.data.nome }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Status</span>
+          <span>{{ selectedNode?.data.status }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Descrição</span>
+          <span>{{ selectedNode?.data.descricao }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2">
+          <span class="font-medium">Observações</span>
+          <span>{{ selectedNode?.data.observacoes }}</span>
+        </div>
+        <hr class="col-span-2" />
+        <div class="flex flex-col gap-2" style="padding-bottom: 64px">
+          <span class="font-medium">Cobertura de Testes</span>
+          <app-pie-chart
+            [failed]="{ value: 3, percentage: 30 }"
+            [passed]="{ value: 5, percentage: 50 }"
+            [pending]="{ value: 2, percentage: 20 }"
+          ></app-pie-chart>
+        </div>
+      </div>
+      }
+    </p-sidebar>
   </div>
 
   <app-modal
@@ -50,55 +156,11 @@
     (confirm)="closeCoverageModal()"
     confirmText="Fechar"
   >
-    <ngx-charts-pie-chart
-      [results]="[
-      {
-        name: 'Passou',
-        value: 5,
-        extra: {
-          percentage: '50%',
-        },
-      },
-      {
-        name: 'Falhou',
-        value: 3,
-        extra: {
-          percentage: '30%',
-        },
-      },
-      {
-        name: 'Executando',
-        value: 2,
-        extra: {
-          percentage: '20%',
-        },
-      },
-    ]"
-      [customColors]="[
-      {
-        name: 'Passou',
-        value: '#6B46C1',
-      },
-      {
-        name: 'Falhou',
-        value: '#A786DB',
-      },
-      {
-        name: 'Executando',
-        value: '#C2B3E5',
-      },
-    ]"
-      [labels]="true"
-      [legend]="true"
-      [legendPosition]="legendPosition"
-      [doughnut]="true"
-      [explodeSlices]="false"
-      [gradient]="false"
-      [animations]="true"
-      [legendTitle]="'Legenda'"
-      [margins]="[50, 20, 50, 20]"
-      style="padding-bottom: 50px"
-    ></ngx-charts-pie-chart>
+    <app-pie-chart
+      [failed]="failed"
+      [passed]="passed"
+      [pending]="pending"
+    ></app-pie-chart>
   </app-content-modal>
 </div>
 

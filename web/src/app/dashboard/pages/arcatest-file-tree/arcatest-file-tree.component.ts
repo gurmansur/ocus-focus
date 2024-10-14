@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { MenuItem, TreeDragDropService, TreeNode } from 'primeng/api';
 import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
+import { SidebarModule } from 'primeng/sidebar';
 import { TreeModule, TreeNodeDropEvent } from 'primeng/tree';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { ContentModalComponent } from '../../../shared/content-modal/content-modal.component';
@@ -15,6 +16,7 @@ import { SuiteDeTeste } from '../../models/suiteDeTeste';
 import { CasoDeTesteService } from '../../services/casoDeTeste.service';
 import { SuiteDeTesteService } from '../../services/suiteDeTeste.service';
 import { TestSuiteIconComponent } from '../painel-arcatest/components/test-suite-icon/test-suite-icon.component';
+import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 
 @Component({
   selector: 'app-arcatest-file-tree',
@@ -29,6 +31,8 @@ import { TestSuiteIconComponent } from '../painel-arcatest/components/test-suite
     TestSuiteIconComponent,
     TreeModule,
     ContextMenuModule,
+    SidebarModule,
+    PieChartComponent,
   ],
   providers: [TreeDragDropService, NodeIterator],
   templateUrl: './arcatest-file-tree.component.html',
@@ -42,9 +46,13 @@ export class ArcatestFileTreeComponent {
   openCoverage: boolean = false;
   fileTreeNodes: TreeNode[] = [];
   @ViewChild('contextMenu') contextMenu!: ContextMenu;
+  passed = { value: 5, percentage: 50 };
+  failed = { value: 3, percentage: 30 };
+  pending = { value: 2, percentage: 20 };
   selectedNode!: TreeNode;
   deleteTitle!: string;
   deleteMessage!: string;
+  displaySidebar: boolean = false;
   contextMenuItems: MenuItem[] = [
     {
       label: 'Adicionar Caso de Teste',
@@ -95,7 +103,7 @@ export class ArcatestFileTreeComponent {
           label: 'Detalhes',
           icon: 'hero-icon hero-info',
           command: (event: any) => {
-            console.log(event);
+            this.displaySidebar = true;
           },
         },
         {
