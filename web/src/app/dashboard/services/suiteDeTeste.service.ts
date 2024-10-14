@@ -20,22 +20,22 @@ export class SuiteDeTesteService {
     );
   }
 
-  update(suiteDeTeste: SuiteDeTeste): Observable<any> {
+  update(id: number, suiteDeTeste: SuiteDeTeste): Observable<any> {
     return this.httpClient.patch<SuiteDeTeste>(
-      `${this.servicesRootUrl}/suite-de-teste/update/${suiteDeTeste.id}`,
+      `${this.servicesRootUrl}/suite-de-teste/${id}`,
       suiteDeTeste
     );
   }
 
   delete(idSuiteDeTeste: number): Observable<any> {
     return this.httpClient.delete<SuiteDeTeste>(
-      `${this.servicesRootUrl}/suite-de-teste/delete/${idSuiteDeTeste}`
+      `${this.servicesRootUrl}/suite-de-teste/${idSuiteDeTeste}`
     );
   }
 
   getById(idSuiteDeTeste: number): Observable<SuiteDeTeste> {
     return this.httpClient.get<SuiteDeTeste>(
-      `${this.servicesRootUrl}/suite-de-teste/findById/${idSuiteDeTeste}`
+      `${this.servicesRootUrl}/suite-de-teste/${idSuiteDeTeste}`
     );
   }
 

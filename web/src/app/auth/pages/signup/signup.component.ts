@@ -6,8 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 import { Colaborador } from '../../models/colaborador';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -98,7 +98,6 @@ export class SignupComponent {
 
       this.authService.signup(signupUser).subscribe({
         next: (response) => {
-          console.log(response);
           this.router.navigate(['/collaborator-signin']);
         },
 

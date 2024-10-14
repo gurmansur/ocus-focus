@@ -19,7 +19,6 @@ export class ProjetoInterceptor implements HttpInterceptor {
     const projetoId = localStorage.getItem('projeto_id');
 
     if (!projetoId) {
-      console.log('projetoId não encontrado');
       this.router.navigate(['/dashboard']);
       return next.handle(req);
     }

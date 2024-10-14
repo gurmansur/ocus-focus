@@ -326,9 +326,6 @@ export class ProjetoService {
     colaboradorId: number,
     user: ColaboradorDto,
   ) {
-    console.log(user);
-    console.log(colaboradorId);
-
     if (user.id === colaboradorId) {
       throw new Error('Você não pode remover a si mesmo');
     }

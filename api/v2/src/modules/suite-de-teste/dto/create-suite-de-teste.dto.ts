@@ -42,7 +42,7 @@ export class CreateSuiteDeTesteDto {
     description: 'Id da suite de teste pai',
     example: 1,
   })
-  @Transform(({ value }) => parseInt(value))
+  @Transform(({ value }) => (!value && value !== 0 ? null : parseInt(value)))
   @IsNumber()
   @IsOptional()
   suitePaiId: number;

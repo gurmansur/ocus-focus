@@ -59,7 +59,6 @@ export class CollaboratorSigninComponent {
 
       this.authService.signinColaborador(signinUser).subscribe({
         next: (response) => {
-          console.log(response);
           localStorage.setItem('token', response.accessToken);
           localStorage.setItem('usu_email', response.usu_email);
           localStorage.setItem('usu_name', response.usu_name);

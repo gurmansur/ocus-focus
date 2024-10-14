@@ -55,7 +55,23 @@ export class ArcatestFileTreeComponent {
       label: 'Editar',
       icon: 'hero-icon hero-pencil',
       command: (event: any) => {
-        console.log(event);
+        if (this.selectedNode.type === 'suite') {
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projectId,
+            'suites-teste',
+            this.selectedNode.data.id,
+            'editar',
+          ]);
+        } else if (this.selectedNode.type === 'case') {
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projectId,
+            'casos-teste',
+            this.selectedNode.data.id,
+            'editar',
+          ]);
+        }
       },
     },
     {
@@ -83,7 +99,6 @@ export class ArcatestFileTreeComponent {
       label: 'Adicionar Suite de Teste',
       icon: 'hero-icon hero-folder-plus',
       command: (event: any) => {
-        console.log(this.selectedNode);
         this.router.navigate(
           ['/dashboard/projeto/', this.projectId, 'suites-teste', 'criar'],
           {
@@ -169,7 +184,6 @@ export class ArcatestFileTreeComponent {
   }
 
   onNodeDrop(event: TreeNodeDropEvent) {
-    console.log(event);
     const target = event.originalEvent?.target as HTMLElement;
     if (event.dropNode?.type === 'suite' || target.tagName === 'LI') {
       event.accept && event.accept();
@@ -195,10 +209,7 @@ export class ArcatestFileTreeComponent {
     }
   }
 
-  onContextMenu(event: MouseEvent, node?: TreeNode) {
-    console.log(event);
-    console.log(node);
-  }
+  onContextMenu(event: MouseEvent, node?: TreeNode) {}
 
   navigateToArcaTest() {
     this.router.navigate(['/dashboard/projeto/', this.projectId]);

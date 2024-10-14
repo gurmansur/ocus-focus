@@ -49,10 +49,25 @@ export class ArcatestSuitesFormComponent {
     this.projectId = this.route.snapshot.params['id'];
     this.suiteId = this.route.snapshot.params['idSuite'];
     this.isEdit = !!this.suiteId;
-    this.suite = this.mockupData[this.suiteId - 1];
+    if (this.isEdit) {
+      this.getSuite();
+    }
+  }
+
+  getSuite() {
+    this.suiteDeTesteService.getById(this.suiteId).subscribe({
+      next: (suite) => {
+        this.suite = suite;
+        this.createFormGroup();
+      },
+    });
   }
 
   ngOnInit(): void {
+    this.createFormGroup();
+  }
+
+  createFormGroup() {
     this.suiteFormGroup = this.formBuilder.group({
       nome: new FormControl(this.suite?.nome || '', Validators.required),
       descricao: new FormControl(
@@ -103,6 +118,16 @@ export class ArcatestSuitesFormComponent {
         this.navigateToArcaTest();
       },
     });
+  }
+
+  updateTestSuite() {
+    this.suiteDeTesteService
+      .update(this.suiteId, this.suiteFormGroup.value)
+      .subscribe({
+        next: () => {
+          this.navigateToArcaTest();
+        },
+      });
   }
 
   get nome() {

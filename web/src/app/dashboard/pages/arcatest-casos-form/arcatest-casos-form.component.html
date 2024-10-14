@@ -38,8 +38,7 @@
           formControlName="nome"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        @if (casoDeTesteFormGroup.get('nome').invalid &&
-        casoDeTesteFormGroup.get('nome').touched) {
+        @if (nome.invalid && nome.touched) {
         <p class="text-red-500 text-xs italic">
           {{
             casoDeTesteFormGroup.get("nome").errors.required
@@ -352,14 +351,17 @@
     </div>
     <div class="flex w-full justify-end gap-2">
       <app-button
-        (onClick)="navigateToTestCases()"
+        (onClick)="navigateToArcaTest()"
         class="mb-4"
         color="secondary"
       >
         Cancelar
       </app-button>
 
-      <app-button (onClick)="createTestCase()" [disabled]="!isFormValid">
+      <app-button
+        (onClick)="isEdit ? updateTestCase() : createTestCase()"
+        [disabled]="!isFormValid"
+      >
         @if (isEdit) { Editar Caso de Teste } @else {
         <app-plus-icon></app-plus-icon>
         Adicionar Caso de Teste }

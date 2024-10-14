@@ -19,9 +19,9 @@ export class CasoDeTesteService {
     );
   }
 
-  update(casoDeTeste: CasoDeTeste): Observable<any> {
+  update(id: number, casoDeTeste: CasoDeTeste): Observable<any> {
     return this.httpClient.patch<CasoDeTeste>(
-      `${this.servicesRootUrl}/caso-de-teste/update/${casoDeTeste.id}`,
+      `${this.servicesRootUrl}/caso-de-teste/${id}`,
       casoDeTeste
     );
   }
@@ -34,7 +34,7 @@ export class CasoDeTesteService {
 
   getById(idCasoDeTeste: number): Observable<CasoDeTeste> {
     return this.httpClient.get<CasoDeTeste>(
-      `${this.servicesRootUrl}/caso-de-teste/findById/${idCasoDeTeste}`
+      `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}`
     );
   }
 
@@ -45,7 +45,6 @@ export class CasoDeTesteService {
   }
 
   changeSuite(idCasoDeTeste: number, suiteId: number): Observable<any> {
-    console.log('idCasoDeTeste', idCasoDeTeste);
     return this.httpClient.patch<CasoDeTeste>(
       `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}/change-suite`,
       { suiteId }

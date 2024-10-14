@@ -84,7 +84,26 @@ export class ArcatestCasosFormComponent {
     });
   }
 
-  ngOnInit() {
+  updateTestCase() {
+    this.casoDeTesteService
+      .update(this.idCaso, this.casoDeTesteFormGroup.value)
+      .subscribe({
+        next: () => {
+          this.navigateToArcaTest();
+        },
+      });
+  }
+
+  getCase() {
+    this.casoDeTesteService.getById(this.idCaso).subscribe({
+      next: (caso) => {
+        this.casoDeTeste = caso;
+        this.createFormGroup();
+      },
+    });
+  }
+
+  createFormGroup() {
     this.casoDeTesteFormGroup = this.formBuilder.group({
       nome: new FormControl(this.casoDeTeste?.nome || '', Validators.required),
       descricao: new FormControl(
@@ -128,6 +147,13 @@ export class ArcatestCasosFormComponent {
       ),
       casoDeUsoId: new FormControl(this.casoDeTeste?.casoDeUsoId || ''),
     });
+  }
+
+  ngOnInit() {
+    if (this.isEdit) {
+      this.getCase();
+    }
+    this.createFormGroup();
   }
 
   get nome() {

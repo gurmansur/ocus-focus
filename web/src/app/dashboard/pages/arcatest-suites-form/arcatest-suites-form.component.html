@@ -119,14 +119,17 @@
     </div>
     <div class="flex w-full justify-end gap-2">
       <app-button
-        (onClick)="navigateToTestSuites()"
+        (onClick)="navigateToArcaTest()"
         class="mb-4"
         color="secondary"
       >
         Cancelar
       </app-button>
 
-      <app-button (onClick)="createTestSuite()" [disabled]="!isFormValid">
+      <app-button
+        (onClick)="isEdit ? updateTestSuite() : createTestSuite()"
+        [disabled]="!isFormValid"
+      >
         @if (isEdit) { Editar Suite de Teste } @else {
         <app-plus-icon></app-plus-icon>
         Adicionar Suite de Teste }
