@@ -16,8 +16,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ProjetoAtual } from 'src/decorators/projeto-atual.decorator';
 import { Serialize } from 'src/decorators/serialize.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSuiteDeTesteDto } from './dto/create-suite-de-teste.dto';
 import { SuiteDeTesteDto } from './dto/suite-de-teste.dto';
 import { UpdateSuiteDeTesteDto } from './dto/update-suite-de-teste.dto';
@@ -39,12 +41,15 @@ export class SuiteDeTesteController {
     description: 'Suite de teste criada com sucesso',
     type: SuiteDeTesteDto,
   })
-  async create(@Body() createSuiteDeTesteDto: CreateSuiteDeTesteDto) {
+  async create(
+    @Body() createSuiteDeTesteDto: CreateSuiteDeTesteDto,
+    @ProjetoAtual() projeto: Projeto,
+  ) {
     const bo = SuiteDeTesteMapper.createSuiteDeTesteDtoToBo(
       createSuiteDeTesteDto,
     );
 
-    const response = await this.suiteDeTesteService.create(bo);
+    const response = await this.suiteDeTesteService.create(bo, projeto);
     return SuiteDeTesteMapper.boToDto(response);
   }
 

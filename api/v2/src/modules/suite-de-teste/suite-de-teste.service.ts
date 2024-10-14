@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { Browser, Builder } from 'selenium-webdriver';
 import { TreeRepository } from 'typeorm';
 import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSuiteDeTesteBo } from './bo/create-suite-de-teste.bo';
 import { SuiteDeTesteBo } from './bo/suite-de-teste.bo';
 import { UpdateSuiteDeTesteBo } from './bo/update-suite-de-teste.bo';
@@ -22,9 +23,12 @@ export class SuiteDeTesteService {
 
   async create(
     createSuiteDeTesteBo: CreateSuiteDeTesteBo,
+    projeto: Projeto,
   ): Promise<SuiteDeTesteBo> {
     const entity =
       SuiteDeTesteMapper.createSuiteDeTesteBoToEntity(createSuiteDeTesteBo);
+
+    entity.projeto = projeto;
 
     return SuiteDeTesteMapper.entityToBo(
       await this.suiteDeTesteRepository.save(entity),
@@ -86,9 +90,10 @@ export class SuiteDeTesteService {
     if (!suite || (suiteId && !parentSuite)) {
       throw new Error('Suite de teste não encontrada');
     }
-    return this.suiteDeTesteRepository.update(id, {
-      suitePai: parentSuite || null,
-    });
+
+    suite.suitePai = parentSuite || null;
+
+    return this.suiteDeTesteRepository.save(suite);
   }
 
   remove(id: number) {

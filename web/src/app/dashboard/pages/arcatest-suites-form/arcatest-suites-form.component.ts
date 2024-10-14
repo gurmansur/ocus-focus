@@ -13,6 +13,7 @@ import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.com
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { PlanoDeTeste } from '../../models/planoDeTeste';
 import { SuiteDeTeste } from '../../models/suiteDeTeste';
+import { SuiteDeTesteService } from '../../services/suiteDeTeste.service';
 
 @Component({
   selector: 'app-arcatest-suites-form',
@@ -40,7 +41,11 @@ export class ArcatestSuitesFormComponent {
   planosDeTeste: PlanoDeTeste[] = [];
   mockupData: SuiteDeTeste[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private suiteDeTesteService: SuiteDeTesteService
+  ) {
     this.projectId = this.route.snapshot.params['id'];
     this.suiteId = this.route.snapshot.params['idSuite'];
     this.isEdit = !!this.suiteId;
@@ -56,6 +61,7 @@ export class ArcatestSuitesFormComponent {
       ),
       status: new FormControl(this.suite?.status || '', Validators.required),
       observacoes: new FormControl(this.suite?.observacoes || ''),
+      suitePaiId: this.route.snapshot.queryParams['suiteId'] || '',
     });
   }
 
@@ -92,7 +98,11 @@ export class ArcatestSuitesFormComponent {
   }
 
   createTestSuite() {
-    console.log(this.suiteFormGroup.value);
+    this.suiteDeTesteService.create(this.suiteFormGroup.value).subscribe({
+      next: () => {
+        this.navigateToArcaTest();
+      },
+    });
   }
 
   get nome() {

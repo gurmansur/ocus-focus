@@ -59,9 +59,9 @@
           formControlName="status"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
-          <option value="" disabled selected>Selecione</option>
-          <option value="Ativo">Ativo</option>
-          <option value="Inativo">Inativo</option>
+          <option value="{{ undefined }}" disabled selected>Selecione</option>
+          <option value="ATIVO">Ativo</option>
+          <option value="INATIVO">Inativo</option>
         </select>
         @if (suiteFormGroup.get('status').invalid &&
         suiteFormGroup.get('status').touched ) {

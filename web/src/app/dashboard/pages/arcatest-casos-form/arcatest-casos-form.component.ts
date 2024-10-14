@@ -24,6 +24,7 @@ import { casoUso } from '../../models/casoUso';
 import { Colaborador } from '../../models/colaborador';
 import { PlanoDeTeste } from '../../models/planoDeTeste';
 import { SuiteDeTeste } from '../../models/suiteDeTeste';
+import { CasoDeTesteService } from '../../services/casoDeTeste.service';
 
 @Component({
   selector: 'app-arcatest-casos-form',
@@ -55,7 +56,11 @@ export class ArcatestCasosFormComponent {
   mockupData: CasoDeTeste[] = [];
   casosDeUso: casoUso[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private casoDeTesteService: CasoDeTesteService
+  ) {
     this.projectId = this.route.snapshot.params['id'];
     this.idCaso = this.route.snapshot.params['idCaso'];
     this.isEdit = !!this.idCaso;
@@ -72,7 +77,11 @@ export class ArcatestCasosFormComponent {
   }
 
   createTestCase() {
-    console.log(this.casoDeTesteFormGroup.value);
+    this.casoDeTesteService.create(this.casoDeTesteFormGroup.value).subscribe({
+      next: () => {
+        this.navigateToArcaTest();
+      },
+    });
   }
 
   ngOnInit() {
@@ -82,14 +91,14 @@ export class ArcatestCasosFormComponent {
         this.casoDeTeste?.descricao || '',
         Validators.required
       ),
-      preCondicoes: new FormControl(this.casoDeTeste?.preCondicoes || ''),
-      posCondicoes: new FormControl(this.casoDeTeste?.posCondicoes || ''),
+      preCondicao: new FormControl(this.casoDeTeste?.preCondicao || ''),
+      posCondicao: new FormControl(this.casoDeTeste?.posCondicao || ''),
       prioridade: new FormControl(
         this.casoDeTeste?.prioridade || EPrioridade.BAIXA,
         Validators.required
       ),
       complexidade: new FormControl(
-        this.casoDeTeste?.complexidade || EComplexidade.BAIXA,
+        this.casoDeTeste?.complexidade || EComplexidade.SIMPLES,
         Validators.required
       ),
       tecnica: new FormControl(
@@ -100,25 +109,24 @@ export class ArcatestCasosFormComponent {
         this.casoDeTeste?.status || EStatus.ATIVO,
         Validators.required
       ),
-      categoria: new FormControl(
-        this.casoDeTeste?.categoria || ECategoria.MANUAL,
+      metodo: new FormControl(
+        this.casoDeTeste?.metodo || ECategoria.MANUAL,
         Validators.required
       ),
-      suiteDeTeste: new FormControl(this.casoDeTeste?.suiteDeTeste?.id || ''),
-      testador: new FormControl(this.casoDeTeste?.testador?.id || ''),
+      suiteDeTesteId: this.route.snapshot.queryParams['suiteId'] || '',
+      testadorDesignadoId: new FormControl(
+        this.casoDeTeste?.testadorDesignadoId || ''
+      ),
       observacoes: new FormControl(this.casoDeTeste?.observacoes || ''),
       resultadoEsperado: new FormControl(
         this.casoDeTeste?.resultadoEsperado || '',
         Validators.required
       ),
-      entrada: new FormControl(
-        this.casoDeTeste?.entrada || '',
+      dadosEntrada: new FormControl(
+        this.casoDeTeste?.dadosEntrada || '',
         Validators.required
       ),
-      casoDeUso: new FormControl(
-        this.casoDeTeste?.casoDeUso.id || '',
-        Validators.required
-      ),
+      casoDeUsoId: new FormControl(this.casoDeTeste?.casoDeUsoId || ''),
     });
   }
 
@@ -130,11 +138,11 @@ export class ArcatestCasosFormComponent {
     return this.casoDeTesteFormGroup.get('descricao');
   }
 
-  get preCondicoes() {
-    return this.casoDeTesteFormGroup.get('preCondicoes');
+  get preCondicao() {
+    return this.casoDeTesteFormGroup.get('preCondicao');
   }
 
-  get posCondicoes() {
+  get posCondicao() {
     return this.casoDeTesteFormGroup.get('posCondicoes');
   }
 

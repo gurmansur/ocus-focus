@@ -13,6 +13,14 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.context-menu-delete {
+  a {
+    span {
+      color: rgb(230, 40, 40);
+    }
+  }
+}
+
 .root-node {
   padding-left: 0rem !important;
 }
@@ -24,9 +32,10 @@ body {
 .hero-icon {
   width: 1.5em;
   height: 1.5em;
+  aspect-ratio: 1;
   vertical-align: -0.125em;
   fill: currentColor;
-  overflow: hidden;
+  margin-right: 0.5em;
 }
 
 .hero-folder {
@@ -37,10 +46,26 @@ body {
   content: url("./assets/img/document.svg");
 }
 
+.hero-document-plus {
+  content: url("./assets/img/document-plus.svg");
+}
+
 .hero-folder-open {
   content: url("./assets/img/folder-open.svg");
 }
 
 .hero-folder-plus {
   content: url("./assets/img/folder-plus.svg");
+}
+
+.hero-trash {
+  content: url("./assets/img/trash.svg");
+}
+
+.hero-pencil {
+  content: url("./assets/img/pencil.svg");
+}
+
+.hero-info {
+  content: url("./assets/img/info.svg");
 }

@@ -1,7 +1,8 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { TreeDragDropService, TreeNode } from 'primeng/api';
+import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
 import { TreeModule, TreeNodeDropEvent } from 'primeng/tree';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { ContentModalComponent } from '../../../shared/content-modal/content-modal.component';
@@ -14,23 +15,20 @@ import { SuiteDeTeste } from '../../models/suiteDeTeste';
 import { CasoDeTesteService } from '../../services/casoDeTeste.service';
 import { SuiteDeTesteService } from '../../services/suiteDeTeste.service';
 import { TestSuiteIconComponent } from '../painel-arcatest/components/test-suite-icon/test-suite-icon.component';
-import { ArcatestCasoComponent } from './arcatest-caso/arcatest-caso.component';
-import { ArcatestFileComponent } from './arcatest-file/arcatest-file.component';
 
 @Component({
   selector: 'app-arcatest-file-tree',
   standalone: true,
   imports: [
     ProjectHeaderComponent,
-    ArcatestFileComponent,
     NgxChartsModule,
     ContentModalComponent,
     ModalComponent,
     PlusIconComponent,
     ButtonComponent,
-    ArcatestCasoComponent,
     TestSuiteIconComponent,
     TreeModule,
+    ContextMenuModule,
   ],
   providers: [TreeDragDropService, NodeIterator],
   templateUrl: './arcatest-file-tree.component.html',
@@ -43,6 +41,73 @@ export class ArcatestFileTreeComponent {
   openDelete: boolean = false;
   openCoverage: boolean = false;
   fileTreeNodes: TreeNode[] = [];
+  @ViewChild('contextMenu') contextMenu!: ContextMenu;
+  selectedNode!: TreeNode;
+  contextMenuItems = [
+    {
+      label: 'Detalhes',
+      icon: 'hero-icon hero-info',
+      command: (event: any) => {
+        console.log(event);
+      },
+    },
+    {
+      label: 'Editar',
+      icon: 'hero-icon hero-pencil',
+      command: (event: any) => {
+        console.log(event);
+      },
+    },
+    {
+      separator: true,
+      style: {
+        'margin-top': '2px',
+        'margin-bottom': '2px',
+        'border-bottom': '1px solid #f0f0f0',
+      },
+    },
+    {
+      label: 'Adicionar Caso de Teste',
+      icon: 'hero-icon hero-document-plus',
+      command: (event: any) => {
+        this.router.navigate(
+          ['/dashboard/projeto/', this.projectId, 'casos-teste', 'criar'],
+          {
+            queryParams: { suiteId: this.selectedNode.data.id },
+            queryParamsHandling: 'merge',
+          }
+        );
+      },
+    },
+    {
+      label: 'Adicionar Suite de Teste',
+      icon: 'hero-icon hero-folder-plus',
+      command: (event: any) => {
+        console.log(this.selectedNode);
+        this.router.navigate(
+          ['/dashboard/projeto/', this.projectId, 'suites-teste', 'criar'],
+          {
+            queryParams: {
+              suiteId:
+                this.selectedNode.type === 'suite'
+                  ? this.selectedNode.data.id
+                  : this.selectedNode.data.suiteDeTesteId,
+            },
+            queryParamsHandling: 'merge',
+          }
+        );
+      },
+    },
+    {
+      label: 'Remover',
+      icon: 'hero-icon hero-trash',
+      style: { color: 'red' },
+      styleClass: 'context-menu-delete',
+      command: (event: any) => {
+        console.log(event);
+      },
+    },
+  ];
 
   constructor(
     @Inject(SuiteDeTesteService)
@@ -59,6 +124,10 @@ export class ArcatestFileTreeComponent {
       this.fileTree = response;
       this.fileTreeNodes = this.fileTreeToNodes(this.fileTree);
     });
+  }
+
+  onContextMenuSelect(event: any) {
+    this.selectedNode = event.node;
   }
 
   private fileTreeToNodes(fileTree: FileTree): TreeNode[] {
@@ -104,10 +173,8 @@ export class ArcatestFileTreeComponent {
     const target = event.originalEvent?.target as HTMLElement;
     if (event.dropNode?.type === 'suite' || target.tagName === 'LI') {
       event.accept && event.accept();
-
-      console.log(target.tagName);
-
       if (event.dragNode?.type === 'suite') {
+        event.dragNode.styleClass = target.tagName === 'LI' ? 'root-node' : '';
         this.suiteDeTesteService
           .changeSuite(
             event.dragNode?.data.id,
@@ -115,6 +182,7 @@ export class ArcatestFileTreeComponent {
           )
           .subscribe();
       } else if (event.dragNode?.type === 'case') {
+        event.dragNode.styleClass = target.tagName === 'LI' ? 'root-node' : '';
         this.casoDeTesteService
           .changeSuite(
             event.dragNode?.data.id,
@@ -125,6 +193,11 @@ export class ArcatestFileTreeComponent {
     } else {
       return;
     }
+  }
+
+  onContextMenu(event: MouseEvent, node?: TreeNode) {
+    console.log(event);
+    console.log(node);
   }
 
   navigateToArcaTest() {

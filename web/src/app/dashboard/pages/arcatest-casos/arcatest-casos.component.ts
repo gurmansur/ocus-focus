@@ -46,7 +46,7 @@ export class ArcatestCasosComponent {
   ngOnInit(): void {
     this.casoDeTesteService.getAll().subscribe((data) => {
       this.casosDeTeste = data.filter(
-        (testCase) => testCase.suiteDeTeste?.id === +this.suiteId
+        (testCase) => testCase.suiteDeTesteId === +this.suiteId
       );
     });
   }

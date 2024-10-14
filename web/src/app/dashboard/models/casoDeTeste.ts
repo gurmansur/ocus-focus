@@ -1,52 +1,62 @@
-import { casoUso } from './casoUso';
-import { Colaborador } from './colaborador';
-import { SuiteDeTeste } from './suiteDeTeste';
-
 export enum EPrioridade {
-  ALTA = 'Alta',
-  MEDIA = 'Média',
-  BAIXA = 'Baixa',
+  ALTA = 'ALTA',
+  MEDIA = 'MEDIA',
+  BAIXA = 'BAIXA',
 }
 
 export enum EComplexidade {
-  ALTA = 'Alta',
-  MEDIA = 'Média',
-  BAIXA = 'Baixa',
+  COMPLEXO = 'COMPLEXO',
+  MEDIO = 'MEDIO',
+  SIMPLES = 'SIMPLES',
 }
 
 export enum EStatus {
   ATIVO = 'ATIVO',
-  INATIVO = 'Inativo',
+  INATIVO = 'INATIVO',
 }
 
 export enum ECategoria {
-  MANUAL = 'Manual',
-  AUTOMATIZADO = 'Automatizado',
+  MANUAL = 'MANUAL',
+  AUTOMATIZADO = 'AUTOMATIZADO',
 }
 
 export enum ETecnica {
-  FUNCIONAL = 'Funcional',
-  ESTRUTURAL = 'Estrutural',
+  FUNCIONAL = 'FUNCIONAL',
+  ESTRUTURAL = 'ESTRUTURAL',
 }
 
 export class CasoDeTeste {
   constructor(
     public nome: string,
+
     public descricao: string,
-    public prioridade: EPrioridade,
-    public complexidade: EComplexidade,
-    public status: EStatus,
-    public tecnica: ETecnica,
-    public categoria: ECategoria,
-    public dataCriacao: string,
+
+    public observacoes: string,
+
+    public prioridade: 'ALTA' | 'MEDIA' | 'BAIXA',
+
+    public preCondicao: string,
+
+    public posCondicao: string,
+
+    public complexidade: 'SIMPLES' | 'MEDIO' | 'COMPLEXO',
+
+    public status: 'ATIVO' | 'INATIVO',
+
     public resultadoEsperado: string,
-    public entrada: string,
-    public casoDeUso: casoUso,
-    public observacoes?: string,
-    public preCondicoes?: string,
-    public posCondicoes?: string,
-    public suiteDeTeste?: SuiteDeTeste,
-    public testador?: Colaborador,
-    public id?: number
+
+    public metodo: 'MANUAL' | 'AUTOMATIZADO',
+
+    public tecnica: 'FUNCIONAL' | 'ESTRUTURAL',
+
+    public dadosEntrada: string,
+
+    public id?: number,
+
+    public casoDeUsoId?: number,
+
+    public suiteDeTesteId?: number,
+
+    public testadorDesignadoId?: number
   ) {}
 }

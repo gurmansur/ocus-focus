@@ -13,14 +13,14 @@ export class SuiteDeTesteService {
     @Inject('servicesRootUrl') private servicesRootUrl: string
   ) {}
 
-  create(suiteDeTeste: SuiteDeTeste, projeto: number): Observable<any> {
+  create(suiteDeTeste: SuiteDeTeste): Observable<any> {
     return this.httpClient.post<SuiteDeTeste>(
       `${this.servicesRootUrl}/suite-de-teste`,
       suiteDeTeste
     );
   }
 
-  update(suiteDeTeste: SuiteDeTeste, projeto: number): Observable<any> {
+  update(suiteDeTeste: SuiteDeTeste): Observable<any> {
     return this.httpClient.patch<SuiteDeTeste>(
       `${this.servicesRootUrl}/suite-de-teste/update/${suiteDeTeste.id}`,
       suiteDeTeste

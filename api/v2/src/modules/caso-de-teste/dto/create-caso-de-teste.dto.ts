@@ -107,7 +107,7 @@ export class CreateCasoDeTesteDto {
     description: 'ID do caso de uso',
     example: 1,
   })
-  @Transform(({ value }) => parseInt(value))
+  @Transform(({ value }) => (!value && value !== 0 ? null : parseInt(value)))
   @IsNumber()
   @IsOptional()
   casoDeUsoId: number;
@@ -117,7 +117,7 @@ export class CreateCasoDeTesteDto {
     example: 1,
     required: false,
   })
-  @Transform(({ value }) => parseInt(value))
+  @Transform(({ value }) => (!value && value !== 0 ? null : parseInt(value)))
   @IsNumber()
   @IsOptional()
   suiteDeTesteId?: number;
@@ -127,7 +127,7 @@ export class CreateCasoDeTesteDto {
     example: 1,
     required: false,
   })
-  @Transform(({ value }) => parseInt(value))
+  @Transform(({ value }) => (!value && value !== 0 ? null : parseInt(value)))
   @IsNumber()
   @IsOptional()
   testadorDesignadoId?: number;

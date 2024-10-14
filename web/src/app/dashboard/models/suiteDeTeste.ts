@@ -2,8 +2,6 @@ import { CasoDeTeste } from './casoDeTeste';
 
 export class SuiteDeTeste {
   constructor(
-    public id: number,
-
     public nome: string,
 
     public status: 'ATIVO' | 'INATIVO',
@@ -12,10 +10,12 @@ export class SuiteDeTeste {
 
     public observacoes: string,
 
-    public suitePai: SuiteDeTeste,
+    public suitePaiId: number,
 
     public suitesFilhas: SuiteDeTeste[],
 
-    public casosDeTeste: CasoDeTeste[]
+    public casosDeTeste: CasoDeTeste[],
+
+    public id?: number
   ) {}
 }

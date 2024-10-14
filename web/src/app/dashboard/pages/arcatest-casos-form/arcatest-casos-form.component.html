@@ -50,77 +50,51 @@
         }
       </div>
       <div class="relative w-full">
-        <label for="casoDeUso" class="leading-7 text-sm text-gray-600"
+        <label for="casoDeUsoId" class="leading-7 text-sm text-gray-600"
           >Caso de Uso</label
         >
         <select
-          id="casoDeUso"
-          name="casoDeUso"
-          formControlName="casoDeUso"
+          id="casoDeUsoId"
+          name="casoDeUsoId"
+          formControlName="casoDeUsoId"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
-          <option value="" disabled selected>Nenhum</option>
+          <option value="{{ undefined }}" disabled selected>Nenhum</option>
           @for (casoDeUso of casosDeUso; track $index) {
           <option value="{{ casoDeUso.id }}">{{ casoDeUso.nome }}</option>
           }
         </select>
-        @if (casoDeTesteFormGroup.get('casoDeUso').invalid &&
-        casoDeTesteFormGroup.get('casoDeUso').touched ) {
+        @if (casoDeTesteFormGroup.get('casoDeUsoId').invalid &&
+        casoDeTesteFormGroup.get('casoDeUsoId').touched ) {
         <p class="text-red-500 text-xs italic">
           {{
-            casoDeTesteFormGroup.get("casoDeUso").errors.required
+            casoDeTesteFormGroup.get("casoDeUsoId").errors.required
               ? "Campo obrigatório"
               : ""
           }}
         </p>
         }
       </div>
-      <div class="relative w-1/2 pr-1">
-        <label for="testador" class="leading-7 text-sm text-gray-600"
+      <div class="relative w-full">
+        <label for="testadorDesignadoId" class="leading-7 text-sm text-gray-600"
           >Testador Designado</label
         >
         <select
-          id="testador"
-          name="testador"
-          formControlName="testador"
+          id="testadorDesignadoId"
+          name="testadorDesignadoId"
+          formControlName="testadorDesignadoId"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
-          <option value="" selected>Nenhum</option>
+          <option value="{{ undefined }}" selected>Nenhum</option>
           @for (testador of testadores; track $index) {
           <option value="{{ testador.id }}">{{ testador.nome }}</option>
           }
         </select>
-        @if (casoDeTesteFormGroup.get('testador').invalid &&
-        casoDeTesteFormGroup.get('testador').touched ) {
+        @if (casoDeTesteFormGroup.get('testadorDesignadoId').invalid &&
+        casoDeTesteFormGroup.get('testadorDesignadoId').touched ) {
         <p class="text-red-500 text-xs italic">
           {{
-            casoDeTesteFormGroup.get("testador").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
-        }
-      </div>
-      <div class="relative w-1/2 pl-1">
-        <label for="suite" class="leading-7 text-sm text-gray-600"
-          >Suite de Teste</label
-        >
-        <select
-          id="suite"
-          name="suite"
-          formControlName="suite"
-          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-        >
-          <option value="" selected>Nenhuma</option>
-          @for (suite of suites; track $index) {
-          <option value="{{ suite.id }}">{{ suite.nome }}</option>
-          }
-        </select>
-        @if (casoDeTesteFormGroup.get('suite').invalid &&
-        casoDeTesteFormGroup.get('suite').touched ) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("suite").errors.required
+            casoDeTesteFormGroup.get("testadorDesignadoId").errors.required
               ? "Campo obrigatório"
               : ""
           }}
@@ -137,8 +111,8 @@
           formControlName="status"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
-          <option value="Ativo">Ativo</option>
-          <option value="Inativo">Inativo</option>
+          <option value="ATIVO">Ativo</option>
+          <option value="INATIVO">Inativo</option>
         </select>
         @if (casoDeTesteFormGroup.get('status').invalid &&
         casoDeTesteFormGroup.get('status').touched) {
@@ -161,8 +135,8 @@
           formControlName="tecnica"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
-          <option value="Funcional">Funcional</option>
-          <option value="Estrutural">Estrutural</option>
+          <option value="FUNCIONAL">Funcional</option>
+          <option value="ESTRUTURAL">Estrutural</option>
         </select>
         @if (casoDeTesteFormGroup.get('tecnica').invalid &&
         casoDeTesteFormGroup.get('tecnica').touched) {
@@ -176,23 +150,23 @@
         }
       </div>
       <div class="relative w-1/5 px-1">
-        <label for="categoria" class="leading-7 text-sm text-gray-600"
-          >Categoria</label
+        <label for="metodo" class="leading-7 text-sm text-gray-600"
+          >Método</label
         >
         <select
-          id="categoria"
-          name="categoria"
-          formControlName="categoria"
+          id="metodo"
+          name="metodo"
+          formControlName="metodo"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
-          <option value="Manual">Manual</option>
-          <option value="Automatizado">Automatizado</option>
+          <option value="MANUAL">Manual</option>
+          <option value="AUTOMATIZADO">Automatizado</option>
         </select>
-        @if (casoDeTesteFormGroup.get('categoria').invalid &&
-        casoDeTesteFormGroup.get('categoria').touched) {
+        @if (casoDeTesteFormGroup.get('metodo').invalid &&
+        casoDeTesteFormGroup.get('metodo').touched) {
         <p class="text-red-500 text-xs italic">
           {{
-            casoDeTesteFormGroup.get("categoria").errors.required
+            casoDeTesteFormGroup.get("metodo").errors.required
               ? "Campo obrigatório"
               : ""
           }}
@@ -209,9 +183,9 @@
           formControlName="prioridade"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
-          <option value="Alta">Alta</option>
-          <option value="Média">Média</option>
-          <option value="Baixa">Baixa</option>
+          <option value="ALTA">Alta</option>
+          <option value="MEDIA">Média</option>
+          <option value="BAIXA">Baixa</option>
         </select>
         @if (casoDeTesteFormGroup.get('prioridade').invalid &&
         casoDeTesteFormGroup.get('prioridade').touched) {
@@ -234,9 +208,9 @@
           formControlName="complexidade"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
-          <option value="Alta">Alta</option>
-          <option value="Média">Média</option>
-          <option value="Baixa">Baixa</option>
+          <option value="COMPLEXO">Complexo</option>
+          <option value="MEDIO">Médio</option>
+          <option value="SIMPLES">Simples</option>
         </select>
         @if (casoDeTesteFormGroup.get('complexidade').invalid &&
         casoDeTesteFormGroup.get('complexidade').touched) {
@@ -292,20 +266,20 @@
         }
       </div>
       <div class="relative w-1/2 pr-1">
-        <label for="preCondicoes" class="leading-7 text-sm text-gray-600"
+        <label for="preCondicao" class="leading-7 text-sm text-gray-600"
           >Pré-condições</label
         >
         <textarea
-          id="preCondicoes"
-          name="preCondicoes"
-          formControlName="preCondicoes"
+          id="preCondicao"
+          name="preCondicao"
+          formControlName="preCondicao"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('preCondicoes').invalid &&
-        casoDeTesteFormGroup.get('preCondicoes').touched) {
+        @if (casoDeTesteFormGroup.get('preCondicao').invalid &&
+        casoDeTesteFormGroup.get('preCondicao').touched) {
         <p class="text-red-500 text-xs italic">
           {{
-            casoDeTesteFormGroup.get("preCondicoes").errors.required
+            casoDeTesteFormGroup.get("preCondicao").errors.required
               ? "Campo obrigatório"
               : ""
           }}
@@ -313,20 +287,20 @@
         }
       </div>
       <div class="relative w-1/2 pl-1">
-        <label for="posCondicoes" class="leading-7 text-sm text-gray-600"
+        <label for="posCondicao" class="leading-7 text-sm text-gray-600"
           >Pós-condições</label
         >
         <textarea
-          id="posCondicoes"
-          name="posCondicoes"
-          formControlName="posCondicoes"
+          id="posCondicao"
+          name="posCondicao"
+          formControlName="posCondicao"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('posCondicoes').invalid &&
-        casoDeTesteFormGroup.get('posCondicoes').touched) {
+        @if (casoDeTesteFormGroup.get('posCondicao').invalid &&
+        casoDeTesteFormGroup.get('posCondicao').touched) {
         <p class="text-red-500 text-xs italic">
           {{
-            casoDeTesteFormGroup.get("posCondicoes").errors.required
+            casoDeTesteFormGroup.get("posCondicao").errors.required
               ? "Campo obrigatório"
               : ""
           }}
@@ -334,20 +308,20 @@
         }
       </div>
       <div class="relative w-1/2 pr-1">
-        <label for="entrada" class="leading-7 text-sm text-gray-600"
+        <label for="dadosEntrada" class="leading-7 text-sm text-gray-600"
           >Entrada</label
         >
         <textarea
-          id="entrada"
-          name="entrada"
-          formControlName="entrada"
+          id="dadosEntrada"
+          name="dadosEntrada"
+          formControlName="dadosEntrada"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('entrada').invalid &&
-        casoDeTesteFormGroup.get('entrada').touched) {
+        @if (casoDeTesteFormGroup.get('dadosEntrada').invalid &&
+        casoDeTesteFormGroup.get('dadosEntrada').touched) {
         <p class="text-red-500 text-xs italic">
           {{
-            casoDeTesteFormGroup.get("entrada").errors.required
+            casoDeTesteFormGroup.get("dadosEntrada").errors.required
               ? "Campo obrigatório"
               : ""
           }}
