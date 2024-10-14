@@ -1,7 +1,7 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, HostListener, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
-import { TreeDragDropService, TreeNode } from 'primeng/api';
+import { MenuItem, TreeDragDropService, TreeNode } from 'primeng/api';
 import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
 import { TreeModule, TreeNodeDropEvent } from 'primeng/tree';
 import { ButtonComponent } from '../../../shared/button/button.component';
@@ -45,83 +45,29 @@ export class ArcatestFileTreeComponent {
   selectedNode!: TreeNode;
   deleteTitle!: string;
   deleteMessage!: string;
-  contextMenuItems = [
-    {
-      label: 'Detalhes',
-      icon: 'hero-icon hero-info',
-      command: (event: any) => {
-        console.log(event);
-      },
-    },
-    {
-      label: 'Editar',
-      icon: 'hero-icon hero-pencil',
-      command: (event: any) => {
-        if (this.selectedNode.type === 'suite') {
-          this.router.navigate([
-            '/dashboard/projeto/',
-            this.projectId,
-            'suites-teste',
-            this.selectedNode.data.id,
-            'editar',
-          ]);
-        } else if (this.selectedNode.type === 'case') {
-          this.router.navigate([
-            '/dashboard/projeto/',
-            this.projectId,
-            'casos-teste',
-            this.selectedNode.data.id,
-            'editar',
-          ]);
-        }
-      },
-    },
-    {
-      separator: true,
-      style: {
-        'margin-top': '2px',
-        'margin-bottom': '2px',
-        'border-bottom': '1px solid #f0f0f0',
-      },
-    },
+  contextMenuItems: MenuItem[] = [
     {
       label: 'Adicionar Caso de Teste',
       icon: 'hero-icon hero-document-plus',
       command: (event: any) => {
-        this.router.navigate(
-          ['/dashboard/projeto/', this.projectId, 'casos-teste', 'criar'],
-          {
-            queryParams: { suiteId: this.selectedNode.data.id },
-            queryParamsHandling: 'merge',
-          }
-        );
+        this.router.navigate([
+          '/dashboard/projeto/',
+          this.projectId,
+          'casos-teste',
+          'criar',
+        ]);
       },
     },
     {
       label: 'Adicionar Suite de Teste',
       icon: 'hero-icon hero-folder-plus',
       command: (event: any) => {
-        this.router.navigate(
-          ['/dashboard/projeto/', this.projectId, 'suites-teste', 'criar'],
-          {
-            queryParams: {
-              suiteId:
-                this.selectedNode.type === 'suite'
-                  ? this.selectedNode.data.id
-                  : this.selectedNode.data.suiteDeTesteId,
-            },
-            queryParamsHandling: 'merge',
-          }
-        );
-      },
-    },
-    {
-      label: 'Remover',
-      icon: 'hero-icon hero-trash',
-      style: { color: 'red' },
-      styleClass: 'context-menu-delete',
-      command: (event: any) => {
-        this.openDeleteModal();
+        this.router.navigate([
+          '/dashboard/projeto/',
+          this.projectId,
+          'suites-teste',
+          'criar',
+        ]);
       },
     },
   ];
@@ -138,6 +84,120 @@ export class ArcatestFileTreeComponent {
     this.projectId = this.route.snapshot.params['id'];
 
     this.getFileTree();
+  }
+
+  @HostListener('document:auxclick', ['$event'])
+  clickout(event: Event) {
+    console.log(event);
+    if ((event.target as HTMLElement).closest('.p-treenode')) {
+      this.contextMenuItems = [
+        {
+          label: 'Detalhes',
+          icon: 'hero-icon hero-info',
+          command: (event: any) => {
+            console.log(event);
+          },
+        },
+        {
+          label: 'Editar',
+          icon: 'hero-icon hero-pencil',
+          command: (event: any) => {
+            if (this.selectedNode.type === 'suite') {
+              this.router.navigate([
+                '/dashboard/projeto/',
+                this.projectId,
+                'suites-teste',
+                this.selectedNode.data.id,
+                'editar',
+              ]);
+            } else if (this.selectedNode.type === 'case') {
+              this.router.navigate([
+                '/dashboard/projeto/',
+                this.projectId,
+                'casos-teste',
+                this.selectedNode.data.id,
+                'editar',
+              ]);
+            }
+          },
+        },
+        {
+          separator: true,
+          style: {
+            'margin-top': '2px',
+            'margin-bottom': '2px',
+            'border-bottom': '1px solid #f0f0f0',
+          },
+        },
+        {
+          label: 'Adicionar Caso de Teste',
+          icon: 'hero-icon hero-document-plus',
+          command: (event: any) => {
+            this.router.navigate(
+              ['/dashboard/projeto/', this.projectId, 'casos-teste', 'criar'],
+              {
+                queryParams: { suiteId: this.selectedNode.data.id },
+                queryParamsHandling: 'merge',
+              }
+            );
+          },
+        },
+        {
+          label: 'Adicionar Suite de Teste',
+          icon: 'hero-icon hero-folder-plus',
+          command: (event: any) => {
+            this.router.navigate(
+              ['/dashboard/projeto/', this.projectId, 'suites-teste', 'criar'],
+              {
+                queryParams: {
+                  suiteId:
+                    this.selectedNode.type === 'suite'
+                      ? this.selectedNode.data.id
+                      : this.selectedNode.data.suiteDeTesteId,
+                },
+                queryParamsHandling: 'merge',
+              }
+            );
+          },
+        },
+        {
+          label: 'Remover',
+          icon: 'hero-icon hero-trash',
+          style: { color: 'red' },
+          styleClass: 'context-menu-delete',
+          command: (event: any) => {
+            this.openDeleteModal();
+          },
+        },
+      ];
+    } else {
+      this.contextMenuItems = [
+        {
+          label: 'Adicionar Caso de Teste',
+          icon: 'hero-icon hero-document-plus',
+          command: (event: any) => {
+            this.router.navigate([
+              '/dashboard/projeto/',
+              this.projectId,
+              'casos-teste',
+              'criar',
+            ]);
+          },
+        },
+        {
+          label: 'Adicionar Suite de Teste',
+          icon: 'hero-icon hero-folder-plus',
+          command: (event: any) => {
+            this.router.navigate([
+              '/dashboard/projeto/',
+              this.projectId,
+              'suites-teste',
+              'criar',
+            ]);
+          },
+        },
+      ];
+    }
   }
 
   getFileTree() {
