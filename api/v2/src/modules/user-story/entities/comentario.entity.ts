@@ -1,11 +1,19 @@
 import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { UserStory } from './user-story.entity';
 
+@Entity('COMENTARIOS')
 export class Comentario {
   @PrimaryGeneratedColumn({ type: 'int', name: 'cmn_id' })
   id: number;
 
-  @Column({ type: 'string', name: 'cmn_comentario' })
+  @Column({ type: 'varchar', name: 'cmn_comentario' })
   comentario: string;
 
   @Column({ type: 'datetime', name: 'cmn_criado_em' })
@@ -14,7 +22,11 @@ export class Comentario {
   @Column({ type: 'datetime', name: 'cmn_modificado_em' })
   modificado_em: Date;
 
-  @ManyToOne(() => Usuario)
+  @ManyToOne(() => Usuario, (usuario) => usuario.id)
   @JoinColumn({ name: 'fk_usuario_id' })
   usuario: Usuario;
+
+  @ManyToOne(() => UserStory, (userStory) => userStory.id)
+  @JoinColumn({ name: 'fk_user_story' })
+  userStory: UserStory;
 }

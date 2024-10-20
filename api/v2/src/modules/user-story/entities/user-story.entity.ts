@@ -1,60 +1,78 @@
 import { Arquivo } from 'src/modules/arquivo/entities/arquivo.entity';
+import { Kanban } from 'src/modules/kanban/entities/kanban.entity';
+import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
 import { Subtarefa } from 'src/modules/subtarefa/entities/subtarefa.entity';
 import { Tag } from 'src/modules/tag/entities/tag.entity';
 import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
   Column,
+  Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Comentario } from './comentario.entity';
 
+@Entity('USER_STORIES')
 export class UserStory {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'ust_id' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'UST_ID' })
   id: number;
 
-  @Column({ type: 'string', name: 'ust_nome' })
+  @Column({ type: 'varchar', name: 'UST_NOME' })
   nome: string;
 
-  @Column({ type: 'string', name: 'ust_descricao' })
+  @Column({ type: 'varchar', name: 'UST_DESCRICAO' })
   descricao: string;
 
-  @Column({ type: 'int', name: 'ust_estimativa_tempo' })
+  @Column({ type: 'int', name: 'UST_ESTIMATIVA_TEMPO' })
   estimativa_tempo: number;
 
+  @OneToMany(() => Comentario, (comentario) => comentario.id)
   comentarios: Comentario[];
 
   @ManyToMany(() => Tag)
   @JoinColumn({
-    name: 'fk_tag_id',
+    name: 'FK_TAG_ID',
   })
   tags: Tag[];
 
+  @OneToMany(() => Subtarefa, (subtarefa) => subtarefa.userStory)
   subtarefas: Subtarefa[];
 
-  @ManyToMany(() => Arquivo)
-  @JoinColumn({
-    name: 'fk_anexo_id',
+  @ManyToMany(() => Arquivo, (arquivo) => arquivo.userStories)
+  @JoinTable({
+    name: 'USER_STORY_ARQUIVOS',
   })
-  anexos: Arquivo[];
+  arquivos: Arquivo[];
 
-  // TODO Acho que aqui seria um One to many, porque o usuario pode criar várias
-  // US, mas uma US só pode ser criada por um usuario
+  @ManyToOne(() => Usuario, (usuario) => usuario.criadorUS)
+  @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
   criador: Usuario;
 
-  // TODO Aqui a mesma coisa
+  @ManyToOne(() => Usuario, (usuario) => usuario.responsavelUS)
+  @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
   responsavel: Usuario;
 
-  @ManyToMany(() => Usuario)
-  @JoinColumn({
-    name: 'fk_usuario_id',
+  @ManyToMany(() => Usuario, (usuario) => usuario.participantesUS)
+  @JoinTable({
+    name: 'USER_STORIES_USUARIOS',
   })
   participantes: Usuario[];
 
-  @Column({ type: 'datetime', name: 'ust_criado_em' })
+  @ManyToOne(() => Kanban, (kanban) => kanban.userStories)
+  @JoinColumn({ name: 'FK_KANBAN_ID' })
+  kanban: Kanban;
+
+  @ManyToMany(() => Sprint, (sprint) => sprint.userStories)
+  @JoinTable({ name: 'SPRINTS_USERS_STORIES' })
+  sprints: Sprint[];
+
+  @Column({ type: 'datetime', name: 'UST_CRIADO_EM' })
   criado_em: Date;
 
-  @Column({ type: 'datetime', name: 'ust_modificado_em' })
+  @Column({ type: 'datetime', name: 'UST_MODIFICADO_EM' })
   modificado_em: Date;
 }
