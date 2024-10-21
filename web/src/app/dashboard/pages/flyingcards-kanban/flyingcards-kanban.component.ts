@@ -2,6 +2,7 @@ import {
   CdkDrag,
   CdkDragDrop,
   CdkDropList,
+  CdkDropListGroup,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
@@ -25,6 +26,7 @@ import { ProjetoService } from '../../services/projeto.service';
     ProjectHeaderComponent,
     CdkDrag,
     CdkDropList,
+    CdkDropListGroup,
     PlusIconComponent,
     ButtonComponent,
     ModalComponent,
@@ -57,12 +59,8 @@ export class FlyingcardsKanbanComponent implements OnInit {
     });
   }
 
-  navigateToFlyingCards() {
-    this.router.navigate([
-      '/dashboard/projeto/',
-      this.projectId,
-      'painel-flyingcards',
-    ]);
+  navigateToGeral() {
+    this.router.navigate(['/dashboard/projeto/', this.projectId]);
   }
 
   navigateToCreateUserStory() {
@@ -75,8 +73,6 @@ export class FlyingcardsKanbanComponent implements OnInit {
   }
 
   ngOnInit() {}
-
-  // TODO depois preciso adicionar o cdk do angular pra funcionar o kanban aqui
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
