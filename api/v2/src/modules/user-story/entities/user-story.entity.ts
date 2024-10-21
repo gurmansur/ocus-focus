@@ -1,5 +1,6 @@
 import { Arquivo } from 'src/modules/arquivo/entities/arquivo.entity';
 import { Kanban } from 'src/modules/kanban/entities/kanban.entity';
+import { Swimlane } from 'src/modules/kanban/entities/swimlane.entity';
 import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
 import { Subtarefa } from 'src/modules/subtarefa/entities/subtarefa.entity';
 import { Tag } from 'src/modules/tag/entities/tag.entity';
@@ -21,7 +22,7 @@ export class UserStory {
   @PrimaryGeneratedColumn({ type: 'int', name: 'UST_ID' })
   id: number;
 
-  @Column({ type: 'varchar', name: 'UST_NOME' })
+  @Column({ type: 'varchar', name: 'UST_NOME', length: 50 })
   nome: string;
 
   @Column({ type: 'varchar', name: 'UST_DESCRICAO' })
@@ -70,9 +71,15 @@ export class UserStory {
   @JoinTable({ name: 'SPRINTS_USERS_STORIES' })
   sprints: Sprint[];
 
-  @Column({ type: 'datetime', name: 'UST_CRIADO_EM' })
+  @ManyToOne(() => Swimlane, (swimlane) => swimlane.id)
+  @JoinColumn({
+    name: 'FK_SWI_ID',
+  })
+  swimlane: Swimlane;
+
+  @Column({ type: 'timestamp', name: 'UST_CRIADO_EM' })
   criado_em: Date;
 
-  @Column({ type: 'datetime', name: 'UST_MODIFICADO_EM' })
+  @Column({ type: 'timestamp', name: 'UST_MODIFICADO_EM' })
   modificado_em: Date;
 }

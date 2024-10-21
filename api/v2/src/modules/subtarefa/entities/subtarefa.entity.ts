@@ -15,7 +15,7 @@ export class Subtarefa {
   @Column({ type: 'varchar', name: 'SBT_DESCRICAO' })
   descricao: string;
 
-  @Column({ type: 'tinyint', name: 'SBT_COMPLETADA' })
+  @Column({ type: 'tinyint', width: 1, name: 'SBT_COMPLETADA' })
   completada: boolean;
 
   @ManyToOne(() => UserStory, (userStory) => userStory.subtarefas)

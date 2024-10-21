@@ -6,7 +6,7 @@ export class Sprint {
   @PrimaryGeneratedColumn({ type: 'int', name: 'SPR_ID' })
   id: number;
 
-  @Column({ type: 'varchar', name: 'SPR_NOME' })
+  @Column({ type: 'varchar', name: 'SPR_NOME', length: 30 })
   nome: string;
 
   @Column({ type: 'varchar', name: 'SPR_DESCRICAO' })
