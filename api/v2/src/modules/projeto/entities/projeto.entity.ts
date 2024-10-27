@@ -8,6 +8,7 @@ import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-fun
 import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
 import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
 import { SuiteDeTeste } from 'src/modules/suite-de-teste/entities/suite-de-teste.entity';
+import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('PROJETOS')
@@ -88,4 +89,7 @@ export class Projeto {
 
   @OneToMany(() => Sprint, (sprint) => sprint.id)
   sprints: Sprint[];
+
+  @OneToMany(() => UserStory, (userStory) => userStory.id)
+  userStories: UserStory[];
 }
