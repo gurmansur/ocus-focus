@@ -40,9 +40,8 @@ export class UserStoryService {
   }
 
   async create(createUserStoryDto: CreateUserStoryDto, projetoId: number) {
-    const userStory = this.userStoryRepository.create(createUserStoryDto);
-
-    return await this.userStoryRepository.save(userStory);
+    // const userStory = this.userStoryRepository.create(createUserStoryDto);
+    // return await this.userStoryRepository.save(userStory);
   }
 
   update(id: number, updateUserStoryDto: UpdateUserStoryDto) {
