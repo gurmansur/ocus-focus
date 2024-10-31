@@ -76,7 +76,7 @@ export class UserStory {
 
   @ManyToMany(() => Sprint, (sprint) => sprint.userStories)
   @JoinTable({ name: 'SPRINTS_USERS_STORIES' })
-  sprints: Sprint[];
+  sprints: Sprint[] | null;
 
   @ManyToOne(() => Swimlane, (swimlane) => swimlane.id)
   @JoinColumn({

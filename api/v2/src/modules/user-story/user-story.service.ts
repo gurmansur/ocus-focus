@@ -39,9 +39,12 @@ export class UserStoryService {
     return `This action returns a #${id} userStory`;
   }
 
-  async create(createUserStoryDto: CreateUserStoryDto, projetoId: number) {
-    // const userStory = this.userStoryRepository.create(createUserStoryDto);
-    // return await this.userStoryRepository.save(userStory);
+  async create(createUserStoryDto: CreateUserStoryDto) {
+    console.log(createUserStoryDto);
+    const entity = this.userStoryRepository.create(createUserStoryDto);
+
+    console.log(entity);
+    return this.userStoryRepository.save(entity);
   }
 
   update(id: number, updateUserStoryDto: UpdateUserStoryDto) {

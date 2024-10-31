@@ -1,6 +1,7 @@
 import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -23,10 +24,10 @@ export class Swimlane {
   @Column({ type: 'varchar', name: 'SWI_COR', length: 6 })
   cor: string;
 
-  @Column({ type: 'timestamp', name: 'SWI_CRIADO_EM' })
+  @CreateDateColumn({ name: 'SWI_CRIADO_EM' })
   criadoEm: Date;
 
-  @Column({ type: 'timestamp', name: 'SWI_ATUALIZADO_EM' })
+  @CreateDateColumn({ name: 'SWI_ATUALIZADO_EM' })
   atualizadoEm: Date;
 
   @ManyToOne(() => Kanban, (kanban) => kanban.swinlanes)

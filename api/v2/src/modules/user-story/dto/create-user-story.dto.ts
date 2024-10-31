@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
+import { KanbanDto } from 'src/modules/kanban/dto/kanban.dto';
+import { SwimlaneDto } from 'src/modules/kanban/dto/swimlane.dto';
+import { ProjetoDto } from 'src/modules/projeto/dto/projeto.dto';
+import { UsuarioDto } from 'src/modules/usuario/dto/usuario.dto';
 
 export class CreateUserStoryDto {
   @ApiProperty({
@@ -32,30 +36,26 @@ export class CreateUserStoryDto {
     description: 'Id do kanban do projeto',
     example: '1',
   })
-  @IsNumber()
-  kanban: number;
+  kanban: KanbanDto;
 
   @ApiProperty({
     type: 'number',
     description: 'Id do usuário que criou a user story',
     example: '1',
   })
-  @IsNumber()
-  usuario: number;
+  criador: UsuarioDto;
 
   @ApiProperty({
     type: 'number',
     description: 'Id da swimlane que a user story está',
     example: '1',
   })
-  @IsNumber()
-  swimlane: number;
+  swimlane: SwimlaneDto;
 
   @ApiProperty({
     type: 'number',
     description: 'Id do projeto que a user story está',
     example: '1',
   })
-  @IsNumber()
-  projeto: number;
+  projeto: ProjetoDto;
 }

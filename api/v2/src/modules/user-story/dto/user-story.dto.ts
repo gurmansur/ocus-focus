@@ -1,8 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { Arquivo } from 'src/modules/arquivo/entities/arquivo.entity';
+import { KanbanDto } from 'src/modules/kanban/dto/kanban.dto';
+import { SwimlaneDto } from 'src/modules/kanban/dto/swimlane.dto';
 import { Kanban } from 'src/modules/kanban/entities/kanban.entity';
 import { Swimlane } from 'src/modules/kanban/entities/swimlane.entity';
+import { ProjetoDto } from 'src/modules/projeto/dto/projeto.dto';
 import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
+import { SprintDto } from 'src/modules/sprint/dto/sprint.dto';
 import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
 import { Subtarefa } from 'src/modules/subtarefa/entities/subtarefa.entity';
 import { Tag } from 'src/modules/tag/entities/tag.entity';
@@ -84,24 +89,28 @@ export class UserStoryDto {
     type: [Kanban],
     description: 'Kanban em que a user story vai ficar',
   })
+  @Type(() => KanbanDto)
   kanban: Kanban;
 
   @ApiProperty({
     type: [Projeto],
     description: 'Projeto que a user story vai ficar',
   })
+  @Type(() => ProjetoDto)
   projeto: Projeto;
 
   @ApiProperty({
     type: [Sprint],
     description: 'Sprint que a user story vai ser realizada',
   })
+  @Type(() => SprintDto)
   sprints: Sprint;
 
   @ApiProperty({
     type: [Swimlane],
     description: 'Swimlane que a user story está',
   })
+  @Type(() => SwimlaneDto)
   swimlane: Swimlane;
 
   @ApiProperty({

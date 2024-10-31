@@ -1,5 +1,11 @@
 import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('SPRINTS')
 export class Sprint {
@@ -15,12 +21,12 @@ export class Sprint {
   @Column({ type: 'int', name: 'SPR_HORAS_PREVISTAS' })
   horas_previstas: number;
 
-  @Column({ type: 'date', name: 'SPR_DATA_INICIO' })
+  @CreateDateColumn({ name: 'SPR_DATA_INICIO' })
   data_inicio: Date;
 
-  @Column({ type: 'date', name: 'SPR_DATA_FIM' })
+  @CreateDateColumn({ name: 'SPR_DATA_FIM' })
   data_fim: Date;
 
   @ManyToMany(() => UserStory, (userStory) => userStory.sprints)
-  userStories: UserStory[];
+  userStories: UserStory[] | null;
 }

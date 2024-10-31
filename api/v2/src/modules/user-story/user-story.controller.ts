@@ -38,11 +38,8 @@ export class UserStoryController {
   }
 
   @Post('new')
-  create(
-    @Body() createUserStoryDto: CreateUserStoryDto,
-    @ProjetoAtual() projeto: Projeto,
-  ) {
-    return this.userStoryService.create(createUserStoryDto, projeto.id);
+  create(@Body() createUserStoryDto: CreateUserStoryDto) {
+    return this.userStoryService.create(createUserStoryDto);
   }
 
   @Patch(':id')

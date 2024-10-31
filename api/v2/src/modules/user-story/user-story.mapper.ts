@@ -3,10 +3,11 @@ import { Swimlane } from '../kanban/entities/swimlane.entity';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { CreateUserStoryBo } from './bo/create-user-story.bo';
+import { UserStoryBo } from './bo/user-story.bo';
+import { UserStoryDto } from './dto/user-story.dto';
 import { UserStory } from './entities/user-story.entity';
 
 export class UserStoryMapper {
-  // TODO adicionar as outras informações da user story aqui
   static createUserStoryBoToEntity(bo: CreateUserStoryBo): UserStory {
     const entity = new UserStory();
     entity.titulo = bo.titulo;
@@ -20,6 +21,28 @@ export class UserStoryMapper {
     return entity;
   }
 
-  // TODO fazer os arquivos base de dto e de bo
-  static boToDto() {}
+  static boToDto(bo: UserStoryBo): UserStoryDto {
+    const dto = new UserStoryDto();
+    dto.id = bo.id;
+    dto.titulo = bo.titulo;
+    dto.descricao = bo.descricao;
+    dto.criador = bo.criador;
+    dto.responsavel = bo.responsavel;
+    dto.projeto = bo.projeto;
+    dto.sprints = bo.sprints;
+
+    return dto;
+  }
+
+  static entityToBo(entity: UserStory): UserStoryBo {
+    const bo = new UserStoryBo();
+    bo.id = entity.id;
+    bo.titulo = entity.titulo;
+    bo.descricao = entity.descricao;
+    bo.criador = entity.criador;
+    bo.responsavel = entity.responsavel;
+    bo.projeto = entity.projeto;
+
+    return bo;
+  }
 }
