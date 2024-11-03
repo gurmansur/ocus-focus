@@ -98,7 +98,6 @@ export class ArcatestFileTreeComponent {
 
   @HostListener('document:auxclick', ['$event'])
   clickout(event: Event) {
-    console.log(event);
     if ((event.target as HTMLElement).closest('.p-treenode')) {
       this.contextMenuItems = [
         {
