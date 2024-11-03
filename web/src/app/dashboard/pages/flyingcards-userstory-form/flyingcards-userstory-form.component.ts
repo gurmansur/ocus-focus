@@ -15,7 +15,7 @@ import { ButtonComponent } from 'src/app/shared/button/button.component';
 import { CardComponent } from 'src/app/shared/card/card.component';
 import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.component';
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
-import { userStory } from '../../models/userStory';
+import { UserStory } from '../../models/userStory';
 
 @Component({
   selector: 'app-flyingcards-userstory-form',
@@ -37,7 +37,7 @@ import { userStory } from '../../models/userStory';
 export class FlyingcardsUserstoryFormComponent implements OnInit {
   private projectId: number;
   userStoryFormGroup: any;
-  userStory: userStory;
+  userStory: UserStory;
   membros = new FormControl();
   membrosList = [
     'Breno Lisi Romano',
