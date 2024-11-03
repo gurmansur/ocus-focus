@@ -2,9 +2,6 @@
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-medium mb-5">Execuções de Teste</h2>
     <div class="flex gap-4">
-      <app-button (click)="openCoverageModal()">
-        Cobertura de Testes
-      </app-button>
       <app-button (click)="navigateToCreateExecution()">
         <app-plus-icon></app-plus-icon>
         Executar Teste
@@ -12,7 +9,7 @@
     </div>
   </div>
   <app-table
-    [columns]="['Nome', 'Status', 'Data de Execução', 'Hora', 'Colaborador']"
+    [columns]="['Nome', 'Status', 'Data de Execução', 'Hora']"
     [data]="execucoes"
     customEmptyMessage="'Nenhum caso de teste encontrado'"
     addButtonLabel="'Adicionar Caso de Teste'"

@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { ProjetoService } from '../../services/projeto.service';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Projeto } from '../../models/projeto';
+import { ProjetoService } from '../../services/projeto.service';
 
 @Component({
   selector: 'app-projeto',
@@ -14,8 +14,9 @@ export class ProjetoComponent {
   projeto!: Projeto;
 
   showModal: boolean = false;
-  tituloDialogo: string = "Deseja realmente excluir este projeto?";
-  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do projeto em questão serão excluídos do sistema.";
+  tituloDialogo: string = 'Deseja realmente excluir este projeto?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. Todos os dados do projeto em questão serão excluídos do sistema.';
 
   constructor(
     private projetoService: ProjetoService,
@@ -26,7 +27,7 @@ export class ProjetoComponent {
     this.userId = Number(localStorage.getItem('usu_id'));
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projectId, this.userId);
   }
 
@@ -37,11 +38,24 @@ export class ProjetoComponent {
   }
 
   openColaboradores() {
-    this.router.navigate(['/dashboard/projeto/', this.projectId, 'colaboradores']);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'colaboradores',
+    ]);
   }
 
   openRequisitos() {
     this.router.navigate(['/dashboard/projeto/', this.projectId, 'requisitos']);
+  }
+
+  openArcaTest() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'painel-arcatest',
+      'execucoes',
+    ]);
   }
 
   onEdit() {
@@ -62,5 +76,4 @@ export class ProjetoComponent {
       this.router.navigate(['/dashboard/projetos']);
     });
   }
-
 }
