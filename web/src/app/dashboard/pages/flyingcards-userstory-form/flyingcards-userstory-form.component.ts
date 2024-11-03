@@ -51,7 +51,7 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
-    this.userStory = new userStory();
+    this.userStory = new UserStory();
   }
 
   navigateToKanban() {

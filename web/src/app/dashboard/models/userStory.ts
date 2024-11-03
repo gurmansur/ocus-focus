@@ -39,6 +39,8 @@ export class UserStory {
     //    Id do usuario que comentou - number
     //    Comentário - string
     //    Data e horário do comentário - datetime
-    public comentarios: string[] = ['']
+    public comentarios: string[] = [''],
+
+    public prazo: string = new Date().toISOString().split('T')[0]
   ) {}
 }
