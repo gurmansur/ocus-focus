@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -24,12 +23,8 @@ export class UserStoryController {
   constructor(private readonly userStoryService: UserStoryService) {}
 
   @Get('all')
-  findAll(
-    @ProjetoAtual() projetoId: Projeto,
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-  ) {
-    return this.userStoryService.findAll(projetoId, page, pageSize);
+  findAll(@ProjetoAtual() projetoId: Projeto) {
+    return this.userStoryService.findAll(projetoId);
   }
 
   @Get(':id')

@@ -18,6 +18,7 @@ import { FatorAmbientalProjetoModule } from './modules/fator-ambiental-projeto/f
 import { FatorTecnicoProjetoModule } from './modules/fator-tecnico-projeto/fator-tecnico-projeto.module';
 import { FatoresAmbientaisModule } from './modules/fatores-ambientais/fatores-ambientais.module';
 import { FatoresTecnicosModule } from './modules/fatores-tecnicos/fatores-tecnicos.module';
+import { KanbanModule } from './modules/kanban/kanban.module';
 import { PriorizacaoModule } from './modules/priorizacao/priorizacao.module';
 import { ProjetoModule } from './modules/projeto/projeto.module';
 import { RequisitoModule } from './modules/requisito/requisito-funcional.module';
@@ -66,6 +67,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     ExecucaoDeTesteModule,
     CasoDeTesteModule,
     SuiteDeTesteModule,
+    KanbanModule,
   ],
   providers: [
     AppService,

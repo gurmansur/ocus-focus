@@ -22,21 +22,21 @@
     <div class="flex flex-grow" cdkDropListGroup>
       <div
         class="flex flex-col flex-grow min-w-[300px] m-10 p-5 border-r-4 bg-violet-700"
-        *ngFor="let column of board.columns"
+        *ngFor="let swimlane of board.swimlanes"
       >
         <div class="text-lg font-bold uppercase mb-5 text-white">
-          {{ column.name }}
+          {{ swimlane.nome }}
         </div>
 
         <div
           class="tasks-container"
           cdkDropList
-          [cdkDropListData]="column.tasks"
+          [cdkDropListData]="swimlane.userStories"
           (cdkDropListDropped)="drop($event)"
         >
           <div
             class="bg-white flex flex-col p-4 border-b-2 border-b-violet-400 gap-4 cursor-pointer"
-            *ngFor="let item of column.tasks"
+            *ngFor="let item of swimlane.userStories"
             cdkDrag
             (click)="openTaskModal()"
           >

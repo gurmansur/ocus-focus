@@ -1,5 +1,5 @@
-import { Column } from './column';
+import { Swimlane } from './swimlane';
 
 export class Board {
-  constructor(public name: string, public columns: Column[]) {}
+  constructor(public nome: string = '', public swimlanes: Swimlane[] = []) {}
 }

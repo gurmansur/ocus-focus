@@ -64,19 +64,20 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
         this.userStory?.titulo || '',
         Validators.required
       ),
-      responsavel: new FormControl(
-        this.userStory?.responsavel || '',
-        Validators.required
-      ),
-      membros: new FormControl(
-        this.userStory.membros || [''],
-        Validators.required
-      ),
+      // responsavel: new FormControl(
+      //   this.userStory?.responsavel || '',
+      //   Validators.required
+      // ),
+      // membros: new FormControl(
+      //   this.userStory.membros || [''],
+      //   Validators.required
+      // ),
       prazo: new FormControl(
-        this.userStory?.prazo || new Date().toISOString().split('T')[0],
+        this.userStory?.estimativa_tempo ||
+          new Date().toISOString().split('T')[0],
         Validators.required
       ),
-      tags: new FormControl(this.userStory?.tags || '', Validators.required),
+      // tags: new FormControl(this.userStory?.tags || '', Validators.required),
     });
   }
 

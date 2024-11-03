@@ -12,31 +12,36 @@ export class UserStoryService {
     @InjectRepository(UserStory)
     private readonly userStoryRepository: Repository<UserStory>,
   ) {}
-  async findAll(projetoId: Projeto, page: number, pageSize: number) {
+  async findAll(projetoId: Projeto) {
     if (!projetoId)
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
 
-    const take = pageSize ? pageSize : 10;
-    const skip = page ? page * take : 0;
-    const [items, count] = await this.userStoryRepository.findAndCount({
+    const userStories = await this.userStoryRepository.find({
       where: { projeto: { id: projetoId.id } },
-      take,
-      skip,
+      relations: ['swimlane'],
     });
 
-    return {
-      items,
-      page: {
-        size: take,
-        totalElements: count,
-        totalPages: Math.ceil(count / take),
-        number: page ? page : 0,
-      },
-    };
+    const response = userStories.map((userStory) => {
+      return {
+        id: userStory.id,
+        titulo: userStory.titulo,
+        descricao: userStory.descricao,
+        estimativa_tempo: userStory.estimativa_tempo,
+        swimlane: userStory.swimlane.id,
+      };
+    });
+
+    return response;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} userStory`;
+  }
+
+  async findFromSwimlane(swimlane: number) {
+    return await this.userStoryRepository.find({
+      where: { swimlane: { id: swimlane } },
+    });
   }
 
   async create(createUserStoryDto: CreateUserStoryDto) {

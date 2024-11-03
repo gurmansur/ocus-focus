@@ -6,7 +6,9 @@
 <!-- isso aqui tá dando uns negócios esquisitos, tá recarregando a página toda hora -->
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
-    <h2 class="text-3xl font-medium mb-5">Kanban do projeto teste</h2>
+    <h2 class="text-3xl font-medium mb-5">
+      Kanban do projeto <i>{{ board.nome }}</i>
+    </h2>
     <app-button (click)="navigateToCreateUserStory()">
       <app-plus-icon></app-plus-icon>
       Adicionar User Story
@@ -14,24 +16,28 @@
   </div>
 
   <div class="flex flex-grow overflow-x-auto" cdkDropListGroup>
+    @if (board.swimlanes.length > 0) {
     <div
       class="flex flex-col flex-grow min-w-fit min-h-fit my-10 mx-2 p-5 border-r-4 bg-violet-700 rounded-sm"
-      *ngFor="let column of board.columns"
+      *ngFor="let swimlane of board.swimlanes"
     >
       <div class="text-lg font-bold uppercase mb-5 text-white">
-        {{ column.name }}
+        {{ swimlane.nome }}
       </div>
 
       <div
         class="tasks-container h-full w-full"
         cdkDropList
-        [cdkDropListData]="column.tasks"
+        [cdkDropListData]="swimlane.userStories"
         (cdkDropListDropped)="drop($event)"
       >
-        <div class="task" *ngFor="let item of column.tasks" cdkDrag>
-          {{ item }}
+        <div class="task" *ngFor="let item of swimlane.userStories" cdkDrag>
+          {{ item.titulo }}
         </div>
       </div>
     </div>
+    } @else {
+    <h2>Não existem swimlanes nesse Kanban.</h2>
+    }
   </div>
 </div>

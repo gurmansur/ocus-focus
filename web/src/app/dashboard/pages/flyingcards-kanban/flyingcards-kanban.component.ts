@@ -14,8 +14,9 @@ import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.comp
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
 import { Board } from '../../models/board';
-import { Column } from '../../models/column';
 import { Projeto } from '../../models/projeto';
+import { UserStory } from '../../models/userStory';
+import { KanbanService } from '../../services/kanban.service';
 import { ProjetoService } from '../../services/projeto.service';
 
 @Component({
@@ -37,21 +38,23 @@ import { ProjetoService } from '../../services/projeto.service';
 export class FlyingcardsKanbanComponent implements OnInit {
   private projectId!: number;
   project!: Projeto;
+  userStories: UserStory[] = [];
+
+  paginaAtual: number = 0;
+  tamanhoPagina: number = 5;
+  quantidadeElementos: number = 0;
+  totalPaginas: number = 0;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private projectService: ProjetoService
+    private projectService: ProjetoService,
+    private kanbanService: KanbanService
   ) {
     this.projectId = this.route.snapshot.params['id'];
   }
 
-  board: Board = new Board('Test Board', [
-    new Column('Backlog', ['fazer alguma coisa']),
-    new Column('Work in Progress (WIP)', ['fazendo alguma coisa']),
-    new Column('Revision', ['revisando alguma coisa']),
-    new Column('Done', ['alguma coisa que está pronta']),
-  ]);
+  board: Board = new Board();
 
   buscarProjeto(id: number, user: number) {
     this.projectService.findById(id, user).subscribe((project) => {
@@ -72,9 +75,13 @@ export class FlyingcardsKanbanComponent implements OnInit {
     ]);
   }
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.kanbanService
+      .getBoardFromProject(this.projectId.toString())
+      .subscribe(this.processarBoard());
+  }
 
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<UserStory[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -89,5 +96,13 @@ export class FlyingcardsKanbanComponent implements OnInit {
         event.currentIndex
       );
     }
+  }
+
+  private processarBoard() {
+    return (data: any) => {
+      console.log(data);
+      this.board = data;
+      console.log(this.board);
+    };
   }
 }

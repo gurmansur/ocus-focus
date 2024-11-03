@@ -14,8 +14,8 @@ import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.comp
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
 import { Board } from '../../models/board';
-import { Column } from '../../models/column';
 import { Projeto } from '../../models/projeto';
+import { UserStory } from '../../models/userStory';
 import { ProjetoService } from '../../services/projeto.service';
 import { FlyingcardsTaskModalComponent } from './flyingcards-task-modal/flyingcards-task-modal.component';
 
@@ -49,12 +49,7 @@ export class PainelFlyingcardsComponent {
     this.projectId = this.route.snapshot.params['id'];
   }
 
-  board: Board = new Board('Test Board', [
-    new Column('Backlog', ['fazer alguma coisa']),
-    new Column('Work in Progress (WIP)', ['fazendo alguma coisa']),
-    new Column('Revision', ['revisando alguma coisa']),
-    new Column('Done', ['alguma coisa que está pronta']),
-  ]);
+  board: Board = new Board();
 
   buscarProjeto(id: number, user: number) {
     this.projectService.findById(id, user).subscribe((project) => {
@@ -81,9 +76,7 @@ export class PainelFlyingcardsComponent {
 
   ngOnInit() {}
 
-  // TODO depois preciso adicionar o cdk do angular pra funcionar o kanban aqui
-
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<UserStory[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
