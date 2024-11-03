@@ -1,0 +1,14 @@
+<app-tooltip [text]="text" [position]="'right'">
+  <li
+    class="flex font-medium rounded-md cursor-pointer transition-colors justify-center items-center p-2 relative"
+    style="width: fit-content"
+    [ngClass]="
+      isActive
+        ? 'bg-gradient-to-tr from-violet-200 to-violet-100 text-violet-700'
+        : 'hover:bg-violet-100 text-gray-800 hover:text-violet-700'
+    "
+    (click)="handleClick()"
+  >
+    <ng-content></ng-content>
+  </li>
+</app-tooltip>

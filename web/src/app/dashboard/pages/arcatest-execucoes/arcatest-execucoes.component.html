@@ -1,8 +1,3 @@
-<app-project-header
-  (onBack)="navigateToArcaTest()"
-  voltar="Voltar ao ArcaTest"
-></app-project-header>
-
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-medium mb-5">Execuções de Teste</h2>
@@ -18,7 +13,7 @@
   </div>
   <app-table
     [columns]="['Nome', 'Status', 'Data de Execução', 'Hora', 'Colaborador']"
-    [data]="mockupData"
+    [data]="execucoes"
     customEmptyMessage="'Nenhum caso de teste encontrado'"
     addButtonLabel="'Adicionar Caso de Teste'"
     [hasDelete]="true"
@@ -26,8 +21,8 @@
     [hasExecute]="true"
     (editClick)="navigateToEditExecution($event)"
     (deleteClick)="openDeleteModal($event)"
-    (executeClick)="openExecutionModal()"
-    [entityAttributes]="['nome', 'status', 'data', 'hora', 'colaborador:nome']"
+    (executeClick)="openExecutionModal($event)"
+    [entityAttributes]="['nome', 'resultado', 'data', 'hora']"
   ></app-table>
 
   <app-modal
@@ -104,6 +99,8 @@
   <app-arcatest-execucoes-modal
     (cancel)="closeExecutionModal()"
     [open]="openExecution"
-    (confirm)="closeExecutionModal()"
+    [value]="executarTeste"
+    (valueChange)="onModalValueChange($event)"
+    (confirm)="changeExecutionStatus($event)"
   ></app-arcatest-execucoes-modal>
 </div>

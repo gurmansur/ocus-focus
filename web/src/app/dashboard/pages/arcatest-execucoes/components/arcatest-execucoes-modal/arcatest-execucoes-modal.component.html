@@ -16,13 +16,14 @@
           id="status"
           name="status"
           formControlName="status"
+          (change)="onValueChange()"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
           <option value="" disabled selected>
             Selecione o status da execução
           </option>
-          <option value="Aprovado">Aprovado</option>
-          <option value="Reprovado">Reprovado</option>
+          <option value="SUCESSO">Aprovado</option>
+          <option value="FALHA">Reprovado</option>
         </select>
         @if (executarFormGroup.get('status').invalid &&
         executarFormGroup.get('status').touched ) {
@@ -45,6 +46,7 @@
           name="observacoes"
           formControlName="observacoes"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
+          (change)="onValueChange()"
         ></textarea>
         @if (executarFormGroup.get('observacoes').invalid &&
         executarFormGroup.get('observacoes').touched) {

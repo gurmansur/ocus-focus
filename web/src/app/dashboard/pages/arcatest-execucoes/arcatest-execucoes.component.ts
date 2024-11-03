@@ -8,7 +8,9 @@ import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { TableComponent } from '../../../shared/table/table.component';
 import { CasoDeTeste } from '../../models/casoDeTeste';
-import { ExecucaoTeste } from '../../models/execucaoTeste';
+import { ExecucaoDeTeste } from '../../models/execucaoDeTeste';
+import { ExecutarTeste } from '../../models/executarTeste';
+import { ExecucaoDeTesteService } from '../../services/execucoesDeTeste.service';
 import { ArcatestExecucoesModalComponent } from './components/arcatest-execucoes-modal/arcatest-execucoes-modal.component';
 
 @Component({
@@ -33,24 +35,50 @@ export class ArcatestExecucoesComponent {
   openDelete: boolean = false;
   openCoverage: boolean = false;
   openExecution: boolean = false;
-  executionToDelete?: ExecucaoTeste;
+  executionToDelete?: ExecucaoDeTeste;
   casoId: string;
+  executarTeste!: ExecutarTeste;
   casosDeTeste: CasoDeTeste[] = [];
 
-  mockupData: ExecucaoTeste[] = [];
+  execucoes: ExecucaoDeTeste[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-    this.projectId = this.route.snapshot.params['id'];
+  status?: string;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private execucaoDeTesteService: ExecucaoDeTesteService
+  ) {
     this.casoId = this.route.snapshot.queryParams['casoId'];
+
+    this.fetchExecucoes();
 
     if (this.casoId) {
       this.filterTestCasesByCaso();
     }
   }
 
+  ngOnInit(): void {
+    this.projectId = this.route.parent?.snapshot.params['id'];
+  }
+
+  fetchExecucoes() {
+    this.execucaoDeTesteService.getAll().subscribe((execucoes) => {
+      this.execucoes = execucoes.map((execucao) => ({
+        ...execucao,
+        data: new Date(execucao.dataExecucao).toLocaleDateString(),
+        hora: new Date(execucao.dataExecucao).toLocaleTimeString(),
+      }));
+    });
+  }
+
+  onModalValueChange(value: ExecutarTeste) {
+    this.executarTeste = value;
+  }
+
   filterTestCasesByCaso() {
     if (this.casoId !== undefined) {
-      this.mockupData = this.mockupData.filter(
+      this.execucoes = this.execucoes.filter(
         (execution) => execution.casoDeTeste.id === Number(this.casoId)
       );
     }
@@ -69,34 +97,49 @@ export class ArcatestExecucoesComponent {
   }
 
   deleteExecution() {
-    this.mockupData = this.mockupData.filter(
-      (execution) => execution.id !== this.executionToDelete?.id
-    );
-    this.openDelete = false;
+    if (this.executionToDelete) {
+      this.execucaoDeTesteService
+        .delete(this.executionToDelete.id)
+        .subscribe(() => {
+          this.fetchExecucoes();
+          this.openDelete = false;
+        });
+    }
   }
 
   openDeleteModal(id: number) {
-    this.executionToDelete = this.mockupData.find(
+    this.executionToDelete = this.execucoes.find(
       (execution) => execution.id === id
     );
     this.openDelete = true;
   }
 
+  changeExecutionStatus(id: number) {
+    this.execucaoDeTesteService
+      .changeStatus(id, this.executarTeste || {})
+      .subscribe(() => {
+        this.closeExecutionModal();
+        this.fetchExecucoes();
+      });
+  }
+
   navigateToEditExecution(id: number) {
     this.router.navigate([
-      '/dashboard/projeto/',
+      '/dashboard/projeto',
       this.projectId,
-      'execucoes-teste',
-      id,
+      'painel-arcatest',
+      'execucoes',
       'editar',
+      id,
     ]);
   }
 
   navigateToCreateExecution() {
     this.router.navigate([
-      '/dashboard/projeto/',
+      '/dashboard/projeto',
       this.projectId,
-      'execucoes-teste',
+      'painel-arcatest',
+      'execucoes',
       'criar',
     ]);
   }
@@ -109,7 +152,13 @@ export class ArcatestExecucoesComponent {
     this.openCoverage = false;
   }
 
-  openExecutionModal() {
+  openExecutionModal(id: number) {
+    const execution = this.execucoes.find((execution) => execution.id === id);
+    this.executarTeste = {
+      id: execution!.id,
+      resultado: execution!.resultado,
+      observacao: execution!.observacao,
+    };
     this.openExecution = true;
   }
 

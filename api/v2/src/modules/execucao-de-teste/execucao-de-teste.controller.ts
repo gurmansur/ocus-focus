@@ -112,6 +112,7 @@ export class ExecucaoDeTesteController {
     @Param('id') id: string,
     @Body() changeStatusExecucaoDeTesteDto: ChangeStatusExecucaoDeTesteDto,
   ) {
+    console.log(changeStatusExecucaoDeTesteDto);
     const bo = ExecucaoDeTesteMapper.changeStatusDtoToBo(
       changeStatusExecucaoDeTesteDto,
     );

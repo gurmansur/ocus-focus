@@ -19,11 +19,11 @@ export class ProjetoInterceptor implements HttpInterceptor {
     const projetoId = localStorage.getItem('projeto_id');
 
     if (!projetoId) {
-      this.router.navigate(['/dashboard']);
       return next.handle(req);
     }
+
     req = req.clone({
-      setHeaders: { projeto: req.headers.get('projeto') || projetoId },
+      setHeaders: { projeto: req.headers.get('projeto') || projetoId || '' },
     });
 
     return next.handle(req);

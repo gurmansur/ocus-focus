@@ -61,6 +61,7 @@ export class ArcatestFileTreeComponent {
         this.router.navigate([
           '/dashboard/projeto/',
           this.projectId,
+          'painel-arcatest',
           'casos-teste',
           'criar',
         ]);
@@ -73,6 +74,7 @@ export class ArcatestFileTreeComponent {
         this.router.navigate([
           '/dashboard/projeto/',
           this.projectId,
+          'painel-arcatest',
           'suites-teste',
           'criar',
         ]);
@@ -89,7 +91,7 @@ export class ArcatestFileTreeComponent {
   ) {}
 
   ngOnInit() {
-    this.projectId = this.route.snapshot.params['id'];
+    this.projectId = this.route.parent?.snapshot.params['id'];
 
     this.getFileTree();
   }
@@ -114,6 +116,7 @@ export class ArcatestFileTreeComponent {
               this.router.navigate([
                 '/dashboard/projeto/',
                 this.projectId,
+                'painel-arcatest',
                 'suites-teste',
                 this.selectedNode.data.id,
                 'editar',
@@ -122,6 +125,7 @@ export class ArcatestFileTreeComponent {
               this.router.navigate([
                 '/dashboard/projeto/',
                 this.projectId,
+                'painel-arcatest',
                 'casos-teste',
                 this.selectedNode.data.id,
                 'editar',
@@ -142,7 +146,13 @@ export class ArcatestFileTreeComponent {
           icon: 'hero-icon hero-document-plus',
           command: (event: any) => {
             this.router.navigate(
-              ['/dashboard/projeto/', this.projectId, 'casos-teste', 'criar'],
+              [
+                '/dashboard/projeto/',
+                this.projectId,
+                'painel-arcatest',
+                'casos-teste',
+                'criar',
+              ],
               {
                 queryParams: { suiteId: this.selectedNode.data.id },
                 queryParamsHandling: 'merge',
@@ -155,7 +165,13 @@ export class ArcatestFileTreeComponent {
           icon: 'hero-icon hero-folder-plus',
           command: (event: any) => {
             this.router.navigate(
-              ['/dashboard/projeto/', this.projectId, 'suites-teste', 'criar'],
+              [
+                '/dashboard/projeto/',
+                this.projectId,
+                'painel-arcatest',
+                'suites-teste',
+                'criar',
+              ],
               {
                 queryParams: {
                   suiteId:
@@ -187,6 +203,7 @@ export class ArcatestFileTreeComponent {
             this.router.navigate([
               '/dashboard/projeto/',
               this.projectId,
+              'painel-arcatest',
               'casos-teste',
               'criar',
             ]);
@@ -199,6 +216,7 @@ export class ArcatestFileTreeComponent {
             this.router.navigate([
               '/dashboard/projeto/',
               this.projectId,
+              'painel-arcatest',
               'suites-teste',
               'criar',
             ]);

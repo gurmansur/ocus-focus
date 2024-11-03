@@ -46,7 +46,7 @@ export class ArcatestSuitesFormComponent {
     private route: ActivatedRoute,
     private suiteDeTesteService: SuiteDeTesteService
   ) {
-    this.projectId = this.route.snapshot.params['id'];
+    this.projectId = this.route.parent?.snapshot.params['id'];
     this.suiteId = this.route.snapshot.params['idSuite'];
     this.isEdit = !!this.suiteId;
     if (this.isEdit) {
@@ -108,14 +108,15 @@ export class ArcatestSuitesFormComponent {
     this.router.navigate([
       '/dashboard/projeto/',
       this.projectId,
-      'suites-teste',
+      'painel-arcatest',
+      'arvore',
     ]);
   }
 
   createTestSuite() {
     this.suiteDeTesteService.create(this.suiteFormGroup.value).subscribe({
       next: () => {
-        this.navigateToArcaTest();
+        this.navigateToTestSuites();
       },
     });
   }

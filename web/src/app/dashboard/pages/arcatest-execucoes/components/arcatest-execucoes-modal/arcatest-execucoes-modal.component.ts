@@ -26,30 +26,35 @@ export class ArcatestExecucoesModalComponent {
   executarFormGroup: any;
   formBuilder: FormBuilder = new FormBuilder();
   @Input({ required: true }) open: boolean = false;
-  @Input() value: ExecutarTeste = new ExecutarTeste(0, '', '');
+  @Input() value!: ExecutarTeste;
   @Output() valueChange = new EventEmitter<ExecutarTeste>();
   @Output() cancel = new EventEmitter<void>();
-  @Output() confirm = new EventEmitter<void>();
+  @Output() confirm = new EventEmitter<number>();
 
   ngOnInit(): void {
     this.executarFormGroup = this.formBuilder.group({
-      status: new FormControl(this.value?.status || '', Validators.required),
+      status: new FormControl(this.value?.resultado || '', Validators.required),
       observacoes: new FormControl(
-        this.value?.observacoes || '',
+        this.value?.observacao || '',
         Validators.required
       ),
     });
   }
 
   onConfirm() {
-    this.confirm.emit();
+    this.confirm.emit(this.value?.id);
   }
 
   onCancel() {
     this.cancel.emit();
   }
 
-  onValueChange(value: ExecutarTeste) {
+  onValueChange() {
+    const value = new ExecutarTeste(
+      this.value.id,
+      this.status.value,
+      this.observacoes.value
+    );
     this.valueChange.emit(value);
   }
 
@@ -66,6 +71,6 @@ export class ArcatestExecucoesModalComponent {
   }
 
   get isReprovado() {
-    return this.status?.value === 'Reprovado';
+    return this.status?.value === 'FALHA';
   }
 }

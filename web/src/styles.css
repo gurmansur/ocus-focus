@@ -69,3 +69,7 @@ body {
 .hero-info {
   content: url("./assets/img/info.svg");
 }
+
+.hero-play {
+  content: url("./assets/img/play.svg");
+}

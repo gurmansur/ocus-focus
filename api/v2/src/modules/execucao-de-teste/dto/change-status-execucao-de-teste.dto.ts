@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsString, ValidateIf } from 'class-validator';
 
 export class ChangeStatusExecucaoDeTesteDto {
   @ApiProperty({
@@ -16,6 +16,7 @@ export class ChangeStatusExecucaoDeTesteDto {
     description: 'Observação sobre a execução de teste',
     example: 'Execução de teste realizada com sucesso',
   })
+  @ValidateIf((object) => object.resultado === 'FALHA')
   @IsString()
   observacao: string;
 }

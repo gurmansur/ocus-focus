@@ -61,7 +61,7 @@ export class ArcatestCasosFormComponent {
     private route: ActivatedRoute,
     private casoDeTesteService: CasoDeTesteService
   ) {
-    this.projectId = this.route.snapshot.params['id'];
+    this.projectId = this.route.parent?.snapshot.params['id'];
     this.idCaso = this.route.snapshot.params['idCaso'];
     this.isEdit = !!this.idCaso;
 
@@ -79,7 +79,7 @@ export class ArcatestCasosFormComponent {
   createTestCase() {
     this.casoDeTesteService.create(this.casoDeTesteFormGroup.value).subscribe({
       next: () => {
-        this.navigateToArcaTest();
+        this.navigateToTestCases();
       },
     });
   }
@@ -220,7 +220,8 @@ export class ArcatestCasosFormComponent {
     this.router.navigate([
       '/dashboard/projeto/',
       this.projectId,
-      'casos-teste',
+      'painel-arcatest',
+      'arvore',
     ]);
   }
 }

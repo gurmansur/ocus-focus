@@ -1,8 +1,3 @@
-<app-project-header
-  (onBack)="navigateToArcaTest()"
-  voltar="Voltar ao ArcaTest"
-></app-project-header>
-
 <div class="container px-5 py-24 mx-auto">
   <form
     [formGroup]="execucaoFormGroup"
@@ -127,7 +122,10 @@
         Cancelar
       </app-button>
 
-      <app-button (onClick)="createTestExecution()" [disabled]="!isFormValid">
+      <app-button
+        (onClick)="isEdit ? updateTestExecution() : createTestExecution()"
+        [disabled]="!isFormValid"
+      >
         @if (isEdit) { Editar Caso de Teste } @else {
         <app-plus-icon></app-plus-icon>
         Adicionar Caso de Teste }

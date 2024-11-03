@@ -56,15 +56,21 @@ export class ExecucaoDeTesteService {
     return this.execucaoDeTesteRepository.update(id, entity);
   }
 
-  changeStatus(
+  async changeStatus(
     id: number,
     changeStatusExecucaoDeTesteBo: ChangeStatusExecucaoDeTesteBo,
   ) {
-    const entity = ExecucaoDeTesteMapper.changeStatusBoToEntity(
+    const entity = await this.execucaoDeTesteRepository.findOne({
+      where: { id },
+    });
+
+    const updatedEntity = ExecucaoDeTesteMapper.changeStatusBoToEntity(
       changeStatusExecucaoDeTesteBo,
     );
 
-    return this.execucaoDeTesteRepository.update(id, entity);
+    Object.assign(entity, updatedEntity);
+
+    return this.execucaoDeTesteRepository.save(entity);
   }
 
   remove(id: number) {
