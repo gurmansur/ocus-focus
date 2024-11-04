@@ -3,9 +3,11 @@ import { CasoDeTeste } from '../caso-de-teste/entities/caso-de-teste.entity';
 import { ChangeStatusExecucaoDeTesteBo } from './bo/change-status-execucao-de-teste.bo';
 import { CreateExecucaoDeTesteBo } from './bo/create-execucao-de-teste.bo';
 import { ExecucaoDeTesteBo } from './bo/execucao-de-teste.bo';
+import { GetExecucaoDeTesteGraficoQueryBo } from './bo/get-execucao-de-teste-grafico-query.bo';
 import { ChangeStatusExecucaoDeTesteDto } from './dto/change-status-execucao-de-teste.dto';
 import { CreateExecucaoDeTesteDto } from './dto/create-execucao-de-teste.dto';
 import { ExecucaoDeTesteDto } from './dto/execucao-de-teste.dto';
+import { GetExecucaoDeTesteGraficoQueryDto } from './dto/get-execucao-de-teste-grafico-query.dto';
 import { UpdateExecucaoDeTesteDto } from './dto/update-execucao-de-teste.dto';
 import { ExecucaoDeTeste } from './entities/execucao-de-teste.entity';
 
@@ -93,5 +95,13 @@ export class ExecucaoDeTesteMapper {
     dto.resposta = bo.resposta;
     dto.resultado = bo.resultado;
     return dto;
+  }
+
+  static getExecucaoDeTesteGraficoQueryDtoToBo(
+    getExecucaoDeTesteGraficoQueryDto: GetExecucaoDeTesteGraficoQueryDto,
+  ) {
+    const bo = new GetExecucaoDeTesteGraficoQueryBo();
+    bo.suiteId = getExecucaoDeTesteGraficoQueryDto.suiteId;
+    return bo;
   }
 }

@@ -78,8 +78,8 @@ export class CasoDeTesteController {
     type: [CasoDeTesteDto],
   })
   @Get()
-  async findAll() {
-    return (await this.casoDeTesteService.findAll()).map((casoDeTeste) =>
+  async findAll(@ProjetoAtual() projeto: Projeto): Promise<CasoDeTesteDto[]> {
+    return (await this.casoDeTesteService.findAll(projeto)).map((casoDeTeste) =>
       CasoDeTesteMapper.casoDeTesteBoToDto(casoDeTeste),
     );
   }

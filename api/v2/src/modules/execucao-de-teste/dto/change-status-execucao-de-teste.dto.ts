@@ -1,15 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString, ValidateIf } from 'class-validator';
+import { resultTypes } from '../execucao-de-teste.constants';
 
 export class ChangeStatusExecucaoDeTesteDto {
   @ApiProperty({
     type: 'enum',
-    enum: ['SUCESSO', 'FALHA', 'PENDENTE'],
+    enum: resultTypes,
     description: 'Resultado da execução de teste',
     example: 'SUCESSO',
   })
-  @IsEnum(['SUCESSO', 'FALHA', 'PENDENTE'])
-  resultado: 'SUCESSO' | 'FALHA' | 'PENDENTE';
+  @IsEnum(resultTypes)
+  resultado: resultTypes;
 
   @ApiProperty({
     type: String,

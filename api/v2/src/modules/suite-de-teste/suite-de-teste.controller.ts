@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -71,8 +72,11 @@ export class SuiteDeTesteController {
     description: 'Árvore de arquivos',
     type: [SuiteDeTesteDto],
   })
-  async getFileTree() {
-    const response = await this.suiteDeTesteService.getFileTree();
+  async getFileTree(
+    @ProjetoAtual() projeto: Projeto,
+    @Query('id') id?: string,
+  ) {
+    const response = await this.suiteDeTesteService.getFileTree(projeto, +id);
 
     return SuiteDeTesteMapper.fileTreeBoToDto(response);
   }

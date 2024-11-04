@@ -1,9 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
+import { Projeto } from '../projeto/entities/projeto.entity';
+import { SuiteDeTesteDto } from '../suite-de-teste/dto/suite-de-teste.dto';
+import { SuiteDeTesteService } from '../suite-de-teste/suite-de-teste.service';
 import { ChangeStatusExecucaoDeTesteBo } from './bo/change-status-execucao-de-teste.bo';
 import { CreateExecucaoDeTesteBo } from './bo/create-execucao-de-teste.bo';
+import { GetExecucaoDeTesteGraficoQueryBo } from './bo/get-execucao-de-teste-grafico-query.bo';
 import { UpdateExecucaoDeTesteBo } from './bo/update-execucao-de-teste.bo';
 import { ExecucaoDeTeste } from './entities/execucao-de-teste.entity';
 import { ExecucaoDeTesteMapper } from './execucao-de-teste.mapper';
@@ -14,6 +18,7 @@ export class ExecucaoDeTesteService {
     @InjectRepository(ExecucaoDeTeste)
     private execucaoDeTesteRepository: Repository<ExecucaoDeTeste>,
     private casoDeTesteService: CasoDeTesteService,
+    private suiteDeTesteService: SuiteDeTesteService,
   ) {}
 
   async create(createExecucaoDeTesteBo: CreateExecucaoDeTesteBo) {
@@ -36,8 +41,11 @@ export class ExecucaoDeTesteService {
     );
   }
 
-  async findAll() {
-    const entities = await this.execucaoDeTesteRepository.find();
+  async findAll(projeto: Projeto) {
+    const entities = await this.execucaoDeTesteRepository.find({
+      relations: ['casoDeTeste', 'casoDeTeste.projeto'],
+      where: { casoDeTeste: { projeto } },
+    });
 
     return entities.map((entity) => ExecucaoDeTesteMapper.entityToBo(entity));
   }
@@ -75,5 +83,69 @@ export class ExecucaoDeTesteService {
 
   remove(id: number) {
     return this.execucaoDeTesteRepository.softDelete(id);
+  }
+
+  async getGrafico(query: GetExecucaoDeTesteGraficoQueryBo, projeto: Projeto) {
+    if (query.suiteId) {
+      const tree = await this.suiteDeTesteService.getFileTree(
+        projeto,
+        query.suiteId,
+      );
+
+      return this.generateGraficoSuite(tree.suites[0], projeto);
+    } else {
+      const execucoes = await this.execucaoDeTesteRepository.find({
+        where: { casoDeTeste: { projeto } },
+        relations: ['casoDeTeste'],
+      });
+
+      const resultados = execucoes.reduce((acc, execucao) => {
+        if (!acc[execucao.resultado]) {
+          acc[execucao.resultado] = 0;
+        }
+
+        acc[execucao.resultado]++;
+
+        return acc;
+      }, {});
+
+      return resultados;
+    }
+  }
+
+  async generateGraficoSuite(suite: SuiteDeTesteDto, projeto: Projeto) {
+    const casos = suite.casosDeTeste.map((caso) => caso.id);
+
+    const execucoes = await this.execucaoDeTesteRepository.find({
+      where: { casoDeTeste: In(casos) },
+      relations: ['casoDeTeste'],
+    });
+
+    const execucoesFilhas = await Promise.all(
+      suite.suitesFilhas?.map((suite) =>
+        this.generateGraficoSuite(suite, projeto),
+      ) || [],
+    );
+
+    const resultados = execucoes.reduce((acc, execucao) => {
+      if (!acc[execucao.resultado]) {
+        acc[execucao.resultado] = 0;
+      }
+
+      acc[execucao.resultado]++;
+
+      return acc;
+    }, {});
+
+    execucoesFilhas.forEach((filha) => {
+      for (const [key, value] of Object.entries(filha)) {
+        if (!resultados[key]) {
+          resultados[key] = 0;
+        }
+        resultados[key] += value;
+      }
+    });
+
+    return resultados;
   }
 }

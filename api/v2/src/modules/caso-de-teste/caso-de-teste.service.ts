@@ -43,21 +43,27 @@ export class CasoDeTesteService {
     );
   }
 
-  async findAll() {
+  async findAll(projeto: Projeto) {
     return (
       await this.casoDeTesteRepository.find({
-        relations: ['testadorDesignado', 'suiteDeTeste', 'casoDeUso'],
+        relations: [
+          'testadorDesignado',
+          'suiteDeTeste',
+          'casoDeUso',
+          'projeto',
+        ],
+        where: { projeto },
       })
     ).map((casoDeTeste) =>
       CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),
     );
   }
 
-  async findAllWithoutSuite() {
+  async findAllWithoutSuite(projeto: Projeto) {
     return (
       await this.casoDeTesteRepository.find({
         relations: ['testadorDesignado', 'suiteDeTeste', 'casoDeUso'],
-        where: { suiteDeTeste: IsNull() },
+        where: { suiteDeTeste: IsNull(), projeto },
       })
     ).map((casoDeTeste) =>
       CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),

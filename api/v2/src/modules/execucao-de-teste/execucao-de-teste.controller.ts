@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -15,10 +16,14 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ProjetoAtual } from 'src/decorators/projeto-atual.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { ChangeStatusExecucaoDeTesteDto } from './dto/change-status-execucao-de-teste.dto';
 import { CreateExecucaoDeTesteDto } from './dto/create-execucao-de-teste.dto';
 import { ExecucaoDeTesteDto } from './dto/execucao-de-teste.dto';
+import { GetExecucaoDeTesteGraficoQueryDto } from './dto/get-execucao-de-teste-grafico-query.dto';
+import { GetExecucaoDeTesteGraficoDto } from './dto/get-execucao-de-teste-grafico.dto';
 import { UpdateExecucaoDeTesteDto } from './dto/update-execucao-de-teste.dto';
 import { ExecucaoDeTesteMapper } from './execucao-de-teste.mapper';
 import { ExecucaoDeTesteService } from './execucao-de-teste.service';
@@ -51,10 +56,28 @@ export class ExecucaoDeTesteController {
     type: [ExecucaoDeTesteDto],
   })
   @Get()
-  async findAll() {
-    const bos = await this.execucaoDeTesteService.findAll();
+  async findAll(@ProjetoAtual() projeto: Projeto) {
+    const bos = await this.execucaoDeTesteService.findAll(projeto);
 
     return bos.map((bo) => ExecucaoDeTesteMapper.boToDto(bo));
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Execução de teste encontrada',
+    type: GetExecucaoDeTesteGraficoDto,
+  })
+  @Get('grafico')
+  async getGrafico(
+    @Query()
+    getExecucaoDeTesteGraficoQueryDto: GetExecucaoDeTesteGraficoQueryDto,
+    @ProjetoAtual() projeto: Projeto,
+  ) {
+    const bo = ExecucaoDeTesteMapper.getExecucaoDeTesteGraficoQueryDtoToBo(
+      getExecucaoDeTesteGraficoQueryDto,
+    );
+
+    return this.execucaoDeTesteService.getGrafico(bo, projeto);
   }
 
   @ApiResponse({

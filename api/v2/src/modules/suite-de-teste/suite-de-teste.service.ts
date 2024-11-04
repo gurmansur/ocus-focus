@@ -45,12 +45,27 @@ export class SuiteDeTesteService {
     return this.suiteDeTesteRepository.findOne({ where: { id } });
   }
 
-  async getFileTree() {
-    const entities = await this.suiteDeTesteRepository.findTrees({
-      relations: ['casosDeTeste'],
-    });
+  async getFileTree(projeto: Projeto, suiteId?: number) {
+    let entities: SuiteDeTeste[];
+    if (suiteId) {
+      const suite = await this.suiteDeTesteRepository.findDescendantsTree(
+        await this.suiteDeTesteRepository.findOne({ where: { id: suiteId } }),
+        { relations: ['casosDeTeste', 'projeto'] },
+      );
+      entities = [suite];
+    } else {
+      entities = await this.suiteDeTesteRepository
+        .findTrees({
+          relations: ['casosDeTeste', 'projeto'],
+        })
+        .then((trees) =>
+          trees.filter((tree) => tree?.projeto?.id === projeto?.id),
+        );
+    }
 
-    const casos = await this.casoDeTesteService.findAllWithoutSuite();
+    const casos = !suiteId
+      ? await this.casoDeTesteService.findAllWithoutSuite(projeto)
+      : [];
 
     const fileTree = SuiteDeTesteAdapter.makeFileTreeBo(entities, casos);
 

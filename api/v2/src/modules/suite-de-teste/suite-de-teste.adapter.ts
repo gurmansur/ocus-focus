@@ -7,7 +7,7 @@ import { SuiteDeTesteMapper } from './suite-de-teste.mapper';
 export class SuiteDeTesteAdapter {
   static makeFileTreeBo(
     suitesBo: SuiteDeTeste[],
-    casosBo: CasoDeTesteBo[],
+    casosBo?: CasoDeTesteBo[],
   ): FileTreeDto {
     const dto = new FileTreeBo();
 

@@ -93,7 +93,7 @@ export class SuiteDeTesteMapper {
   static fileTreeBoToDto(bo: FileTreeBo): FileTreeDto {
     const dto = new FileTreeDto();
     dto.suites = bo.suites.map((suite) => this.boToDto(suite));
-    dto.casos = bo.casos.map((caso) =>
+    dto.casos = bo?.casos?.map((caso) =>
       CasoDeTesteMapper.casoDeTesteBoToDto(caso),
     );
     return dto;
