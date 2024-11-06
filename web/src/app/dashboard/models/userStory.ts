@@ -4,7 +4,7 @@ export class UserStory {
 
     public descricao: string = '',
 
-    public estimativa_tempo: number = 0,
+    public estimativa_tempo: number = -1,
 
     public criado_em: string = '',
 
@@ -14,7 +14,11 @@ export class UserStory {
 
     public prazo: string = new Date().toISOString().split('T')[0],
 
-    public swimlane: number = 0,
+    public criador: number = -1,
+
+    public responsavel: number = -1,
+
+    public swimlane: number = -1,
 
     public id?: number
   ) {}

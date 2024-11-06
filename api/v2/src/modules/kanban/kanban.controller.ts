@@ -9,8 +9,18 @@ import { KanbanService } from './kanban.service';
 export class KanbanController {
   constructor(private readonly kanbanService: KanbanService) {}
 
+  @Get()
+  findBoard(@Query('projeto') projeto: number) {
+    return this.kanbanService.findBoard(projeto);
+  }
+
   @Get('swimlanes')
-  findSwimlanes(@Query('projeto') projeto: number) {
-    return this.kanbanService.findSwimlanes(projeto);
+  findSwimlaneFromProject(@Query('projeto') projeto: number) {
+    return this.kanbanService.findSwimlaneFromProject(projeto);
+  }
+
+  @Get('id')
+  findIdFromProject(@Query('projeto') projeto: number) {
+    return this.kanbanService.findIdFromProject(projeto);
   }
 }

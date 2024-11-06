@@ -19,6 +19,14 @@ export class ColaboradorService {
     return this.colaboradorRepository.save(colaborador);
   }
 
+  async findAllFromProject(projetoId: number) {
+    return await this.colaboradorRepository.find({
+      where: {
+        projetos: { id: projetoId },
+      },
+    });
+  }
+
   async findAll(name?: string, projetoId?: number) {
     const inProject = await this.colaboradorRepository.find({
       where: {

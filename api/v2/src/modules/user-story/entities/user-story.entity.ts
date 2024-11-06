@@ -1,13 +1,14 @@
 import { Arquivo } from 'src/modules/arquivo/entities/arquivo.entity';
+import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
 import { Kanban } from 'src/modules/kanban/entities/kanban.entity';
 import { Swimlane } from 'src/modules/kanban/entities/swimlane.entity';
 import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
 import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
 import { Subtarefa } from 'src/modules/subtarefa/entities/subtarefa.entity';
 import { Tag } from 'src/modules/tag/entities/tag.entity';
-import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -33,36 +34,36 @@ export class UserStory {
   estimativa_tempo: number;
 
   @OneToMany(() => Comentario, (comentario) => comentario.id)
-  comentarios: Comentario[];
+  comentarios: Comentario[] | null;
 
   @ManyToMany(() => Tag)
   @JoinColumn({
     name: 'FK_TAG_ID',
   })
-  tags: Tag[];
+  tags: Tag[] | null;
 
   @OneToMany(() => Subtarefa, (subtarefa) => subtarefa.userStory)
-  subtarefas: Subtarefa[];
+  subtarefas: Subtarefa[] | null;
 
   @ManyToMany(() => Arquivo, (arquivo) => arquivo.userStories)
   @JoinTable({
     name: 'USER_STORY_ARQUIVOS',
   })
-  arquivos: Arquivo[];
+  arquivos: Arquivo[] | null;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.criadorUS)
-  @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
-  criador: Usuario;
+  @ManyToOne(() => Colaborador, (colaborador) => colaborador.criadorUS)
+  @JoinColumn({ name: 'FK_COLABORADOR_COL_ID' })
+  criador: Colaborador;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.responsavelUS)
-  @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
-  responsavel: Usuario;
+  @ManyToOne(() => Colaborador, (colaborador) => colaborador.responsavelUS)
+  @JoinColumn({ name: 'FK_COLABORADOR_COL_ID' })
+  responsavel: Colaborador;
 
-  @ManyToMany(() => Usuario, (usuario) => usuario.participantesUS)
+  @ManyToMany(() => Colaborador, (colaborador) => colaborador.participantesUS)
   @JoinTable({
-    name: 'USER_STORIES_USUARIOS',
+    name: 'USER_STORIES_COLABORADORES',
   })
-  participantes: Usuario[];
+  participantes: Colaborador[] | null;
 
   @ManyToOne(() => Kanban, (kanban) => kanban.userStories)
   @JoinColumn({ name: 'FK_KANBAN_ID' })
@@ -84,17 +85,13 @@ export class UserStory {
   })
   swimlane: Swimlane;
 
-  @Column({
-    type: 'timestamp',
+  @CreateDateColumn({
     name: 'UST_CRIADO_EM',
-    default: () => 'CURRENT_TIMESTAMP',
   })
   criado_em: Date;
 
-  @Column({
-    type: 'timestamp',
+  @CreateDateColumn({
     name: 'UST_MODIFICADO_EM',
-    default: () => 'CURRENT_TIMESTAMP',
   })
   modificado_em: Date;
 }

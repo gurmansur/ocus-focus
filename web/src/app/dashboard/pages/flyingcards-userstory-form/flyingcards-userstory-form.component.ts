@@ -7,7 +7,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {} from '@angular/material';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,7 +14,10 @@ import { ButtonComponent } from 'src/app/shared/button/button.component';
 import { CardComponent } from 'src/app/shared/card/card.component';
 import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.component';
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
+import { Colaborador } from '../../models/colaborador';
 import { UserStory } from '../../models/userStory';
+import { ColaboradorService } from '../../services/colaborador.service';
+import { KanbanService } from '../../services/kanban.service';
 
 @Component({
   selector: 'app-flyingcards-userstory-form',
@@ -36,21 +38,22 @@ import { UserStory } from '../../models/userStory';
 })
 export class FlyingcardsUserstoryFormComponent implements OnInit {
   private projectId: number;
+  private kanbanId: number = -1;
   userStoryFormGroup: any;
+  criador = Number(localStorage.getItem('usu_id'));
   userStory: UserStory;
-  membros = new FormControl();
-  membrosList = [
-    'Breno Lisi Romano',
-    'Felipe de Andrade',
-    'Gustavo Mansur',
-    'Zacarias da Silva',
-  ];
-  membrosEscolhidos: string[] = [];
+  usuarios: Colaborador[] = [];
+  swimlanes: ISelectSwimlane[] = [];
 
   formBuilder: FormBuilder = new FormBuilder();
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-    this.projectId = this.route.snapshot.params['id'];
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private colaboradorService: ColaboradorService,
+    private kanbanService: KanbanService
+  ) {
+    this.projectId = parseInt(this.route.snapshot.params['id']);
     this.userStory = new UserStory();
   }
 
@@ -59,31 +62,71 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.colaboradorService
+      .findAllFromProject(this.projectId)
+      .subscribe((colaboradores) => {
+        this.usuarios = colaboradores;
+      });
+
+    console.log(this.usuarios);
+
+    this.kanbanService
+      .getSwimlaneFromProject(this.projectId)
+      .subscribe((swimlanes) => {
+        this.swimlanes = swimlanes;
+      });
+
+    this.kanbanService.getKanbanId(this.projectId).subscribe((kanban) => {
+      this.kanbanId = kanban;
+    });
+
     this.userStoryFormGroup = this.formBuilder.group({
       titulo: new FormControl(
         this.userStory?.titulo || '',
         Validators.required
       ),
-      // responsavel: new FormControl(
-      //   this.userStory?.responsavel || '',
-      //   Validators.required
-      // ),
-      // membros: new FormControl(
-      //   this.userStory.membros || [''],
-      //   Validators.required
-      // ),
-      prazo: new FormControl(
-        this.userStory?.estimativa_tempo ||
-          new Date().toISOString().split('T')[0],
+      descricao: new FormControl(
+        this.userStory.descricao || '',
         Validators.required
       ),
-      // tags: new FormControl(this.userStory?.tags || '', Validators.required),
+      responsavel: new FormControl<number>(
+        this.userStory?.responsavel || -1,
+        Validators.required
+      ),
+      estimativa_tempo: new FormControl<number>(
+        this.userStory?.estimativa_tempo || 0,
+        Validators.required
+      ),
+      swimlane: new FormControl<number>(
+        this.userStory?.swimlane || -1,
+        Validators.required
+      ),
     });
   }
 
-  addMembro(event: Event): void {
-    const nome = (event.target as HTMLSelectElement).value;
+  createUserStory() {
+    const newUserStory = {
+      ...this.userStoryFormGroup.value,
+      projeto: +this.projectId,
+      criador: +this.criador,
+      kanban: +this.kanbanId,
+    };
 
-    this.membrosEscolhidos.push(nome);
+    console.log(newUserStory);
+
+    this.kanbanService
+      .createUserStory(newUserStory)
+      .subscribe({ next: () => this.navigateToKanban() });
   }
+
+  // addMembro(event: Event): void {
+  //   const nome = (event.target as HTMLSelectElement).value;
+
+  //   this.membrosEscolhidos.push(nome);
+  // }
+}
+
+interface ISelectSwimlane {
+  id: number;
+  nome: string;
 }

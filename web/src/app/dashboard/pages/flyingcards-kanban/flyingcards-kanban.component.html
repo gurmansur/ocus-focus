@@ -6,13 +6,16 @@
 <!-- isso aqui tá dando uns negócios esquisitos, tá recarregando a página toda hora -->
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
-    <h2 class="text-3xl font-medium mb-5">
-      Kanban do projeto <i>{{ board.nome }}</i>
-    </h2>
-    <app-button (click)="navigateToCreateUserStory()">
-      <app-plus-icon></app-plus-icon>
-      Adicionar User Story
-    </app-button>
+    <h2 class="text-3xl font-medium mb-5">Kanban</h2>
+    <div class="flex gap-2">
+      <app-button (click)="navigateToSprints()">
+        <app-gear-icon></app-gear-icon>
+      </app-button>
+      <app-button (click)="navigateToCreateUserStory()">
+        <app-plus-icon></app-plus-icon>
+        Adicionar User Story
+      </app-button>
+    </div>
   </div>
 
   <div class="flex flex-grow overflow-x-auto" cdkDropListGroup>

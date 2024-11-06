@@ -1,61 +1,68 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
-import { KanbanDto } from 'src/modules/kanban/dto/kanban.dto';
-import { SwimlaneDto } from 'src/modules/kanban/dto/swimlane.dto';
-import { ProjetoDto } from 'src/modules/projeto/dto/projeto.dto';
-import { UsuarioDto } from 'src/modules/usuario/dto/usuario.dto';
 
 export class CreateUserStoryDto {
-  @ApiProperty({
-    type: 'string',
-    description: 'Descrição da User Story',
-    example:
-      'O usuário autenticado consegue logar no sistema e acessar seu perfil',
-  })
+  // @ApiProperty({
+  //   type: 'string',
+  //   description: 'Descrição da User Story',
+  //   example:
+  //     'O usuário autenticado consegue logar no sistema e acessar seu perfil',
+  // })
   @IsString()
   descricao: string;
 
-  @ApiProperty({
-    type: 'number',
-    description: 'Estimativa da User Story',
-    example: '7',
-  })
-  @IsNumber()
-  estimativa_tempo: number;
+  // @ApiProperty({
+  //   type: 'string',
+  //   description: 'Estimativa da User Story',
+  //   example: '7',
+  // })
+  @IsString()
+  estimativa_tempo: string;
 
-  @ApiProperty({
-    type: 'string',
-    description: 'Titulo da User Story',
-    example: 'Acessar o próprio perfil',
-  })
+  // @ApiProperty({
+  //   type: 'string',
+  //   description: 'Titulo da User Story',
+  //   example: 'Acessar o próprio perfil',
+  // })
   @IsString()
   titulo: string;
 
-  @ApiProperty({
-    type: 'number',
-    description: 'Id do kanban do projeto',
-    example: '1',
-  })
-  kanban: KanbanDto;
+  // @ApiProperty({
+  //   type: 'number',
+  //   description: 'Id do kanban do projeto',
+  //   example: 1,
+  // })
+  @IsNumber()
+  kanban: number;
 
-  @ApiProperty({
-    type: 'number',
-    description: 'Id do usuário que criou a user story',
-    example: '1',
-  })
-  criador: UsuarioDto;
+  // @ApiProperty({
+  //   type: 'number',
+  //   description: 'Id do usuário que criou a user story',
+  //   example: 1,
+  // })
+  @IsNumber()
+  criador: number;
 
-  @ApiProperty({
-    type: 'number',
-    description: 'Id da swimlane que a user story está',
-    example: '1',
-  })
-  swimlane: SwimlaneDto;
+  // @ApiProperty({
+  //   type: 'string',
+  //   description: 'Id do responsável pela user story',
+  //   example: '1',
+  // })
+  @IsString()
+  responsavel: string;
 
-  @ApiProperty({
-    type: 'number',
-    description: 'Id do projeto que a user story está',
-    example: '1',
-  })
-  projeto: ProjetoDto;
+  // @ApiProperty({
+  //   type: 'string',
+  //   description: 'Id da swimlane que a user story está',
+  //   example: '1',
+  // })
+  @IsString()
+  swimlane: string;
+
+  // @ApiProperty({
+  //   type: 'number',
+  //   description: 'Id do projeto que a user story está',
+  //   example: 1,
+  // })
+  @IsNumber()
+  projeto: number;
 }

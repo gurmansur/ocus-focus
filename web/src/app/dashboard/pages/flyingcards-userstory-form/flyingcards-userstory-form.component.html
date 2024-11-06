@@ -1,6 +1,6 @@
 <app-project-header
   (onBack)="navigateToKanban()"
-  voltar="Voltar ao Kanban"
+  voltar="Voltar ao Flying Cards"
 ></app-project-header>
 
 <div class="container px-5 py-24 mx-auto">
@@ -23,7 +23,6 @@
       </svg>
     </div>
     <h2 class="my-4 text-xl text-center">
-      <!-- @if (isEdit) { Editar } @else { Inserir } -->
       Inserir
       <span class="font-medium text-violet-700">User Story</span>
     </h2>
@@ -50,7 +49,21 @@
         </p>
         }
       </div>
-      <div class="relative w-1/4 mr-1">
+
+      <div class="relative w-full">
+        <label for="descricao" class="leading-7 text-sm text-gray-600"
+          >Descrição</label
+        >
+        <textarea
+          type="text"
+          id="descricao"
+          name="descricao"
+          formControlName="descricao"
+          class="w-full h-20 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        ></textarea>
+      </div>
+
+      <div class="relative w-2/4 mr-1">
         <label for="responsavel" class="leading-7 text-sm text-gray-600"
           >Responsável</label
         >
@@ -59,11 +72,9 @@
           name="responsavel"
           formControlName="responsavel"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          *ngFor="let usuario of usuarios"
         >
-          <option value="1">Breno Lisi Romano</option>
-          <option value="2">Felipe de Andrade Nascimento</option>
-          <option value="3">Gustavo Mansur</option>
-          <option value="4">Zacarias da Silva</option>
+          <option value="{{ usuario.id }}">{{ usuario.nome }}</option>
         </select>
         @if (userStoryFormGroup.get('responsavel').invalid &&
         userStoryFormGroup.get('responsavel').touched) {
@@ -77,46 +88,22 @@
         }
       </div>
 
-      <div class="relative w-1/4 mr-1">
-        <label for="membros" class="leading-7 text-sm text-gray-600"
-          >Membros</label
-        >
-
-        <select
-          id="membros"
-          name="membros"
-          formControlName="membros"
-          (change)="addMembro($event)"
-          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-        >
-          <option *ngFor="let membro of membrosList" [value]="membro">
-            {{ membro }}
-          </option>
-        </select>
-      </div>
-
-      <div class="relative w-3/4 mr-1 bg-purple-300 p-2 rounded-sm">
-        @for (membro of membrosEscolhidos; track $index) {
-        {{ $index + 1 }} - {{ membro }} <br />
-        } @empty { Nenhum membro foi escolhido. }
-      </div>
-
       <div class="relative w-1/4 mx-1">
-        <label for="data" class="leading-7 text-sm text-gray-600"
-          >Prazo para entrega</label
+        <label for="estimativa_tempo" class="leading-7 text-sm text-gray-600"
+          >Estimativa de tempo</label
         >
         <input
-          type="date"
-          id="prazo"
-          name="prazo"
-          formControlName="prazo"
+          type="text"
+          id="estimativa_tempo"
+          name="estimativa_tempo"
+          formControlName="estimativa_tempo"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-5 transition-colors duration-200 ease-in-out"
         />
-        @if (userStoryFormGroup.get('prazo').invalid &&
-        userStoryFormGroup.get('prazo').touched) {
+        @if (userStoryFormGroup.get('estimativa_tempo').invalid &&
+        userStoryFormGroup.get('estimativa_tempo').touched) {
         <p class="text-red-500 text-xs italic">
           {{
-            userStoryFormGroup.get("prazo").errors.required
+            userStoryFormGroup.get("estimativa_tempo").errors.required
               ? "Campo obrigatório"
               : ""
           }}
@@ -124,47 +111,30 @@
         }
       </div>
 
-      <div class="relative w-2/4 flex">
-        <div class="relative w-2/4 mr-1">
-          <label for="status" class="leading-7 text-sm text-gray-600"
-            >Tags</label
-          >
-          <select
-            id="tags"
-            name="tags"
-            formControlName="tags"
-            class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-          >
-            <option value="" disabled selected>Selecione as tags</option>
-            <option value="opcao 1">Feature</option>
-            <option value="opcao 2">BUG</option>
-            <option value="opcao 3">Teste</option>
-            <option value="opcao 4">Documentação</option>
-          </select>
-          @if (userStoryFormGroup.get('tags').invalid &&
-          userStoryFormGroup.get('tags').touched ) {
-          <p class="text-red-500 text-xs italic">
-            {{
-              userStoryFormGroup.get("tags").errors.required
-                ? "Campo obrigatório"
-                : ""
-            }}
-          </p>
-          }
-        </div>
+      <div class="relative w-2/4">
+        <label for="swimlane" class="leading-7 text-sm text-gray-600"
+          >Swimlane</label
+        >
+        <select
+          name="swimlane"
+          id="swimlane"
+          formControlName="swimlane"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          *ngFor="let swimlane of swimlanes"
+        >
+          <option value="{{ swimlane.id }}">{{ swimlane.nome }}</option>
+        </select>
       </div>
     </div>
-  </form>
-  <div class="flex w-full justify-end gap-2">
-    <app-button (onClick)="navigateToKanban()" class="mb-4" color="secondary">
-      Cancelar
-    </app-button>
+    <div class="flex w-full justify-end gap-2">
+      <app-button (onClick)="navigateToKanban()" class="mb-4" color="secondary">
+        Cancelar
+      </app-button>
 
-    <app-button [disabled]="true">
-      <!-- @if (isEdit) { Editar Caso de Teste } @else { -->
-      <app-plus-icon></app-plus-icon>
-      Adicionar User Story
-      <!-- } -->
-    </app-button>
-  </div>
+      <app-button (onClick)="createUserStory()">
+        <app-plus-icon></app-plus-icon>
+        Adicionar User Story
+      </app-button>
+    </div>
+  </form>
 </div>

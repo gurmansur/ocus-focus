@@ -1,10 +1,13 @@
 import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
 import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
+import { Comentario } from 'src/modules/user-story/entities/comentario.entity';
+import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
 import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -64,4 +67,16 @@ export class Colaborador {
   )
   @JoinColumn({ name: 'FK_COLABORADORES_COL_ID' })
   casosDeTeste: CasoDeTeste[];
+
+  @OneToMany(() => UserStory, (userStory) => userStory.responsavel)
+  responsavelUS: UserStory[];
+
+  @OneToMany(() => UserStory, (userStory) => userStory.criador)
+  criadorUS: UserStory[];
+
+  @ManyToMany(() => UserStory, (userStory) => userStory.participantes)
+  participantesUS: UserStory[];
+
+  @OneToMany(() => Comentario, (comentario) => comentario.usuario)
+  comentarios: Comentario[];
 }

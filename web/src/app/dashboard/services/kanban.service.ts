@@ -13,20 +13,43 @@ export class KanbanService {
     @Inject('servicesRootUrl') private servicesRootUrl: string
   ) {}
 
-  getAllFromProject(idProjeto: string): Observable<UserStory[]> {
-    return this.httpClient.get<UserStory[]>(
-      `${this.servicesRootUrl}/user-story/all`,
+  getBoardFromProject(idProjeto: string): Observable<Board> {
+    return this.httpClient.get<Board>(
+      `${this.servicesRootUrl}/kanban?projeto=${idProjeto}`,
       {
         headers: {
-          projeto: idProjeto,
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       }
     );
   }
 
-  getBoardFromProject(idProjeto: string): Observable<Board> {
-    return this.httpClient.get<Board>(
-      `${this.servicesRootUrl}/kanban/swimlanes?projeto=${idProjeto}`
+  getSwimlaneFromProject(projeto: number): Observable<ISelectSwimlane[]> {
+    return this.httpClient.get<ISelectSwimlane[]>(
+      `${this.servicesRootUrl}/kanban/swimlanes?projeto=${projeto}`,
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      }
     );
   }
+
+  createUserStory(userStory: UserStory) {
+    return this.httpClient.post<UserStory>(
+      `${this.servicesRootUrl}/user-story/new`,
+      userStory
+    );
+  }
+
+  getKanbanId(projeto: number): Observable<number> {
+    return this.httpClient.get<number>(
+      `${this.servicesRootUrl}/kanban/id?projeto=${projeto}`
+    );
+  }
+}
+
+interface ISelectSwimlane {
+  id: number;
+  nome: string;
 }

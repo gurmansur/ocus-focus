@@ -78,11 +78,7 @@ export class FlyingcardsSprintsComponent {
   }
 
   navigateToKanban() {
-    this.router.navigate([
-      '/dashboard/projeto/',
-      this.projectId,
-      'painel-flyingcards',
-    ]);
+    this.router.navigate(['/dashboard/projeto/', this.projectId, 'kanban']);
   }
 
   openConfigModal() {

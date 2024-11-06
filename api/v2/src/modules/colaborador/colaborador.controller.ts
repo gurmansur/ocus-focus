@@ -28,6 +28,11 @@ export class ColaboradorController {
     return this.colaboradorService.create(createColaboradorDto);
   }
 
+  @Get('projeto')
+  findAllFromProject(@Query('projeto') projeto: number) {
+    return this.colaboradorService.findAllFromProject(+projeto);
+  }
+
   @Get()
   findAll(@Query('name') name: string, @Query('projeto') projetoId: number) {
     return this.colaboradorService.findAll(

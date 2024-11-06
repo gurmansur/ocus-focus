@@ -13,6 +13,7 @@ import { ButtonComponent } from 'src/app/shared/button/button.component';
 import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
+import { GearIconComponent } from '../../../shared/icons/gear-icon/gear-icon.component';
 import { Board } from '../../models/board';
 import { Projeto } from '../../models/projeto';
 import { UserStory } from '../../models/userStory';
@@ -31,6 +32,7 @@ import { ProjetoService } from '../../services/projeto.service';
     PlusIconComponent,
     ButtonComponent,
     ModalComponent,
+    GearIconComponent,
   ],
   templateUrl: './flyingcards-kanban.component.html',
   styleUrl: './flyingcards-kanban.component.css',
@@ -104,5 +106,14 @@ export class FlyingcardsKanbanComponent implements OnInit {
       this.board = data;
       console.log(this.board);
     };
+  }
+
+  navigateToSprints() {
+    this.router.navigate([
+      'dashboard/projeto/',
+      this.projectId,
+      'kanban',
+      'sprints',
+    ]);
   }
 }

@@ -18,7 +18,7 @@ export class KanbanService {
     @Inject() private readonly userStoryService: UserStoryService,
   ) {}
 
-  async findSwimlanes(projetoId: number) {
+  async findBoard(projetoId: number) {
     const projeto = await this.projetoRepository.findOne({
       where: { id: projetoId },
     });
@@ -50,5 +50,46 @@ export class KanbanService {
       nome: projeto.nome,
       swimlanes,
     };
+  }
+
+  async findSwimlaneFromProject(projetoId: number) {
+    const projeto = await this.projetoRepository.findOne({
+      where: { id: projetoId },
+    });
+    const kanban = await this.kanbanRepository.findOne({
+      where: { projeto: projeto },
+      relations: ['projeto'],
+    });
+
+    const swimlaneRepo = await this.swimlaneRepository.find({
+      where: { kanban: kanban },
+      relations: ['kanban'],
+    });
+
+    const swimlanes = swimlaneRepo.map((swimlane) => {
+      return { id: swimlane.id, nome: swimlane.nome };
+    });
+
+    return swimlanes;
+  }
+
+  async findIdFromProject(projetoId: number) {
+    const projeto = await this.projetoRepository.findOne({
+      where: { id: projetoId },
+    });
+    const kanban = await this.kanbanRepository.findOne({
+      where: { projeto: projeto },
+      relations: ['projeto'],
+    });
+
+    return kanban.id;
+  }
+
+  async findOneSwimlane(kanbanId: number) {
+    return await this.swimlaneRepository.findOne({
+      where: {
+        kanban: { id: kanbanId },
+      },
+    });
   }
 }

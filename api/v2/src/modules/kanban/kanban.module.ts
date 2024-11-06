@@ -14,5 +14,6 @@ import { KanbanService } from './kanban.service';
     TypeOrmModule.forFeature([Kanban, Swimlane, Projeto]),
     UserStoryModule,
   ],
+  exports: [KanbanService],
 })
 export class KanbanModule {}
