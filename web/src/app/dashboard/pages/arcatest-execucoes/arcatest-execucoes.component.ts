@@ -52,10 +52,6 @@ export class ArcatestExecucoesComponent {
     this.casoId = this.route.snapshot.queryParams['casoId'];
 
     this.fetchExecucoes();
-
-    if (this.casoId) {
-      this.filterTestCasesByCaso();
-    }
   }
 
   ngOnInit(): void {
@@ -69,6 +65,10 @@ export class ArcatestExecucoesComponent {
         data: new Date(execucao.dataExecucao).toLocaleDateString(),
         hora: new Date(execucao.dataExecucao).toLocaleTimeString(),
       }));
+
+      if (this.casoId !== undefined) {
+        this.filterTestCasesByCaso();
+      }
     });
   }
 

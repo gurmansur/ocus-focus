@@ -256,12 +256,12 @@ export class ProjetoService {
     return `This action removes a #${id} projeto`;
   }
 
-  async findColaboradores(id: number, page: number, pageSize: number) {
+  async findColaboradores(id: number, page?: number, pageSize?: number) {
     const items =
       await this.colaboradorProjetoService.findColaboradoresByProjetoId(
         id,
-        page,
-        pageSize,
+        page ? page : undefined,
+        pageSize ? pageSize : undefined,
       );
 
     return {

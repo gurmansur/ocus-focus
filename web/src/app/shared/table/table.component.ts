@@ -49,4 +49,15 @@ export class TableComponent {
   executeClicked(id: number) {
     this.executeClick.emit(id);
   }
+
+  getEntityAttribute = (entity: any, attribute: string): string => {
+    const attributes = attribute.split(':');
+    let value = entity;
+
+    for (const attr of attributes) {
+      value = value ? value[attr] : '-';
+    }
+
+    return value || '-';
+  };
 }

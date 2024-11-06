@@ -47,10 +47,21 @@ export class SuiteDeTesteService {
 
   async getFileTree(projeto: Projeto, suiteId?: number) {
     let entities: SuiteDeTeste[];
+
     if (suiteId) {
+      const suiteEntity = await this.suiteDeTesteRepository.findOne({
+        where: { id: suiteId },
+      });
+
+      if (!suiteEntity) {
+        throw new Error('Suite de teste não encontrada');
+      }
+
       const suite = await this.suiteDeTesteRepository.findDescendantsTree(
-        await this.suiteDeTesteRepository.findOne({ where: { id: suiteId } }),
-        { relations: ['casosDeTeste', 'projeto'] },
+        suiteEntity,
+        {
+          relations: ['casosDeTeste', 'projeto'],
+        },
       );
       entities = [suite];
     } else {

@@ -31,11 +31,7 @@
     <tr [class.border-b]="$index !== data.length - 1">
       @for (attribute of entityAttributes; track $index) {
       <td class="p-3">
-        {{
-          attribute.includes(":")
-            ? item[attribute.split(":")[0]][attribute.split(":")[1]] || "N/A"
-            : item[attribute] || "N/A"
-        }}
+        {{ getEntityAttribute(item, attribute) }}
       </td>
       } @if (hasDelete || hasView || hasEdit || hasAlert || hasUseCase ||
       hasAlert || hasExecute) {

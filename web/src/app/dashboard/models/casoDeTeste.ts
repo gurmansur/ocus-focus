@@ -1,3 +1,5 @@
+import { Colaborador } from './colaborador';
+
 export enum EPrioridade {
   ALTA = 'ALTA',
   MEDIA = 'MEDIA',
@@ -57,6 +59,8 @@ export class CasoDeTeste {
 
     public suiteDeTesteId?: number,
 
-    public testadorDesignadoId?: number
+    public testadorDesignadoId?: number,
+
+    public testadorDesignado?: Colaborador
   ) {}
 }

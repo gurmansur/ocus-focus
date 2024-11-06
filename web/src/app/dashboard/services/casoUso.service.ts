@@ -58,10 +58,22 @@ export class CasoUsoService {
     );
   }
 
-  list(idPro: number, idReq: number, page: number, pageSize: number): Observable<GetResponseCaso[]> {
-    return this.httpClient.get<GetResponseCaso[]>(
-      `${this.servicesRootUrl}/caso-de-uso?requisito=${idReq}&projeto${idPro}&page=${page}&size=${pageSize}`,
+  list(
+    idPro?: number,
+    idReq?: number,
+    page?: number,
+    pageSize?: number
+  ): Observable<GetResponseCaso> {
+    const params: any = {};
+    if (idPro !== undefined) params.projeto = idPro.toString();
+    if (idReq !== undefined) params.requisito = idReq.toString();
+    if (page !== undefined) params.page = page.toString();
+    if (pageSize !== undefined) params.pageSize = pageSize.toString();
+
+    return this.httpClient.get<GetResponseCaso>(
+      `${this.servicesRootUrl}/caso-de-uso`,
       {
+        params: params,
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
@@ -69,7 +81,12 @@ export class CasoUsoService {
     );
   }
 
-  listByName(idReq: number, nome: string, page: number, pageSize: number): Observable<GetResponseCaso[]> {
+  listByName(
+    idReq: number,
+    nome: string,
+    page: number,
+    pageSize: number
+  ): Observable<GetResponseCaso[]> {
     return this.httpClient.get<GetResponseCaso[]>(
       `${this.servicesRootUrl}/caso-de-uso/findByNome?projeto=${idReq}&nome=${nome}&page=${page}&size=${pageSize}`,
       {
@@ -123,7 +140,6 @@ export class CasoUsoService {
       }
     );
   }
-
 }
 
 interface GetResponseCaso {

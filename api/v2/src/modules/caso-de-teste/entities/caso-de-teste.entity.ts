@@ -101,6 +101,7 @@ export class CasoDeTeste {
     (colaborador: Colaborador) => colaborador.casosDeTeste,
     {
       nullable: true,
+      eager: true,
     },
   )
   @JoinColumn({ name: 'FK_COLABORADORES_COL_ID' })

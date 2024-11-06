@@ -103,10 +103,10 @@ export class ProjetoService {
 
   getColaboradoresByProjeto(
     id: number,
-    page: number,
-    pageSize: number
-  ): Observable<GetResponseColaboradores[]> {
-    return this.httpClient.get<GetResponseColaboradores[]>(
+    page?: number,
+    pageSize?: number
+  ): Observable<GetResponseColaboradores> {
+    return this.httpClient.get<GetResponseColaboradores>(
       `${this.servicesRootUrl}/projetos/colaboradores?projeto=${id}&page=${page}&pageSize=${pageSize}`,
       {
         headers: {

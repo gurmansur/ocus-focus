@@ -43,7 +43,11 @@ export class ExecucaoDeTesteService {
 
   async findAll(projeto: Projeto) {
     const entities = await this.execucaoDeTesteRepository.find({
-      relations: ['casoDeTeste', 'casoDeTeste.projeto'],
+      relations: [
+        'casoDeTeste',
+        'casoDeTeste.projeto',
+        'casoDeTeste.testadorDesignado',
+      ],
       where: { casoDeTeste: { projeto } },
     });
 

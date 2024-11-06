@@ -41,11 +41,11 @@ export class ColaboradorProjetoService {
 
   async findColaboradoresByProjetoId(
     projetoId: number,
-    page: number,
-    pageSize: number,
+    page?: number,
+    pageSize?: number,
   ) {
-    const take = pageSize ? pageSize : 5;
-    const skip = page ? (page - 1) * take : 0;
+    const take = pageSize ? pageSize : undefined;
+    const skip = page ? (page - 1) * take : undefined;
 
     const colaboradores = await this.colaboradorProjetoRepository.find({
       where: { projeto: { id: projetoId } },

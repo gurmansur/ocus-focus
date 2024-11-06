@@ -9,7 +9,13 @@
     </div>
   </div>
   <app-table
-    [columns]="['Nome', 'Status', 'Data de Execução', 'Hora']"
+    [columns]="[
+      'Nome',
+      'Status',
+      'Testador Designado',
+      'Data de Execução',
+      'Hora'
+    ]"
     [data]="execucoes"
     customEmptyMessage="'Nenhum caso de teste encontrado'"
     addButtonLabel="'Adicionar Caso de Teste'"
@@ -19,7 +25,13 @@
     (editClick)="navigateToEditExecution($event)"
     (deleteClick)="openDeleteModal($event)"
     (executeClick)="openExecutionModal($event)"
-    [entityAttributes]="['nome', 'resultado', 'data', 'hora']"
+    [entityAttributes]="[
+      'nome',
+      'resultado',
+      'casoDeTeste:testadorDesignado:nome',
+      'data',
+      'hora'
+    ]"
   ></app-table>
 
   <app-modal

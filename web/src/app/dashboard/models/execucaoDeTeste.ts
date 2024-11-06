@@ -1,5 +1,4 @@
 import { CasoDeTeste } from './casoDeTeste';
-import { Colaborador } from './colaborador';
 
 export class ExecucaoDeTeste {
   constructor(
@@ -10,7 +9,6 @@ export class ExecucaoDeTeste {
     public data: string,
     public hora: string,
     public dataExecucao: string,
-    public colaborador: Colaborador,
     public casoDeTeste: CasoDeTeste
   ) {}
 }

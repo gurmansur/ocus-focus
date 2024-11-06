@@ -74,7 +74,6 @@ export class ArcatestSuitesFormComponent {
         this.suite?.descricao || '',
         Validators.required
       ),
-      status: new FormControl(this.suite?.status || '', Validators.required),
       observacoes: new FormControl(this.suite?.observacoes || ''),
       suitePaiId: this.route.snapshot.queryParams['suiteId'] || '',
     });
@@ -137,10 +136,6 @@ export class ArcatestSuitesFormComponent {
 
   get descricao() {
     return this.suiteFormGroup.get('descricao');
-  }
-
-  get status() {
-    return this.suiteFormGroup.get('status');
   }
 
   get observacoes() {

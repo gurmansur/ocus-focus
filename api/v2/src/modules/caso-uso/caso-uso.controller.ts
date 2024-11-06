@@ -9,7 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ProjetoAtual } from 'src/decorators/projeto-atual.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { CasoUsoService } from './caso-uso.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';
 import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
@@ -18,7 +20,7 @@ import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
 @ApiTags('Caso de Uso')
 @ApiResponse({ status: 401, description: 'Não autorizado' })
 @ApiBearerAuth()
-@Controller('caso-uso')
+@Controller('caso-de-uso')
 export class CasoUsoController {
   constructor(private readonly casoUsoService: CasoUsoService) {}
 
@@ -31,8 +33,9 @@ export class CasoUsoController {
     @Query('requisito') requisito: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
+    @ProjetoAtual() projeto: Projeto,
   ) {
-    return this.casoUsoService.findAll(requisito, page, pageSize);
+    return this.casoUsoService.findAll(requisito, page, pageSize, projeto);
   }
 
   // TODO fazer o DTO da resposta aqui e ver se o service retorna certo
@@ -98,8 +101,11 @@ export class CasoUsoController {
     type: CreateCasoUsoDto,
   })
   @Post('new')
-  create(@Body() createCasoUsoDto: CreateCasoUsoDto) {
-    return this.casoUsoService.create(createCasoUsoDto);
+  create(
+    @Body() createCasoUsoDto: CreateCasoUsoDto,
+    @Query('requisito') requisitoId: number,
+  ) {
+    return this.casoUsoService.create(createCasoUsoDto, requisitoId);
   }
 
   @ApiResponse({

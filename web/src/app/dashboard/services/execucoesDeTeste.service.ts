@@ -54,4 +54,13 @@ export class ExecucaoDeTesteService {
       `${this.servicesRootUrl}/execucao-de-teste`
     );
   }
+
+  getGrafico(suiteId?: number): Observable<any> {
+    return this.httpClient.get<any>(
+      `${this.servicesRootUrl}/execucao-de-teste/grafico`,
+      {
+        params: suiteId ? { suiteId: suiteId.toString() } : {},
+      }
+    );
+  }
 }

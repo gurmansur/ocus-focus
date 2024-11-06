@@ -17,7 +17,6 @@ import {
   ECategoria,
   EComplexidade,
   EPrioridade,
-  EStatus,
   ETecnica,
 } from '../../models/casoDeTeste';
 import { casoUso } from '../../models/casoUso';
@@ -25,6 +24,8 @@ import { Colaborador } from '../../models/colaborador';
 import { PlanoDeTeste } from '../../models/planoDeTeste';
 import { SuiteDeTeste } from '../../models/suiteDeTeste';
 import { CasoDeTesteService } from '../../services/casoDeTeste.service';
+import { CasoUsoService } from '../../services/casoUso.service';
+import { ProjetoService } from '../../services/projeto.service';
 
 @Component({
   selector: 'app-arcatest-casos-form',
@@ -59,13 +60,16 @@ export class ArcatestCasosFormComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private casoDeTesteService: CasoDeTesteService
+    private readonly casoDeTesteService: CasoDeTesteService,
+    private readonly casoDeUsoService: CasoUsoService,
+    private readonly projetoService: ProjetoService
   ) {
     this.projectId = this.route.parent?.snapshot.params['id'];
     this.idCaso = this.route.snapshot.params['idCaso'];
     this.isEdit = !!this.idCaso;
 
-    // this.casoDeTeste = this.mockupData[this.idCaso - 1];
+    this.getCasosDeUso();
+    this.getColaboradores();
   }
 
   navigateToArcaTest() {
@@ -74,6 +78,22 @@ export class ArcatestCasosFormComponent {
       this.projectId,
       'painel-arcatest',
     ]);
+  }
+
+  getCasosDeUso() {
+    this.casoDeUsoService.list().subscribe({
+      next: (casos) => {
+        this.casosDeUso = casos.items;
+      },
+    });
+  }
+
+  getColaboradores() {
+    this.projetoService.getColaboradoresByProjeto(this.projectId).subscribe({
+      next: (colaboradores) => {
+        this.testadores = colaboradores.items;
+      },
+    });
   }
 
   createTestCase() {
@@ -122,10 +142,6 @@ export class ArcatestCasosFormComponent {
       ),
       tecnica: new FormControl(
         this.casoDeTeste?.tecnica || ETecnica.FUNCIONAL,
-        Validators.required
-      ),
-      status: new FormControl(
-        this.casoDeTeste?.status || EStatus.ATIVO,
         Validators.required
       ),
       metodo: new FormControl(
@@ -182,10 +198,6 @@ export class ArcatestCasosFormComponent {
 
   get tecnica() {
     return this.casoDeTesteFormGroup.get('tecnica');
-  }
-
-  get status() {
-    return this.casoDeTesteFormGroup.get('status');
   }
 
   get suite() {

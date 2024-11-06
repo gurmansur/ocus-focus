@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { RequisitoService } from '../requisito/requisito-funcional.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';
 import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
@@ -14,18 +15,36 @@ export class CasoUsoService {
     @Inject() private readonly requisitosService: RequisitoService,
   ) {}
 
-  async create(createCasoUsoDto: CreateCasoUsoDto) {
+  async create(createCasoUsoDto: CreateCasoUsoDto, requisitoId: number) {
     const casoUso = this.casoUsoRepository.create(createCasoUsoDto);
+    const requisito = await this.requisitosService.getById(requisitoId);
+
+    if (!requisito)
+      throw new HttpException('Requisito não encontrado', HttpStatus.NOT_FOUND);
+
+    casoUso.requisitoFuncional = requisito;
+
     return await this.casoUsoRepository.save(casoUso);
   }
 
-  async findAll(requisitoId: number, page = 0, pageSize = 10) {
-    const take = pageSize ? pageSize : 10;
-    const skip = page ? page * take : 0;
+  async findAll(
+    requisitoId: number,
+    page: number,
+    pageSize: number,
+    projeto: Projeto,
+  ) {
+    const take = pageSize ? pageSize : undefined;
+    const skip = page ? page * take : undefined;
     const [items, count] = await this.casoUsoRepository.findAndCount({
-      where: { requisitoFuncional: { id: requisitoId } },
-      take,
-      skip,
+      where: {
+        requisitoFuncional: {
+          id: requisitoId ? requisitoId : undefined,
+          projeto: projeto,
+        },
+      },
+      relations: ['requisitoFuncional', 'requisitoFuncional.projeto'],
+      take: !!take ? take : undefined,
+      skip: !!skip ? skip : undefined,
     });
 
     return {
@@ -61,16 +80,18 @@ export class CasoUsoService {
     }
   }
 
-  getMetrics(
+  async getMetrics(
     requisitoFuncional: number,
     option?: 'SIMPLES' | 'MEDIO' | 'COMPLEXO',
   ) {
-    return this.casoUsoRepository.count({
-      where: {
-        requisitoFuncional: { id: requisitoFuncional },
-        complexidade: option,
-      },
-    });
+    return {
+      totalCount: await this.casoUsoRepository.count({
+        where: {
+          requisitoFuncional: { id: requisitoFuncional },
+          complexidade: option,
+        },
+      }),
+    };
   }
 
   async update(

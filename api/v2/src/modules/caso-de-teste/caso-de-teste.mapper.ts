@@ -1,4 +1,5 @@
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
+import { ColaboradorMapper } from '../colaborador/colaborador.mapper';
 import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { SuiteDeTeste } from '../suite-de-teste/entities/suite-de-teste.entity';
 import { SuiteDeTesteMapper } from '../suite-de-teste/suite-de-teste.mapper';
@@ -123,7 +124,9 @@ export class CasoDeTesteMapper {
     bo.suiteDeTeste = entity.suiteDeTeste
       ? SuiteDeTesteMapper.entityToBo(entity.suiteDeTeste)
       : null;
-    bo.testadorDesignado = entity.testadorDesignado;
+    bo.testadorDesignado = entity.testadorDesignado
+      ? ColaboradorMapper.fromEntityToBo(entity.testadorDesignado)
+      : null;
     bo.projeto = entity.projeto;
 
     return bo;
@@ -147,7 +150,9 @@ export class CasoDeTesteMapper {
     dto.dadosEntrada = bo.dadosEntrada;
     dto.casoDeUso = bo.casoDeUso;
     dto.suiteDeTeste = bo.suiteDeTeste;
-    dto.testadorDesignado = bo.testadorDesignado;
+    dto.testadorDesignado = bo.testadorDesignado
+      ? ColaboradorMapper.fromBoToDto(bo.testadorDesignado)
+      : null;
     dto.projeto = bo.projeto;
 
     return dto;

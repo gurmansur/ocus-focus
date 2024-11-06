@@ -14,6 +14,7 @@ import { CasoDeTeste } from '../../models/casoDeTeste';
 import { FileTree } from '../../models/fileTree';
 import { SuiteDeTeste } from '../../models/suiteDeTeste';
 import { CasoDeTesteService } from '../../services/casoDeTeste.service';
+import { ExecucaoDeTesteService } from '../../services/execucoesDeTeste.service';
 import { SuiteDeTesteService } from '../../services/suiteDeTeste.service';
 import { TestSuiteIconComponent } from '../painel-arcatest/components/test-suite-icon/test-suite-icon.component';
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
@@ -46,10 +47,10 @@ export class ArcatestFileTreeComponent {
   openCoverage: boolean = false;
   fileTreeNodes: TreeNode[] = [];
   @ViewChild('contextMenu') contextMenu!: ContextMenu;
-  passed = { value: 5, percentage: 50 };
-  failed = { value: 3, percentage: 30 };
-  pending = { value: 2, percentage: 20 };
-  selectedNode!: TreeNode;
+  passed?: number = 0;
+  failed?: number = 0;
+  pending?: number = 0;
+  selectedNode?: TreeNode;
   deleteTitle!: string;
   deleteMessage!: string;
   displaySidebar: boolean = false;
@@ -86,6 +87,7 @@ export class ArcatestFileTreeComponent {
     @Inject(SuiteDeTesteService)
     private suiteDeTesteService: SuiteDeTesteService,
     private casoDeTesteService: CasoDeTesteService,
+    private execucaoDeTesteService: ExecucaoDeTesteService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -94,6 +96,27 @@ export class ArcatestFileTreeComponent {
     this.projectId = this.route.parent?.snapshot.params['id'];
 
     this.getFileTree();
+  }
+
+  onShowDetails(event: any) {
+    console.log(this.selectedNode);
+    this.displaySidebar = true;
+    if (this.selectedNode?.type === 'suite') {
+      this.execucaoDeTesteService
+        .getGrafico(this.selectedNode?.data.id)
+        .subscribe({
+          next: (response) => {
+            this.passed = response['SUCESSO'] || 0;
+            this.failed = response['FALHA'] || 0;
+            this.pending = response['PENDENTE'] || 0;
+          },
+        });
+    }
+  }
+
+  onHideDetails(event: any) {
+    this.selectedNode = undefined;
+    this.displaySidebar = false;
   }
 
   @HostListener('document:auxclick', ['$event'])
@@ -111,22 +134,22 @@ export class ArcatestFileTreeComponent {
           label: 'Editar',
           icon: 'hero-icon hero-pencil',
           command: (event: any) => {
-            if (this.selectedNode.type === 'suite') {
+            if (this.selectedNode?.type === 'suite') {
               this.router.navigate([
                 '/dashboard/projeto/',
                 this.projectId,
                 'painel-arcatest',
                 'suites-teste',
-                this.selectedNode.data.id,
+                this.selectedNode?.data.id,
                 'editar',
               ]);
-            } else if (this.selectedNode.type === 'case') {
+            } else if (this.selectedNode?.type === 'case') {
               this.router.navigate([
                 '/dashboard/projeto/',
                 this.projectId,
                 'painel-arcatest',
                 'casos-teste',
-                this.selectedNode.data.id,
+                this.selectedNode?.data.id,
                 'editar',
               ]);
             }
@@ -153,7 +176,7 @@ export class ArcatestFileTreeComponent {
                 'criar',
               ],
               {
-                queryParams: { suiteId: this.selectedNode.data.id },
+                queryParams: { suiteId: this.selectedNode?.data.id },
                 queryParamsHandling: 'merge',
               }
             );
@@ -174,9 +197,9 @@ export class ArcatestFileTreeComponent {
               {
                 queryParams: {
                   suiteId:
-                    this.selectedNode.type === 'suite'
-                      ? this.selectedNode.data.id
-                      : this.selectedNode.data.suiteDeTesteId,
+                    this.selectedNode?.type === 'suite'
+                      ? this.selectedNode?.data.id
+                      : this.selectedNode?.data.suiteDeTesteId,
                 },
                 queryParamsHandling: 'merge',
               }
@@ -311,16 +334,16 @@ export class ArcatestFileTreeComponent {
   }
 
   deleteSelected() {
-    if (this.selectedNode.type === 'suite') {
+    if (this.selectedNode?.type === 'suite') {
       this.suiteDeTesteService
-        .delete(this.selectedNode.data.id)
+        .delete(this.selectedNode?.data.id)
         .subscribe(() => {
           this.getFileTree();
           this.openDelete = false;
         });
-    } else if (this.selectedNode.type === 'case') {
+    } else if (this.selectedNode?.type === 'case') {
       this.casoDeTesteService
-        .delete(this.selectedNode.data.id)
+        .delete(this.selectedNode?.data.id)
         .subscribe(() => {
           this.getFileTree();
           this.openDelete = false;
@@ -330,17 +353,24 @@ export class ArcatestFileTreeComponent {
 
   openDeleteModal() {
     this.deleteTitle = `Excluir ${
-      this.selectedNode.type === 'suite' ? 'Suite' : 'Caso de Teste'
+      this.selectedNode?.type === 'suite' ? 'Suite' : 'Caso de Teste'
     }`;
     this.deleteMessage = `Tem certeza que deseja excluir ${
-      this.selectedNode.type === 'suite' ? 'a Suite' : 'o Caso de Teste'
-    } "${this.selectedNode.data.nome}"?`;
+      this.selectedNode?.type === 'suite' ? 'a Suite' : 'o Caso de Teste'
+    } "${this.selectedNode?.data.nome}"?`;
 
     this.openDelete = true;
   }
 
   openCoverageModal() {
-    this.openCoverage = true;
+    this.execucaoDeTesteService.getGrafico().subscribe({
+      next: (response) => {
+        this.passed = response['SUCESSO'] || 0;
+        this.failed = response['FALHA'] || 0;
+        this.pending = response['PENDENTE'] || 0;
+        this.openCoverage = true;
+      },
+    });
   }
 
   closeCoverageModal() {
