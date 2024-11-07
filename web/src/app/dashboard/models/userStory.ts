@@ -12,7 +12,7 @@ export class UserStory {
 
     public criador: number = -1,
 
-    public responsavel: number = -1,
+    public responsavel: number | string = -1,
 
     public swimlane: number = -1,
 

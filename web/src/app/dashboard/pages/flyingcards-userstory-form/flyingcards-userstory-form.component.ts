@@ -99,7 +99,7 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
         this.userStory.descricao || '',
         Validators.required
       ),
-      responsavel: new FormControl<number>(
+      responsavel: new FormControl<number | string>(
         this.userStory?.responsavel || -1,
         Validators.required
       ),
@@ -146,7 +146,6 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
   }
 
   deletarUserStory() {
-    console.log('clicou aqui');
     this.kanbanService.deletarUserStory(this.usId).subscribe({
       next: () => this.navigateToKanban(),
     });

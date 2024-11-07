@@ -15,17 +15,29 @@
         <app-plus-icon></app-plus-icon>
         Adicionar User Story
       </app-button>
+      <app-button (click)="navigateToCreateSwimlane()">
+        <app-plus-icon></app-plus-icon>
+        Adicionar Swimlane
+      </app-button>
     </div>
   </div>
 
   <div class="flex flex-grow overflow-x-auto" cdkDropListGroup>
     @if (board.swimlanes.length > 0) {
     <div
-      class="flex flex-col flex-grow min-w-fit min-h-fit my-10 mx-2 p-5 border-r-4 bg-violet-700 rounded-sm"
+      class="flex flex-col flex-grow min-w-fit min-h-fit my-10 mx-2 p-5 bg-violet-700 border-r-4 rounded-sm"
+      [ngStyle]="{ color: swimlane.cor }"
       *ngFor="let swimlane of board.swimlanes"
     >
-      <div class="text-lg font-bold uppercase mb-5 text-white">
-        {{ swimlane.nome }}
+      <div class="flex text-lg font-bold uppercase mb-5 justify-between">
+        <span class="text-white">{{ swimlane.nome }}</span>
+
+        <app-button
+          class="bg-gray-400 p-1 rounded-sm text-white"
+          (click)="navigateToEditSwimlane(swimlane.id!)"
+        >
+          <app-gear-icon></app-gear-icon>
+        </app-button>
       </div>
 
       <div
@@ -37,7 +49,7 @@
         <div
           class="bg-white flex flex-col p-4 border-b-2 border-b-violet-400 gap-4 cursor-pointer"
           *ngFor="let item of swimlane.userStories"
-          (click)="navigateToEdit(item.id)"
+          (click)="navigateToEditUserStory(item.id)"
           cdkDrag
         >
           <h2 class="font-bold">{{ item.titulo }}</h2>

@@ -1,20 +1,11 @@
-import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
-import { Kanban } from '../entities/kanban.entity';
+import { IsString } from 'class-validator';
 
 export class SwimlaneDto {
-  id: number;
-
+  @IsString()
   nome: string;
 
-  vertical: boolean;
-
+  @IsString()
   cor: string;
 
-  criadoEm: Date;
-
-  atualizadoEm: Date;
-
-  kanban: Kanban;
-
-  userStories: UserStory[];
+  kanban: number;
 }

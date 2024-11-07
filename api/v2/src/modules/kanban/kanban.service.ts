@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { UserStoryService } from '../user-story/user-story.service';
+import { SwimlaneDto } from './dto/swimlane.dto';
+import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';
 import { Kanban } from './entities/kanban.entity';
 import { Swimlane } from './entities/swimlane.entity';
 
@@ -85,12 +87,44 @@ export class KanbanService {
     return kanban.id;
   }
 
-  async findOneSwimlane(kanbanId: number) {
+  async findOneSwimlane(id: number) {
     return await this.swimlaneRepository.findOne({
       where: {
-        kanban: { id: kanbanId },
+        id,
       },
     });
+  }
+
+  async updateSwimlane(id: number, swimlaneDto: UpdateSwimlaneDto) {
+    const kanban = await this.kanbanRepository.findOne({
+      where: {
+        id: swimlaneDto.kanban,
+      },
+    });
+
+    return await this.swimlaneRepository.update(id, {
+      ...swimlaneDto,
+      kanban: kanban,
+    });
+  }
+
+  async deleteSwimlane(id: number) {
+    return await this.swimlaneRepository.delete(id);
+  }
+
+  async createSwimlane(swimlane: SwimlaneDto) {
+    const kanban = await this.kanbanRepository.findOne({
+      where: {
+        id: swimlane.kanban,
+      },
+    });
+
+    const swimlaneCreated = this.swimlaneRepository.create({
+      ...swimlane,
+      kanban,
+    });
+
+    return await this.swimlaneRepository.save(swimlaneCreated);
   }
 
   async createKanban(projeto: Projeto) {

@@ -21,6 +21,7 @@ import { FatoresAmbientaisComponent } from './pages/fatores-ambientais/fatores-a
 import { FatoresTecnicosComponent } from './pages/fatores-tecnicos/fatores-tecnicos.component';
 import { FlyingcardsKanbanComponent } from './pages/flyingcards-kanban/flyingcards-kanban.component';
 import { FlyingcardsSprintsComponent } from './pages/flyingcards-sprints/flyingcards-sprints.component';
+import { FlyingcardsSwimlaneFormComponent } from './pages/flyingcards-swimlane-form/flyingcards-swimlane-form.component';
 import { FlyingcardsUserstoryFormComponent } from './pages/flyingcards-userstory-form/flyingcards-userstory-form.component';
 import { InserirAtoresComponent } from './pages/inserir-atores/inserir-atores.component';
 import { InserirCasoComponent } from './pages/inserir-caso/inserir-caso.component';
@@ -310,9 +311,27 @@ const routes: Routes = [
         canActivate: [colaboradorGuard],
       },
 
+      // Flying Cards - Editar User Story
+
       {
         path: 'projeto/:id/kanban/editar-us/:usId',
         component: FlyingcardsUserstoryFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      // Flying Cards - Criar Swimlane
+
+      {
+        path: 'projeto/:id/kanban/swimlane/new',
+        component: FlyingcardsSwimlaneFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      // Flying Cards - Editar Swimlane
+
+      {
+        path: 'projeto/:id/kanban/swimlane/edit/:swimlaneId',
+        component: FlyingcardsSwimlaneFormComponent,
         canActivate: [colaboradorGuard],
       },
 

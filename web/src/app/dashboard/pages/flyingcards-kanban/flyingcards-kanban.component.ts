@@ -6,7 +6,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { NgFor } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
@@ -35,6 +35,7 @@ import { FlyingcardsTaskModalComponent } from '../painel-flyingcards/flyingcards
     ModalComponent,
     GearIconComponent,
     FlyingcardsTaskModalComponent,
+    CommonModule,
   ],
   templateUrl: './flyingcards-kanban.component.html',
   styleUrl: './flyingcards-kanban.component.css',
@@ -79,6 +80,28 @@ export class FlyingcardsKanbanComponent implements OnInit {
     ]);
   }
 
+  navigateToCreateSwimlane() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'kanban',
+      'swimlane',
+      'new',
+    ]);
+  }
+
+  navigateToEditSwimlane(swimlaneId: number) {
+    console.log('clicou aqui');
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'kanban',
+      'swimlane',
+      'edit',
+      swimlaneId,
+    ]);
+  }
+
   ngOnInit(): void {
     this.kanbanService
       .getBoardFromProject(this.projectId.toString())
@@ -104,9 +127,7 @@ export class FlyingcardsKanbanComponent implements OnInit {
 
   private processarBoard() {
     return (data: any) => {
-      console.log(data);
       this.board = data;
-      console.log(this.board);
     };
   }
 
@@ -119,7 +140,7 @@ export class FlyingcardsKanbanComponent implements OnInit {
     ]);
   }
 
-  navigateToEdit(usId: number = -1) {
+  navigateToEditUserStory(usId: number = -1) {
     this.router.navigate([
       'dashboard/projeto/',
       this.projectId,

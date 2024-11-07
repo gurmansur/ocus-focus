@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Board } from '../models/board';
+import { Swimlane } from '../models/swimlane';
 import { UserStory } from '../models/userStory';
 
 @Injectable({
@@ -60,6 +61,37 @@ export class KanbanService {
     );
   }
 
+  createSwimlane(swimlane: Swimlane): Observable<Swimlane> {
+    return this.httpClient.post<Swimlane>(
+      `${this.servicesRootUrl}/kanban/swimlane`,
+      swimlane
+    );
+  }
+
+  findSwimlane(id: number) {
+    return this.httpClient.get<IEditSwimlane>(
+      `${this.servicesRootUrl}/kanban/swimlane?id=${id}`
+    );
+  }
+
+  updateSwimlane(id: number, swimlane: IEditSwimlane) {
+    return this.httpClient.patch<EditUserstory>(
+      `${this.servicesRootUrl}/kanban/swimlane/${id}`,
+      swimlane
+    );
+  }
+
+  deleteSwimlane(id: number) {
+    return this.httpClient.delete<Swimlane>(
+      `${this.servicesRootUrl}/kanban/swimlane/${id}`,
+      {
+        headers: {
+          Authorization: 'Bearer: ' + localStorage.getItem('token'),
+        },
+      }
+    );
+  }
+
   getKanbanId(projeto: number): Observable<number> {
     return this.httpClient.get<number>(
       `${this.servicesRootUrl}/kanban/id?projeto=${projeto}`
@@ -81,6 +113,12 @@ export class KanbanService {
 interface ISelectSwimlane {
   id: number;
   nome: string;
+}
+
+interface IEditSwimlane {
+  nome: string;
+  cor: string;
+  kanban: number;
 }
 
 interface EditUserstory {
