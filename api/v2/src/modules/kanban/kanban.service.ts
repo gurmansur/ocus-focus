@@ -92,4 +92,10 @@ export class KanbanService {
       },
     });
   }
+
+  async createKanban(projeto: Projeto) {
+    const kanban = this.kanbanRepository.create({ projeto: projeto });
+
+    return await this.kanbanRepository.save(kanban);
+  }
 }

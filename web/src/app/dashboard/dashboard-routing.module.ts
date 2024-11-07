@@ -33,7 +33,6 @@ import { InserirRequisitoComponent } from './pages/inserir-requisito/inserir-req
 import { InserirStakeholderComponent } from './pages/inserir-stakeholder/inserir-stakeholder.component';
 import { PainelArcatestComponent } from './pages/painel-arcatest/painel-arcatest.component';
 import { PainelEstimaComponent } from './pages/painel-estima/painel-estima.component';
-import { PainelFlyingcardsComponent } from './pages/painel-flyingcards/painel-flyingcards.component';
 import { PainelPrioreasyComponent } from './pages/painel-prioreasy/painel-prioreasy.component';
 import { PainelStakeholderComponent } from './pages/painel-stakeholder/painel-stakeholder.component';
 import { PriorizarRequisitosComponent } from './pages/priorizar-requisitos/priorizar-requisitos.component';
@@ -295,14 +294,6 @@ const routes: Routes = [
         ],
       },
 
-      // Flying Cards - Painel
-
-      {
-        path: 'projeto/:id/painel-flyingcards',
-        component: PainelFlyingcardsComponent,
-        canActivate: [colaboradorGuard],
-      },
-
       // Flying Cards - Kanban
 
       {
@@ -315,6 +306,12 @@ const routes: Routes = [
 
       {
         path: 'projeto/:id/kanban/criar-us',
+        component: FlyingcardsUserstoryFormComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      {
+        path: 'projeto/:id/kanban/editar-us/:usId',
         component: FlyingcardsUserstoryFormComponent,
         canActivate: [colaboradorGuard],
       },

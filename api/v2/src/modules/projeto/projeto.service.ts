@@ -4,6 +4,7 @@ import { Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { ColaboradorProjetoService } from '../colaborador-projeto/colaborador-projeto.service';
 import { ColaboradorService } from '../colaborador/colaborador.service';
 import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
+import { KanbanService } from '../kanban/kanban.service';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { Projeto } from './entities/projeto.entity';
@@ -17,12 +18,16 @@ export class ProjetoService {
     private colaboradorProjetoService: ColaboradorProjetoService,
     @Inject()
     private colaboradorService: ColaboradorService,
+    @Inject()
+    private kanbanService: KanbanService,
   ) {}
 
   async create(createProjetoDto: CreateProjetoDto, user: number) {
     const projeto = await this.projetoRepository.save(createProjetoDto);
 
     const colaborador = await this.colaboradorService.findOne(user);
+
+    this.kanbanService.createKanban(projeto);
 
     return this.colaboradorProjetoService.create({
       colaborador: colaborador,

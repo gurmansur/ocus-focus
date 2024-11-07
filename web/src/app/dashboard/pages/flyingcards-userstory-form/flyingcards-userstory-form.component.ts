@@ -39,6 +39,10 @@ import { KanbanService } from '../../services/kanban.service';
 export class FlyingcardsUserstoryFormComponent implements OnInit {
   private projectId: number;
   private kanbanId: number = -1;
+
+  isEdit: boolean = false;
+  usId: number = -1;
+
   userStoryFormGroup: any;
   criador = Number(localStorage.getItem('usu_id'));
   userStory: UserStory;
@@ -54,6 +58,8 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     private kanbanService: KanbanService
   ) {
     this.projectId = parseInt(this.route.snapshot.params['id']);
+    this.isEdit = this.route.snapshot.params['usId'] ? true : false;
+    if (this.isEdit) this.usId = parseInt(this.route.snapshot.params['usId']);
     this.userStory = new UserStory();
   }
 
@@ -68,8 +74,6 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
         this.usuarios = colaboradores;
       });
 
-    console.log(this.usuarios);
-
     this.kanbanService
       .getSwimlaneFromProject(this.projectId)
       .subscribe((swimlanes) => {
@@ -80,12 +84,20 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
       this.kanbanId = kanban;
     });
 
+    if (this.isEdit) {
+      this.kanbanService.findUserStory(this.usId).subscribe((userStory) => {
+        console.log(userStory);
+        this.userStoryFormGroup.patchValue(userStory);
+        console.log(this.userStory);
+      });
+    }
+
     this.userStoryFormGroup = this.formBuilder.group({
-      titulo: new FormControl(
+      titulo: new FormControl<string>(
         this.userStory?.titulo || '',
         Validators.required
       ),
-      descricao: new FormControl(
+      descricao: new FormControl<string>(
         this.userStory.descricao || '',
         Validators.required
       ),
@@ -104,29 +116,56 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     });
   }
 
-  createUserStory() {
-    const newUserStory = {
-      ...this.userStoryFormGroup.value,
-      projeto: +this.projectId,
-      criador: +this.criador,
-      kanban: +this.kanbanId,
-    };
+  handleUserStory() {
+    if (!this.isEdit) {
+      const newUserStory = {
+        ...this.userStoryFormGroup.value,
+        projeto: +this.projectId,
+        criador: +this.criador,
+        kanban: +this.kanbanId,
+      };
 
-    console.log(newUserStory);
+      console.log(newUserStory);
 
-    this.kanbanService
-      .createUserStory(newUserStory)
-      .subscribe({ next: () => this.navigateToKanban() });
+      this.kanbanService
+        .createUserStory(newUserStory)
+        .subscribe({ next: () => this.navigateToKanban() });
+    } else {
+      let editedUserStory: EditUserstory = {
+        ...this.userStoryFormGroup.value,
+        projeto: +this.projectId,
+        criador: +this.criador,
+        kanban: +this.kanbanId,
+      };
+
+      editedUserStory.responsavel = editedUserStory.responsavel.toString();
+      editedUserStory.swimlane = editedUserStory.swimlane.toString();
+      editedUserStory.estimativa_tempo =
+        editedUserStory.estimativa_tempo.toString();
+
+      console.log(editedUserStory);
+
+      this.kanbanService.updateUserStory(this.usId, editedUserStory).subscribe({
+        next: () => this.navigateToKanban(),
+      });
+    }
   }
 
-  // addMembro(event: Event): void {
-  //   const nome = (event.target as HTMLSelectElement).value;
-
-  //   this.membrosEscolhidos.push(nome);
-  // }
+  deletarUserStory() {}
 }
 
 interface ISelectSwimlane {
   id: number;
   nome: string;
+}
+
+interface EditUserstory {
+  titulo: string;
+  descricao: string;
+  responsavel: string;
+  estimativa_tempo: string;
+  swimlane: string;
+  projeto: number;
+  criador: number;
+  kanban: number;
 }

@@ -46,8 +46,19 @@ export class UserStoryService {
     return response;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userStory`;
+  async findOne(id: number) {
+    const us = await this.userStoryRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['swimlane', 'responsavel'],
+    });
+
+    return {
+      ...us,
+      responsavel: us.responsavel.id,
+      swimlane: us.swimlane.id,
+    };
   }
 
   async findFromSwimlane(swimlane: number) {
@@ -103,8 +114,53 @@ export class UserStoryService {
     return await this.userStoryRepository.save(userStoryCreated);
   }
 
-  update(id: number, updateUserStoryDto: UpdateUserStoryDto) {
-    return `This action updates a #${id} userStory`;
+  async update(id: number, updateUserStoryDto: UpdateUserStoryDto) {
+    const criador = await this.colaboradorRepository.findOne({
+      where: {
+        id: updateUserStoryDto.criador,
+      },
+    });
+
+    const responsavel = await this.colaboradorRepository.findOne({
+      where: {
+        id: parseInt(updateUserStoryDto.responsavel),
+      },
+    });
+
+    const projeto = await this.projetoRepository.findOne({
+      where: {
+        id: updateUserStoryDto.projeto,
+      },
+    });
+
+    const kanban = await this.kanbanRepository.findOne({
+      where: {
+        id: updateUserStoryDto.kanban,
+      },
+    });
+
+    const swimlane = await this.swimlaneRepository.findOne({
+      where: {
+        id: parseInt(updateUserStoryDto.swimlane),
+      },
+    });
+
+    const userStory = {
+      titulo: updateUserStoryDto.titulo,
+      descricao: updateUserStoryDto.descricao,
+      estimativa_tempo: parseInt(updateUserStoryDto.estimativa_tempo),
+      responsavel: responsavel,
+      criador: criador,
+      swimlane: swimlane,
+      projeto: projeto,
+      kanban: kanban,
+    };
+
+    const result = await this.userStoryRepository.update(id, userStory);
+
+    console.log(result);
+
+    return;
   }
 
   remove(id: number) {

@@ -10,10 +10,6 @@ export class UserStory {
 
     public modificado_em: string = '',
 
-    public comentarios: string[] = [''],
-
-    public prazo: string = new Date().toISOString().split('T')[0],
-
     public criador: number = -1,
 
     public responsavel: number = -1,

@@ -42,9 +42,27 @@ export class KanbanService {
     );
   }
 
+  updateUserStory(id: number, userStory: EditUserstory) {
+    return this.httpClient.patch<EditUserstory>(
+      `${this.servicesRootUrl}/user-story/${id}`,
+      userStory
+    );
+  }
+
   getKanbanId(projeto: number): Observable<number> {
     return this.httpClient.get<number>(
       `${this.servicesRootUrl}/kanban/id?projeto=${projeto}`
+    );
+  }
+
+  findUserStory(id: number): Observable<UserStory> {
+    return this.httpClient.get<UserStory>(
+      `${this.servicesRootUrl}/user-story/${id}`,
+      {
+        headers: {
+          Authorization: 'Bearer: ' + localStorage.getItem('token'),
+        },
+      }
     );
   }
 }
@@ -52,4 +70,15 @@ export class KanbanService {
 interface ISelectSwimlane {
   id: number;
   nome: string;
+}
+
+interface EditUserstory {
+  titulo: string;
+  descricao: string;
+  responsavel: string;
+  estimativa_tempo: string;
+  swimlane: string;
+  projeto: number;
+  criador: number;
+  kanban: number;
 }

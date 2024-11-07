@@ -19,6 +19,7 @@ import { Projeto } from '../../models/projeto';
 import { UserStory } from '../../models/userStory';
 import { KanbanService } from '../../services/kanban.service';
 import { ProjetoService } from '../../services/projeto.service';
+import { FlyingcardsTaskModalComponent } from '../painel-flyingcards/flyingcards-task-modal/flyingcards-task-modal.component';
 
 @Component({
   selector: 'app-flyingcards-kanban',
@@ -33,6 +34,7 @@ import { ProjetoService } from '../../services/projeto.service';
     ButtonComponent,
     ModalComponent,
     GearIconComponent,
+    FlyingcardsTaskModalComponent,
   ],
   templateUrl: './flyingcards-kanban.component.html',
   styleUrl: './flyingcards-kanban.component.css',
@@ -114,6 +116,16 @@ export class FlyingcardsKanbanComponent implements OnInit {
       this.projectId,
       'kanban',
       'sprints',
+    ]);
+  }
+
+  navigateToEdit(usId: number = -1) {
+    this.router.navigate([
+      'dashboard/projeto/',
+      this.projectId,
+      'kanban',
+      'editar-us',
+      usId,
     ]);
   }
 }

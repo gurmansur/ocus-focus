@@ -34,8 +34,26 @@
         [cdkDropListData]="swimlane.userStories"
         (cdkDropListDropped)="drop($event)"
       >
-        <div class="task" *ngFor="let item of swimlane.userStories" cdkDrag>
-          {{ item.titulo }}
+        <div
+          class="bg-white flex flex-col p-4 border-b-2 border-b-violet-400 gap-4 cursor-pointer"
+          *ngFor="let item of swimlane.userStories"
+          (click)="navigateToEdit(item.id)"
+          cdkDrag
+        >
+          <h2 class="font-bold">{{ item.titulo }}</h2>
+
+          <br />
+
+          <span>{{ item.descricao }}</span>
+
+          <div class="flex gap-2">
+            <span class="text-sm bg-green-200 rounded-sm p-1"
+              >Est. Tempo: {{ item.estimativa_tempo }}h</span
+            >
+            <span class="text-sm bg-green-200 rounded-sm p-1"
+              >Responsável: {{ item.responsavel }}</span
+            >
+          </div>
         </div>
       </div>
     </div>
