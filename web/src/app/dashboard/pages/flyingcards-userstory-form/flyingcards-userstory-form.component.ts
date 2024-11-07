@@ -86,9 +86,7 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
 
     if (this.isEdit) {
       this.kanbanService.findUserStory(this.usId).subscribe((userStory) => {
-        console.log(userStory);
         this.userStoryFormGroup.patchValue(userStory);
-        console.log(this.userStory);
       });
     }
 
@@ -125,8 +123,6 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
         kanban: +this.kanbanId,
       };
 
-      console.log(newUserStory);
-
       this.kanbanService
         .createUserStory(newUserStory)
         .subscribe({ next: () => this.navigateToKanban() });
@@ -143,15 +139,18 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
       editedUserStory.estimativa_tempo =
         editedUserStory.estimativa_tempo.toString();
 
-      console.log(editedUserStory);
-
       this.kanbanService.updateUserStory(this.usId, editedUserStory).subscribe({
         next: () => this.navigateToKanban(),
       });
     }
   }
 
-  deletarUserStory() {}
+  deletarUserStory() {
+    console.log('clicou aqui');
+    this.kanbanService.deletarUserStory(this.usId).subscribe({
+      next: () => this.navigateToKanban(),
+    });
+  }
 }
 
 interface ISelectSwimlane {

@@ -49,6 +49,17 @@ export class KanbanService {
     );
   }
 
+  deletarUserStory(id: number) {
+    return this.httpClient.delete<UserStory>(
+      `${this.servicesRootUrl}/user-story/${id}`,
+      {
+        headers: {
+          Authorization: 'Bearer: ' + localStorage.getItem('token'),
+        },
+      }
+    );
+  }
+
   getKanbanId(projeto: number): Observable<number> {
     return this.httpClient.get<number>(
       `${this.servicesRootUrl}/kanban/id?projeto=${projeto}`

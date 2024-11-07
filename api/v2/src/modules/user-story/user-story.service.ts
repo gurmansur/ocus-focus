@@ -163,7 +163,7 @@ export class UserStoryService {
     return;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userStory`;
+  async remove(id: number) {
+    return await this.userStoryRepository.delete(id);
   }
 }
