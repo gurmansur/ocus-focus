@@ -2,8 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Projeto } from '../projeto/entities/projeto.entity';
+import { UserStory } from '../user-story/entities/user-story.entity';
 import { UserStoryService } from '../user-story/user-story.service';
 import { SwimlaneDto } from './dto/swimlane.dto';
+import { UpdateSwimlaneUsDto } from './dto/update-swimlane-us.dto';
 import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';
 import { Kanban } from './entities/kanban.entity';
 import { Swimlane } from './entities/swimlane.entity';
@@ -18,6 +20,8 @@ export class KanbanService {
     @InjectRepository(Swimlane)
     private readonly swimlaneRepository: Repository<Swimlane>,
     @Inject() private readonly userStoryService: UserStoryService,
+    @InjectRepository(UserStory)
+    private readonly userStoryRepository: Repository<UserStory>,
   ) {}
 
   async findBoard(projetoId: number) {
@@ -96,6 +100,7 @@ export class KanbanService {
   }
 
   async updateSwimlane(id: number, swimlaneDto: UpdateSwimlaneDto) {
+    console.log(swimlaneDto);
     const kanban = await this.kanbanRepository.findOne({
       where: {
         id: swimlaneDto.kanban,
@@ -106,6 +111,32 @@ export class KanbanService {
       ...swimlaneDto,
       kanban: kanban,
     });
+  }
+
+  async updateSwimlaneUserStories(swimlaneDto: UpdateSwimlaneUsDto) {
+    const swimlane = await this.swimlaneRepository.findOne({
+      where: {
+        id: swimlaneDto.id,
+      },
+    });
+
+    const userStories = await Promise.all(
+      swimlaneDto.userStories.map(async (userStory) => {
+        const us = await this.userStoryRepository.findOne({
+          where: {
+            id: userStory,
+          },
+        });
+
+        us.swimlane = swimlane;
+
+        this.userStoryRepository.update(us.id, us);
+
+        return us;
+      }),
+    );
+
+    console.log(userStories);
   }
 
   async deleteSwimlane(id: number) {

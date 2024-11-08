@@ -81,6 +81,20 @@ export class KanbanService {
     );
   }
 
+  updateUserStoriesInSwimlane(
+    swimlane: IUpdateUserStorySwimlane
+  ): Observable<any> {
+    return this.httpClient.patch<IUpdateUserStorySwimlane>(
+      `${this.servicesRootUrl}/kanban/user-story/update`,
+      swimlane,
+      {
+        headers: {
+          Authorization: 'Bearer: ' + localStorage.getItem('token'),
+        },
+      }
+    );
+  }
+
   deleteSwimlane(id: number) {
     return this.httpClient.delete<Swimlane>(
       `${this.servicesRootUrl}/kanban/swimlane/${id}`,
@@ -130,4 +144,9 @@ interface EditUserstory {
   projeto: number;
   criador: number;
   kanban: number;
+}
+
+interface IUpdateUserStorySwimlane {
+  id: number | undefined;
+  userStories: number[];
 }

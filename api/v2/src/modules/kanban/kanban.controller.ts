@@ -12,6 +12,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { SwimlaneDto } from './dto/swimlane.dto';
+import { UpdateSwimlaneUsDto } from './dto/update-swimlane-us.dto';
 import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';
 import { KanbanService } from './kanban.service';
 
@@ -42,6 +43,11 @@ export class KanbanController {
     @Body() updateSwimlaneDto: UpdateSwimlaneDto,
   ) {
     return this.kanbanService.updateSwimlane(+id, updateSwimlaneDto);
+  }
+
+  @Patch('user-story/update')
+  updateSwimlaneUserStories(@Body() swimlaneDto: UpdateSwimlaneUsDto) {
+    return this.kanbanService.updateSwimlaneUserStories(swimlaneDto);
   }
 
   @Delete('swimlane/:id')

@@ -108,7 +108,7 @@ export class FlyingcardsKanbanComponent implements OnInit {
       .subscribe(this.processarBoard());
   }
 
-  drop(event: CdkDragDrop<UserStory[]>) {
+  async drop(event: CdkDragDrop<UserStory[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -123,6 +123,26 @@ export class FlyingcardsKanbanComponent implements OnInit {
         event.currentIndex
       );
     }
+
+    this.board.swimlanes.map((swimlane) => {
+      let usId: number[] = [];
+
+      if (swimlane.userStories.length > 0) {
+        usId =
+          swimlane.userStories.map<number>((us) => {
+            return us.id || -1;
+          }) || [];
+      }
+
+      if (!usId) usId = [];
+
+      this.kanbanService
+        .updateUserStoriesInSwimlane({
+          id: swimlane.id || -1,
+          userStories: usId,
+        })
+        .subscribe();
+    });
   }
 
   private processarBoard() {
