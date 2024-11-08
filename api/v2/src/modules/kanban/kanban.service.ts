@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Projeto } from '../projeto/entities/projeto.entity';
@@ -136,7 +136,7 @@ export class KanbanService {
       }),
     );
 
-    console.log(userStories);
+    if (userStories) return HttpStatus.OK;
   }
 
   async deleteSwimlane(id: number) {
