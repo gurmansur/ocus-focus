@@ -3,6 +3,7 @@
     "vivaxy.vscode-conventional-commits",
     "eamodio.gitlens",
     "esbenp.prettier-vscode",
-    "rvest.vs-code-prettier-eslint"
+    "rvest.vs-code-prettier-eslint",
+    "aaron-bond.better-comments"
   ]
 }
