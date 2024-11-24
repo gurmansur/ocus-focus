@@ -1,4 +1,3 @@
-import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { UserStory } from '../../user-story/entities/user-story.entity';
 import { Kanban } from './kanban.entity';
 
 @Entity('SWIMLANES')

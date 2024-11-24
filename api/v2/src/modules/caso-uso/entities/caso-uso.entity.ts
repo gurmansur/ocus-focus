@@ -1,6 +1,3 @@
-import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
-import { Cenario } from 'src/modules/cenarios/entities/cenario.entity';
-import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
 import {
   Column,
   Entity,
@@ -9,6 +6,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
+import { Cenario } from '../../cenarios/entities/cenario.entity';
+import { RequisitoFuncional } from '../../requisito/entities/requisito-funcional.entity';
 
 @Entity('CASOS_DE_USO')
 export class CasoUso {

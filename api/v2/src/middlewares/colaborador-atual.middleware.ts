@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction, Request, Response } from 'express';
-import { ColaboradorService } from 'src/modules/colaborador/colaborador.service';
-import { ColaboradorDto } from 'src/modules/colaborador/dto/colaborador.dto';
+import { ColaboradorService } from '../modules/colaborador/colaborador.service';
+import { ColaboradorDto } from '../modules/colaborador/dto/colaborador.dto';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

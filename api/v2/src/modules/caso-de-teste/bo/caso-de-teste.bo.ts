@@ -1,7 +1,7 @@
-import { CasoUsoBo } from 'src/modules/caso-uso/dto copy/caso-uso.bo';
-import { ColaboradorBo } from 'src/modules/colaborador/bo/colaborador.bo';
-import { ProjetoBo } from 'src/modules/projeto/bo/projeto.bo';
-import { SuiteDeTesteBo } from 'src/modules/suite-de-teste/bo/suite-de-teste.bo';
+import { CasoUsoBo } from '../../caso-uso/dto copy/caso-uso.bo';
+import { ColaboradorBo } from '../../colaborador/bo/colaborador.bo';
+import { ProjetoBo } from '../../projeto/bo/projeto.bo';
+import { SuiteDeTesteBo } from '../../suite-de-teste/bo/suite-de-teste.bo';
 
 export class CasoDeTesteBo {
   id: number;

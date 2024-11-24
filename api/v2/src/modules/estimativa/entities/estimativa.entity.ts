@@ -1,5 +1,5 @@
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Projeto } from '../../projeto/entities/projeto.entity';
 
 @Entity('ESTIMATIVAS_ESFORCOS')
 export class Estimativa {

@@ -1,8 +1,3 @@
-import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
-import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
-import { Comentario } from 'src/modules/user-story/entities/comentario.entity';
-import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
-import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
   Column,
   Entity,
@@ -12,6 +7,11 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
+import { ColaboradorProjeto } from '../../colaborador-projeto/entities/colaborador-projeto.entity';
+import { Comentario } from '../../user-story/entities/comentario.entity';
+import { UserStory } from '../../user-story/entities/user-story.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 
 @Entity('COLABORADORES')
 export class Colaborador {

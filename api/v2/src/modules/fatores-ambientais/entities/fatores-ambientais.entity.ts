@@ -1,5 +1,5 @@
-import { FatorAmbientalProjeto } from 'src/modules/fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { FatorAmbientalProjeto } from '../../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 
 @Entity('FATORES_AMBIENTAIS')
 export class FatorAmbiental {

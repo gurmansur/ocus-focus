@@ -1,4 +1,3 @@
-import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
   Column,
   Entity,
@@ -6,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 import { UserStory } from './user-story.entity';
 
 @Entity('COMENTARIOS')

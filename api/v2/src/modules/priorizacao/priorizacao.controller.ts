@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { CreatePriorizacaoDto } from './dto/create-priorizacao.dto';
 import { PriorizacaoService } from './priorizacao.service';
 

@@ -18,9 +18,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ProjetoAtual } from 'src/decorators/projeto-atual.decorator';
-import { Serialize } from 'src/decorators/serialize.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { Serialize } from '../../decorators/serialize.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CasoDeTesteMapper } from './caso-de-teste.mapper';
 import { CasoDeTesteService } from './caso-de-teste.service';

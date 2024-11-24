@@ -1,7 +1,3 @@
-import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
-import { Priorizacao } from 'src/modules/priorizacao/entities/priorizacao.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { ResultadoRequisito } from 'src/modules/resultado-requisito/entities/resultado-requisito.entity';
 import {
   Column,
   Entity,
@@ -10,6 +6,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { CasoUso } from '../../caso-uso/entities/caso-uso.entity';
+import { Priorizacao } from '../../priorizacao/entities/priorizacao.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { ResultadoRequisito } from '../../resultado-requisito/entities/resultado-requisito.entity';
 
 @Entity('REQUISITOS_FUNCIONAIS')
 export class RequisitoFuncional {

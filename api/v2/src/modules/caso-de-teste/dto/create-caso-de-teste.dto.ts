@@ -69,6 +69,7 @@ export class CreateCasoDeTesteDto {
     enum: ['ATIVO', 'INATIVO'],
   })
   @IsEnum(['ATIVO', 'INATIVO'])
+  @IsOptional()
   status: 'ATIVO' | 'INATIVO';
 
   @ApiProperty({

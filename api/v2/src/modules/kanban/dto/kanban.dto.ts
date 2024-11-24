@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { UserStory } from '../../user-story/entities/user-story.entity';
 import { Swimlane } from '../entities/swimlane.entity';
 
 export class KanbanDto {

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { CasoUsoDto } from 'src/modules/caso-uso/dto/caso-uso.dto';
-import { ColaboradorDto } from 'src/modules/colaborador/dto/colaborador.dto';
-import { ProjetoDto } from 'src/modules/projeto/dto/projeto.dto';
-import { SuiteDeTesteDto } from 'src/modules/suite-de-teste/dto/suite-de-teste.dto';
+import { CasoUsoDto } from '../../caso-uso/dto/caso-uso.dto';
+import { ColaboradorDto } from '../../colaborador/dto/colaborador.dto';
+import { ProjetoDto } from '../../projeto/dto/projeto.dto';
+import { SuiteDeTesteDto } from '../../suite-de-teste/dto/suite-de-teste.dto';
 
 export class CasoDeTesteDto {
   @ApiProperty({

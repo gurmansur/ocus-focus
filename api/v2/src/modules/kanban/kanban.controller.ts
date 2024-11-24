@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { SwimlaneDto } from './dto/swimlane.dto';
 import { UpdateSwimlaneUsDto } from './dto/update-swimlane-us.dto';
 import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';

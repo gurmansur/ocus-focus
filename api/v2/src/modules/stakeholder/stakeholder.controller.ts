@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { CreateStakeholderDto } from './dto/create-stakeholder.dto';
 import { StakeholderService } from './stakeholder.service';
 

@@ -1,9 +1,4 @@
 import { Logger } from '@nestjs/common';
-import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
-import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
-import { Priorizacao } from 'src/modules/priorizacao/entities/priorizacao.entity';
-import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
-import { StatusPriorizacao } from 'src/modules/status-priorizacao/entities/status-priorizacao.entity';
 import {
   AfterInsert,
   AfterLoad,
@@ -14,6 +9,11 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ColaboradorProjeto } from '../../colaborador-projeto/entities/colaborador-projeto.entity';
+import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { Priorizacao } from '../../priorizacao/entities/priorizacao.entity';
+import { Stakeholder } from '../../stakeholder/entities/stakeholder.entity';
+import { StatusPriorizacao } from '../../status-priorizacao/entities/status-priorizacao.entity';
 
 @Entity('USUARIOS')
 export class Usuario {

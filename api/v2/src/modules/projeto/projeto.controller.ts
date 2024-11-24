@@ -14,8 +14,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ColaboradorAtual } from 'src/decorators/colaborador-atual.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
 import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
@@ -123,8 +123,8 @@ export class ProjetoController {
   @Get('colaboradores')
   findColaboradores(
     @Query('projeto') projetoId: number,
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
+    @Query('page') page?: number,
+    @Query('pageSize') pageSize?: number,
   ) {
     return this.projetoService.findColaboradores(projetoId, page, pageSize);
   }

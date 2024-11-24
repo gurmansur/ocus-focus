@@ -1,15 +1,15 @@
-import { Ator } from 'src/modules/ator/entities/ator.entity';
-import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
-import { ColaboradorProjeto } from 'src/modules/colaborador-projeto/entities/colaborador-projeto.entity';
-import { Estimativa } from 'src/modules/estimativa/entities/estimativa.entity';
-import { FatorAmbientalProjeto } from 'src/modules/fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
-import { FatorTecnicoProjeto } from 'src/modules/fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
-import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
-import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
-import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
-import { SuiteDeTeste } from 'src/modules/suite-de-teste/entities/suite-de-teste.entity';
-import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Ator } from '../../ator/entities/ator.entity';
+import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
+import { ColaboradorProjeto } from '../../colaborador-projeto/entities/colaborador-projeto.entity';
+import { Estimativa } from '../../estimativa/entities/estimativa.entity';
+import { FatorAmbientalProjeto } from '../../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
+import { FatorTecnicoProjeto } from '../../fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
+import { RequisitoFuncional } from '../../requisito/entities/requisito-funcional.entity';
+import { Sprint } from '../../sprint/entities/sprint.entity';
+import { Stakeholder } from '../../stakeholder/entities/stakeholder.entity';
+import { SuiteDeTeste } from '../../suite-de-teste/entities/suite-de-teste.entity';
+import { UserStory } from '../../user-story/entities/user-story.entity';
 
 @Entity('PROJETOS')
 export class Projeto {

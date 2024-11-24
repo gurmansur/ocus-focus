@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { CreateFatorAmbientalProjetoDto } from './dto/create-fator-ambiental-projeto.dto';
 import { UpdateFatorAmbientalProjetoDto } from './dto/update-fator-ambiental-projeto.dto';
 import { FatorAmbientalProjetoService } from './fator-ambiental-projeto.service';

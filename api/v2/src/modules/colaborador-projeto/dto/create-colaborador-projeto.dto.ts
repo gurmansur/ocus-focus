@@ -1,7 +1,7 @@
 import { IsBoolean, IsNumber } from 'class-validator';
-import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
+import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 
 export class CreateColaboradorProjetoDto {
   @IsBoolean()

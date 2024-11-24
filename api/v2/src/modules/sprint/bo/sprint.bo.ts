@@ -1,4 +1,4 @@
-import { UserStoryBo } from 'src/modules/user-story/bo/user-story.bo';
+import { UserStoryBo } from '../../user-story/bo/user-story.bo';
 
 export class SprintBo {
   id: number;

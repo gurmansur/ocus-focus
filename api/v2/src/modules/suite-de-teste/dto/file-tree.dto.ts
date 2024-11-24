@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CasoDeTesteDto } from 'src/modules/caso-de-teste/dto/caso-de-teste.dto';
+import { CasoDeTesteDto } from '../../caso-de-teste/dto/caso-de-teste.dto';
 import { SuiteDeTesteDto } from './suite-de-teste.dto';
 
 export class FileTreeDto {

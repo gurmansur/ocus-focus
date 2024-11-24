@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { CenariosService } from './cenarios.service';
 import { CreateCenarioDto } from './dto/create-cenario.dto';
 import { UpdateCenarioDto } from './dto/update-cenario.dto';

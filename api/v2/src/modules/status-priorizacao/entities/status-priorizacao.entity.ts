@@ -1,5 +1,3 @@
-import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
-import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
   Column,
   Entity,
@@ -7,6 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Stakeholder } from '../../stakeholder/entities/stakeholder.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 
 @Entity('STATUS_PRIORIZACAO')
 export class StatusPriorizacao {

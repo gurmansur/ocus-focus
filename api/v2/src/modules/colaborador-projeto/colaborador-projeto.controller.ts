@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { ColaboradorProjetoService } from './colaborador-projeto.service';
 import { CreateColaboradorProjetoDto } from './dto/create-colaborador-projeto.dto';
 import { UpdateColaboradorProjetoDto } from './dto/update-colaborador-projeto.dto';

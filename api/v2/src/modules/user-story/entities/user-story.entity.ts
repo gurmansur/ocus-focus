@@ -1,11 +1,3 @@
-import { Arquivo } from 'src/modules/arquivo/entities/arquivo.entity';
-import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
-import { Kanban } from 'src/modules/kanban/entities/kanban.entity';
-import { Swimlane } from 'src/modules/kanban/entities/swimlane.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
-import { Subtarefa } from 'src/modules/subtarefa/entities/subtarefa.entity';
-import { Tag } from 'src/modules/tag/entities/tag.entity';
 import {
   Column,
   CreateDateColumn,
@@ -17,6 +9,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Arquivo } from '../../arquivo/entities/arquivo.entity';
+import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { Kanban } from '../../kanban/entities/kanban.entity';
+import { Swimlane } from '../../kanban/entities/swimlane.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { Sprint } from '../../sprint/entities/sprint.entity';
+import { Subtarefa } from '../../subtarefa/entities/subtarefa.entity';
+import { Tag } from '../../tag/entities/tag.entity';
 import { Comentario } from './comentario.entity';
 
 @Entity('USER_STORIES')
@@ -52,11 +52,11 @@ export class UserStory {
   arquivos: Arquivo[] | null;
 
   @ManyToOne(() => Colaborador, (colaborador) => colaborador.criadorUS)
-  @JoinColumn({ name: 'FK_COLABORADOR_COL_ID' })
+  @JoinColumn({ name: 'FK_COLABORADOR_COL_CRI_ID' })
   criador: Colaborador;
 
   @ManyToOne(() => Colaborador, (colaborador) => colaborador.responsavelUS)
-  @JoinColumn({ name: 'FK_COLABORADOR_COL_ID' })
+  @JoinColumn({ name: 'FK_COLABORADOR_COL_RES_ID' })
   responsavel: Colaborador;
 
   @ManyToMany(() => Colaborador, (colaborador) => colaborador.participantesUS)

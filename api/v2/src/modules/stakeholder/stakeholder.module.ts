@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StakeholderAtualMiddleware } from 'src/middlewares/stakeholder-atual.middleware';
+import { StakeholderAtualMiddleware } from '../../middlewares/stakeholder-atual.middleware';
 import { ProjetoModule } from '../projeto/projeto.module';
 import { StatusPriorizacaoModule } from '../status-priorizacao/status-priorizacao.module';
 import { UsuarioModule } from '../usuario/usuario.module';

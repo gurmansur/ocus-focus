@@ -1,4 +1,3 @@
-import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
 
 @Entity('EXECUCOES_DE_TESTE')
 export class ExecucaoDeTeste {

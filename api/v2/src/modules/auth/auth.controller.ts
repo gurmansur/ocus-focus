@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, Post, Req } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Serialize } from 'src/decorators/serialize.decorator';
+import { Serialize } from '../../decorators/serialize.decorator';
 import { AuthService } from './auth.service';
 import { SignInColaboradorDto } from './dto/sign-in-colaborador.dto';
 import { SignInStakeholderDto } from './dto/sign-in-stakeholder.dto';

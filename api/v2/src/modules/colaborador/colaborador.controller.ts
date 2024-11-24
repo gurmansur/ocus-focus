@@ -10,8 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Serialize } from 'src/decorators/serialize.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { Serialize } from '../../decorators/serialize.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
 import { ColaboradorService } from './colaborador.service';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';

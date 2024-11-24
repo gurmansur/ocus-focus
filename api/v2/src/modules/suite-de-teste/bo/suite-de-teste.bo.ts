@@ -1,4 +1,4 @@
-import { CasoDeTesteBo } from 'src/modules/caso-de-teste/bo/caso-de-teste.bo';
+import { CasoDeTesteBo } from '../../caso-de-teste/bo/caso-de-teste.bo';
 
 export class SuiteDeTesteBo {
   id: number;

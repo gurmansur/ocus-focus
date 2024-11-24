@@ -1,6 +1,3 @@
-import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
-import { Stakeholder } from 'src/modules/stakeholder/entities/stakeholder.entity';
-import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
   Column,
   Entity,
@@ -8,6 +5,9 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { RequisitoFuncional } from '../../requisito/entities/requisito-funcional.entity';
+import { Stakeholder } from '../../stakeholder/entities/stakeholder.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 
 @Entity('PRIORIZACAO_STAKEHOLDERS')
 export class Priorizacao {

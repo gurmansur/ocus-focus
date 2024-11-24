@@ -1,5 +1,3 @@
-import { CasoDeTeste } from 'src/modules/caso-de-teste/entities/caso-de-teste.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
 import {
   Column,
   CreateDateColumn,
@@ -14,6 +12,8 @@ import {
   TreeParent,
   UpdateDateColumn,
 } from 'typeorm';
+import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
 
 @Entity('SUITES_DE_TESTE')
 @Tree('closure-table', {

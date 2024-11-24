@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { Arquivo } from 'src/modules/arquivo/entities/arquivo.entity';
-import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
-import { KanbanDto } from 'src/modules/kanban/dto/kanban.dto';
-import { SwimlaneDto } from 'src/modules/kanban/dto/swimlane.dto';
-import { Kanban } from 'src/modules/kanban/entities/kanban.entity';
-import { Swimlane } from 'src/modules/kanban/entities/swimlane.entity';
-import { ProjetoDto } from 'src/modules/projeto/dto/projeto.dto';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { SprintDto } from 'src/modules/sprint/dto/sprint.dto';
-import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
-import { Subtarefa } from 'src/modules/subtarefa/entities/subtarefa.entity';
-import { Tag } from 'src/modules/tag/entities/tag.entity';
+import { Arquivo } from '../../arquivo/entities/arquivo.entity';
+import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { KanbanDto } from '../../kanban/dto/kanban.dto';
+import { SwimlaneDto } from '../../kanban/dto/swimlane.dto';
+import { Kanban } from '../../kanban/entities/kanban.entity';
+import { Swimlane } from '../../kanban/entities/swimlane.entity';
+import { ProjetoDto } from '../../projeto/dto/projeto.dto';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { SprintDto } from '../../sprint/dto/sprint.dto';
+import { Sprint } from '../../sprint/entities/sprint.entity';
+import { Subtarefa } from '../../subtarefa/entities/subtarefa.entity';
+import { Tag } from '../../tag/entities/tag.entity';
 import { Comentario } from '../entities/comentario.entity';
 
 export class UserStoryDto {

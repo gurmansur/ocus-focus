@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProjetoAtualMiddleware } from 'src/middlewares/projeto-atual.middleware';
+import { ProjetoAtualMiddleware } from '../../middlewares/projeto-atual.middleware';
 import { ColaboradorProjetoModule } from '../colaborador-projeto/colaborador-projeto.module';
 import { ColaboradorModule } from '../colaborador/colaborador.module';
 import { KanbanModule } from '../kanban/kanban.module';

@@ -1,5 +1,3 @@
-import { FatorTecnico } from 'src/modules/fatores-tecnicos/entities/fatores-tecnicos.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
 import {
   Column,
   Entity,
@@ -7,6 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { FatorTecnico } from '../../fatores-tecnicos/entities/fatores-tecnicos.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
 
 @Entity('FATORES_TECNICOS_PROJETOS')
 export class FatorTecnicoProjeto {

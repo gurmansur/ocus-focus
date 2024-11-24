@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { AtorService } from './ator.service';
 import { AtoresMetricsQueryDto } from './dto/atores-metrics-query.dto';
 import { AtoresMetricsDto } from './dto/atores-metrics.dto';

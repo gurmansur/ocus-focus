@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { UsuarioDto } from 'src/modules/usuario/dto/usuario.dto';
+import { UsuarioDto } from '../../usuario/dto/usuario.dto';
 
 export class SignUpResponseDto {
   @ApiProperty({

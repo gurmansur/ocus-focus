@@ -1,7 +1,3 @@
-import { Priorizacao } from 'src/modules/priorizacao/entities/priorizacao.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { StatusPriorizacao } from 'src/modules/status-priorizacao/entities/status-priorizacao.entity';
-import { Usuario } from 'src/modules/usuario/entities/usuario.entity';
 import {
   Column,
   Entity,
@@ -10,6 +6,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Priorizacao } from '../../priorizacao/entities/priorizacao.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { StatusPriorizacao } from '../../status-priorizacao/entities/status-priorizacao.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 
 @Entity('STAKEHOLDERS')
 export class Stakeholder {

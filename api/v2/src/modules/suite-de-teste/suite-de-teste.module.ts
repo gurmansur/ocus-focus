@@ -9,8 +9,8 @@ import { SuiteDeTesteService } from './suite-de-teste.service';
   controllers: [SuiteDeTesteController],
   providers: [SuiteDeTesteService],
   imports: [
-    TypeOrmModule.forFeature([SuiteDeTeste]),
     forwardRef(() => CasoDeTesteModule),
+    TypeOrmModule.forFeature([SuiteDeTeste]),
   ],
   exports: [SuiteDeTesteService],
 })

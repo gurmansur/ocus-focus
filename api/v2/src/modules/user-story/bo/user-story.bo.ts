@@ -1,11 +1,11 @@
-import { Arquivo } from 'src/modules/arquivo/entities/arquivo.entity';
-import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
-import { Kanban } from 'src/modules/kanban/entities/kanban.entity';
-import { Swimlane } from 'src/modules/kanban/entities/swimlane.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { Sprint } from 'src/modules/sprint/entities/sprint.entity';
-import { Subtarefa } from 'src/modules/subtarefa/entities/subtarefa.entity';
-import { Tag } from 'src/modules/tag/entities/tag.entity';
+import { Arquivo } from '../../arquivo/entities/arquivo.entity';
+import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { Kanban } from '../../kanban/entities/kanban.entity';
+import { Swimlane } from '../../kanban/entities/swimlane.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { Sprint } from '../../sprint/entities/sprint.entity';
+import { Subtarefa } from '../../subtarefa/entities/subtarefa.entity';
+import { Tag } from '../../tag/entities/tag.entity';
 import { Comentario } from '../entities/comentario.entity';
 
 export class UserStoryBo {

@@ -9,8 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ProjetoAtual } from 'src/decorators/projeto-atual.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CasoUsoService } from './caso-uso.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';

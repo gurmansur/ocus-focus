@@ -16,8 +16,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ProjetoAtual } from 'src/decorators/projeto-atual.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { ChangeStatusExecucaoDeTesteDto } from './dto/change-status-execucao-de-teste.dto';
 import { CreateExecucaoDeTesteDto } from './dto/create-execucao-de-teste.dto';

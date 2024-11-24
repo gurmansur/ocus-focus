@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction, Request, Response } from 'express';
-import { StakeholderDto } from 'src/modules/stakeholder/dto/stakeholder.dto';
-import { StakeholderService } from 'src/modules/stakeholder/stakeholder.service';
+import { StakeholderDto } from '../modules/stakeholder/dto/stakeholder.dto';
+import { StakeholderService } from '../modules/stakeholder/stakeholder.service';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

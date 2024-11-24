@@ -1,5 +1,3 @@
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
 import {
   Entity,
   JoinColumn,
@@ -7,6 +5,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { UserStory } from '../../user-story/entities/user-story.entity';
 import { Swimlane } from './swimlane.entity';
 
 @Entity('KANBANS')

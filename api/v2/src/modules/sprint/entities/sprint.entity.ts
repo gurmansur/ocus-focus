@@ -1,4 +1,3 @@
-import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +5,7 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { UserStory } from '../../user-story/entities/user-story.entity';
 
 @Entity('SPRINTS')
 export class Sprint {

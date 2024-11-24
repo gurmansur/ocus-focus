@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';
-import { CasoDeTesteDto } from 'src/modules/caso-de-teste/dto/caso-de-teste.dto';
+import { CasoDeTesteDto } from '../../caso-de-teste/dto/caso-de-teste.dto';
 
 export class SuiteDeTesteDto {
   @ApiProperty({

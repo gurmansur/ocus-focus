@@ -1,5 +1,11 @@
-import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { CasoUso } from '../../caso-uso/entities/caso-uso.entity';
 
 @Entity('CENARIOS')
 export class Cenario {

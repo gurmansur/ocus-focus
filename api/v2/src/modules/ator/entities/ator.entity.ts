@@ -1,4 +1,3 @@
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
 import {
   BaseEntity,
   Column,
@@ -7,6 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Projeto } from '../../projeto/entities/projeto.entity';
 @Entity('ATORES')
 export class Ator extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int', name: 'ATO_ID' })

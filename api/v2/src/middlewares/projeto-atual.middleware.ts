@@ -1,7 +1,7 @@
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { CreateProjetoDto } from 'src/modules/projeto/dto/create-projeto.dto';
-import { ProjetoService } from 'src/modules/projeto/projeto.service';
+import { CreateProjetoDto } from '../modules/projeto/dto/create-projeto.dto';
+import { ProjetoService } from '../modules/projeto/projeto.service';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

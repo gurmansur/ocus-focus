@@ -1,8 +1,3 @@
-import { CasoUso } from 'src/modules/caso-uso/entities/caso-uso.entity';
-import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
-import { ExecucaoDeTeste } from 'src/modules/execucao-de-teste/entities/execucao-de-teste.entity';
-import { Projeto } from 'src/modules/projeto/entities/projeto.entity';
-import { SuiteDeTeste } from 'src/modules/suite-de-teste/entities/suite-de-teste.entity';
 import {
   Column,
   CreateDateColumn,
@@ -14,6 +9,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { CasoUso } from '../../caso-uso/entities/caso-uso.entity';
+import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { ExecucaoDeTeste } from '../../execucao-de-teste/entities/execucao-de-teste.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
+import { SuiteDeTeste } from '../../suite-de-teste/entities/suite-de-teste.entity';
 
 @Entity('CASOS_DE_TESTE')
 export class CasoDeTeste {
@@ -70,10 +70,10 @@ export class CasoDeTeste {
   @Column('varchar', { name: 'CDT_POS_CONDICAO', length: 255 })
   posCondicao: string;
 
-  @Column('varchar', { name: 'CDT_DADOS_ENTRADA', length: 255 })
+  @Column('text', { name: 'CDT_DADOS_ENTRADA' })
   dadosEntrada: string;
 
-  @Column('varchar', { name: 'CDT_RESULTADO_ESPERADO', length: 255 })
+  @Column('text', { name: 'CDT_RESULTADO_ESPERADO' })
   resultadoEsperado: string;
 
   @ManyToOne(() => CasoUso, (casoUso: CasoUso) => casoUso.casosDeTeste)

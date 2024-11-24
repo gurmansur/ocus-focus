@@ -1,4 +1,3 @@
-import { RequisitoFuncional } from 'src/modules/requisito/entities/requisito-funcional.entity';
 import {
   Column,
   Entity,
@@ -6,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { RequisitoFuncional } from '../../requisito/entities/requisito-funcional.entity';
 
 @Entity('RESULTADO_REQUISITOS')
 export class ResultadoRequisito {

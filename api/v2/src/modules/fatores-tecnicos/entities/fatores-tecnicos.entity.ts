@@ -1,5 +1,5 @@
-import { FatorTecnicoProjeto } from 'src/modules/fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { FatorTecnicoProjeto } from '../../fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
 
 @Entity('FATORES_TECNICOS')
 export class FatorTecnico {
