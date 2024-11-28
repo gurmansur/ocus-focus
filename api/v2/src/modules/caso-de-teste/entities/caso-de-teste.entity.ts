@@ -76,7 +76,9 @@ export class CasoDeTeste {
   @Column('text', { name: 'CDT_RESULTADO_ESPERADO' })
   resultadoEsperado: string;
 
-  @ManyToOne(() => CasoUso, (casoUso: CasoUso) => casoUso.casosDeTeste)
+  @ManyToOne(() => CasoUso, (casoUso: CasoUso) => casoUso.casosDeTeste, {
+    eager: true,
+  })
   @JoinColumn({ name: 'FK_CASOS_DE_USO_CAS_ID' })
   casoDeUso: CasoUso;
 

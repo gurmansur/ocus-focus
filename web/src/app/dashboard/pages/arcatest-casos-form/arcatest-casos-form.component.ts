@@ -150,7 +150,7 @@ export class ArcatestCasosFormComponent {
       ),
       suiteDeTesteId: this.route.snapshot.queryParams['suiteId'] || '',
       testadorDesignadoId: new FormControl(
-        this.casoDeTeste?.testadorDesignadoId || ''
+        this.casoDeTeste?.testadorDesignado?.id || ''
       ),
       observacoes: new FormControl(this.casoDeTeste?.observacoes || ''),
       resultadoEsperado: new FormControl(
@@ -161,7 +161,7 @@ export class ArcatestCasosFormComponent {
         this.casoDeTeste?.dadosEntrada || '',
         Validators.required
       ),
-      casoDeUsoId: new FormControl(this.casoDeTeste?.casoDeUsoId || ''),
+      casoDeUsoId: new FormControl(this.casoDeTeste?.casoDeUso?.id || ''),
     });
   }
 

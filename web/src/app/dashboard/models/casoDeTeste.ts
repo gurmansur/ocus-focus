@@ -1,3 +1,4 @@
+import { casoUso } from './casoUso';
 import { Colaborador } from './colaborador';
 
 export enum EPrioridade {
@@ -54,6 +55,8 @@ export class CasoDeTeste {
     public dadosEntrada: string,
 
     public id?: number,
+
+    public casoDeUso?: casoUso,
 
     public casoDeUsoId?: number,
 
