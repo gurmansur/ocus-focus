@@ -25,8 +25,8 @@
   <div class="flex flex-grow overflow-x-auto" cdkDropListGroup>
     @if (board.swimlanes.length > 0) {
     <div
-      class="flex flex-col flex-grow min-w-fit min-h-fit my-10 mx-2 p-5 bg-violet-700 border-r-4 rounded-sm"
-      [ngStyle]="{ color: swimlane.cor }"
+      [style.--minha-cor]="swimlane.cor"
+      class="flex flex-col flex-grow min-w-fit min-h-fit my-10 mx-2 p-5 bg-[var(--minha-cor)] border-r-4 rounded-sm"
       *ngFor="let swimlane of board.swimlanes"
     >
       <div class="flex text-lg font-bold uppercase mb-5 justify-between">

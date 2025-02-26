@@ -21,7 +21,7 @@ export class Swimlane {
   @Column({ type: 'tinyint', width: 1, name: 'SWI_VERTICAL', default: 0 })
   vertical: boolean;
 
-  @Column({ type: 'varchar', name: 'SWI_COR', length: 6 })
+  @Column({ type: 'varchar', name: 'SWI_COR', length: 7, default: '#6d28d9' })
   cor: string;
 
   @CreateDateColumn({ name: 'SWI_CRIADO_EM' })
