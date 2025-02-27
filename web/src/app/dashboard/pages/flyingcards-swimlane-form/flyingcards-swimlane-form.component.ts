@@ -68,7 +68,7 @@ export class FlyingcardsSwimlaneFormComponent {
         Validators.required
       ),
       cor: new FormControl<string>(
-        this.swimlane.cor || '',
+        this.swimlane.cor || '#6d28d9',
         Validators.required
       ),
     });
