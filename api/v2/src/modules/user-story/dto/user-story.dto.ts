@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { Arquivo } from '../../arquivo/entities/arquivo.entity';
 import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { Comentario } from '../../comentario/entities/comentario.entity';
 import { KanbanDto } from '../../kanban/dto/kanban.dto';
 import { SwimlaneDto } from '../../kanban/dto/swimlane.dto';
 import { Kanban } from '../../kanban/entities/kanban.entity';
@@ -12,7 +13,6 @@ import { SprintDto } from '../../sprint/dto/sprint.dto';
 import { Sprint } from '../../sprint/entities/sprint.entity';
 import { Subtarefa } from '../../subtarefa/entities/subtarefa.entity';
 import { Tag } from '../../tag/entities/tag.entity';
-import { Comentario } from '../entities/comentario.entity';
 
 export class UserStoryDto {
   @ApiProperty({

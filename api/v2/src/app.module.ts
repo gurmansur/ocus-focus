@@ -12,6 +12,7 @@ import { CasoUsoModule } from './modules/caso-uso/caso-uso.module';
 import { CenariosModule } from './modules/cenarios/cenarios.module';
 import { ColaboradorProjetoModule } from './modules/colaborador-projeto/colaborador-projeto.module';
 import { ColaboradorModule } from './modules/colaborador/colaborador.module';
+import { ComentarioModule } from './modules/comentario/comentario.module';
 import { EstimativaModule } from './modules/estimativa/estimativa.module';
 import { ExecucaoDeTesteModule } from './modules/execucao-de-teste/execucao-de-teste.module';
 import { FatorAmbientalProjetoModule } from './modules/fator-ambiental-projeto/fator-ambiental-projeto.module';
@@ -68,6 +69,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     CasoDeTesteModule,
     SuiteDeTesteModule,
     KanbanModule,
+    ComentarioModule,
   ],
   providers: [
     AppService,

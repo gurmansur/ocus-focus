@@ -47,18 +47,30 @@ export class UserStoryService {
   }
 
   async findOne(id: number) {
-    const us = await this.userStoryRepository.findOne({
-      where: {
-        id,
-      },
-      relations: ['swimlane', 'responsavel'],
-    });
+    try {
+      const us = await this.userStoryRepository.findOne({
+        where: {
+          id,
+        },
+        relations: {
+          swimlane: true,
+          responsavel: true,
+        },
+      });
 
-    return {
-      ...us,
-      responsavel: us.responsavel.id,
-      swimlane: us.swimlane.id,
-    };
+      if (!us) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+
+      return {
+        ...us,
+        responsavel: us.responsavel.id,
+        swimlane: us.swimlane.id,
+      };
+    } catch (error) {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async findFromSwimlane(swimlane: number) {
@@ -165,5 +177,24 @@ export class UserStoryService {
 
   async remove(id: number) {
     return await this.userStoryRepository.delete(id);
+  }
+
+  async findOneFullInformation(id: number) {
+    try {
+      const us = await this.userStoryRepository.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!us) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+
+      return us;
+    } catch (error) {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
