@@ -3,7 +3,7 @@
   voltar="Voltar ao Flying Cards"
 ></app-project-header>
 
-<div class="container px-5 py-24 mx-auto">
+<div class="container px-5 pt-16 pb-4 mx-auto">
   <form
     [formGroup]="userStoryFormGroup"
     class="border-l-4 border-violet-700 rounded-lg md:w-1/2 mx-auto flex flex-col items-center shadow-lg p-10"
@@ -150,4 +150,34 @@
       </div>
     </div>
   </form>
+</div>
+
+<div class="flex flex-col justify-center items-center py-4 w-full gap-4">
+  <!-- Caixinha do comentário -->
+  <div
+    class="border-violet-700 border-2 rounded-md p-2 max-w-xl w-full bg-white"
+  >
+    <div class="flex justify-between items-center pb-2">
+      <div class="flex gap-2">
+        <!-- Nome do autor do comentário  -->
+        <span class="text-xs font-bold">Felipe de Andrade Nascimento</span>
+
+        <!--  Tempo decorrido da postagem -->
+        <span class="text-xs text-gray-600">1d</span>
+      </div>
+      <div class="scale-75 cursor-pointer">
+        <app-three-dots-icon></app-three-dots-icon>
+      </div>
+    </div>
+
+    <!-- Conteúdo do comentário -->
+    <span>Eu acho que essa user story tá meio feia ainda hein...</span>
+  </div>
+
+  <!-- Caixinha de novo comentário -->
+  <input
+    class="border-gray-500 border-2 rounded-md p-2 max-w-xl w-full bg-white hover:border-violet-700 focus:border-violet-700 focus:outline-none transition-colors"
+    type="text"
+    placeholder="Escreva um comentário..."
+  />
 </div>

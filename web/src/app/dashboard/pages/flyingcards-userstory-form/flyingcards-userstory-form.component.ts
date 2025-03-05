@@ -11,10 +11,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
-import { CardComponent } from 'src/app/shared/card/card.component';
 import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.component';
+import { ThreeDotsIconComponent } from 'src/app/shared/icons/three-dots-icon/three-dots-icon.component';
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
 import { Colaborador } from '../../models/colaborador';
+import { Comentario } from '../../models/comentario';
 import { UserStory } from '../../models/userStory';
 import { ColaboradorService } from '../../services/colaborador.service';
 import { KanbanService } from '../../services/kanban.service';
@@ -29,9 +30,9 @@ import { KanbanService } from '../../services/kanban.service';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    CardComponent,
     PlusIconComponent,
     ButtonComponent,
+    ThreeDotsIconComponent,
   ],
   templateUrl: './flyingcards-userstory-form.component.html',
   styleUrl: './flyingcards-userstory-form.component.css',
@@ -48,6 +49,14 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
   userStory: UserStory;
   usuarios: Colaborador[] = [];
   swimlanes: ISelectSwimlane[] = [];
+  comentarios: Comentario[] = [
+    {
+      id: 1,
+      comentario: 'Comentário 1',
+      fk_user_story: 1,
+      fk_usuario_id: 1,
+    },
+  ];
 
   formBuilder: FormBuilder = new FormBuilder();
 
