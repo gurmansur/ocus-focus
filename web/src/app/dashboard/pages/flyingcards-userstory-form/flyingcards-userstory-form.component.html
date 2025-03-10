@@ -152,15 +152,17 @@
   </form>
 </div>
 
+@if (isEdit) {
 <div class="flex flex-col justify-center items-center py-4 w-full gap-4">
   <!-- Caixinha do comentário -->
   <div
+    *ngFor="let comentario of comentarios"
     class="border-violet-700 border-2 rounded-md p-2 max-w-xl w-full bg-white"
   >
     <div class="flex justify-between items-center pb-2">
       <div class="flex gap-2">
         <!-- Nome do autor do comentário  -->
-        <span class="text-xs font-bold">Felipe de Andrade Nascimento</span>
+        <span class="text-xs font-bold">{{ comentario.nome_usuario }}</span>
 
         <!--  Tempo decorrido da postagem -->
         <span class="text-xs text-gray-600">1d</span>
@@ -171,13 +173,26 @@
     </div>
 
     <!-- Conteúdo do comentário -->
-    <span>Eu acho que essa user story tá meio feia ainda hein...</span>
+    <span>{{ comentario.comentario }}</span>
   </div>
 
   <!-- Caixinha de novo comentário -->
-  <input
-    class="border-gray-500 border-2 rounded-md p-2 max-w-xl w-full bg-white hover:border-violet-700 focus:border-violet-700 focus:outline-none transition-colors"
-    type="text"
-    placeholder="Escreva um comentário..."
-  />
+  <div
+    class="flex border-gray-500 border-2 rounded-md p-2 max-w-xl w-full bg-white hover:border-violet-700 transition-colors"
+  >
+    <input
+      class="focus:outline-none w-full"
+      type="text"
+      placeholder="Escreva um comentário..."
+      name="conteudo_comentario"
+      id="conteudo_comentario"
+      [(ngModel)]="newComentario"
+      (keyup.enter)="enviarComentario()"
+    />
+
+    <app-button (onClick)="enviarComentario()">
+      <app-send-icon class="cursor-pointer"></app-send-icon>
+    </app-button>
+  </div>
 </div>
+}

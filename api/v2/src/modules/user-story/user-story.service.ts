@@ -170,31 +170,10 @@ export class UserStoryService {
 
     const result = await this.userStoryRepository.update(id, userStory);
 
-    console.log(result);
-
     return;
   }
 
   async remove(id: number) {
     return await this.userStoryRepository.delete(id);
-  }
-
-  async findOneFullInformation(id: number) {
-    try {
-      const us = await this.userStoryRepository.findOne({
-        where: {
-          id,
-        },
-      });
-
-      if (!us) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
-
-      return us;
-    } catch (error) {
-      throw new HttpException(
-        'Internal Server Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
   }
 }

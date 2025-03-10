@@ -1,10 +1,14 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ColaboradorService } from '../colaborador/colaborador.service';
 import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { UserStory } from '../user-story/entities/user-story.entity';
-import { UserStoryService } from '../user-story/user-story.service';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { UpdateComentarioDto } from './dto/update-comentario.dto';
 import { Comentario } from './entities/comentario.entity';
@@ -14,35 +18,34 @@ export class ComentarioService {
   constructor(
     @InjectRepository(Comentario)
     private readonly comentarioRepository: Repository<Comentario>,
-    @Inject() private readonly colaboradorService: ColaboradorService,
-    @Inject() private readonly userStoryService: UserStoryService,
     @InjectRepository(UserStory)
     private readonly userStoryRepository: Repository<UserStory>,
     @InjectRepository(Colaborador)
     private readonly colaboradorRepository: Repository<Colaborador>,
   ) {}
-  async create(createComentarioDto: CreateComentarioDto) {
-    const usuario = await this.colaboradorService.findOne(
-      createComentarioDto.usuario_id,
-    );
-    if (!usuario) return 'Usuário não encontrado';
 
-    const userStory = await this.userStoryService.findOneFullInformation(
+  async create(createComentarioDto: CreateComentarioDto) {
+    // busca o usuário que fez o comentário
+    const usuario = await this.findColaborador(createComentarioDto.usuario_id);
+
+    // busca a user story que recebeu o comentário
+    const userStory = await this.findUserStory(
       createComentarioDto.user_story_id,
     );
-    if (!userStory) return 'User Story não encontrada';
 
+    // cria o comentário
     const comentario = this.comentarioRepository.create({
       comentario: createComentarioDto.comentario,
       usuario,
       userStory,
     });
 
+    // tenta salvar e lança um erro caso não consiga
     try {
-      await this.comentarioRepository.save(comentario);
-      return 'Comentário criado com sucesso';
+      const { id } = await this.comentarioRepository.save(comentario);
+      return id;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw new HttpException(
         'Internal Server Error',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -50,12 +53,53 @@ export class ComentarioService {
     }
   }
 
-  findAll() {
-    return `This action returns all comentario`;
+  async findAllFromUserStory(id: number) {
+    if (typeof id != 'number' || !id)
+      throw new BadRequestException('Id não definido');
+
+    try {
+      const comentarios = await this.comentarioRepository.find({
+        where: {
+          userStory: {
+            id,
+          },
+        },
+        relations: ['usuario', 'userStory'],
+      });
+
+      const comentariosTratados = comentarios.map((comentario) => {
+        return {
+          id: comentario.id,
+          comentario: comentario.comentario,
+          nome_usuario: comentario.usuario.nome,
+          user_story_id: comentario.userStory.id,
+        };
+      });
+
+      // talvez eu poderia retornar um objeto ao invés de um array direto
+      // mas não sei se seria melhor
+      return comentariosTratados;
+    } catch (err) {
+      console.error(err);
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comentario`;
+  async findOne(id: number) {
+    try {
+      const comentario = await this.comentarioRepository.findOneOrFail({
+        where: { id },
+      });
+      return {
+        comentario,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new NotFoundException('Comentário não encontrado');
+    }
   }
 
   update(id: number, updateComentarioDto: UpdateComentarioDto) {
@@ -63,6 +107,31 @@ export class ComentarioService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} comentario`;
+    try {
+      this.comentarioRepository.delete(id);
+      return 'Comentário deletado com sucesso';
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  private async findColaborador(id: number) {
+    const colaborador = await this.colaboradorRepository.findOne({
+      where: { id },
+    });
+    if (!colaborador) throw new NotFoundException('Colaborador não encontrado');
+    return colaborador;
+  }
+
+  private async findUserStory(id: number) {
+    const userStory = await this.userStoryRepository.findOne({
+      where: { id },
+    });
+    if (!userStory) throw new NotFoundException('User Story não encontrada');
+    return userStory;
   }
 }

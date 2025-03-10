@@ -12,12 +12,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
 import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.component';
+import { SendIconComponent } from 'src/app/shared/icons/send-icon/send-icon.component';
 import { ThreeDotsIconComponent } from 'src/app/shared/icons/three-dots-icon/three-dots-icon.component';
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
 import { Colaborador } from '../../models/colaborador';
 import { Comentario } from '../../models/comentario';
 import { UserStory } from '../../models/userStory';
 import { ColaboradorService } from '../../services/colaborador.service';
+import { ComentarioService } from '../../services/comentario.service';
 import { KanbanService } from '../../services/kanban.service';
 
 @Component({
@@ -32,6 +34,7 @@ import { KanbanService } from '../../services/kanban.service';
     ReactiveFormsModule,
     PlusIconComponent,
     ButtonComponent,
+    SendIconComponent,
     ThreeDotsIconComponent,
   ],
   templateUrl: './flyingcards-userstory-form.component.html',
@@ -49,14 +52,8 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
   userStory: UserStory;
   usuarios: Colaborador[] = [];
   swimlanes: ISelectSwimlane[] = [];
-  comentarios: Comentario[] = [
-    {
-      id: 1,
-      comentario: 'Comentário 1',
-      fk_user_story: 1,
-      fk_usuario_id: 1,
-    },
-  ];
+  comentarios: Comentario[] = [];
+  newComentario: string = '';
 
   formBuilder: FormBuilder = new FormBuilder();
 
@@ -64,7 +61,8 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private colaboradorService: ColaboradorService,
-    private kanbanService: KanbanService
+    private kanbanService: KanbanService,
+    private comentarioService: ComentarioService
   ) {
     this.projectId = parseInt(this.route.snapshot.params['id']);
     this.isEdit = this.route.snapshot.params['usId'] ? true : false;
@@ -77,6 +75,7 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.newComentario = '';
     this.colaboradorService
       .findAllFromProject(this.projectId)
       .subscribe((colaboradores) => {
@@ -92,6 +91,13 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     this.kanbanService.getKanbanId(this.projectId).subscribe((kanban) => {
       this.kanbanId = kanban;
     });
+
+    this.comentarioService
+      .getComentariosUserStory(this.usId)
+      .subscribe((comentarios) => {
+        console.log(comentarios);
+        this.comentarios = comentarios;
+      });
 
     if (this.isEdit) {
       this.kanbanService.findUserStory(this.usId).subscribe((userStory) => {
@@ -159,6 +165,25 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
       next: () => this.navigateToKanban(),
     });
   }
+
+  enviarComentario() {
+    const novo_comentario: IPostComentario = {
+      comentario: this.newComentario,
+      user_story_id: this.usId,
+      usuario_id: this.criador,
+    };
+
+    this.comentarioService.postComentario(novo_comentario).subscribe((id) => {
+      this.comentarios.push({
+        comentario: this.newComentario,
+        nome_usuario: localStorage.getItem('usu_name') || '<Nome não definido>',
+        user_story_id: this.usId,
+        id: id,
+      });
+
+      this.newComentario = '';
+    });
+  }
 }
 
 interface ISelectSwimlane {
@@ -175,4 +200,10 @@ interface EditUserstory {
   projeto: number;
   criador: number;
   kanban: number;
+}
+
+interface IPostComentario {
+  comentario: string;
+  usuario_id: number;
+  user_story_id: number;
 }

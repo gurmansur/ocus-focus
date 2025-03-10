@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -18,13 +19,14 @@ export class ComentarioController {
   constructor(private readonly comentarioService: ComentarioService) {}
 
   @Post()
+  @HttpCode(201)
   create(@Body() createComentarioDto: CreateComentarioDto) {
     return this.comentarioService.create(createComentarioDto);
   }
 
-  @Get()
-  findAll() {
-    return this.comentarioService.findAll();
+  @Get('us/:id')
+  findAllFromUserStory(@Param('id') id: number) {
+    return this.comentarioService.findAllFromUserStory(id);
   }
 
   @Get(':id')
