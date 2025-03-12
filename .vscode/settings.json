@@ -4,5 +4,7 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": "always"
   },
-  "cSpell.words": ["arcatest", "Arcatest"]
+  "cSpell.words": ["arcatest", "Arcatest"],
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative"
 }
