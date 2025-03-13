@@ -11,7 +11,10 @@
       <app-button (click)="navigateToSprints()">
         <app-gear-icon></app-gear-icon>
       </app-button>
-      <app-button (click)="navigateToCreateUserStory()">
+      <app-button
+        *ngIf="board.swimlanes.length > 0"
+        (click)="navigateToCreateUserStory()"
+      >
         <app-plus-icon></app-plus-icon>
         Adicionar User Story
       </app-button>
@@ -46,6 +49,7 @@
         [cdkDropListData]="swimlane.userStories"
         (cdkDropListDropped)="drop($event)"
       >
+        <!-- TODO: Adicionar a tag à user story -->
         <div
           class="bg-white flex flex-col p-4 border-b-2 border-b-violet-400 gap-4 cursor-pointer"
           *ngFor="let item of swimlane.userStories"
@@ -58,12 +62,21 @@
 
           <span>{{ item.descricao }}</span>
 
+          <div
+            *ngFor="let tag of item.tags"
+            [style.--cor-tag]="tag.cor"
+            class="bg-[var(--cor-tag)] px-3 w-fit rounded-md"
+          >
+            <span class="text-sm font-sans font-bold">{{ tag.nome }}</span>
+          </div>
           <div class="flex gap-2">
-            <span class="text-sm bg-green-200 rounded-sm p-1"
-              >Est. Tempo: {{ item.estimativa_tempo }}h</span
+            <span
+              class="text-sm font-semibold px-3 bg-violet-400 rounded-md p-1"
+              >{{ item.estimativa_tempo }}h</span
             >
-            <span class="text-sm bg-green-200 rounded-sm p-1"
-              >Responsável: {{ item.responsavel }}</span
+
+            <span class="text-sm px-3 bg-violet-400 rounded-md p-1">
+              {{ item.responsavel }}</span
             >
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,10 +17,12 @@ import { ThreeDotsIconComponent } from 'src/app/shared/icons/three-dots-icon/thr
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
 import { Colaborador } from '../../models/colaborador';
 import { Comentario } from '../../models/comentario';
+import { Tag } from '../../models/tag';
 import { UserStory } from '../../models/userStory';
 import { ColaboradorService } from '../../services/colaborador.service';
 import { ComentarioService } from '../../services/comentario.service';
 import { KanbanService } from '../../services/kanban.service';
+import { TagService } from '../../services/tag.service';
 
 @Component({
   selector: 'app-flyingcards-userstory-form',
@@ -32,6 +34,7 @@ import { KanbanService } from '../../services/kanban.service';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatSelectModule,
     PlusIconComponent,
     ButtonComponent,
     SendIconComponent,
@@ -39,6 +42,7 @@ import { KanbanService } from '../../services/kanban.service';
   ],
   templateUrl: './flyingcards-userstory-form.component.html',
   styleUrl: './flyingcards-userstory-form.component.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class FlyingcardsUserstoryFormComponent implements OnInit {
   private projectId: number;
@@ -54,6 +58,8 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
   swimlanes: ISelectSwimlane[] = [];
   comentarios: Comentario[] = [];
   newComentario: string = '';
+  tagsList: Tag[] = [];
+  tagChosenId: number = -1;
 
   formBuilder: FormBuilder = new FormBuilder();
 
@@ -62,7 +68,8 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     private route: ActivatedRoute,
     private colaboradorService: ColaboradorService,
     private kanbanService: KanbanService,
-    private comentarioService: ComentarioService
+    private comentarioService: ComentarioService,
+    private tagService: TagService
   ) {
     this.projectId = parseInt(this.route.snapshot.params['id']);
     this.isEdit = this.route.snapshot.params['usId'] ? true : false;
@@ -81,6 +88,10 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
       .subscribe((colaboradores) => {
         this.usuarios = colaboradores;
       });
+
+    this.tagService.getTags().subscribe((tags) => {
+      this.tagsList = tags;
+    });
 
     this.kanbanService
       .getSwimlaneFromProject(this.projectId)
@@ -126,6 +137,7 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
         this.userStory?.swimlane || -1,
         Validators.required
       ),
+      tag: new FormControl<number>(this.tagChosenId, Validators.required),
     });
   }
 
@@ -133,6 +145,7 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     if (!this.isEdit) {
       const newUserStory = {
         ...this.userStoryFormGroup.value,
+        tag: +this.userStoryFormGroup.value.tag,
         projeto: +this.projectId,
         criador: +this.criador,
         kanban: +this.kanbanId,
@@ -144,6 +157,7 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     } else {
       let editedUserStory: EditUserstory = {
         ...this.userStoryFormGroup.value,
+        tag: +this.userStoryFormGroup.value.tag,
         projeto: +this.projectId,
         criador: +this.criador,
         kanban: +this.kanbanId,
@@ -184,6 +198,16 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
       this.newComentario = '';
     });
   }
+
+  writeTags() {
+    console.log({
+      ...this.userStoryFormGroup.value,
+      tag: +this.userStoryFormGroup.value.tag,
+      projeto: +this.projectId,
+      criador: +this.criador,
+      kanban: +this.kanbanId,
+    });
+  }
 }
 
 interface ISelectSwimlane {
@@ -196,6 +220,7 @@ interface EditUserstory {
   descricao: string;
   responsavel: string;
   estimativa_tempo: string;
+  tag: number;
   swimlane: string;
   projeto: number;
   criador: number;

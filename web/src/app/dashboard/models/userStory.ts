@@ -1,3 +1,5 @@
+import { Tag } from './tag';
+
 export class UserStory {
   constructor(
     public titulo: string = '',
@@ -15,6 +17,8 @@ export class UserStory {
     public responsavel: number | string = -1,
 
     public swimlane: number = -1,
+
+    public tags: Tag[] = [],
 
     public id?: number
   ) {}

@@ -37,8 +37,8 @@ export class UserStory {
   comentarios: Comentario[] | null;
 
   @ManyToMany(() => Tag)
-  @JoinColumn({
-    name: 'FK_TAG_ID',
+  @JoinTable({
+    name: 'USER_STORY_TAGS',
   })
   tags: Tag[] | null;
 

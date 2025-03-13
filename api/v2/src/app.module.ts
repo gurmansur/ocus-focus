@@ -28,6 +28,7 @@ import { SprintModule } from './modules/sprint/sprint.module';
 import { StakeholderModule } from './modules/stakeholder/stakeholder.module';
 import { StatusPriorizacaoModule } from './modules/status-priorizacao/status-priorizacao.module';
 import { SuiteDeTesteModule } from './modules/suite-de-teste/suite-de-teste.module';
+import { TagModule } from './modules/tag/tag.module';
 import { UserStoryModule } from './modules/user-story/user-story.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
 
@@ -70,6 +71,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     SuiteDeTesteModule,
     KanbanModule,
     ComentarioModule,
+    TagModule,
   ],
   providers: [
     AppService,

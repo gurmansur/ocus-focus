@@ -1,6 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Colaborador } from 'src/modules/colaborador/entities/colaborador.entity';
-import { UserStory } from 'src/modules/user-story/entities/user-story.entity';
 import {
   Column,
   Entity,
@@ -8,6 +6,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { UserStory } from '../../user-story/entities/user-story.entity';
 
 @Entity('COMENTARIOS')
 export class Comentario {

@@ -5,6 +5,7 @@ import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Kanban } from '../kanban/entities/kanban.entity';
 import { Swimlane } from '../kanban/entities/swimlane.entity';
 import { Projeto } from '../projeto/entities/projeto.entity';
+import { Tag } from '../tag/entities/tag.entity';
 import { CreateUserStoryDto } from './dto/create-user-story.dto';
 import { UpdateUserStoryDto } from './dto/update-user-story.dto';
 import { UserStory } from './entities/user-story.entity';
@@ -22,6 +23,7 @@ export class UserStoryService {
     private readonly kanbanRepository: Repository<Kanban>,
     @InjectRepository(Swimlane)
     private readonly swimlaneRepository: Repository<Swimlane>,
+    @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
   ) {}
 
   async findAll(projetoId: Projeto) {
@@ -74,9 +76,34 @@ export class UserStoryService {
   }
 
   async findFromSwimlane(swimlane: number) {
-    return await this.userStoryRepository.find({
+    const userStories = await this.userStoryRepository.find({
       where: { swimlane: { id: swimlane } },
+      relations: {
+        tags: true,
+        responsavel: true,
+      },
     });
+
+    console.log(userStories);
+
+    const userStoriesEdited = userStories.map((userStory) => {
+      console.log(userStory.responsavel);
+      return {
+        id: userStory.id,
+        titulo: userStory.titulo,
+        descricao: userStory.descricao,
+        estimativa_tempo: userStory.estimativa_tempo,
+        responsavel: userStory.responsavel.nome,
+        tags: userStory.tags.map((tag) => {
+          return {
+            nome: tag.nome,
+            cor: tag.cor,
+          };
+        }),
+      };
+    });
+
+    return userStoriesEdited;
   }
 
   async create(createUserStoryDto: CreateUserStoryDto) {
@@ -110,6 +137,12 @@ export class UserStoryService {
       },
     });
 
+    const tag = await this.tagRepository.findOne({
+      where: {
+        id: createUserStoryDto.tag,
+      },
+    });
+
     const userStory = {
       titulo: createUserStoryDto.titulo,
       descricao: createUserStoryDto.descricao,
@@ -119,11 +152,20 @@ export class UserStoryService {
       swimlane: swimlane,
       projeto: projeto,
       kanban: kanban,
-    };
+      tags: [tag],
+    } as UserStory;
 
-    const userStoryCreated = this.userStoryRepository.create(userStory);
-
-    return await this.userStoryRepository.save(userStoryCreated);
+    try {
+      const userStoryCreated = this.userStoryRepository.create(userStory);
+      console.log('aqui passou');
+      return await this.userStoryRepository.save(userStoryCreated);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async update(id: number, updateUserStoryDto: UpdateUserStoryDto) {
@@ -168,7 +210,7 @@ export class UserStoryService {
       kanban: kanban,
     };
 
-    const result = await this.userStoryRepository.update(id, userStory);
+    await this.userStoryRepository.update(id, userStory);
 
     return;
   }

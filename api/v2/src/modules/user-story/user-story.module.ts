@@ -4,6 +4,7 @@ import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Kanban } from '../kanban/entities/kanban.entity';
 import { Swimlane } from '../kanban/entities/swimlane.entity';
 import { Projeto } from '../projeto/entities/projeto.entity';
+import { Tag } from '../tag/entities/tag.entity';
 import { UserStory } from './entities/user-story.entity';
 import { UserStoryController } from './user-story.controller';
 import { UserStoryService } from './user-story.service';
@@ -18,6 +19,7 @@ import { UserStoryService } from './user-story.service';
       Kanban,
       Swimlane,
       Colaborador,
+      Tag
     ]),
   ],
   exports: [UserStoryService],
