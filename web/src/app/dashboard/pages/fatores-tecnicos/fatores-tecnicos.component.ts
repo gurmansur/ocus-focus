@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
-import { FatTecProService } from '../../services/fatTecPro.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fatTecPro } from '../../models/fatTecPro';
+import { Projeto } from '../../models/projeto';
+import { FatTecProService } from '../../services/fatTecPro.service';
 import { ProjetoService } from '../../services/projeto.service';
-import { Projeto } from '../../models/projeto'
 
 @Component({
   selector: 'app-fatores-tecnicos',
   templateUrl: './fatores-tecnicos.component.html',
-  styleUrls: ['./fatores-tecnicos.component.css']
+  styleUrls: ['./fatores-tecnicos.component.css'],
 })
 export class FatoresTecnicosComponent {
-
   userId!: number;
   projetoId!: number;
   projeto!: Projeto;
@@ -26,25 +25,16 @@ export class FatoresTecnicosComponent {
     this.userId = Number(localStorage.getItem('usu_id'));
   }
 
-
   // datasource
-  fat: fatTecPro  [] = [];
+  fat: fatTecPro[] = [];
 
   // tabela
-  colunasTabela: string[] = [
-    'Descrição',
-    'Peso',
-    'Valor'
-  ];
+  colunasTabela: string[] = ['Descrição', 'Peso', 'Valor'];
 
-  camposEntidade: string[] = [
-    'descricao',
-    'peso',
-    'valor'
-  ];
+  camposEntidade: string[] = ['descricao', 'peso', 'valor'];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -54,11 +44,13 @@ export class FatoresTecnicosComponent {
 
   // diálogo de confirmação
   showModal: boolean = false;
+  mostrarDialogoConfirmacao: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente excluir este Fator Tecnico?";
-  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do Fator Tecnico em questão serão excluídos do sistema.";
+  tituloDialogo: string = 'Deseja realmente excluir este fator técnico?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. Todos os dados do fator técnico em questão serão excluídos do sistema.';
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
@@ -69,11 +61,10 @@ export class FatoresTecnicosComponent {
     });
   }
 
-
   private executarBusca(): void {
-
-    this.fatTecService.list(this.projetoId, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
-
+    this.fatTecService
+      .list(this.projetoId, this.paginaAtual, this.tamanhoPagina)
+      .subscribe(this.processarResultado());
   }
 
   private processarResultado() {
@@ -86,31 +77,43 @@ export class FatoresTecnicosComponent {
     };
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
-  openNewFator(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'inserir-fator-tecnico']);
+  openNewFator() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'inserir-fator-tecnico',
+    ]);
   }
 
   excluirItem(item: any) {
     this.itemExclusao = item.id;
     this.showModal = true;
+    this.mostrarDialogoConfirmacao = true;
   }
 
   editarItem(item: any) {
     console.log(item);
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'editar-fator-tecnico', item.id]);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'editar-fator-tecnico',
+      item.id,
+    ]);
   }
 
   cancelarExclusao() {
     this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
   }
 
   confirmarExclusao() {
     this.fatTecService.delete(this.itemExclusao).subscribe(() => {
       this.showModal = false;
+      this.mostrarDialogoConfirmacao = false;
       this.executarBusca();
     });
   }
@@ -128,5 +131,4 @@ export class FatoresTecnicosComponent {
       this.executarBusca();
     }
   }
-
 }

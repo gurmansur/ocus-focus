@@ -14,6 +14,8 @@ export class ProjetoComponent {
   projeto!: Projeto;
 
   showModal: boolean = false;
+  mostrarDialogoConfirmacao: boolean = false;
+  itemExclusao!: number;
   tituloDialogo: string = 'Deseja realmente excluir este projeto?';
   mensagemDialogo: string =
     'Essa ação é irreversível. Todos os dados do projeto em questão serão excluídos do sistema.';
@@ -62,17 +64,20 @@ export class ProjetoComponent {
     this.router.navigate(['/dashboard/editar-projeto/', this.projectId]);
   }
 
-  onDelete() {
+  excluirProjeto() {
     this.showModal = true;
+    this.mostrarDialogoConfirmacao = true;
   }
 
   cancelarExclusao() {
     this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
   }
 
   confirmarExclusao() {
     this.projetoService.delete(this.projectId).subscribe(() => {
       this.showModal = false;
+      this.mostrarDialogoConfirmacao = false;
       this.router.navigate(['/dashboard/projetos']);
     });
   }

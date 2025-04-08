@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { DashboardComponent } from './containers/dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { ArcatestFileTreeComponent } from './pages/arcatest-file-tree/arcatest-file-tree.component';
@@ -34,6 +35,7 @@ import { ProjetoComponent } from './pages/projeto/projeto.component';
 import { ProjetosComponent } from './pages/projetos/projetos.component';
 import { RequisitosProjetoComponent } from './pages/requisitos-projeto/requisitos-projeto.component';
 import { StakeholdersProjetoComponent } from './pages/stakeholders-projeto/stakeholders-projeto.component';
+import { DialogoConfirmacaoCompatDirective } from './shared/dialogo-confirmacao/dialogo-confirmacao-compat.directive';
 import { DialogoConfirmacaoComponent } from './shared/dialogo-confirmacao/dialogo-confirmacao.component';
 import { DialogoMensagemComponent } from './shared/dialogo-mensagem/dialogo-mensagem.component';
 import { FooterComponent } from './shared/footer/footer.component';
@@ -66,6 +68,7 @@ import { TabelaComponent } from './shared/tabela/tabela.component';
     InserirProjetoComponent,
     EditarProjetoComponent,
     DialogoConfirmacaoComponent,
+    DialogoConfirmacaoCompatDirective,
     ProjetoComponent,
     ColaboradoresProjetoComponent,
     InserirColaboradorProjetoComponent,
@@ -87,6 +90,7 @@ import { TabelaComponent } from './shared/tabela/tabela.component';
     DashboardRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule,
     PainelArcatestComponent,
     ArcatestFileTreeComponent,
   ],

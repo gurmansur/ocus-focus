@@ -34,6 +34,7 @@ export class PriorizarRequisitosComponent {
   mensagemDialogo: string =
     'Ao completar a priorização de requisitos, você não poderá mais alterar as respostas. Deseja continuar?';
   showModal: boolean = false;
+  mostrarDialogoConfirmacao: boolean = false;
 
   constructor(
     private projetoService: ProjetoService,
@@ -178,11 +179,29 @@ export class PriorizarRequisitosComponent {
     }
   }
 
+  cancelarExclusao() {
+    this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
+  }
+
+  confirmarExclusao() {
+    this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
+    // Implementação necessária para a exclusão ou finalização
+  }
+
   cancelarPriorizacao() {
     this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
   }
 
   confirmarPriorizacao() {
+    this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
+    this.finalizar();
+  }
+
+  finalizar() {
     this.classificacaoFinalAtual = calcularResultadoFinal(
       this.respostaPositiva!.value,
       this.respostaNegativa!.value

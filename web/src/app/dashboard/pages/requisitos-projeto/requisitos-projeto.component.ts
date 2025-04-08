@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { RequisitoService } from '../../services/requisito.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Projeto } from '../../models/projeto';
 import { Requisito } from '../../models/requisito';
 import { ProjetoService } from '../../services/projeto.service';
+import { RequisitoService } from '../../services/requisito.service';
 
 @Component({
   selector: 'app-requisitos-projeto',
   templateUrl: './requisitos-projeto.component.html',
-  styleUrls: ['./requisitos-projeto.component.css']
+  styleUrls: ['./requisitos-projeto.component.css'],
 })
 export class RequisitosProjetoComponent {
   userId!: number;
@@ -29,20 +29,12 @@ export class RequisitosProjetoComponent {
   requisitos: Requisito[] = [];
 
   // tabela
-  colunasTabela: string[] = [
-    'RF#',
-    'Nome',
-    'Especificação',
-  ];
+  colunasTabela: string[] = ['RF#', 'Nome', 'Especificação'];
 
-  camposEntidade: string[] = [
-    'numeroIdentificador',
-    'nome',
-    'especificacao',
-  ];
+  camposEntidade: string[] = ['numeroIdentificador', 'nome', 'especificacao'];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -52,11 +44,13 @@ export class RequisitosProjetoComponent {
 
   // diálogo de confirmação
   showModal: boolean = false;
+  mostrarDialogoConfirmacao: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente remover o requisito do projeto?";
-  mensagemDialogo: string = "Ao confirmar, o requisito será removido do projeto.";
+  tituloDialogo: string = 'Deseja realmente excluir este requisito?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. Todos os dados do requisito em questão serão excluídos do sistema.';
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
@@ -73,10 +67,19 @@ export class RequisitosProjetoComponent {
   }
 
   private executarBusca(): void {
-    if(!this.filterValue){
-      this.requisitoService.list(this.projetoId, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+    if (!this.filterValue) {
+      this.requisitoService
+        .list(this.projetoId, this.paginaAtual, this.tamanhoPagina)
+        .subscribe(this.processarResultado());
     } else {
-      this.requisitoService.listByName(this.projetoId, this.filterValue, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+      this.requisitoService
+        .listByName(
+          this.projetoId,
+          this.filterValue,
+          this.paginaAtual,
+          this.tamanhoPagina
+        )
+        .subscribe(this.processarResultado());
     }
   }
 
@@ -90,34 +93,52 @@ export class RequisitosProjetoComponent {
     };
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
-  openNewRequisito(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'inserir-requisito']);
+  openNewRequisito() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'inserir-requisito',
+    ]);
   }
 
   excluirItem(item: any) {
     this.itemExclusao = item.id;
     this.showModal = true;
+    this.mostrarDialogoConfirmacao = true;
   }
 
   editarItem(item: any) {
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'editar-requisito', item.id]);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'editar-requisito',
+      item.id,
+    ]);
   }
 
-  visualizarCasoDeUso(item: any){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId,'requisitos', item.id, 'caso-de-uso' ]);
+  visualizarCasoDeUso(item: any) {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'requisitos',
+      item.id,
+      'caso-de-uso',
+    ]);
   }
 
   cancelarExclusao() {
     this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
   }
 
   confirmarExclusao() {
     this.requisitoService.delete(this.itemExclusao).subscribe(() => {
       this.showModal = false;
+      this.mostrarDialogoConfirmacao = false;
       this.executarBusca();
     });
   }
@@ -135,5 +156,4 @@ export class RequisitosProjetoComponent {
       this.executarBusca();
     }
   }
-
 }

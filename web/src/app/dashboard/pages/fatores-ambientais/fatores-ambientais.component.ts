@@ -54,9 +54,10 @@ export class FatoresAmbientaisComponent {
 
   // diálogo de confirmação
   showModal: boolean = false;
+  mostrarDialogoConfirmacao: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente excluir este Fator Ambiente?";
-  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do Fator Ambiente em questão serão excluídos do sistema.";
+  tituloDialogo: string = "Deseja realmente excluir este fator ambiental?";
+  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do fator ambiental em questão serão excluídos do sistema.";
 
   ngOnInit(){
     this.buscarProjeto(this.projetoId, this.userId);
@@ -97,6 +98,7 @@ export class FatoresAmbientaisComponent {
   excluirItem(item: any) {
     this.itemExclusao = item.id;
     this.showModal = true;
+    this.mostrarDialogoConfirmacao = true;
   }
 
   editarItem(item: any) {
@@ -105,11 +107,13 @@ export class FatoresAmbientaisComponent {
 
   cancelarExclusao() {
     this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
   }
 
   confirmarExclusao() {
     this.fatAmbService.delete(this.itemExclusao).subscribe(() => {
       this.showModal = false;
+      this.mostrarDialogoConfirmacao = false;
       this.executarBusca();
     });
   }

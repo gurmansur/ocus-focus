@@ -60,6 +60,7 @@ export class CenariosComponent {
 
   // diálogo de confirmação
   showModal: boolean = false;
+  mostrarDialogoConfirmacao: boolean = false;
   itemExclusao!: number;
   tituloDialogo: string = "Deseja realmente excluir este cenario?";
   mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do cenario em questão serão excluídos do sistema.";
@@ -109,6 +110,7 @@ export class CenariosComponent {
   excluirItem(item: any) {
     this.itemExclusao = item.id;
     this.showModal = true;
+    this.mostrarDialogoConfirmacao = true;
   }
 
   editarItem(item: any) {
@@ -117,11 +119,13 @@ export class CenariosComponent {
 
   cancelarExclusao() {
     this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
   }
 
   confirmarExclusao() {
     this.cenarioService.delete(this.itemExclusao).subscribe(() => {
       this.showModal = false;
+      this.mostrarDialogoConfirmacao = false;
       this.executarBusca();
     });
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { ColaboradorSignin } from '../../models/colaborador-signin';
 import { AuthService } from '../../services/auth.service';
 
@@ -14,8 +15,10 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './collaborator-signin.component.html',
   styleUrls: ['./collaborator-signin.component.css'],
 })
-export class CollaboratorSigninComponent {
+export class CollaboratorSigninComponent implements OnInit {
   signinFormGroup!: FormGroup;
+  isLoading = false;
+  errorMessage = '';
 
   constructor(
     private authService: AuthService,
@@ -23,10 +26,21 @@ export class CollaboratorSigninComponent {
     private formBuilder: FormBuilder
   ) {}
 
+  /**
+   * Inicializa o formulário de login com validações
+   */
   ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  /**
+   * Inicializa o formulário com as validações necessárias
+   */
+  private initializeForm(): void {
     this.signinFormGroup = this.formBuilder.group({
       email: new FormControl('', [
         Validators.required,
+        Validators.email,
         Validators.minLength(5),
         Validators.maxLength(100),
       ]),
@@ -39,37 +53,64 @@ export class CollaboratorSigninComponent {
     });
   }
 
+  /**
+   * Getter para o campo de email do formulário
+   */
   get email() {
     return this.signinFormGroup.get('email');
   }
+
+  /**
+   * Getter para o campo de senha do formulário
+   */
   get senha() {
     return this.signinFormGroup.get('senha');
   }
 
+  /**
+   * Cria um objeto de login a partir dos valores do formulário
+   */
   private createUser(): ColaboradorSignin {
     return new ColaboradorSignin(this.email!.value, this.senha!.value);
   }
 
+  /**
+   * Processa o envio do formulário de login
+   */
   onSubmit(): void {
     if (this.signinFormGroup.invalid) {
       this.signinFormGroup.markAllAsTouched();
       return;
-    } else {
-      const signinUser = this.createUser();
+    }
 
-      this.authService.signinColaborador(signinUser).subscribe({
-        next: (response) => {
-          localStorage.setItem('token', response.accessToken);
-          localStorage.setItem('usu_email', response.usu_email);
-          localStorage.setItem('usu_name', response.usu_name);
-          localStorage.setItem('usu_id', response.usu_id.toString());
-          localStorage.setItem('usu_role', response.usu_role);
+    this.login();
+  }
+
+  /**
+   * Realiza o processo de login
+   */
+  private login(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const signinUser = this.createUser();
+
+    this.authService
+      .signinColaborador(signinUser)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: () => {
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
-          alert(err.error.message);
+          this.errorMessage =
+            err.error?.message ||
+            'Erro ao realizar login. Verifique suas credenciais.';
         },
       });
-    }
   }
 }

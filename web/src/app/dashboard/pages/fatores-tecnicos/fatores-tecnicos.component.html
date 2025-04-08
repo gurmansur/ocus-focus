@@ -68,9 +68,9 @@
   <app-dialogo-confirmacao
     [titulo]="tituloDialogo"
     [mensagem]="mensagemDialogo"
-    [isActive]="showModal"
-    [onCancel]="cancelarExclusao.bind(this)"
-    [onConfirm]="confirmarExclusao.bind(this)"
+    [isActive]="mostrarDialogoConfirmacao"
+    (cancelar)="cancelarExclusao()"
+    (confirmar)="confirmarExclusao()"
   ></app-dialogo-confirmacao>
 
   <div class="table-buttons mt-5 flex w-full">

@@ -60,10 +60,10 @@ export class StakeholderSigninComponent {
       this.authService.signinStakeholder(signinUser).subscribe({
         next: (response) => {
           localStorage.setItem('token', response.accessToken);
-          localStorage.setItem('usu_email', response.usu_email);
-          localStorage.setItem('usu_name', response.usu_name);
-          localStorage.setItem('usu_id', response.usu_id);
-          localStorage.setItem('usu_role', response.usu_role);
+          localStorage.setItem('usu_email', response['usu_email'] as string);
+          localStorage.setItem('usu_name', response['usu_name'] as string);
+          localStorage.setItem('usu_id', String(response['usu_id']));
+          localStorage.setItem('usu_role', response['usu_role'] as string);
           this.router.navigate(['/dashboard']);
         },
 

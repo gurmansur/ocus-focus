@@ -97,17 +97,17 @@
   <app-dialogo-confirmacao
     [titulo]="tituloDialogo"
     [mensagem]="mensagemDialogo"
-    [isActive]="showModal"
-    [onCancel]="cancelarExclusao.bind(this)"
-    [onConfirm]="confirmarExclusao.bind(this)"
+    [isActive]="mostrarDialogoConfirmacao"
+    (cancelar)="cancelarExclusao()"
+    (confirmar)="confirmarExclusao()"
   ></app-dialogo-confirmacao>
 
   <app-dialogo-confirmacao
     [titulo]="tituloDialogoAlerta"
     [mensagem]="mensagemDialogoAlerta"
     [isActive]="showAlertModal"
-    [onCancel]="cancelarAlerta.bind(this)"
-    [onConfirm]="confirmarAlerta.bind(this)"
+    (cancelar)="cancelarExclusao()"
+    (confirmar)="confirmarExclusao()"
   ></app-dialogo-confirmacao>
 
   <div class="table-buttons mt-5 flex w-full">

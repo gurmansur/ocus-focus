@@ -55,10 +55,10 @@ export class StakeholdersProjetoComponent {
 
   // diálogo de confirmação
   showModal: boolean = false;
+  mostrarDialogoConfirmacao: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = 'Deseja realmente remover o stakeholder do projeto?';
-  mensagemDialogo: string =
-    'Essa ação é irreversível. O stakeholder perderá acesso total ao projeto e ao Prioreasy.';
+  tituloDialogo: string = "Deseja realmente excluir este stakeholder?";
+  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do stakeholder em questão serão excluídos do sistema.";
 
   // diálogo de confirmação alerta
   showAlertModal: boolean = false;
@@ -129,19 +129,20 @@ export class StakeholdersProjetoComponent {
   excluirItem(item: any) {
     this.itemExclusao = item.id;
     this.showModal = true;
+    this.mostrarDialogoConfirmacao = true;
   }
 
   cancelarExclusao() {
     this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
   }
 
   confirmarExclusao() {
-    this.stakeholderService
-    .delete(this.itemExclusao)
-      .subscribe(() => {
-        this.showModal = false;
-        this.executarBusca();
-      });
+    this.stakeholderService.delete(this.itemExclusao).subscribe(() => {
+      this.showModal = false;
+      this.mostrarDialogoConfirmacao = false;
+      this.executarBusca();
+    });
   }
 
   alertarItem(item: any) {

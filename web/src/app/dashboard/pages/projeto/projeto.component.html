@@ -30,7 +30,7 @@
         Editar Dados
       </button>
       <button
-        (click)="onDelete()"
+        (click)="excluirProjeto()"
         [disabled]="!projeto.admin"
         data-bs-toggle="modal"
         data-bs-target="#modalConfirmacao"
@@ -168,7 +168,7 @@
         <span class="text-violet-700 font-medium">Kanban</span> em seu projeto.
       </p>
       <a
-        href="/dashboard/projeto/{{ projeto.id }}/kanban"
+        [routerLink]="['/dashboard/projeto', projeto.id, 'kanban']"
         class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 focus:outline-none hover:bg-violet-800 text-white mt-4"
       >
         Acessar Flying Cards
@@ -205,7 +205,7 @@
         em seu projeto.
       </p>
       <a
-        href="/dashboard/projeto/{{ projeto.id }}/painel-prioreasy"
+        [routerLink]="['/dashboard/projeto', projeto.id, 'painel-prioreasy']"
         class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 focus:outline-none hover:bg-violet-800 text-white mt-4"
       >
         Acessar Prioreasy
@@ -238,7 +238,7 @@
         de seu projeto.
       </p>
       <a
-        href="/dashboard/projeto/{{ projeto.id }}/painel-estima"
+        [routerLink]="['/dashboard/projeto', projeto.id, 'painel-estima']"
         class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 focus:outline-none hover:bg-violet-800 text-white mt-4"
       >
         Acessar Estima
@@ -260,8 +260,8 @@
   <app-dialogo-confirmacao
     [titulo]="tituloDialogo"
     [mensagem]="mensagemDialogo"
-    [isActive]="showModal"
-    [onCancel]="cancelarExclusao.bind(this)"
-    [onConfirm]="confirmarExclusao.bind(this)"
+    [isActive]="mostrarDialogoConfirmacao"
+    (cancelar)="cancelarExclusao()"
+    (confirmar)="confirmarExclusao()"
   ></app-dialogo-confirmacao>
 </div>

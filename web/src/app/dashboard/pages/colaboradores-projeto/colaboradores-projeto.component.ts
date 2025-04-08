@@ -56,9 +56,10 @@ export class ColaboradoresProjetoComponent {
 
   // diálogo de confirmação
   showModal: boolean = false;
+  mostrarDialogoConfirmacao: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente remover o colaborador do projeto?";
-  mensagemDialogo: string = "Essa ação é irreversível. O colaborador perderá acesso total ao projeto.";
+  tituloDialogo: string = "Deseja realmente excluir este colaborador?";
+  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do colaborador em questão serão excluídos do sistema.";
 
   ngOnInit(){
     this.buscarProjeto(this.projetoId, this.userId);
@@ -118,15 +119,18 @@ export class ColaboradoresProjetoComponent {
   excluirItem(item: any) {
     this.itemExclusao = item.id;
     this.showModal = true;
+    this.mostrarDialogoConfirmacao = true;
   }
 
   cancelarExclusao() {
     this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
   }
 
   confirmarExclusao() {
     this.projetoService.removeColaborador(this.projetoId, this.itemExclusao).subscribe(() => {
       this.showModal = false;
+      this.mostrarDialogoConfirmacao = false;
       this.executarBusca();
     });
   }

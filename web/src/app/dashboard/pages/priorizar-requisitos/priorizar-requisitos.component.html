@@ -200,8 +200,8 @@
   <app-dialogo-confirmacao
   [titulo]="tituloDialogo"
   [mensagem]="mensagemDialogo"
-  [isActive]="showModal"
-  [onCancel]="cancelarPriorizacao.bind(this)"
-  [onConfirm]="confirmarPriorizacao.bind(this)"
+  [isActive]="mostrarDialogoConfirmacao"
+  (cancelar)="cancelarExclusao()"
+  (confirmar)="confirmarExclusao()"
 ></app-dialogo-confirmacao>
 </section>

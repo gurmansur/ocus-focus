@@ -116,15 +116,15 @@
     [titulo]="tituloConfirmacao"
     [mensagem]="mensagemConfirmacao"
     [isActive]="showModalConfirmacao"
-    [onCancel]="cancelarPriorizacao.bind(this)"
-    [onConfirm]="confirmarPriorizacao.bind(this)"
+    (cancelar)="cancelarExclusao()"
+    (confirmar)="confirmarExclusao()"
   ></app-dialogo-confirmacao>
 
   <app-dialogo-mensagem
     [titulo]="tituloMensagem"
     [mensagem]="mensagemMensagem"
     [isActive]="showModalMensagem"
-    [onConfirm]="fecharMensagem.bind(this)"
+    (confirmar)="confirmarExclusao()"
   ></app-dialogo-mensagem>
 
   <div class="table-buttons mt-5 flex w-full">
