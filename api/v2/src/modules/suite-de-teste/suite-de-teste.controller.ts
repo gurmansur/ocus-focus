@@ -17,7 +17,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { NoCache, ProjetoAtual } from '../../decorators';
 import { Serialize } from '../../decorators/serialize.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
@@ -67,6 +67,7 @@ export class SuiteDeTesteController {
   }
 
   @Get('file-tree')
+  @NoCache()
   @ApiResponse({
     status: 200,
     description: 'Árvore de arquivos',
@@ -76,9 +77,7 @@ export class SuiteDeTesteController {
     @ProjetoAtual() projeto: Projeto,
     @Query('id') id?: string,
   ) {
-    const response = await this.suiteDeTesteService.getFileTree(projeto, +id);
-
-    return SuiteDeTesteMapper.fileTreeBoToDto(response);
+    return this.suiteDeTesteService.getFileTree(projeto, +id);
   }
 
   @Get(':id')

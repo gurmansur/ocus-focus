@@ -7,9 +7,9 @@ import { AppService } from './app.service';
 import { TypeOrmConfigService } from './config/typeorm.config';
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { CacheInterceptor } from './interceptors/cache.interceptor';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
-import { CacheMiddleware } from './middlewares/cache.middleware';
 import { RequestLoggerMiddleware } from './middlewares/request-logger.middleware';
 import { AtorModule } from './modules/ator/ator.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -98,10 +98,14 @@ import { ValidationPipe as CustomValidationPipe } from './pipes/validation.pipe'
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RequestLoggerMiddleware, CacheMiddleware).forRoutes('*');
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
   }
 }

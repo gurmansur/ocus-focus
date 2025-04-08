@@ -23,7 +23,7 @@ export class CreateCasoDeTesteBo {
 
   dadosEntrada: string;
 
-  casoDeUsoId: number;
+  casoDeUsoId?: number;
 
   suiteDeTesteId?: number;
 

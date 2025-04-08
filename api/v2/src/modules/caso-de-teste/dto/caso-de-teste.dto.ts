@@ -121,7 +121,7 @@ export class CasoDeTesteDto {
     required: true,
   })
   @Type(() => CasoUsoDto)
-  casoDeUso: CasoUsoDto;
+  casoDeUso?: CasoUsoDto;
 
   @ApiProperty({
     type: () => SuiteDeTesteDto,

@@ -51,6 +51,7 @@ export class SuiteDeTesteService {
     if (suiteId) {
       const suiteEntity = await this.suiteDeTesteRepository.findOne({
         where: { id: suiteId },
+        relations: ['projeto'],
       });
 
       if (!suiteEntity) {

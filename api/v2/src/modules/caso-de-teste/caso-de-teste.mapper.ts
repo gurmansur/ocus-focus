@@ -51,9 +51,18 @@ export class CasoDeTesteMapper {
     entity.metodo = bo.metodo;
     entity.tecnica = bo.tecnica;
     entity.dadosEntrada = bo.dadosEntrada;
-    entity.casoDeUso = { id: bo.casoDeUsoId } as CasoUso;
-    entity.suiteDeTeste = { id: bo.suiteDeTesteId } as SuiteDeTeste;
-    entity.testadorDesignado = { id: bo.testadorDesignadoId } as Colaborador;
+
+    if (bo.casoDeUsoId) {
+      entity.casoDeUso = { id: bo.casoDeUsoId } as CasoUso;
+    }
+
+    if (bo.suiteDeTesteId) {
+      entity.suiteDeTeste = { id: bo.suiteDeTesteId } as SuiteDeTeste;
+    }
+
+    if (bo.testadorDesignadoId) {
+      entity.testadorDesignado = { id: bo.testadorDesignadoId } as Colaborador;
+    }
 
     return entity;
   }
