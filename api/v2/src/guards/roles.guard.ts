@@ -25,7 +25,7 @@ export class RolesGuard implements CanActivate {
     ]);
     
     // Se não houver funções definidas, permite o acesso
-    if (!requiredRoles) {
+    if (!requiredRoles || requiredRoles.length === 0) {
       return true;
     }
     
@@ -37,6 +37,9 @@ export class RolesGuard implements CanActivate {
       return false;
     }
     
-    return requiredRoles.some((role) => user.roles?.includes(role));
+    // Check if user has at least one of the required roles
+    return requiredRoles.some((role) => 
+      user.roles && Array.isArray(user.roles) && user.roles.includes(role)
+    );
   }
 } 

@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -44,7 +43,7 @@ export class AtorController {
   @ApiOperation({ summary: 'Listar atores' })
   @ApiPaginatedResponse(FindAtorByIdDto)
   findAll(
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page?: number,
     @Query('pageSize') pageSize?: number,
   ) {
@@ -60,7 +59,7 @@ export class AtorController {
   @ApiPaginatedResponse(FindAtorByIdDto)
   findByNome(
     @Query('nome') nome: string,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page?: number,
     @Query('pageSize') pageSize?: number,
   ) {
@@ -84,7 +83,7 @@ export class AtorController {
   })
   create(
     @Body() createAtorDto: CreateAtorDto,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
   ) {
     return this.atorService.create(createAtorDto, projetoId);
   }
@@ -96,7 +95,7 @@ export class AtorController {
   @Get(':id')
   @ApiOperation({ summary: 'Buscar ator por ID' })
   @ApiOkResponse({ description: 'Ator encontrado', type: FindAtorByIdDto })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.atorService.findOne(id);
   }
 
@@ -111,9 +110,9 @@ export class AtorController {
     type: FindAtorByIdDto,
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateAtorDto: UpdateAtorDto,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
   ) {
     return this.atorService.update(id, projetoId, updateAtorDto);
   }
@@ -125,7 +124,7 @@ export class AtorController {
   @Delete(':id')
   @ApiOperation({ summary: 'Remover ator' })
   @ApiOkResponse({ description: 'Ator removido com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.atorService.remove(id);
   }
 

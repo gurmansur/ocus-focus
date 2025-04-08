@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -49,7 +48,7 @@ export class SuiteDeTesteController {
   @ApiOperation({ summary: 'Listar', description: 'Lista todos os recursos' })
   @ApiPaginatedResponse(SuiteDeTesteDto)
   findAll(
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
@@ -73,7 +72,7 @@ export class SuiteDeTesteController {
   @ApiPaginatedResponse(SuiteDeTesteDto)
   findByNome(
     @Query('nome') nome: string,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
@@ -95,7 +94,7 @@ export class SuiteDeTesteController {
     description: 'Suite de teste encontrada',
     type: SuiteDeTesteDto,
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.suiteDeTesteService.findOne(id);
   }
 
@@ -117,7 +116,7 @@ export class SuiteDeTesteController {
   })
   create(
     @Body() createSuiteDeTesteDto: CreateSuiteDeTesteDto,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
   ) {
     return this.suiteDeTesteService.create(createSuiteDeTesteDto, projetoId);
   }
@@ -140,7 +139,7 @@ export class SuiteDeTesteController {
     type: SuiteDeTesteDto,
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateSuiteDeTesteDto: UpdateSuiteDeTesteDto,
   ) {
     return this.suiteDeTesteService.update(id, updateSuiteDeTesteDto);
@@ -156,7 +155,7 @@ export class SuiteDeTesteController {
   @ApiOperation({ summary: 'Remover', description: 'Remove um recurso' })
   @ApiResponse({ status: 200, description: 'Recurso removido com sucesso' })
   @ApiOkResponse({ description: 'Suite de teste removida com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.suiteDeTesteService.remove(id);
   }
 }

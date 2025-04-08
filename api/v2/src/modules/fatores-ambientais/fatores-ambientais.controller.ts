@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -55,7 +54,7 @@ export class FatoresAmbientaisController {
   @Get(':id')
   @ApiOperation({ summary: 'Buscar fator ambiental por ID' })
   @ApiOkResponse({ description: 'Fator ambiental encontrado' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.fatoresAmbientaisService.findOne(id);
   }
 
@@ -70,7 +69,7 @@ export class FatoresAmbientaisController {
   @ApiOperation({ summary: 'Atualizar fator ambiental' })
   @ApiOkResponse({ description: 'Fator ambiental atualizado com sucesso' })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateFatoresAmbientaiDto: UpdateFatoresAmbientaiDto,
   ) {
     return this.fatoresAmbientaisService.update(id, updateFatoresAmbientaiDto);
@@ -85,7 +84,7 @@ export class FatoresAmbientaisController {
   @Delete(':id')
   @ApiOperation({ summary: 'Remover fator ambiental' })
   @ApiOkResponse({ description: 'Fator ambiental removido com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.fatoresAmbientaisService.remove(id);
   }
 }

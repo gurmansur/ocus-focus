@@ -1,16 +1,15 @@
-import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -29,7 +28,7 @@ import { ExecucaoDeTesteService } from './execucao-de-teste.service';
  */
 @ApiTags('Execução de Teste')
 @ApiBearerAuth()
-@Controller('execucoes-de-teste')
+@Controller('execucao-de-teste')
 export class ExecucaoDeTesteController {
   constructor(
     private readonly execucaoDeTesteService: ExecucaoDeTesteService,
@@ -51,7 +50,7 @@ export class ExecucaoDeTesteController {
   @ApiOperation({ summary: 'Listar', description: 'Lista todos os recursos' })
   @ApiPaginatedResponse(ExecucaoDeTesteDto)
   findAll(
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
@@ -75,7 +74,7 @@ export class ExecucaoDeTesteController {
   @ApiPaginatedResponse(ExecucaoDeTesteDto)
   findByNome(
     @Query('nome') nome: string,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
@@ -102,7 +101,7 @@ export class ExecucaoDeTesteController {
   })
   @ApiPaginatedResponse(ExecucaoDeTesteDto)
   findByCasoDeTeste(
-    @Query('casoDeTeste', ParseIntPipe) casoDeTesteId: number,
+    @Query('casoDeTeste') casoDeTesteId: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
@@ -128,7 +127,7 @@ export class ExecucaoDeTesteController {
     description: 'Execução de teste encontrada',
     type: ExecucaoDeTesteDto,
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.execucaoDeTesteService.findOne(id);
   }
 
@@ -150,7 +149,7 @@ export class ExecucaoDeTesteController {
   })
   create(
     @Body() createExecucaoDeTesteDto: CreateExecucaoDeTesteDto,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
   ) {
     return this.execucaoDeTesteService.create(
       createExecucaoDeTesteDto,
@@ -176,7 +175,7 @@ export class ExecucaoDeTesteController {
     type: ExecucaoDeTesteDto,
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateExecucaoDeTesteDto: UpdateExecucaoDeTesteDto,
   ) {
     return this.execucaoDeTesteService.update(id, updateExecucaoDeTesteDto);
@@ -192,7 +191,7 @@ export class ExecucaoDeTesteController {
   @ApiOperation({ summary: 'Remover', description: 'Remove um recurso' })
   @ApiResponse({ status: 200, description: 'Recurso removido com sucesso' })
   @ApiOkResponse({ description: 'Execução de teste removida com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.execucaoDeTesteService.remove(id);
   }
 }

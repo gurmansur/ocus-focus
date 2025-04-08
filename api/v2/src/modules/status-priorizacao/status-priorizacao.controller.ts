@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -55,7 +54,7 @@ export class StatusPriorizacaoController {
   @Get(':id')
   @ApiOperation({ summary: 'Buscar status de priorização por ID' })
   @ApiOkResponse({ description: 'Status de priorização encontrado' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.statusPriorizacaoService.findOne(id);
   }
 
@@ -72,7 +71,7 @@ export class StatusPriorizacaoController {
     description: 'Status de priorização atualizado com sucesso',
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateStatusPriorizacaoDto: UpdateStatusPriorizacaoDto,
   ) {
     return this.statusPriorizacaoService.update(id);
@@ -87,7 +86,7 @@ export class StatusPriorizacaoController {
   @Delete(':id')
   @ApiOperation({ summary: 'Remover status de priorização' })
   @ApiOkResponse({ description: 'Status de priorização removido com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.statusPriorizacaoService.remove(id);
   }
 }

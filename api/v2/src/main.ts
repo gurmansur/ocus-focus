@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {
@@ -16,7 +16,7 @@ import { setupSwagger } from './swagger-setup';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://127.0.0.1:4200',
+    origin: process.env.FRONTEND_URL || 'http://127.0.0.1:4200',
     credentials: true,
   });
 
@@ -26,6 +26,40 @@ async function bootstrap() {
     new TransformInterceptor(),
     new TimeoutInterceptor(60000), // 60 segundos de timeout
     new EntityNotFoundInterceptor(),
+  );
+
+  // Configurar validação global
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Remove propriedades que não existem no DTO
+      forbidNonWhitelisted: true, // Retorna erro para propriedades não esperadas
+      transform: true, // Transforma os dados de entrada para o tipo do DTO
+      transformOptions: {
+        enableImplicitConversion: true, // Permite converter strings em números automaticamente
+      },
+      enableDebugMessages: true, // Habilita mensagens de debug no console
+      stopAtFirstError: false, // Coleta todos os erros antes de parar
+      dismissDefaultMessages: false, // Mantém as mensagens padrão de erro
+      exceptionFactory: (errors) => {
+        const formattedErrors = errors.map((error) => {
+          const constraints = error.constraints
+            ? Object.values(error.constraints)
+            : ['Erro de validação'];
+
+          return {
+            campo: error.property,
+            mensagens: constraints,
+          };
+        });
+
+        return new Error(
+          JSON.stringify({
+            message: 'Erro de validação',
+            errors: formattedErrors,
+          }),
+        );
+      },
+    }),
   );
 
   // Aplicar filtros de exceção

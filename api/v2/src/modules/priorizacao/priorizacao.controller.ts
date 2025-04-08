@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -26,7 +25,7 @@ export class PriorizacaoController {
   @ApiOkResponse({ description: 'Priorização criada com sucesso' })
   createPriorizacao(
     @Body() createPriorizacaoDto: CreatePriorizacaoDto,
-    @Query('stakeholder', ParseIntPipe) stakeholderId: number,
+    @Query('stakeholder') stakeholderId: number,
   ) {
     return this.priorizacaoService.createPriorizacao(
       createPriorizacaoDto,
@@ -42,7 +41,7 @@ export class PriorizacaoController {
   @ApiOperation({ summary: 'Criar resultado de priorização' })
   @ApiOkResponse({ description: 'Resultado de priorização criado com sucesso' })
   createResultado(
-    @Query('requisito', ParseIntPipe) requisitoId: number,
+    @Query('requisito') requisitoId: number,
     @Query('resultado')
     resultadoFinal:
       | 'DEVE SER FEITO'
@@ -62,7 +61,7 @@ export class PriorizacaoController {
   @Get()
   @ApiOperation({ summary: 'Listar priorizações por projeto' })
   @ApiOkResponse({ description: 'Priorizações por projeto' })
-  findByProjeto(@Query('projeto', ParseIntPipe) projetoId: number) {
+  findByProjeto(@Query('projeto') projetoId: number) {
     return this.priorizacaoService.findByProjeto(projetoId);
   }
 
@@ -73,7 +72,7 @@ export class PriorizacaoController {
   @Patch('complete')
   @ApiOperation({ summary: 'Marcar priorização como completa' })
   @ApiOkResponse({ description: 'Priorização marcada como completa' })
-  update(@Query('stakeholder', ParseIntPipe) stakeholderId: number) {
+  update(@Query('stakeholder') stakeholderId: number) {
     return this.priorizacaoService.update(stakeholderId);
   }
 
@@ -85,7 +84,7 @@ export class PriorizacaoController {
   @ApiOperation({ summary: 'Obter classificação final de um requisito' })
   @ApiOkResponse({ description: 'Classificação final do requisito' })
   getRequirementFinalClassification(
-    @Query('requisito', ParseIntPipe) requisitoId: number,
+    @Query('requisito') requisitoId: number,
   ) {
     return this.priorizacaoService.getMostFrequentClassification(requisitoId);
   }

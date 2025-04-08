@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -116,7 +115,7 @@ export class UsuarioController {
     type: Number,
     example: 1,
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.usuarioService.findOne(id);
   }
 
@@ -149,7 +148,7 @@ export class UsuarioController {
     example: 1,
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateUsuarioDto: UpdateUsuarioDto,
   ) {
     return this.usuarioService.update(id, updateUsuarioDto);
@@ -187,7 +186,7 @@ export class UsuarioController {
     type: Number,
     example: 1,
   })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.usuarioService.remove(id);
   }
 }

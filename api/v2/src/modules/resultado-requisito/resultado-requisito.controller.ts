@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -55,7 +54,7 @@ export class ResultadoRequisitoController {
   @Get(':id')
   @ApiOperation({ summary: 'Buscar resultado de requisito por ID' })
   @ApiOkResponse({ description: 'Resultado de requisito encontrado' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.resultadoRequisitoService.findOne(id);
   }
 
@@ -72,7 +71,7 @@ export class ResultadoRequisitoController {
     description: 'Resultado de requisito atualizado com sucesso',
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateResultadoRequisitoDto: UpdateResultadoRequisitoDto,
   ) {
     return this.resultadoRequisitoService.update(
@@ -90,7 +89,7 @@ export class ResultadoRequisitoController {
   @Delete(':id')
   @ApiOperation({ summary: 'Remover resultado de requisito' })
   @ApiOkResponse({ description: 'Resultado de requisito removido com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.resultadoRequisitoService.remove(id);
   }
 }

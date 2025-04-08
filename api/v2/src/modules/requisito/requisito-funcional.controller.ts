@@ -1,15 +1,14 @@
-import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
   Delete,
   Get,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -69,9 +68,9 @@ export class RequisitoController {
   @ApiPaginatedResponse(RequisitoDto)
   listByNamePaginated(
     @Query('nome') nome: string,
-    @Query('projeto', ParseIntPipe) projetoId: number,
-    @Query('page', ParseIntPipe) page: number,
-    @Query('pageSize', ParseIntPipe) pageSize: number,
+    @Query('projeto') projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
     return this.requisitoService.listByNamePaginated(
       nome,
@@ -93,7 +92,7 @@ export class RequisitoController {
   })
   @ProtectedRoute()
   @ApiOkResponse({ description: 'Requisito encontrado', type: RequisitoDto })
-  getById(@Query('id', ParseIntPipe) id: number) {
+  getById(@Query('id') id: number) {
     return this.requisitoService.getById(id);
   }
 

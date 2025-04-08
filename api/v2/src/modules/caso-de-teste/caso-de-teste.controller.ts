@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -49,7 +48,7 @@ export class CasoDeTesteController {
   @ApiOperation({ summary: 'Listar', description: 'Lista todos os recursos' })
   @ApiPaginatedResponse(CasoDeTesteDto)
   findAll(
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
@@ -73,7 +72,7 @@ export class CasoDeTesteController {
   @ApiPaginatedResponse(CasoDeTesteDto)
   findByNome(
     @Query('nome') nome: string,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
@@ -95,7 +94,7 @@ export class CasoDeTesteController {
   })
   @ApiPaginatedResponse(CasoDeTesteDto)
   findBySuiteDeTeste(
-    @Query('suiteDeTeste', ParseIntPipe) suiteDeTesteId: number,
+    @Query('suiteDeTeste') suiteDeTesteId: number,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
@@ -121,7 +120,7 @@ export class CasoDeTesteController {
     description: 'Caso de teste encontrado',
     type: CasoDeTesteDto,
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.casoDeTesteService.findOne(id);
   }
 
@@ -143,7 +142,7 @@ export class CasoDeTesteController {
   })
   create(
     @Body() createCasoDeTesteDto: CreateCasoDeTesteDto,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
   ) {
     return this.casoDeTesteService.create(createCasoDeTesteDto, projetoId);
   }
@@ -163,9 +162,9 @@ export class CasoDeTesteController {
     type: CasoDeTesteDto,
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateCasoDeTesteDto: UpdateCasoDeTesteDto,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
   ) {
     return this.casoDeTesteService.update(id, updateCasoDeTesteDto, projetoId);
   }
@@ -180,7 +179,7 @@ export class CasoDeTesteController {
   @ApiOperation({ summary: 'Remover', description: 'Remove um recurso' })
   @ApiResponse({ status: 200, description: 'Recurso removido com sucesso' })
   @ApiOkResponse({ description: 'Caso de teste removido com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.casoDeTesteService.remove(id);
   }
 }

@@ -56,7 +56,13 @@ export class AuthService {
     }
 
     if (await bcrypt.compare(signInDto.senha, user.senha)) {
-      const { senha, ...payload } = user;
+      const { senha, ...userData } = user;
+
+      // Add roles array to payload
+      const payload = {
+        ...userData,
+        roles: ['colaborador'],
+      };
 
       const token = await this.jwtService.signAsync(payload);
 
@@ -80,7 +86,13 @@ export class AuthService {
     }
 
     if (await bcrypt.compare(signInDto.senha, user.senha)) {
-      const { senha, ...payload } = user;
+      const { senha, ...userData } = user;
+
+      // Add roles array to payload
+      const payload = {
+        ...userData,
+        roles: ['stakeholder'],
+      };
 
       const token = await this.jwtService.signAsync(payload);
 
@@ -99,7 +111,9 @@ export class AuthService {
 
   async verifyToken(token: string) {
     try {
-      const payload = await this.jwtService.verifyAsync(token);
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: process.env.JWT_SECRET,
+      });
       return { auth: true, message: 'Token válido.' };
     } catch (error) {
       return { auth: false, message: 'Token inválido.' };

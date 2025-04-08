@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -34,7 +33,7 @@ export class FatorTecnicoProjetoController {
   @ApiOkResponse({ description: 'Fator técnico criado com sucesso' })
   create(
     @Body() createFatorTecnicoProjetoDto: CreateFatorTecnicoProjetoDto,
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
   ) {
     return this.fatorTecnicoProjetoService.create(
       projetoId,
@@ -54,7 +53,7 @@ export class FatorTecnicoProjetoController {
   @ApiOperation({ summary: 'Listar fatores técnicos' })
   @ApiOkResponse({ description: 'Lista de fatores técnicos do projeto' })
   findAll(
-    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('projeto') projetoId: number,
     @Query('page') page?: number,
     @Query('size') pageSize?: number,
   ) {
@@ -74,7 +73,7 @@ export class FatorTecnicoProjetoController {
   @Get(':id')
   @ApiOperation({ summary: 'Buscar fator técnico por ID' })
   @ApiOkResponse({ description: 'Fator técnico do projeto encontrado' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.fatorTecnicoProjetoService.getById(id);
   }
 
@@ -91,7 +90,7 @@ export class FatorTecnicoProjetoController {
     description: 'Fator técnico do projeto atualizado com sucesso',
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateFatorTecnicoProjetoDto: UpdateFatorTecnicoProjetoDto,
   ) {
     return this.fatorTecnicoProjetoService.update(
@@ -111,7 +110,7 @@ export class FatorTecnicoProjetoController {
   @ApiOkResponse({
     description: 'Fator técnico do projeto removido com sucesso',
   })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.fatorTecnicoProjetoService.remove(id);
   }
 }

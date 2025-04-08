@@ -3,313 +3,686 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
-  ParseIntPipe,
+  HttpStatus,
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiOkResponse,
+  ApiBody,
   ApiOperation,
   ApiQuery,
+  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ApiPaginatedResponse } from '../../decorators/api-paginated-response.decorator';
-import { ProtectedRoute } from '../../decorators/protected-route.decorator';
-import { Serialize } from '../../decorators/serialize.decorator';
-import { ColaboradorService } from '../colaborador/colaborador.service';
+import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
 import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
-import { CreateColaboradorDto } from '../colaborador/dto/create-colaborador.dto';
-import { UpdateColaboradorDto } from '../colaborador/dto/update-colaborador.dto';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
-import { ProjetoDto } from './dto/projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { ProjetoService } from './projeto.service';
 
+/**
+ * Controlador responsável por gerenciar as operações relacionadas aos projetos
+ * Este controlador contém endpoints para criação, atualização, exclusão e consulta de projetos,
+ * bem como para o gerenciamento de colaboradores associados aos projetos.
+ */
+@UseGuards(AuthGuard)
 @ApiTags('Projeto')
 @ApiBearerAuth()
+@ApiUnauthorizedResponse({
+  description:
+    'Não autorizado - O token de autenticação não foi fornecido ou é inválido',
+})
 @Controller('projetos')
-@Serialize()
 export class ProjetoController {
-  constructor(
-    private readonly projetoService: ProjetoService,
-    private readonly colaboradorService: ColaboradorService,
-  ) {}
+  constructor(private readonly projetoService: ProjetoService) {}
+
+  /*
+   * =================================================
+   * ENDPOINTS DE OPERAÇÕES BÁSICAS DE PROJETOS
+   * =================================================
+   */
 
   /**
-   * Cria um novo projeto
-   * @param createProjetoDto Dados do projeto a ser criado
-   * @returns O projeto criado
+   * Lista todos os projetos cadastrados no sistema
+   * @returns Lista de todos os projetos
    */
-  @Post()
-  @ProtectedRoute('admin', 'gerente')
+  @Get()
   @ApiOperation({
-    summary: 'Criar novo projeto',
+    summary: 'Lista todos os projetos',
     description:
-      'Cria um novo projeto no sistema com as informações fornecidas. Disponível apenas para administradores e gerentes.',
+      'Retorna uma lista completa de todos os projetos cadastrados no sistema',
   })
-  @ApiCreatedResponse({
-    description: 'Projeto criado com sucesso',
-    type: ProjetoDto,
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de projetos recuperada com sucesso',
   })
-  @ApiBadRequestResponse({
-    description: 'Dados inválidos fornecidos para a criação do projeto',
-  })
-  @ApiUnauthorizedResponse({
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
     description: 'Usuário não autenticado',
   })
-  @ApiForbiddenResponse({
-    description: 'Usuário não tem permissão para criar projeto',
+  findAll() {
+    return this.projetoService.findAll();
+  }
+
+  /**
+   * Cria um novo projeto no sistema
+   * @param createProjetoDto Dados do projeto a ser criado
+   * @param user ID do usuário que está criando o projeto
+   * @returns O projeto criado com seu ID gerado
+   */
+  @Post('new')
+  @ApiOperation({
+    summary: 'Cria um novo projeto',
+    description:
+      'Cria um novo projeto associado ao usuário especificado. O usuário se torna o proprietário do projeto.',
+  })
+  @ApiBody({
+    type: CreateProjetoDto,
+    description: 'Dados necessários para a criação de um projeto',
   })
   @ApiQuery({
     name: 'user',
-    description: 'ID do usuário criador do projeto',
-    type: String,
     required: true,
-    example: '1',
+    type: Number,
+    description: 'ID do usuário que está criando o projeto',
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Projeto criado com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description:
+      'Dados inválidos fornecidos. Verifique os seguintes pontos: \n' +
+      '- Não envie o campo "admin" no payload \n' +
+      '- Campos dataInicio e previsaoFim devem estar no formato ISO 8601 (YYYY-MM-DDTHH:mm:ss.sssZ) \n' +
+      '- O campo status deve ser um dos valores: EM ANDAMENTO, FINALIZADO, CANCELADO',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Usuário não autenticado',
   })
   create(
     @Body() createProjetoDto: CreateProjetoDto,
-    @Query('user') user: string,
+    @Query('user') user: number,
   ) {
-    return this.projetoService.create(createProjetoDto, parseInt(user));
+    return this.projetoService.create(createProjetoDto, user);
   }
 
   /**
-   * Lista todos os projetos com paginação
-   * @param page Número da página
-   * @param pageSize Tamanho da página
-   * @returns Lista paginada de projetos
+   * Atualiza os dados de um projeto existente
+   * @param id ID do projeto a ser atualizado
+   * @param updateProjetoDto Dados atualizados do projeto
+   * @returns Projeto atualizado
    */
-  @Get()
-  @ProtectedRoute()
-  @ApiPaginatedResponse(ProjetoDto)
+  @Patch('update')
   @ApiOperation({
-    summary: 'Listar projetos',
+    summary: 'Atualiza um projeto existente',
     description:
-      'Retorna uma lista paginada de todos os projetos cadastrados no sistema',
-  })
-  @ApiOkResponse({
-    description: 'Lista de projetos recuperada com sucesso',
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Usuário não autenticado',
+      'Atualiza os dados de um projeto existente com base no ID fornecido e nos dados de atualização',
   })
   @ApiQuery({
-    name: 'page',
-    description: 'Número da página a ser exibida (começa em 1)',
+    name: 'projeto',
+    required: true,
     type: Number,
-    required: false,
-    example: 1,
+    description: 'ID do projeto a ser atualizado',
   })
-  @ApiQuery({
-    name: 'pageSize',
-    description: 'Quantidade de itens por página',
-    type: Number,
-    required: false,
-    example: 10,
+  @ApiBody({
+    type: UpdateProjetoDto,
+    description: 'Dados para atualização do projeto',
   })
-  findAll(@Query('page') page?: string, @Query('pageSize') pageSize?: string) {
-    return this.projetoService.findAll(
-      page ? parseInt(page) : undefined,
-      pageSize ? parseInt(pageSize) : undefined,
-    );
-  }
-
-  /**
-   * Retorna a contagem total de projetos
-   * @returns Total de projetos
-   */
-  @Get('metrics/count')
-  @ProtectedRoute('admin', 'gerente')
-  @ApiOperation({
-    summary: 'Contagem total de projetos',
-    description: 'Retorna a contagem total de projetos cadastrados no sistema',
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Projeto atualizado com sucesso',
   })
-  @ApiOkResponse({
-    description: 'Contagem de projetos recuperada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        count: {
-          type: 'number',
-          example: 42,
-          description: 'Número total de projetos',
-        },
-      },
-    },
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Projeto não encontrado',
   })
-  @ApiUnauthorizedResponse({
-    description: 'Usuário não autenticado',
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Dados inválidos fornecidos',
   })
-  @ApiForbiddenResponse({
-    description: 'Usuário não tem permissão para acessar métricas',
-  })
-  countProjects() {
-    return this.projetoService.findTotal(0); // Using existing methods
-  }
-
-  /**
-   * Retorna a contagem de projetos por status
-   * @returns Contagem de projetos por status
-   */
-  @Get('metrics/status')
-  @ProtectedRoute('admin', 'gerente')
-  @ApiOperation({ description: 'Retorna a contagem de projetos por status' })
-  countProjectsByStatus() {
-    // Use existing method or implement as needed
-    // Return structure expected by frontend
-    return {
-      ongoing: this.projetoService.findOngoingCount(0),
-      finished: this.projetoService.findFinishedCount(0),
-      new: this.projetoService.findNewCount(0),
-    };
-  }
-
-  /**
-   * Retorna a contagem de projetos por gerente
-   * @returns Contagem de projetos por gerente
-   */
-  @Get('metrics/gerente')
-  @ProtectedRoute('admin', 'gerente')
-  @ApiOperation({ description: 'Retorna a contagem de projetos por gerente' })
-  countProjectsByGerente() {
-    // Return structure expected by frontend
-    return this.projetoService.findRecentes(0, 10);
-  }
-
-  /**
-   * Busca um projeto pelo ID
-   * @param id ID do projeto
-   * @returns O projeto encontrado
-   */
-  @Get(':id')
-  @ProtectedRoute()
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.projetoService.findOne(id);
-  }
-
-  /**
-   * Atualiza um projeto
-   * @param id ID do projeto
-   * @param updateProjetoDto Dados a serem atualizados
-   * @returns O projeto atualizado
-   */
-  @Patch(':id')
-  @ProtectedRoute('admin', 'gerente')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Query('projeto') id: number,
     @Body() updateProjetoDto: UpdateProjetoDto,
   ) {
     return this.projetoService.update(id, updateProjetoDto);
   }
 
   /**
-   * Remove um projeto
-   * @param id ID do projeto
-   * @returns Mensagem de confirmação
+   * Remove um projeto do sistema
+   * @param id ID do projeto a ser removido
+   * @returns Confirmação de remoção
    */
-  @Delete(':id')
-  @ProtectedRoute('admin', 'gerente')
-  @ApiOkResponse({ description: 'Projeto removido com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  @Delete('delete')
+  @ApiOperation({
+    summary: 'Remove um projeto',
+    description:
+      'Remove permanentemente um projeto do sistema com base no ID fornecido',
+  })
+  @ApiQuery({
+    name: 'projeto',
+    required: true,
+    type: Number,
+    description: 'ID do projeto a ser removido',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Projeto removido com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Projeto não encontrado',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Usuário não tem permissão para remover este projeto',
+  })
+  remove(@Query('projeto') id: number) {
     return this.projetoService.remove(id);
   }
 
-  // Colaborador endpoints
+  /*
+   * =================================================
+   * ENDPOINTS DE BUSCA DE PROJETOS
+   * =================================================
+   */
 
   /**
-   * Busca todos os colaboradores de um projeto
-   * @param id ID do projeto
-   * @returns Lista de colaboradores do projeto
+   * Busca projetos pelo nome, com paginação
+   * @param nome Nome ou parte do nome do projeto a ser buscado
+   * @param colaboradorId ID do colaborador associado aos projetos
+   * @param page Número da página para paginação
+   * @param pageSize Quantidade de itens por página
+   * @returns Lista paginada de projetos que correspondem ao nome buscado
    */
-  @Get(':id/colaboradores')
-  @ProtectedRoute()
-  @ApiOkResponse({
-    description: 'Lista de colaboradores do projeto',
-    type: [ColaboradorDto],
+  @Get('findByNome')
+  @ApiOperation({
+    summary: 'Busca projetos por nome',
+    description:
+      'Retorna uma lista paginada de projetos que correspondem ao nome ou parte do nome fornecido, filtrando por colaborador',
   })
-  findColaboradores(
-    @Param('id', ParseIntPipe) id: number,
-    @Query('page') page?: string,
-    @Query('pageSize') pageSize?: string,
+  @ApiQuery({
+    name: 'nome',
+    required: true,
+    type: String,
+    description: 'Nome ou parte do nome do projeto a ser buscado',
+  })
+  @ApiQuery({
+    name: 'user',
+    required: true,
+    type: Number,
+    description: 'ID do colaborador para filtrar os projetos',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Número da página para paginação (começa em 1)',
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    type: Number,
+    description: 'Quantidade de itens por página',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de projetos recuperada com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Parâmetros de paginação inválidos',
+  })
+  findByNome(
+    @Query('nome') nome: string,
+    @Query('user') colaboradorId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
-    return this.colaboradorService.findAllFromProject(
+    return this.projetoService.findByNome(nome, page, pageSize, colaboradorId);
+  }
+
+  /**
+   * Busca um projeto específico pelo ID, com paginação de dados relacionados
+   * @param id ID do projeto a ser buscado
+   * @param colaboradorId ID do colaborador para verificar permissões
+   * @param page Número da página para paginação
+   * @param pageSize Quantidade de itens por página
+   * @returns Dados do projeto com informações relacionadas paginadas
+   */
+  @Get('findById')
+  @ApiOperation({
+    summary: 'Busca projeto por ID',
+    description:
+      'Retorna os detalhes de um projeto específico com base no ID fornecido, incluindo dados relacionados paginados',
+  })
+  @ApiQuery({
+    name: 'projeto',
+    required: true,
+    type: Number,
+    description: 'ID do projeto a ser buscado',
+  })
+  @ApiQuery({
+    name: 'colaborador',
+    required: true,
+    type: Number,
+    description: 'ID do colaborador para verificar permissões',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Número da página para paginação (começa em 1)',
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    type: Number,
+    description: 'Quantidade de itens por página',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Projeto encontrado com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Projeto não encontrado',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Colaborador não tem permissão para visualizar este projeto',
+  })
+  findById(
+    @Query('projeto') id: number,
+    @Query('colaborador') colaboradorId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.projetoService.findById(
       id,
-      page ? parseInt(page) : undefined,
-      pageSize ? parseInt(pageSize) : undefined,
+      colaboradorId,
+      !!pageSize,
+      page,
+      pageSize,
     );
   }
 
   /**
-   * Adiciona um colaborador ao projeto
-   * @param id ID do projeto
-   * @param createColaboradorDto Dados do colaborador a ser adicionado
-   * @returns O colaborador adicionado
+   * Busca projetos associados a um stakeholder específico
+   * @param stakeholderId ID do stakeholder
+   * @returns Lista de projetos associados ao stakeholder
    */
-  @Post(':id/colaboradores')
-  @ProtectedRoute('admin', 'gerente')
-  @ApiOkResponse({
+  @Get('findByIdStakeholder')
+  @ApiOperation({
+    summary: 'Busca projetos por ID do stakeholder',
+    description:
+      'Retorna a lista de projetos associados a um stakeholder específico',
+  })
+  @ApiQuery({
+    name: 'stakeholder',
+    required: true,
+    type: Number,
+    description: 'ID do stakeholder para filtrar os projetos',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de projetos recuperada com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Stakeholder não encontrado',
+  })
+  findByIdStakeholder(@Query('stakeholder') stakeholderId: number) {
+    return this.projetoService.findByStakeholderId(stakeholderId);
+  }
+
+  /**
+   * Lista os projetos recentes do usuário
+   * @param user ID do usuário
+   * @param limit Limite de projetos a serem retornados
+   * @returns Lista de projetos recentes do usuário
+   */
+  @Get('recentes')
+  @ApiOperation({
+    summary: 'Lista projetos recentes do usuário',
+    description:
+      'Retorna uma lista dos projetos mais recentes associados ao usuário, limitada pelo parâmetro informado',
+  })
+  @ApiQuery({
+    name: 'user',
+    required: true,
+    type: Number,
+    description: 'ID do usuário para obter os projetos recentes',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Número máximo de projetos a serem retornados',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de projetos recentes recuperada com sucesso',
+  })
+  findRecentes(@Query('user') user: number, @Query('limit') limit?: number) {
+    return this.projetoService.findRecentes(user, limit);
+  }
+
+  /*
+   * =================================================
+   * ENDPOINTS DE MÉTRICAS
+   * =================================================
+   */
+
+  /**
+   * Retorna o total de projetos do usuário
+   * @param user ID do usuário
+   * @returns Total de projetos associados ao usuário
+   */
+  @Get('metrics/total')
+  @ApiOperation({
+    summary: 'Obtém o total de projetos do usuário',
+    description:
+      'Retorna o número total de projetos associados ao usuário especificado',
+  })
+  @ApiQuery({
+    name: 'user',
+    required: true,
+    type: Number,
+    description: 'ID do usuário para obter as métricas',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Total de projetos recuperado com sucesso',
+  })
+  findTotal(@Query('user') user: number) {
+    return this.projetoService.findTotal(user);
+  }
+
+  /**
+   * Retorna o total de projetos em andamento do usuário
+   * @param user ID do usuário
+   * @returns Total de projetos em andamento
+   */
+  @Get('metrics/ongoing')
+  @ApiOperation({
+    summary: 'Obtém o total de projetos em andamento',
+    description:
+      'Retorna o número de projetos que estão atualmente em andamento para o usuário especificado',
+  })
+  @ApiQuery({
+    name: 'user',
+    required: true,
+    type: Number,
+    description: 'ID do usuário para obter as métricas',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Total de projetos em andamento recuperado com sucesso',
+  })
+  findOngoingCount(@Query('user') user: number) {
+    return this.projetoService.findOngoingCount(user);
+  }
+
+  /**
+   * Retorna o total de projetos finalizados do usuário
+   * @param user ID do usuário
+   * @returns Total de projetos finalizados
+   */
+  @Get('metrics/finished')
+  @ApiOperation({
+    summary: 'Obtém o total de projetos finalizados',
+    description:
+      'Retorna o número de projetos que foram finalizados para o usuário especificado',
+  })
+  @ApiQuery({
+    name: 'user',
+    required: true,
+    type: Number,
+    description: 'ID do usuário para obter as métricas',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Total de projetos finalizados recuperado com sucesso',
+  })
+  findFinishedCount(@Query('user') user: number) {
+    return this.projetoService.findFinishedCount(user);
+  }
+
+  /**
+   * Retorna o total de projetos novos do usuário
+   * @param user ID do usuário
+   * @returns Total de projetos novos
+   */
+  @Get('metrics/new')
+  @ApiOperation({
+    summary: 'Obtém o total de projetos novos',
+    description:
+      'Retorna o número de projetos que foram recentemente criados para o usuário especificado',
+  })
+  @ApiQuery({
+    name: 'user',
+    required: true,
+    type: Number,
+    description: 'ID do usuário para obter as métricas',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Total de projetos novos recuperado com sucesso',
+  })
+  findNewCount(@Query('user') user: number) {
+    return this.projetoService.findNewCount(user);
+  }
+
+  /*
+   * =================================================
+   * ENDPOINTS DE GESTÃO DE COLABORADORES DO PROJETO
+   * =================================================
+   */
+
+  /**
+   * Lista os colaboradores associados a um projeto
+   * @param projetoId ID do projeto
+   * @param page Número da página para paginação
+   * @param pageSize Quantidade de itens por página
+   * @returns Lista paginada de colaboradores do projeto
+   */
+  @Get('colaboradores')
+  @ApiOperation({
+    summary: 'Lista colaboradores de um projeto',
+    description:
+      'Retorna uma lista paginada de colaboradores associados ao projeto especificado',
+  })
+  @ApiQuery({
+    name: 'projeto',
+    required: true,
+    type: Number,
+    description: 'ID do projeto para listar os colaboradores',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Número da página para paginação (começa em 1)',
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    type: Number,
+    description: 'Quantidade de itens por página',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de colaboradores recuperada com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Projeto não encontrado',
+  })
+  findColaboradores(
+    @Query('projeto') projetoId: number,
+    @Query('page') page?: number,
+    @Query('pageSize') pageSize?: number,
+  ) {
+    return this.projetoService.findColaboradores(projetoId, page, pageSize);
+  }
+
+  /**
+   * Busca colaboradores de um projeto por nome
+   * @param projetoId ID do projeto
+   * @param nome Nome ou parte do nome do colaborador a ser buscado
+   * @param page Número da página para paginação
+   * @param pageSize Quantidade de itens por página
+   * @returns Lista paginada de colaboradores que correspondem ao nome buscado
+   */
+  @Get('colaboradores/findByNome')
+  @ApiOperation({
+    summary: 'Busca colaboradores de um projeto por nome',
+    description:
+      'Retorna uma lista paginada de colaboradores do projeto que correspondem ao nome ou parte do nome fornecido',
+  })
+  @ApiQuery({
+    name: 'projeto',
+    required: true,
+    type: Number,
+    description: 'ID do projeto para buscar os colaboradores',
+  })
+  @ApiQuery({
+    name: 'nome',
+    required: true,
+    type: String,
+    description: 'Nome ou parte do nome do colaborador a ser buscado',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Número da página para paginação (começa em 1)',
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    type: Number,
+    description: 'Quantidade de itens por página',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de colaboradores recuperada com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Projeto não encontrado',
+  })
+  findColaboradoresByNome(
+    @Query('projeto') projetoId: number,
+    @Query('nome') nome: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.projetoService.findColaboradoresByNome(
+      projetoId,
+      nome,
+      page,
+      pageSize,
+    );
+  }
+
+  /**
+   * Adiciona um colaborador a um projeto existente
+   * @param projetoId ID do projeto
+   * @param colaboradorId ID do colaborador a ser adicionado
+   * @returns Confirmação da adição do colaborador
+   */
+  @Post('addColaborador')
+  @ApiOperation({
+    summary: 'Adiciona um colaborador ao projeto',
+    description: 'Associa um colaborador existente a um projeto específico',
+  })
+  @ApiQuery({
+    name: 'projeto',
+    required: true,
+    type: Number,
+    description: 'ID do projeto ao qual o colaborador será adicionado',
+  })
+  @ApiQuery({
+    name: 'colaborador',
+    required: true,
+    type: Number,
+    description: 'ID do colaborador a ser adicionado ao projeto',
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
     description: 'Colaborador adicionado com sucesso',
-    type: ColaboradorDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Projeto ou colaborador não encontrado',
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Colaborador já está associado ao projeto',
   })
   addColaborador(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() createColaboradorDto: CreateColaboradorDto,
+    @Query('projeto') projetoId: number,
+    @Query('colaborador') colaboradorId: number,
   ) {
-    // Create a new collaborator with the project reference
-    const collaborator = {
-      ...createColaboradorDto,
-      projeto: id,
-    };
-    return this.colaboradorService.create(collaborator);
+    return this.projetoService.addColaborador(projetoId, colaboradorId);
   }
 
   /**
-   * Atualiza um colaborador do projeto
+   * Remove um colaborador de um projeto
    * @param projetoId ID do projeto
-   * @param colaboradorId ID do colaborador
-   * @param updateColaboradorDto Dados a serem atualizados
-   * @returns O colaborador atualizado
+   * @param colaboradorId ID do colaborador a ser removido
+   * @param user Dados do colaborador autenticado que está realizando a operação
+   * @returns Confirmação da remoção do colaborador
    */
-  @Patch(':projetoId/colaboradores/:colaboradorId')
-  @ProtectedRoute('admin', 'gerente')
-  @ApiOkResponse({
-    description: 'Colaborador atualizado com sucesso',
-    type: ColaboradorDto,
+  @Delete('removeColaborador')
+  @ApiOperation({
+    summary: 'Remove um colaborador do projeto',
+    description:
+      'Remove a associação de um colaborador a um projeto específico. O usuário deve ter permissão adequada para realizar esta operação.',
   })
-  updateColaborador(
-    @Param('projetoId', ParseIntPipe) projetoId: number,
-    @Param('colaboradorId', ParseIntPipe) colaboradorId: number,
-    @Body() updateColaboradorDto: UpdateColaboradorDto,
-  ) {
-    // Manually handle projeto relationship
-    const updatedDto = {
-      ...updateColaboradorDto,
-      projeto_id: projetoId,
-    };
-    return this.colaboradorService.update(colaboradorId, updatedDto);
-  }
-
-  /**
-   * Remove um colaborador do projeto
-   * @param projetoId ID do projeto
-   * @param colaboradorId ID do colaborador
-   * @returns Mensagem de confirmação
-   */
-  @Delete(':projetoId/colaboradores/:colaboradorId')
-  @ProtectedRoute('admin', 'gerente')
-  @ApiOkResponse({ description: 'Colaborador removido com sucesso' })
+  @ApiQuery({
+    name: 'projeto',
+    required: true,
+    type: Number,
+    description: 'ID do projeto do qual o colaborador será removido',
+  })
+  @ApiQuery({
+    name: 'colaborador',
+    required: true,
+    type: Number,
+    description: 'ID do colaborador a ser removido do projeto',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Colaborador removido com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Projeto ou colaborador não encontrado',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description:
+      'Usuário não tem permissão para remover colaboradores deste projeto',
+  })
   removeColaborador(
-    @Param('projetoId', ParseIntPipe) projetoId: number,
-    @Param('colaboradorId', ParseIntPipe) colaboradorId: number,
+    @Query('projeto') projetoId: number,
+    @Query('colaborador') colaboradorId: number,
+    @ColaboradorAtual() user: ColaboradorDto,
   ) {
-    return this.colaboradorService.remove(colaboradorId);
+    return this.projetoService.removeColaborador(
+      projetoId,
+      colaboradorId,
+      user,
+    );
   }
 }

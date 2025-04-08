@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -55,7 +54,7 @@ export class FatoresTecnicosController {
   @Get(':id')
   @ApiOperation({ summary: 'Buscar fator técnico por ID' })
   @ApiOkResponse({ description: 'Fator técnico encontrado' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.fatoresTecnicosService.findOne(id);
   }
 
@@ -70,7 +69,7 @@ export class FatoresTecnicosController {
   @ApiOperation({ summary: 'Atualizar fator técnico' })
   @ApiOkResponse({ description: 'Fator técnico atualizado com sucesso' })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() updateFatoresTecnicoDto: UpdateFatoresTecnicoDto,
   ) {
     return this.fatoresTecnicosService.update(id, updateFatoresTecnicoDto);
@@ -85,7 +84,7 @@ export class FatoresTecnicosController {
   @Delete(':id')
   @ApiOperation({ summary: 'Remover fator técnico' })
   @ApiOkResponse({ description: 'Fator técnico removido com sucesso' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.fatoresTecnicosService.remove(id);
   }
 }
