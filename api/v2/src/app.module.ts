@@ -1,10 +1,16 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { TypeOrmConfigService } from './config/typeorm.config';
+import { RateLimitGuard } from './guards/rate-limit.guard';
+import { RolesGuard } from './guards/roles.guard';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { TransformInterceptor } from './interceptors/transform.interceptor';
+import { CacheMiddleware } from './middlewares/cache.middleware';
+import { RequestLoggerMiddleware } from './middlewares/request-logger.middleware';
 import { AtorModule } from './modules/ator/ator.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CasoDeTesteModule } from './modules/caso-de-teste/caso-de-teste.module';
@@ -29,6 +35,7 @@ import { StatusPriorizacaoModule } from './modules/status-priorizacao/status-pri
 import { SuiteDeTesteModule } from './modules/suite-de-teste/suite-de-teste.module';
 import { UserStoryModule } from './modules/user-story/user-story.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
+import { ValidationPipe as CustomValidationPipe } from './pipes/validation.pipe';
 
 @Module({
   imports: [
@@ -73,11 +80,28 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     AppService,
     {
       provide: APP_PIPE,
-      useValue: new ValidationPipe({
-        whitelist: true,
-        transform: true,
-      }),
+      useClass: CustomValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RateLimitGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware, CacheMiddleware).forRoutes('*');
+  }
+}

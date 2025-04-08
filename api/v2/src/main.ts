@@ -2,6 +2,10 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
+import { TransformInterceptor } from './interceptors/transform.interceptor';
+import { ValidationPipe } from './pipes/validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,6 +13,16 @@ async function bootstrap() {
     origin: 'http://127.0.0.1:4200',
     credentials: true,
   });
+
+  // Configuração de pipes globais
+  app.useGlobalPipes(new ValidationPipe());
+
+  // Configuração de interceptors globais
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new TransformInterceptor(),
+    new TimeoutInterceptor(),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Ocus Focus')
