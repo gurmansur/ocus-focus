@@ -1,11 +1,19 @@
-import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException, ValidationPipe as NestValidationPipe, ValidationError } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  ValidationPipe as NestValidationPipe,
+  PipeTransform,
+  ValidationError,
+} from '@nestjs/common';
 
 @Injectable()
-export class ValidationPipe extends NestValidationPipe implements PipeTransform<any> {
+export class ValidationPipe
+  extends NestValidationPipe
+  implements PipeTransform<any>
+{
   constructor() {
     super({
       whitelist: true,
-      forbidNonWhitelisted: true,
       transform: true,
       transformOptions: { enableImplicitConversion: true },
       exceptionFactory: (validationErrors: ValidationError[] = []) => {
@@ -20,16 +28,16 @@ export class ValidationPipe extends NestValidationPipe implements PipeTransform<
   }
 
   private formatErrors(errors: ValidationError[]): string[] {
-    return errors.flatMap(error => {
+    return errors.flatMap((error) => {
       if (error.constraints) {
         return Object.values(error.constraints);
       }
-      
+
       if (error.children && error.children.length > 0) {
         return this.formatErrors(error.children);
       }
-      
+
       return [];
     });
   }
-} 
+}

@@ -7,7 +7,6 @@ import { AppService } from './app.service';
 import { TypeOrmConfigService } from './config/typeorm.config';
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { RolesGuard } from './guards/roles.guard';
-import { CacheInterceptor } from './interceptors/cache.interceptor';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { RequestLoggerMiddleware } from './middlewares/request-logger.middleware';
@@ -97,10 +96,6 @@ import { ValidationPipe as CustomValidationPipe } from './pipes/validation.pipe'
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
     },
   ],
 })
