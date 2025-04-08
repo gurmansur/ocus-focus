@@ -135,8 +135,8 @@ export class ProjetoController {
   findById(
     @Query('projeto', ParseIntPipe) id: number,
     @Query('colaborador', ParseIntPipe) colaboradorId: number,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
     this.logOperation('findById', { id, colaboradorId, page, pageSize });
     return this.projetoService.findById(
