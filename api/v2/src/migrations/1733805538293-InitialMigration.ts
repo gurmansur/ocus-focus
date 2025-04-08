@@ -74,7 +74,7 @@ export class InitialMigration1733805538293 implements MigrationInterface {
       `CREATE TABLE \`COLABORADORES\` (\`COL_ID\` int NOT NULL AUTO_INCREMENT, \`COL_NOME\` varchar(100) NOT NULL, \`COL_EMAIL\` varchar(255) NOT NULL, \`COL_SENHA\` varchar(100) NOT NULL, \`COL_EMPRESA\` varchar(30) NOT NULL, \`COL_CARGO\` enum ('Gerente de Projeto', 'Analista de Sistemas', 'Desenvolvedor', 'Product Owner', 'Scrum Master') NOT NULL DEFAULT 'Desenvolvedor', \`FK_USUARIOS_USU_ID\` int NULL, PRIMARY KEY (\`COL_ID\`)) ENGINE=InnoDB`,
     );
     await queryRunner.query(
-      `CREATE TABLE \`SWIMLANES\` (\`SWI_ID\` int NOT NULL AUTO_INCREMENT, \`SWI_NOME\` varchar(30) NOT NULL, \`SWI_VERTICAL\` tinyint(1) NOT NULL DEFAULT '0', \`SWI_COR\` varchar(6) NOT NULL, \`SWI_CRIADO_EM\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`SWI_ATUALIZADO_EM\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`FK_KAN_ID\` int NULL, PRIMARY KEY (\`SWI_ID\`)) ENGINE=InnoDB`,
+      `CREATE TABLE \`SWIMLANES\` (\`SWI_ID\` int NOT NULL AUTO_INCREMENT, \`SWI_NOME\` varchar(30) NOT NULL, \`SWI_VERTICAL\` tinyint(1) NOT NULL DEFAULT '0', \`SWI_COR\` varchar(7) NOT NULL, \`SWI_CRIADO_EM\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`SWI_ATUALIZADO_EM\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`FK_KAN_ID\` int NULL, PRIMARY KEY (\`SWI_ID\`)) ENGINE=InnoDB`,
     );
     await queryRunner.query(
       `CREATE TABLE \`KANBANS\` (\`KAN_ID\` int NOT NULL AUTO_INCREMENT, \`FK_PRO_ID\` int NULL, UNIQUE INDEX \`REL_7b35d1df7f716ff30c825ce989\` (\`FK_PRO_ID\`), PRIMARY KEY (\`KAN_ID\`)) ENGINE=InnoDB`,

@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class SwimlaneDto {
   @IsString()
@@ -7,5 +7,6 @@ export class SwimlaneDto {
   @IsString()
   cor: string;
 
+  @IsNumber()
   kanban: number;
 }
