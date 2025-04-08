@@ -91,4 +91,12 @@ export class FatorAmbientalProjetoService {
   async remove(id: number) {
     return await this.fatorAmbientalRepository.delete(id);
   }
+
+  async findByProjeto(projetoId: number) {
+    return this.findAll(projetoId);
+  }
+
+  async findOne(id: number) {
+    return this.getById(id);
+  }
 }

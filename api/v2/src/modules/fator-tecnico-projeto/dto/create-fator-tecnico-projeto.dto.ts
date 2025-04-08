@@ -1,9 +1,14 @@
-import { IsAlphanumeric } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsAlphanumeric, IsNumber } from 'class-validator';
 
 export class CreateFatorTecnicoProjetoDto {
   @IsAlphanumeric()
-  valor: number;
+@ApiProperty({ description: 'Propriedade valor' })
+  @IsNumber()
+  valor: number
 
   @IsAlphanumeric()
-  fatorTec: number;
+@ApiProperty({ description: 'Propriedade fatorTec' })
+  @IsNumber()
+  fatorTec: number
 }

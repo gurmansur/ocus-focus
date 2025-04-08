@@ -20,6 +20,10 @@ export class ColaboradorProjetoService {
     return `This action returns all colaboradorProjeto`;
   }
 
+  findByProjeto(projetoId: number) {
+    return this.findColaboradoresByProjetoId(projetoId);
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} colaboradorProjeto`;
   }

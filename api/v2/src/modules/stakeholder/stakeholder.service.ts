@@ -1,6 +1,10 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { hash } from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { Like, Repository } from 'typeorm';
 import { ProjetoService } from '../projeto/projeto.service';
@@ -9,6 +13,7 @@ import { UsuarioService } from '../usuario/usuario.service';
 import { CreateStakeholderDto } from './dto/create-stakeholder.dto';
 import { Stakeholder } from './entities/stakeholder.entity';
 import { StakeholderBuilder } from './stakeholder.builder';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class StakeholderService {
@@ -16,8 +21,9 @@ export class StakeholderService {
     @InjectRepository(Stakeholder)
     private readonly stakeholderRepository: Repository<Stakeholder>,
     @Inject() private readonly usuarioService: UsuarioService,
-    @Inject() private readonly projetoService: ProjetoService,
-    @Inject()
+    @Inject(forwardRef(() => ProjetoService))
+    private readonly projetoService: ProjetoService,
+    @Inject(forwardRef(() => StatusPriorizacaoService))
     private readonly statusPriorizacaoService: StatusPriorizacaoService,
   ) {}
 
@@ -32,7 +38,14 @@ export class StakeholderService {
       throw new Error('Chave já cadastrada!');
     }
 
-    const usuario = await this.usuarioService.create({});
+    const hashedPassword = await hash(createStakeholderDto.senha, 10);
+
+    const usuario = await this.usuarioService.create({
+      nome: createStakeholderDto.nome,
+      email: createStakeholderDto.email,
+      senha: hashedPassword,
+      perfil: 'cliente',
+    });
 
     const projeto = await this.projetoService.findOne(
       createStakeholderDto.projeto_id,
@@ -42,12 +55,10 @@ export class StakeholderService {
       throw new Error('Projeto não encontrado');
     }
 
-    createStakeholderDto.senha = await hash(createStakeholderDto.senha, 10);
-
     const stakeholderEntity = StakeholderBuilder.buildStakeholderEntityFromDto(
       createStakeholderDto,
       chave,
-      usuario,
+      usuario as any,
       projeto,
     );
 
@@ -164,5 +175,9 @@ export class StakeholderService {
     }
 
     return { message: 'Todos os stakeholders participaram da priorização.' };
+  }
+
+  async updateStakeholder(id: number, updateStakeholderDto: any) {
+    return this.stakeholderRepository.update(id, updateStakeholderDto);
   }
 }

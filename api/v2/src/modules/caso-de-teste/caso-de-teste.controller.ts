@@ -1,155 +1,186 @@
+import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiHeader,
+  ApiCreatedResponse,
   ApiOkResponse,
-  ApiParam,
+  ApiOperation,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
-import { Serialize } from '../../decorators/serialize.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
-import { Projeto } from '../projeto/entities/projeto.entity';
-import { CasoDeTesteMapper } from './caso-de-teste.mapper';
+import { ApiPaginatedResponse } from '../../decorators/api-paginated-response.decorator';
+import { ProtectedRoute } from '../../decorators/protected-route.decorator';
 import { CasoDeTesteService } from './caso-de-teste.service';
 import { CasoDeTesteDto } from './dto/caso-de-teste.dto';
 import { CreateCasoDeTesteDto } from './dto/create-caso-de-teste.dto';
 import { UpdateCasoDeTesteDto } from './dto/update-caso-de-teste.dto';
 
+/**
+ * Controlador para gerenciamento de casos de teste
+ */
 @ApiTags('Caso de Teste')
 @ApiBearerAuth()
-@ApiUnauthorizedResponse({ status: 401, description: 'Não autorizado' })
-@UseGuards(AuthGuard)
-@Serialize()
-@Controller('caso-de-teste')
+@Controller('casos-de-teste')
 export class CasoDeTesteController {
   constructor(private readonly casoDeTesteService: CasoDeTesteService) {}
 
-  @ApiResponse({
-    status: 201,
-    description: 'Caso de Teste criado com sucesso',
-    type: CreateCasoDeTesteDto,
-    example: {
-      nome: 'Caso de Teste 1',
-      descricao: 'Descrição do Caso de Teste 1',
-      preCondicoes: 'Pre condições do Caso de Teste 1',
-      posCondicoes: 'Pos condições do Caso de Teste 1',
-      cenario: 'Cenário do Caso de Teste 1',
-      resultadoEsperado: 'Resultado esperado do Caso de Teste 1',
-      status: 'ATIVO',
-      projetoId: 1,
-      suiteDeTesteId: 1,
-    },
-  })
-  @ApiHeader({
-    name: 'projeto',
-    required: true,
-    description: 'Id do Projeto',
-    example: 1,
-  })
-  @Post()
-  async create(
-    @Body() createCasoDeTesteDto: CreateCasoDeTesteDto,
-    @ProjetoAtual() projetoAtual: Projeto,
-  ): Promise<CasoDeTesteDto> {
-    return CasoDeTesteMapper.casoDeTesteBoToDto(
-      await this.casoDeTesteService.create(
-        CasoDeTesteMapper.createCasoDeTesteDtoToBo(createCasoDeTesteDto),
-        projetoAtual,
-      ),
-    );
-  }
-
-  @ApiResponse({
-    status: 200,
-    description: 'Retorna a lista de Casos de Teste',
-    type: [CasoDeTesteDto],
-  })
+  /**
+   * Lista casos de teste com paginação
+   * @param projetoId ID do projeto
+   * @param page Número da página
+   * @param pageSize Tamanho da página
+   * @returns Lista paginada de casos de teste
+   */
+  @ProtectedRoute()
   @Get()
-  async findAll(@ProjetoAtual() projeto: Projeto): Promise<CasoDeTesteDto[]> {
-    return (await this.casoDeTesteService.findAll(projeto)).map((casoDeTeste) =>
-      CasoDeTesteMapper.casoDeTesteBoToDto(casoDeTeste),
+  @ApiOperation({
+    summary: 'Buscar',
+    description: 'Busca recursos específicos',
+  })
+  @ApiOperation({ summary: 'Listar', description: 'Lista todos os recursos' })
+  @ApiPaginatedResponse(CasoDeTesteDto)
+  findAll(
+    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.casoDeTesteService.findAll(projetoId, page, pageSize);
+  }
+
+  /**
+   * Busca casos de teste por nome
+   * @param nome Nome para filtrar
+   * @param projetoId ID do projeto
+   * @param page Número da página
+   * @param pageSize Tamanho da página
+   * @returns Lista paginada de casos de teste
+   */
+  @ProtectedRoute()
+  @Get('findByNome')
+  @ApiOperation({
+    summary: 'Buscar',
+    description: 'Busca recursos específicos',
+  })
+  @ApiPaginatedResponse(CasoDeTesteDto)
+  findByNome(
+    @Query('nome') nome: string,
+    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.casoDeTesteService.findByNome(nome, projetoId, page, pageSize);
+  }
+
+  /**
+   * Busca casos de teste por suite de teste
+   * @param suiteDeTesteId ID da suite de teste
+   * @param page Número da página
+   * @param pageSize Tamanho da página
+   * @returns Lista paginada de casos de teste
+   */
+  @ProtectedRoute()
+  @Get('findBySuiteDeTeste')
+  @ApiOperation({
+    summary: 'Buscar',
+    description: 'Busca recursos específicos',
+  })
+  @ApiPaginatedResponse(CasoDeTesteDto)
+  findBySuiteDeTeste(
+    @Query('suiteDeTeste', ParseIntPipe) suiteDeTesteId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.casoDeTesteService.findBySuiteDeTeste(
+      suiteDeTesteId,
+      page,
+      pageSize,
     );
   }
 
+  /**
+   * Busca caso de teste por ID
+   * @param id ID do caso de teste
+   * @returns Caso de teste encontrado
+   */
+  @ProtectedRoute()
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Buscar',
+    description: 'Busca recursos específicos',
+  })
   @ApiOkResponse({
-    status: 200,
-    description: 'Retorna o Caso de Teste',
+    description: 'Caso de teste encontrado',
     type: CasoDeTesteDto,
   })
-  @ApiBadRequestResponse({
-    status: 400,
-    description: 'Caso de Teste não encontrado',
-  })
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-    description: 'Id do Caso de Teste',
-    example: 1,
-  })
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return CasoDeTesteMapper.casoDeTesteBoToDto(
-      await this.casoDeTesteService.findOne(+id),
-    );
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.casoDeTesteService.findOne(id);
   }
 
-  @Patch(':id/change-suite')
-  changeSuite(
-    @Param('id') id: string,
-    @Body() { suiteId }: { suiteId: number },
-  ) {
-    return this.casoDeTesteService.changeSuite(+id, suiteId);
-  }
-
-  @ApiResponse({
-    status: 200,
-    description: 'Caso de Teste atualizado com sucesso',
-  })
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-    description: 'Id do Caso de Teste',
-    example: 1,
-  })
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCasoDeTesteDto: UpdateCasoDeTesteDto,
-  ) {
-    return this.casoDeTesteService.update(
-      +id,
-      CasoDeTesteMapper.updateCasoDeTesteDtoToBo(updateCasoDeTesteDto),
-    );
-  }
-
+  /**
+   * Cria um novo caso de teste
+   * @param createCasoDeTesteDto Dados do caso de teste
+   * @param projetoId ID do projeto
+   * @returns Caso de teste criado
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista', 'testador')
+  @Post()
+  @ApiOperation({ summary: 'Criar', description: 'Cria um novo recurso' })
+  @ApiCreatedResponse({ description: 'Recurso criado com sucesso' })
+  @ApiOperation({ summary: 'Criar', description: 'Cria um novo recurso' })
+  @ApiCreatedResponse({ description: 'Recurso criado com sucesso' })
   @ApiOkResponse({
-    status: 200,
-    description: 'Caso de Teste removido com sucesso',
+    description: 'Caso de teste criado com sucesso',
+    type: CasoDeTesteDto,
   })
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-    description: 'Id do Caso de Teste',
-    example: 1,
+  create(
+    @Body() createCasoDeTesteDto: CreateCasoDeTesteDto,
+    @Query('projeto', ParseIntPipe) projetoId: number,
+  ) {
+    return this.casoDeTesteService.create(createCasoDeTesteDto, projetoId);
+  }
+
+  /**
+   * Atualiza um caso de teste
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista', 'testador')
+  @Patch(':id')
+  @ApiOperation({
+    summary: 'Atualizar',
+    description: 'Atualiza um recurso existente',
   })
+  @ApiResponse({ status: 200, description: 'Recurso atualizado com sucesso' })
+  @ApiOkResponse({
+    description: 'Caso de teste atualizado com sucesso',
+    type: CasoDeTesteDto,
+  })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateCasoDeTesteDto: UpdateCasoDeTesteDto,
+    @Query('projeto', ParseIntPipe) projetoId: number,
+  ) {
+    return this.casoDeTesteService.update(id, updateCasoDeTesteDto, projetoId);
+  }
+
+  /**
+   * Remove um caso de teste
+   * @param id ID do caso de teste
+   * @returns Mensagem de confirmação
+   */
+  @ProtectedRoute('admin', 'gerente')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.casoDeTesteService.remove(+id);
+  @ApiOperation({ summary: 'Remover', description: 'Remove um recurso' })
+  @ApiResponse({ status: 200, description: 'Recurso removido com sucesso' })
+  @ApiOkResponse({ description: 'Caso de teste removido com sucesso' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.casoDeTesteService.remove(id);
   }
 }

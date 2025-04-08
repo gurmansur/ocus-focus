@@ -1,159 +1,198 @@
+import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
-  ApiParam,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
-import { Projeto } from '../projeto/entities/projeto.entity';
-import { ChangeStatusExecucaoDeTesteDto } from './dto/change-status-execucao-de-teste.dto';
+import { ApiPaginatedResponse } from '../../decorators/api-paginated-response.decorator';
+import { ProtectedRoute } from '../../decorators/protected-route.decorator';
 import { CreateExecucaoDeTesteDto } from './dto/create-execucao-de-teste.dto';
 import { ExecucaoDeTesteDto } from './dto/execucao-de-teste.dto';
-import { GetExecucaoDeTesteGraficoQueryDto } from './dto/get-execucao-de-teste-grafico-query.dto';
-import { GetExecucaoDeTesteGraficoDto } from './dto/get-execucao-de-teste-grafico.dto';
 import { UpdateExecucaoDeTesteDto } from './dto/update-execucao-de-teste.dto';
-import { ExecucaoDeTesteMapper } from './execucao-de-teste.mapper';
 import { ExecucaoDeTesteService } from './execucao-de-teste.service';
 
+/**
+ * Controlador para gerenciamento de execuções de teste
+ */
 @ApiTags('Execução de Teste')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
-@ApiUnauthorizedResponse({ description: 'Não autorizado' })
-@Controller('execucao-de-teste')
+@Controller('execucoes-de-teste')
 export class ExecucaoDeTesteController {
   constructor(
     private readonly execucaoDeTesteService: ExecucaoDeTesteService,
   ) {}
 
-  @ApiResponse({
-    status: 201,
-    description: 'Criado com sucesso',
-    type: ExecucaoDeTesteDto,
-  })
-  @Post()
-  create(@Body() createExecucaoDeTesteDto: CreateExecucaoDeTesteDto) {
-    const bo = ExecucaoDeTesteMapper.createDtoToBo(createExecucaoDeTesteDto);
-
-    return this.execucaoDeTesteService.create(bo);
-  }
-
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de execuções de teste',
-    type: [ExecucaoDeTesteDto],
-  })
+  /**
+   * Lista execuções de teste com paginação
+   * @param projetoId ID do projeto
+   * @param page Número da página
+   * @param pageSize Tamanho da página
+   * @returns Lista paginada de execuções de teste
+   */
+  @ProtectedRoute()
   @Get()
-  async findAll(@ProjetoAtual() projeto: Projeto) {
-    const bos = await this.execucaoDeTesteService.findAll(projeto);
-
-    return bos.map((bo) => ExecucaoDeTesteMapper.boToDto(bo));
-  }
-
-  @ApiResponse({
-    status: 200,
-    description: 'Execução de teste encontrada',
-    type: GetExecucaoDeTesteGraficoDto,
+  @ApiOperation({
+    summary: 'Buscar',
+    description: 'Busca recursos específicos',
   })
-  @Get('grafico')
-  async getGrafico(
-    @Query()
-    getExecucaoDeTesteGraficoQueryDto: GetExecucaoDeTesteGraficoQueryDto,
-    @ProjetoAtual() projeto: Projeto,
+  @ApiOperation({ summary: 'Listar', description: 'Lista todos os recursos' })
+  @ApiPaginatedResponse(ExecucaoDeTesteDto)
+  findAll(
+    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
-    const bo = ExecucaoDeTesteMapper.getExecucaoDeTesteGraficoQueryDtoToBo(
-      getExecucaoDeTesteGraficoQueryDto,
-    );
-
-    return this.execucaoDeTesteService.getGrafico(bo, projeto);
+    return this.execucaoDeTesteService.findAll(projetoId, page, pageSize);
   }
 
-  @ApiResponse({
-    status: 200,
+  /**
+   * Busca execuções de teste por nome
+   * @param nome Nome para filtrar
+   * @param projetoId ID do projeto
+   * @param page Número da página
+   * @param pageSize Tamanho da página
+   * @returns Lista paginada de execuções de teste
+   */
+  @ProtectedRoute()
+  @Get('findByNome')
+  @ApiOperation({
+    summary: 'Buscar',
+    description: 'Busca recursos específicos',
+  })
+  @ApiPaginatedResponse(ExecucaoDeTesteDto)
+  findByNome(
+    @Query('nome') nome: string,
+    @Query('projeto', ParseIntPipe) projetoId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.execucaoDeTesteService.findByNome(
+      nome,
+      projetoId,
+      page,
+      pageSize,
+    );
+  }
+
+  /**
+   * Busca execuções de teste por caso de teste
+   * @param casoDeTesteId ID do caso de teste
+   * @param page Número da página
+   * @param pageSize Tamanho da página
+   * @returns Lista paginada de execuções de teste
+   */
+  @ProtectedRoute()
+  @Get('findByCasoDeTeste')
+  @ApiOperation({
+    summary: 'Buscar',
+    description: 'Busca recursos específicos',
+  })
+  @ApiPaginatedResponse(ExecucaoDeTesteDto)
+  findByCasoDeTeste(
+    @Query('casoDeTeste', ParseIntPipe) casoDeTesteId: number,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return this.execucaoDeTesteService.findByCasoDeTeste(
+      casoDeTesteId,
+      page,
+      pageSize,
+    );
+  }
+
+  /**
+   * Busca execução de teste por ID
+   * @param id ID da execução de teste
+   * @returns A execução de teste encontrada
+   */
+  @ProtectedRoute()
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Buscar',
+    description: 'Busca recursos específicos',
+  })
+  @ApiOkResponse({
     description: 'Execução de teste encontrada',
     type: ExecucaoDeTesteDto,
   })
-  @ApiParam({
-    name: 'id',
-    type: Number,
-    description: 'ID da execução de teste',
-    example: 1,
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.execucaoDeTesteService.findOne(id);
+  }
+
+  /**
+   * Cria uma nova execução de teste
+   * @param createExecucaoDeTesteDto Dados da execução de teste
+   * @param projetoId ID do projeto
+   * @returns A execução de teste criada
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista', 'testador')
+  @Post()
+  @ApiOperation({ summary: 'Criar', description: 'Cria um novo recurso' })
+  @ApiCreatedResponse({ description: 'Recurso criado com sucesso' })
+  @ApiOperation({ summary: 'Criar', description: 'Cria um novo recurso' })
+  @ApiCreatedResponse({ description: 'Recurso criado com sucesso' })
+  @ApiOkResponse({
+    description: 'Execução de teste criada com sucesso',
+    type: ExecucaoDeTesteDto,
   })
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return ExecucaoDeTesteMapper.boToDto(
-      await this.execucaoDeTesteService.findOne(+id),
+  create(
+    @Body() createExecucaoDeTesteDto: CreateExecucaoDeTesteDto,
+    @Query('projeto', ParseIntPipe) projetoId: number,
+  ) {
+    return this.execucaoDeTesteService.create(
+      createExecucaoDeTesteDto,
+      projetoId,
     );
   }
 
-  @ApiResponse({
-    status: 200,
-    description: 'Atualizado com sucesso',
+  /**
+   * Atualiza uma execução de teste
+   * @param id ID da execução de teste
+   * @param updateExecucaoDeTesteDto Dados para atualização
+   * @returns A execução de teste atualizada
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista', 'testador')
+  @Patch(':id')
+  @ApiOperation({
+    summary: 'Atualizar',
+    description: 'Atualiza um recurso existente',
+  })
+  @ApiResponse({ status: 200, description: 'Recurso atualizado com sucesso' })
+  @ApiOkResponse({
+    description: 'Execução de teste atualizada com sucesso',
     type: ExecucaoDeTesteDto,
   })
-  @ApiParam({
-    name: 'id',
-    type: Number,
-    description: 'ID da execução de teste',
-    example: 1,
-  })
-  @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateExecucaoDeTesteDto: UpdateExecucaoDeTesteDto,
   ) {
-    const bo = ExecucaoDeTesteMapper.updateDtoToBo(updateExecucaoDeTesteDto);
-
-    return this.execucaoDeTesteService.update(+id, bo);
+    return this.execucaoDeTesteService.update(id, updateExecucaoDeTesteDto);
   }
 
-  @ApiResponse({
-    status: 200,
-    description: 'Status alterado com sucesso',
-    type: ExecucaoDeTesteDto,
-  })
-  @ApiParam({
-    name: 'id',
-    type: Number,
-    description: 'ID da execução de teste',
-    example: 1,
-  })
-  @Patch(':id/status')
-  changeStatus(
-    @Param('id') id: string,
-    @Body() changeStatusExecucaoDeTesteDto: ChangeStatusExecucaoDeTesteDto,
-  ) {
-    const bo = ExecucaoDeTesteMapper.changeStatusDtoToBo(
-      changeStatusExecucaoDeTesteDto,
-    );
-
-    return this.execucaoDeTesteService.changeStatus(+id, bo);
-  }
-
-  @ApiResponse({
-    status: 200,
-    description: 'Removido com sucesso',
-  })
-  @ApiParam({
-    name: 'id',
-    type: Number,
-    description: 'ID da execução de teste',
-    example: 1,
-  })
+  /**
+   * Remove uma execução de teste
+   * @param id ID da execução de teste
+   * @returns Confirmação de remoção
+   */
+  @ProtectedRoute('admin', 'gerente')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.execucaoDeTesteService.remove(+id);
+  @ApiOperation({ summary: 'Remover', description: 'Remove um recurso' })
+  @ApiResponse({ status: 200, description: 'Recurso removido com sucesso' })
+  @ApiOkResponse({ description: 'Execução de teste removida com sucesso' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.execucaoDeTesteService.remove(id);
   }
 }

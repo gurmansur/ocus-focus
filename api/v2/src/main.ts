@@ -1,7 +1,17 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import {
+  AllExceptionsFilter,
+  HttpExceptionFilter,
+} from './filters/http-exception.filter';
+import {
+  EntityNotFoundInterceptor,
+  LoggingInterceptor,
+  TimeoutInterceptor,
+  TransformInterceptor,
+} from './interceptors';
+import { setupSwagger } from './swagger-setup';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,23 +20,24 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const config = new DocumentBuilder()
-    .setTitle('Ocus Focus')
-    .setDescription('Documentação da API do projeto Ocus Focus')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+  // Aplicar interceptors globais
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new TransformInterceptor(),
+    new TimeoutInterceptor(60000), // 60 segundos de timeout
+    new EntityNotFoundInterceptor(),
+  );
 
-  const document = SwaggerModule.createDocument(app, config, {
-    deepScanRoutes: true,
-  });
+  // Aplicar filtros de exceção
+  app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
 
-  SwaggerModule.setup('docs', app, document);
+  // Configurar Swagger
+  setupSwagger(app);
 
   await app.listen(3333);
 
   Logger.log(
-    'Server running on http://localhost:3333 | Check the documentation on http://localhost:3333/docs',
+    'Servidor rodando em http://localhost:3333 | Consulte a documentação em http://localhost:3333/docs',
     'Bootstrap',
   );
 }

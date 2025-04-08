@@ -1,9 +1,14 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsNumber } from 'class-validator';
 
 export class UpdateSwimlaneUsDto {
   @IsArray()
-  userStories: number[];
+@ApiProperty({ description: 'Propriedade userStories' })
+  @IsNumber()
+  userStories: number[]
 
   @IsNumber()
-  id: number;
+@ApiProperty({ description: 'Propriedade id' })
+  @IsNumber()
+  id: number
 }

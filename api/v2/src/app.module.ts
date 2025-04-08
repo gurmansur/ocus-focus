@@ -1,10 +1,13 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
+import { GlobalValidationPipe } from './common/validation/validation.pipe';
 import { TypeOrmConfigService } from './config/typeorm.config';
+import { JwtAuthGuard, RolesGuard } from './guards';
+import { RequestLoggerMiddleware } from './middlewares/request-logger.middleware';
 import { AtorModule } from './modules/ator/ator.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CasoDeTesteModule } from './modules/caso-de-teste/caso-de-teste.module';
@@ -73,11 +76,27 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     AppService,
     {
       provide: APP_PIPE,
-      useValue: new ValidationPipe({
-        whitelist: true,
-        transform: true,
-      }),
+      useValue: GlobalValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    // Apply RequestLoggerMiddleware to all routes
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+
+    // Note: For more selective middleware application, you can do:
+    // consumer
+    //   .apply(ApiKeyMiddleware)
+    //   .exclude({ path: 'auth/login', method: RequestMethod.POST })
+    //   .forRoutes({ path: 'api/v2', method: RequestMethod.ALL });
+  }
+}

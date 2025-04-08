@@ -35,6 +35,7 @@ export class AuthService {
     const newUser = await this.usuarioService.create({
       ...payload,
       senha: senhaHashed,
+      perfil: 'cliente',
     });
 
     const entity = await this.colaboradorService.create(

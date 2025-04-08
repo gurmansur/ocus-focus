@@ -1,10 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { ColaboradorProjetoService } from '../colaborador-projeto/colaborador-projeto.service';
 import { ColaboradorService } from '../colaborador/colaborador.service';
 import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
 import { KanbanService } from '../kanban/kanban.service';
+import { StakeholderService } from '../stakeholder/stakeholder.service';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { Projeto } from './entities/projeto.entity';
@@ -20,6 +21,8 @@ export class ProjetoService {
     private colaboradorService: ColaboradorService,
     @Inject()
     private kanbanService: KanbanService,
+    @Inject(forwardRef(() => StakeholderService))
+    private stakeholderService: StakeholderService,
   ) {}
 
   async create(createProjetoDto: CreateProjetoDto, user: number) {
@@ -38,8 +41,8 @@ export class ProjetoService {
     });
   }
 
-  findAll() {
-    return `This action returns all projeto`;
+  findAll(page?: number, pageSize?: number) {
+    return this.findByNome('', page, pageSize);
   }
 
   findRecentes(colaboradorId?: number, limit?: number) {
@@ -61,19 +64,28 @@ export class ProjetoService {
 
   async findByNome(
     nome: string,
-    colaboradorId: number,
-    paginated?: boolean,
     page?: number,
     pageSize?: number,
+    colaboradorId?: number,
+    paginated: boolean = true,
   ) {
+    // Default values for pagination
+    const take = pageSize || 10;
+    const skip = page ? page * take : 0;
+
+    // Build the where clause based on parameters
+    let whereClause: any = { nome: Like(`%${nome}%`) };
+
+    if (colaboradorId) {
+      whereClause = {
+        nome: Like(`%${nome}%`),
+        colaboradores: { colaborador: { id: colaboradorId } },
+      };
+    }
+
     if (paginated) {
-      const take = pageSize ? pageSize : 10;
-      const skip = page ? page * take : 0;
-      const items = await this.projetoRepository.findAndCount({
-        where: {
-          nome: Like(`%${nome}%`),
-          colaboradores: { colaborador: { id: colaboradorId } },
-        },
+      const [items, total] = await this.projetoRepository.findAndCount({
+        where: whereClause,
         relations: ['colaboradores', 'colaboradores.colaborador'],
         loadEagerRelations: true,
         take: take,
@@ -81,7 +93,7 @@ export class ProjetoService {
       });
 
       return {
-        items: items[0].map((item) => {
+        items: items.map((item) => {
           return {
             id: item.id,
             nome: item.nome,
@@ -90,25 +102,30 @@ export class ProjetoService {
             dataInicio: new Date(item.dataInicio).toLocaleDateString('pt-BR'),
             previsaoFim: new Date(item.previsaoFim).toLocaleDateString('pt-BR'),
             status: item.status,
-            admin: item.colaboradores.find(
-              (colaborador) => colaborador.colaborador.id === colaboradorId,
-            ).administrador,
+            admin: colaboradorId
+              ? item.colaboradores.find(
+                  (colaborador) => colaborador.colaborador.id === colaboradorId,
+                )?.administrador
+              : undefined,
           };
         }),
         page: {
           size: take,
-          totalElements: items[1],
-          totalPages: Math.ceil(items[1] / take),
-          number: page ? page : 0,
+          totalElements: total,
+          totalPages: Math.ceil(total / take),
+          number: page || 0,
         },
       };
     }
+
+    // Get all items without pagination
     const items = await this.projetoRepository.find({
-      where: { nome: Like(`%${nome}%`) },
+      where: whereClause,
       relations: ['colaboradores', 'colaboradores.colaborador'],
       loadEagerRelations: true,
     });
 
+    // Map to DTO format
     return items.map((item) => {
       return {
         id: item.id,
@@ -118,9 +135,11 @@ export class ProjetoService {
         dataInicio: new Date(item.dataInicio).toLocaleDateString('pt-BR'),
         previsaoFim: new Date(item.previsaoFim).toLocaleDateString('pt-BR'),
         status: item.status,
-        admin: item.colaboradores.find(
-          (colaborador) => colaborador.administrador,
-        ).administrador,
+        admin: colaboradorId
+          ? item.colaboradores.find(
+              (colaborador) => colaborador.colaborador.id === colaboradorId,
+            )?.administrador
+          : undefined,
       };
     });
   }

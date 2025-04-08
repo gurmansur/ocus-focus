@@ -9,11 +9,11 @@ export class SuiteDeTesteAdapter {
     suitesBo: SuiteDeTeste[],
     casosBo?: CasoDeTesteBo[],
   ): FileTreeDto {
-    const dto = new FileTreeBo();
+    const bo = new FileTreeBo();
 
-    dto.suites = suitesBo.map((suite) => SuiteDeTesteMapper.entityToBo(suite));
-    dto.casos = casosBo;
+    bo.suites = suitesBo.map((suite) => SuiteDeTesteMapper.entityToBo(suite));
+    bo.casos = casosBo;
 
-    return dto;
+    return SuiteDeTesteMapper.fileTreeBoToDto(bo);
   }
 }

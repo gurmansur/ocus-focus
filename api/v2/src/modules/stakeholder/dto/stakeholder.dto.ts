@@ -1,19 +1,28 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsString } from 'class-validator';
 
 export class StakeholderDto {
   @IsString()
   @Expose()
-  nome: string;
+@ApiProperty({ description: 'Propriedade nome' })
+  @IsString()
+  nome: string
 
   @IsString()
   @Expose()
-  email: string;
+@ApiProperty({ description: 'Propriedade email' })
+  @IsString()
+  email: string
 
   @IsString()
   @Expose()
-  cargo: string;
+@ApiProperty({ description: 'Propriedade cargo' })
+  @IsString()
+  cargo: string
 
   @IsString()
-  senha: string;
+@ApiProperty({ description: 'Propriedade senha' })
+  @IsString()
+  senha: string
 }

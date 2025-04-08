@@ -1,6 +1,7 @@
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
 import { ColaboradorMapper } from '../colaborador/colaborador.mapper';
 import { Colaborador } from '../colaborador/entities/colaborador.entity';
+import { SuiteDeTesteDto } from '../suite-de-teste/dto/suite-de-teste.dto';
 import { SuiteDeTeste } from '../suite-de-teste/entities/suite-de-teste.entity';
 import { SuiteDeTesteMapper } from '../suite-de-teste/suite-de-teste.mapper';
 import { CasoDeTesteBo } from './bo/caso-de-teste.bo';
@@ -134,7 +135,6 @@ export class CasoDeTesteMapper {
 
   static casoDeTesteBoToDto(bo: CasoDeTesteBo): CasoDeTesteDto {
     const dto = new CasoDeTesteDto();
-
     dto.id = bo.id;
     dto.nome = bo.nome;
     dto.descricao = bo.descricao;
@@ -149,12 +149,44 @@ export class CasoDeTesteMapper {
     dto.tecnica = bo.tecnica;
     dto.dadosEntrada = bo.dadosEntrada;
     dto.casoDeUso = bo.casoDeUso;
-    dto.suiteDeTeste = bo.suiteDeTeste;
+
+    // Convert SuiteDeTesteBo to SuiteDeTesteDto if it exists
+    if (bo.suiteDeTeste) {
+      const suiteDto = new SuiteDeTesteDto({
+        id: bo.suiteDeTeste.id,
+        nome: bo.suiteDeTeste.nome,
+        descricao: bo.suiteDeTeste.descricao,
+        status: bo.suiteDeTeste.status,
+        observacoes: bo.suiteDeTeste.observacoes,
+        suitePaiId: bo.suiteDeTeste.suitePai?.id,
+        projetoId: bo.suiteDeTeste.projeto?.id,
+      });
+
+      // Create a minimal SuiteDeTesteDto for suitePai if it exists
+      if (bo.suiteDeTeste.suitePai) {
+        suiteDto.suitePai = new SuiteDeTesteDto({
+          id: bo.suiteDeTeste.suitePai.id,
+          nome: bo.suiteDeTeste.suitePai.nome,
+          descricao: bo.suiteDeTeste.suitePai.descricao,
+        });
+      }
+
+      suiteDto.suitesFilhas = [];
+      suiteDto.casosDeTeste = [];
+
+      dto.suiteDeTeste = suiteDto;
+    }
+
     dto.testadorDesignado = bo.testadorDesignado
       ? ColaboradorMapper.fromBoToDto(bo.testadorDesignado)
       : null;
     dto.projeto = bo.projeto;
 
     return dto;
+  }
+
+  static entityToDto(entity: CasoDeTeste): CasoDeTesteDto {
+    const bo = this.entityToCasoDeTesteBo(entity);
+    return this.casoDeTesteBoToDto(bo);
   }
 }

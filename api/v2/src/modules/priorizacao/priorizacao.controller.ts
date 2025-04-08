@@ -2,26 +2,31 @@ import {
   Body,
   Controller,
   Get,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ProtectedRoute } from '../../decorators/protected-route.decorator';
 import { CreatePriorizacaoDto } from './dto/create-priorizacao.dto';
 import { PriorizacaoService } from './priorizacao.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Priorização')
-@Controller('priorizacao-stakeholders')
+@Controller('priorizacao')
 export class PriorizacaoController {
   constructor(private readonly priorizacaoService: PriorizacaoService) {}
 
-  @Post('new')
+  /**
+   * Cria uma nova priorização
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista', 'stakeholder')
+  @Post()
+  @ApiOperation({ summary: 'Criar priorização' })
+  @ApiOkResponse({ description: 'Priorização criada com sucesso' })
   createPriorizacao(
     @Body() createPriorizacaoDto: CreatePriorizacaoDto,
-    @Query('stakeholder') stakeholderId: number,
+    @Query('stakeholder', ParseIntPipe) stakeholderId: number,
   ) {
     return this.priorizacaoService.createPriorizacao(
       createPriorizacaoDto,
@@ -29,9 +34,15 @@ export class PriorizacaoController {
     );
   }
 
-  @Post('result')
+  /**
+   * Cria um resultado de priorização
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista')
+  @Post('resultado')
+  @ApiOperation({ summary: 'Criar resultado de priorização' })
+  @ApiOkResponse({ description: 'Resultado de priorização criado com sucesso' })
   createResultado(
-    @Query('requisito') requisitoId: number,
+    @Query('requisito', ParseIntPipe) requisitoId: number,
     @Query('resultado')
     resultadoFinal:
       | 'DEVE SER FEITO'
@@ -44,18 +55,38 @@ export class PriorizacaoController {
     return this.priorizacaoService.createResultado(requisitoId, resultadoFinal);
   }
 
+  /**
+   * Busca priorizações por projeto
+   */
+  @ProtectedRoute()
   @Get()
-  findByProjeto(@Query('projeto') projetoId: number) {
+  @ApiOperation({ summary: 'Listar priorizações por projeto' })
+  @ApiOkResponse({ description: 'Priorizações por projeto' })
+  findByProjeto(@Query('projeto', ParseIntPipe) projetoId: number) {
     return this.priorizacaoService.findByProjeto(projetoId);
   }
 
+  /**
+   * Marca priorização como completa
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista', 'stakeholder')
   @Patch('complete')
-  update(@Query('stakeholder') stakeholderId: number) {
+  @ApiOperation({ summary: 'Marcar priorização como completa' })
+  @ApiOkResponse({ description: 'Priorização marcada como completa' })
+  update(@Query('stakeholder', ParseIntPipe) stakeholderId: number) {
     return this.priorizacaoService.update(stakeholderId);
   }
 
-  @Get('getRequirementFinalClassification')
-  getRequirementFinalClassification(@Query('requisito') requisitoId: number) {
+  /**
+   * Obtém classificação final de um requisito
+   */
+  @ProtectedRoute()
+  @Get('classificacao-final')
+  @ApiOperation({ summary: 'Obter classificação final de um requisito' })
+  @ApiOkResponse({ description: 'Classificação final do requisito' })
+  getRequirementFinalClassification(
+    @Query('requisito', ParseIntPipe) requisitoId: number,
+  ) {
     return this.priorizacaoService.getMostFrequentClassification(requisitoId);
   }
 }

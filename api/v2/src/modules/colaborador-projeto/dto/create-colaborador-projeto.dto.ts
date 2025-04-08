@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsNumber } from 'class-validator';
 import { Colaborador } from '../../colaborador/entities/colaborador.entity';
 import { Projeto } from '../../projeto/entities/projeto.entity';
@@ -5,17 +6,24 @@ import { Usuario } from '../../usuario/entities/usuario.entity';
 
 export class CreateColaboradorProjetoDto {
   @IsBoolean()
-  ativo: boolean;
+@ApiProperty({ description: 'Propriedade ativo' })
+  @IsBoolean()
+  ativo: boolean
 
   @IsBoolean()
-  administrador: boolean;
+@ApiProperty({ description: 'Propriedade administrador' })
+  @IsBoolean()
+  administrador: boolean
 
   @IsNumber()
-  colaborador: Colaborador;
+@ApiProperty({ description: 'Propriedade colaborador' })
+  colaborador: Colaborador
 
   @IsNumber()
-  usuario: Usuario;
+@ApiProperty({ description: 'Propriedade usuario' })
+  usuario: Usuario
 
   @IsNumber()
-  projeto: Projeto;
+@ApiProperty({ description: 'Propriedade projeto' })
+  projeto: Projeto
 }
