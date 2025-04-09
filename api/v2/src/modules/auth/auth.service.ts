@@ -206,4 +206,42 @@ export class AuthService {
       return { auth: false, message: 'Token inválido.' };
     }
   }
+
+  /**
+   * Validates user credentials for local strategy authentication
+   * @param email User's email
+   * @param password User's password
+   * @returns User object without password if valid, null otherwise
+   */
+  async validateUser(email: string, password: string): Promise<any> {
+    try {
+      const user = await this.colaboradorService.findByEmail(email);
+
+      if (!user) {
+        this.logger.warn(
+          `Validation failed: User not found with email ${email}`,
+        );
+        return null;
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.senha);
+
+      if (isPasswordValid) {
+        const { senha, ...result } = user;
+        this.logger.log(`User validated successfully: ${email}`);
+
+        // Add role information
+        return {
+          ...result,
+          role: 'colaborador',
+        };
+      }
+
+      this.logger.warn(`Validation failed: Invalid password for ${email}`);
+      return null;
+    } catch (error) {
+      this.logger.error(`Error validating user: ${error.message}`, error.stack);
+      return null;
+    }
+  }
 }

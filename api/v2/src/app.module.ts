@@ -1,9 +1,20 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
+import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import authConfig from './config/auth.config';
+import cacheConfig from './config/cache.config';
+import loggerConfig from './config/logger.config';
+import throttlerConfig from './config/throttler.config';
 import { TypeOrmConfigService } from './config/typeorm.config';
 import { RateLimitGuard } from './guards/rate-limit.guard';
 import { RolesGuard } from './guards/roles.guard';
@@ -17,6 +28,7 @@ import { CasoUsoModule } from './modules/caso-uso/caso-uso.module';
 import { CenariosModule } from './modules/cenarios/cenarios.module';
 import { ColaboradorProjetoModule } from './modules/colaborador-projeto/colaborador-projeto.module';
 import { ColaboradorModule } from './modules/colaborador/colaborador.module';
+import { EmailModule } from './modules/email/email.module';
 import { EstimativaModule } from './modules/estimativa/estimativa.module';
 import { ExecucaoDeTesteModule } from './modules/execucao-de-teste/execucao-de-teste.module';
 import { FatorAmbientalProjetoModule } from './modules/fator-ambiental-projeto/fator-ambiental-projeto.module';
@@ -41,15 +53,46 @@ import { ValidationPipe as CustomValidationPipe } from './pipes/validation.pipe'
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
+      load: [authConfig, cacheConfig, throttlerConfig, loggerConfig],
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '24h' },
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('auth.jwt.secret'),
+        signOptions: {
+          expiresIn: `${configService.get('auth.jwt.expiresIn')}s`,
+        },
+      }),
     }),
+    // Rate limiting configuration
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: config.get('throttler.ttl') * 1000,
+          limit: config.get('throttler.limit'),
+        },
+      ],
+    }),
+    // Passport configuration for authentication
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    // Cache module with memory store instead of Redis
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 60 * 60 * 1000, // 1 hour
+    }),
+    // Serve static files from public directory
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/public',
+    }),
+    // Event emitter for application-wide events
+    EventEmitterModule.forRoot(),
+    // Original modules
     AtorModule,
     AuthModule,
     CasoUsoModule,
@@ -74,7 +117,9 @@ import { ValidationPipe as CustomValidationPipe } from './pipes/validation.pipe'
     CasoDeTesteModule,
     SuiteDeTesteModule,
     KanbanModule,
+    EmailModule,
   ],
+  controllers: [AppController],
   providers: [
     AppService,
     {
@@ -88,6 +133,10 @@ import { ValidationPipe as CustomValidationPipe } from './pipes/validation.pipe'
     {
       provide: APP_GUARD,
       useClass: RateLimitGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
     {
       provide: APP_INTERCEPTOR,

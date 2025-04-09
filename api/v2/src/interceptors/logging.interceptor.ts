@@ -14,15 +14,65 @@ export class LoggingInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const method = request.method;
-    const url = request.url;
-    const now = Date.now();
+    const { method, url, body, ip, headers } = request;
+    const userAgent = headers['user-agent'] || 'unknown';
+    const startTime = Date.now();
+    
+    // Log the request details
+    this.logger.log({
+      message: `${method} ${url}`,
+      ip,
+      userAgent,
+      body: Object.keys(body || {}).length ? this.sanitizeBody(body) : undefined,
+      timestamp: new Date().toISOString(),
+    });
 
     return next.handle().pipe(
-      tap(() => {
-        const responseTime = Date.now() - now;
-        this.logger.log(`${method} ${url} ${responseTime}ms`);
+      tap({
+        next: (data) => {
+          const responseTime = Date.now() - startTime;
+          
+          // Log the response details
+          this.logger.log({
+            message: `${method} ${url} completed`,
+            responseTime: `${responseTime}ms`,
+            timestamp: new Date().toISOString(),
+          });
+        },
+        error: (error) => {
+          const responseTime = Date.now() - startTime;
+          
+          // Log detailed error information
+          this.logger.error({
+            message: `${method} ${url} failed`,
+            error: {
+              name: error.name,
+              message: error.message,
+              stack: error.stack,
+            },
+            responseTime: `${responseTime}ms`,
+            timestamp: new Date().toISOString(),
+          });
+        },
       }),
     );
+  }
+  
+  /**
+   * Sanitizes the request body to remove sensitive information
+   */
+  private sanitizeBody(body: any): any {
+    if (!body) return {};
+    
+    const sanitized = { ...body };
+    const sensitiveFields = ['password', 'senha', 'token', 'secret', 'authorization'];
+    
+    for (const field of sensitiveFields) {
+      if (sanitized[field]) {
+        sanitized[field] = '********';
+      }
+    }
+    
+    return sanitized;
   }
 }
