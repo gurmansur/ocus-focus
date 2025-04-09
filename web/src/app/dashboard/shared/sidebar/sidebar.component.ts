@@ -14,6 +14,16 @@ import { Projeto } from '../../models/projeto';
 import { ProjetoService } from '../../services/projeto.service';
 
 /**
+ * Interface for user data stored in localStorage
+ */
+interface UserData {
+  email: string;
+  name: string;
+  id: number;
+  role: string;
+}
+
+/**
  * Componente de barra lateral da aplicação.
  * Exibe os projetos recentes do usuário e opções de navegação.
  */
@@ -52,9 +62,25 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private router: Router,
     private storageService: StorageService
   ) {
+    // Obter o papel do usuário do localStorage
     this.userRole = this.storageService.getItem('usu_role') || '';
+
+    // Se não encontrou o papel no formato antigo, tenta obter do objeto userData
+    if (!this.userRole) {
+      const userData = this.storageService.getObject<UserData>('userData');
+      if (userData && userData.role) {
+        this.userRole = userData.role;
+      }
+    }
+
+    // Obter o ID do usuário
     const userId = this.storageService.getItem('usu_id');
-    this.userId = userId ? Number(userId) : 0;
+    if (!userId) {
+      const userData = this.storageService.getObject<UserData>('userData');
+      this.userId = userData && userData.id ? Number(userData.id) : 0;
+    } else {
+      this.userId = Number(userId);
+    }
   }
 
   /**

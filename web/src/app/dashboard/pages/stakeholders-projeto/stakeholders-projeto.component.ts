@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../auth/services/auth.service';
+import { StorageService } from '../../../shared/services/storage.service';
 import { Projeto } from '../../models/projeto';
 import { Stakeholder } from '../../models/stakeholder';
 import { ProjetoService } from '../../services/projeto.service';
@@ -10,8 +12,8 @@ import { StakeholderService } from '../../services/stakeholder.service';
   templateUrl: './stakeholders-projeto.component.html',
   styleUrls: ['./stakeholders-projeto.component.css'],
 })
-export class StakeholdersProjetoComponent {
-  userId!: number;
+export class StakeholdersProjetoComponent implements OnInit {
+  userId: number = 0;
   projetoId!: number;
   projeto!: Projeto;
 
@@ -19,10 +21,21 @@ export class StakeholdersProjetoComponent {
     private projetoService: ProjetoService,
     private stakeholderService: StakeholderService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private storageService: StorageService
   ) {
     this.projetoId = this.route.snapshot.params['id'];
-    this.userId = Number(localStorage.getItem('usu_id'));
+    
+    // Get user ID from AuthService or StorageService as fallback
+    const userData = this.authService.getUserData();
+    if (userData && userData.id) {
+      this.userId = Number(userData.id);
+    } else {
+      // Fallback to StorageService
+      const storedId = this.storageService.getItem('usu_id');
+      this.userId = storedId ? Number(storedId) : 0;
+    }
   }
 
   // datasource
@@ -68,13 +81,24 @@ export class StakeholdersProjetoComponent {
     'O Stakeholder receberá um alerta pedindo a sua participação no processo de priorização.';
 
   ngOnInit() {
+    if (this.userId === 0) {
+      console.error('ID de usuário não encontrado');
+      this.router.navigate(['/']);
+      return;
+    }
+    
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
 
   buscarProjeto(id: number, user: number) {
-    this.projetoService.findById(id, user).subscribe((projeto) => {
-      this.projeto = projeto;
+    this.projetoService.findById(id, user).subscribe({
+      next: (projeto) => {
+        this.projeto = projeto;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar projeto:', err);
+      }
     });
   }
 
@@ -87,7 +111,12 @@ export class StakeholdersProjetoComponent {
     if (!this.filterValue) {
       this.stakeholderService
         .listByProjeto(this.projetoId, this.paginaAtual, this.tamanhoPagina)
-        .subscribe(this.processarResultado());
+        .subscribe({
+          next: this.processarResultado(),
+          error: (err) => {
+            console.error('Erro ao buscar stakeholders:', err);
+          }
+        });
     } else {
       this.stakeholderService
         .listByName(
@@ -96,7 +125,12 @@ export class StakeholdersProjetoComponent {
           this.paginaAtual,
           this.tamanhoPagina
         )
-        .subscribe(this.processarResultado());
+        .subscribe({
+          next: this.processarResultado(),
+          error: (err) => {
+            console.error('Erro ao buscar stakeholders por nome:', err);
+          }
+        });
     }
   }
 
@@ -138,10 +172,17 @@ export class StakeholdersProjetoComponent {
   }
 
   confirmarExclusao() {
-    this.stakeholderService.delete(this.itemExclusao).subscribe(() => {
-      this.showModal = false;
-      this.mostrarDialogoConfirmacao = false;
-      this.executarBusca();
+    this.stakeholderService.delete(this.itemExclusao).subscribe({
+      next: () => {
+        this.showModal = false;
+        this.mostrarDialogoConfirmacao = false;
+        this.executarBusca();
+      },
+      error: (err) => {
+        console.error('Erro ao excluir stakeholder:', err);
+        this.showModal = false;
+        this.mostrarDialogoConfirmacao = false;
+      }
     });
   }
 
@@ -155,9 +196,15 @@ export class StakeholdersProjetoComponent {
   }
 
   confirmarAlerta() {
-    this.stakeholderService.alert(this.itemAlerta).subscribe(() => {
-      this.showAlertModal = false;
-      this.executarBusca();
+    this.stakeholderService.alert(this.itemAlerta).subscribe({
+      next: () => {
+        this.showAlertModal = false;
+        this.executarBusca();
+      },
+      error: (err) => {
+        console.error('Erro ao alertar stakeholder:', err);
+        this.showAlertModal = false;
+      }
     });
   }
 

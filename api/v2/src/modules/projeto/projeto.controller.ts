@@ -18,7 +18,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ApiDocs, ColaboradorAtual, Roles } from '../../decorators';
+import { ApiDocs, ColaboradorAtual, Role, Roles } from '../../decorators';
 import { AuthGuard, RolesGuard } from '../../guards';
 import {
   LoggingInterceptor,
@@ -220,7 +220,7 @@ export class ProjetoController {
     summary: 'Atualizar um projeto',
     responseDescription: 'Projeto atualizado com sucesso',
   })
-  @Roles('admin', 'gerente')
+  @Roles(Role.GERENTE_PROJETO)
   update(
     @Query('projeto', ParseIntPipe) id: number,
     @Body(SanitizePipe) updateProjetoDto: UpdateProjetoDto,
@@ -240,7 +240,7 @@ export class ProjetoController {
     responseDescription: 'Projeto removido com sucesso',
     status: HttpStatus.NO_CONTENT,
   })
-  @Roles('admin')
+  @Roles(Role.GERENTE_PROJETO)
   remove(@Query('projeto', ParseIntPipe) id: number) {
     this.logOperation('remove', { id });
     return this.projetoService.remove(id);
@@ -289,7 +289,7 @@ export class ProjetoController {
     summary: 'Adicionar colaborador a um projeto',
     responseDescription: 'Colaborador adicionado com sucesso',
   })
-  @Roles('admin', 'gerente')
+  @Roles(Role.GERENTE_PROJETO)
   addColaborador(
     @Query('projeto', ParseIntPipe) projetoId: number,
     @Query('colaborador', ParseIntPipe) colaboradorId: number,
@@ -310,7 +310,7 @@ export class ProjetoController {
     summary: 'Remover colaborador de um projeto',
     responseDescription: 'Colaborador removido com sucesso',
   })
-  @Roles('admin', 'gerente')
+  @Roles(Role.GERENTE_PROJETO)
   removeColaborador(
     @Query('projeto', ParseIntPipe) projetoId: number,
     @Query('colaborador', ParseIntPipe) colaboradorId: number,

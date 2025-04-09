@@ -1,18 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 // import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Projeto } from '../../models/projeto';
 import { ProjetoService } from '../../services/projeto.service';
+import { StorageService } from '../../../shared/services/storage.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-projetos',
   templateUrl: './projetos.component.html',
   styleUrls: ['./projetos.component.css'],
 })
-export class ProjetosComponent {
-  constructor(private projetoService: ProjetoService, private router: Router) {}
+export class ProjetosComponent implements OnInit {
+  constructor(
+    private projetoService: ProjetoService, 
+    private router: Router,
+    private storageService: StorageService,
+    private authService: AuthService
+  ) {}
 
-  userId: number = +localStorage.getItem('usu_id')!;
+  userId: number = 0;
 
   // datasource
   projetos: Projeto[] = [];
@@ -58,6 +65,24 @@ export class ProjetosComponent {
     'Essa ação é irreversível. Todos os dados do projeto em questão serão excluídos do sistema.';
 
   ngOnInit() {
+    // Obter o ID do usuário a partir dos dados do usuário
+    const userData = this.authService.getUserData();
+    
+    if (userData && userData.id) {
+      this.userId = Number(userData.id);
+    } else {
+      // Fallback para o StorageService
+      const storedId = this.storageService.getItem('usu_id');
+      this.userId = storedId ? Number(storedId) : 0;
+    }
+    
+    if (this.userId === 0) {
+      console.error('ID de usuário não encontrado');
+      // Redirecionar para login se o ID não for encontrado
+      this.router.navigate(['/']);
+      return;
+    }
+    
     this.executarBusca();
     this.buscarMetricas();
   }
@@ -75,32 +100,57 @@ export class ProjetosComponent {
         this.paginaAtual,
         this.tamanhoPagina
       )
-      .subscribe(this.processarResultado());
+      .subscribe({
+        next: this.processarResultado(),
+        error: (err) => {
+          console.error('Erro ao buscar projetos:', err);
+        }
+      });
 
     this.buscarMetricas();
   }
 
   private buscarMetricas(): void {
-    this.projetoService.getNumberOfProjetos(this.userId).subscribe((data) => {
-      this.quantidadeProjetos = data.totalCount;
+    this.projetoService.getNumberOfProjetos(this.userId).subscribe({
+      next: (data) => {
+        this.quantidadeProjetos = data.totalCount;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar quantidade de projetos:', err);
+      }
     });
 
     this.projetoService
       .getNumberOfNovosProjetos(this.userId)
-      .subscribe((data) => {
-        this.novosProjetos = data.totalCount;
+      .subscribe({
+        next: (data) => {
+          this.novosProjetos = data.totalCount;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar projetos novos:', err);
+        }
       });
 
     this.projetoService
       .getNumberOfProjetosEmAndamento(this.userId)
-      .subscribe((data) => {
-        this.projetosEmAndamento = data.totalCount;
+      .subscribe({
+        next: (data) => {
+          this.projetosEmAndamento = data.totalCount;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar projetos em andamento:', err);
+        }
       });
 
     this.projetoService
       .getNumberOfProjetosConcluidos(this.userId)
-      .subscribe((data) => {
-        this.projetosConcluidos = data.totalCount;
+      .subscribe({
+        next: (data) => {
+          this.projetosConcluidos = data.totalCount;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar projetos concluídos:', err);
+        }
       });
   }
 
@@ -115,7 +165,7 @@ export class ProjetosComponent {
   }
 
   visualizarItem(item: any) {
-    localStorage.setItem('projeto_id', item.id);
+    this.storageService.setItem('projeto_id', item.id);
     this.router.navigate(['/dashboard/projeto/', item.id]);
   }
 
@@ -135,10 +185,17 @@ export class ProjetosComponent {
   }
 
   confirmarExclusao() {
-    this.projetoService.delete(this.itemExclusao).subscribe(() => {
-      this.showModal = false;
-      this.mostrarDialogoConfirmacao = false;
-      this.executarBusca();
+    this.projetoService.delete(this.itemExclusao).subscribe({
+      next: () => {
+        this.showModal = false;
+        this.mostrarDialogoConfirmacao = false;
+        this.executarBusca();
+      },
+      error: (err) => {
+        console.error('Erro ao excluir projeto:', err);
+        this.showModal = false;
+        this.mostrarDialogoConfirmacao = false;
+      }
     });
   }
 

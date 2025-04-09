@@ -19,6 +19,15 @@ export class ColaboradorService {
   ) {}
 
   /**
+   * Obtém os cabeçalhos de autorização para as requisições
+   */
+  private getHeaders() {
+    return {
+      Authorization: `Bearer ${this.storageService.getToken()}`,
+    };
+  }
+
+  /**
    * Busca colaboradores pelo nome em um projeto específico
    * @param nome Nome ou parte do nome do colaborador
    * @param projeto ID do projeto
@@ -28,9 +37,7 @@ export class ColaboradorService {
     return this.httpClient.get<IColaborador[]>(
       `${this.servicesRootUrl}/colaboradores?name=${nome}&projeto=${projeto}`,
       {
-        headers: {
-          Authorization: `Bearer ${this.storageService.getToken()}`,
-        },
+        headers: this.getHeaders(),
       }
     );
   }
@@ -44,9 +51,7 @@ export class ColaboradorService {
     return this.httpClient.get<IColaborador[]>(
       `${this.servicesRootUrl}/colaboradores/projeto?projeto=${projeto}`,
       {
-        headers: {
-          Authorization: `Bearer ${this.storageService.getToken()}`,
-        },
+        headers: this.getHeaders(),
       }
     );
   }

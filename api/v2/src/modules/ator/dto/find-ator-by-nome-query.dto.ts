@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumberString, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class FindAtorByNomeQueryDto {
   @ApiProperty({
@@ -13,20 +13,20 @@ export class FindAtorByNomeQueryDto {
     description: 'ID do projeto',
     example: 1,
   })
-  @IsNumberString()
+  @IsNumber()
   projeto: number;
 
   @ApiProperty({
     description: 'Número da página',
     example: 1,
   })
-  @IsNumberString()
+  @IsNumber()
   page: number;
 
   @ApiProperty({
     description: 'Numero de itens por página',
     example: 10,
   })
-  @IsNumberString()
+  @IsNumber()
   pageSize: number;
 }

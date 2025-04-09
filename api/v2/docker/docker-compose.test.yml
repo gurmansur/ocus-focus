@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mysql_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: ocus_focus_test_container
+    ports:
+      - '3307:3306'
+    volumes:
+      - ocus_test_db_data:/var/lib/mysql
+    networks:
+      - test-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ocus_focus_test
+
+volumes:
+  ocus_test_db_data:
+    name: ocus_test_db_data
+
+networks:
+  test-network:
+    driver: bridge

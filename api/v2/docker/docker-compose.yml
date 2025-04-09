@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: ocus_focus_container
+    ports:
+      - '3306:3306'
+    volumes:
+      - ocus_focus_db_data:/var/lib/mysql
+    networks:
+      - main-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ocus_focus
+
+volumes:
+  ocus_focus_db_data:
+    name: ocus_focus_db_data
+
+networks:
+  main-network:
+    driver: bridge

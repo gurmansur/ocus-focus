@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
+import { JwtUtils } from '../../shared/services/jwt.utils';
 import { StorageService } from '../../shared/services/storage.service';
 import { Colaborador } from '../models/colaborador';
 import { ColaboradorSignin } from '../models/colaborador-signin';
 import { StakeholderSignin } from '../models/stakeholder-signin';
-import { JwtUtils } from '../../shared/services/jwt.utils';
 
 /**
  * Interface para a resposta de autenticação do colaborador
@@ -87,22 +87,28 @@ export class AuthService {
   signinColaborador(
     colaboradorSignin: ColaboradorSignin
   ): Observable<IColaboradorAuthResponse> {
-    return this.httpClient.post<IColaboradorAuthResponse>(
-      `${this.servicesRootUrl}/signin-colaborador`,
-      colaboradorSignin,
-      { responseType: 'json' }
-    ).pipe(
-      tap(response => {
-        // Armazena token e dados do usuário
-        this.saveToken(response.accessToken);
-        this.saveUserData({
-          email: response.usu_email,
-          name: response.usu_name,
-          id: response.usu_id,
-          role: response.usu_role
-        });
-      })
-    );
+    return this.httpClient
+      .post<IColaboradorAuthResponse>(
+        `${this.servicesRootUrl}/signin-colaborador`,
+        colaboradorSignin,
+        { responseType: 'json' }
+      )
+      .pipe(
+        tap((response) => {
+          // Armazena token e dados do usuário
+          this.saveToken(response.accessToken);
+          this.saveUserData({
+            email: response.usu_email,
+            name: response.usu_name,
+            id: response.usu_id,
+            role: response.usu_role,
+          });
+        }),
+        catchError((error) => {
+          console.error('Erro ao autenticar colaborador:', error);
+          throw error;
+        })
+      );
   }
 
   /**
@@ -113,27 +119,38 @@ export class AuthService {
   signinStakeholder(
     stakeholderSignin: StakeholderSignin
   ): Observable<IStakeholderAuthResponse> {
-    return this.httpClient.post<IStakeholderAuthResponse>(
-      `${this.servicesRootUrl}/signin-stakeholder`,
-      stakeholderSignin
-    ).pipe(
-      tap(response => {
-        if (response.accessToken) {
-          this.saveToken(response.accessToken);
-          
-          // Tenta extrair dados do usuário do token
-          const userInfo = JwtUtils.extractUserInfo(response.accessToken);
-          if (userInfo && userInfo.email) {
-            this.saveUserData({
-              email: userInfo.email,
-              name: userInfo.email.split('@')[0], // Usar parte do email como nome se não tiver outro
-              id: Number(userInfo.id) || 0,
-              role: userInfo.role || 'stakeholder'
-            });
+    return this.httpClient
+      .post<IStakeholderAuthResponse>(
+        `${this.servicesRootUrl}/signin-stakeholder`,
+        stakeholderSignin
+      )
+      .pipe(
+        tap((response) => {
+          if (response.accessToken) {
+            this.saveToken(response.accessToken);
+
+            // Tenta extrair dados do usuário do token
+            try {
+              const userInfo = JwtUtils.extractUserInfo(response.accessToken);
+              if (userInfo && userInfo.email) {
+                this.saveUserData({
+                  email: userInfo.email,
+                  name: userInfo.email.split('@')[0], // Usar parte do email como nome se não tiver outro
+                  id: Number(userInfo.id) || 0,
+                  role: userInfo.role || 'stakeholder',
+                });
+              }
+            } catch (error) {
+              console.error('Erro ao extrair informações do token:', error);
+              // Ainda continua mesmo se tiver erro na extração dos dados
+            }
           }
-        }
-      })
-    );
+        }),
+        catchError((error) => {
+          console.error('Erro ao autenticar stakeholder:', error);
+          throw error;
+        })
+      );
   }
 
   /**
@@ -157,20 +174,25 @@ export class AuthService {
       return of({ isValid: false, message: 'Token inválido ou expirado' });
     }
 
-    return this.httpClient.get<IVerifyLoginResponse>(
-      `${this.servicesRootUrl}/verify`,
-      { headers: this.authHeaders }
-    ).pipe(
-      tap(response => {
-        if (response.isValid && response.userData) {
-          this.saveUserData(response.userData);
-        }
-      }),
-      catchError(error => {
-        this.logout();
-        return of({ isValid: false, message: error.message });
+    return this.httpClient
+      .get<IVerifyLoginResponse>(`${this.servicesRootUrl}/verify`, {
+        headers: this.authHeaders,
       })
-    );
+      .pipe(
+        tap((response) => {
+          if (response.isValid && response.userData) {
+            this.saveUserData(response.userData);
+          }
+        }),
+        catchError((error) => {
+          console.error('Erro ao verificar login:', error);
+          this.logout();
+          return of({
+            isValid: false,
+            message: error.message || 'Erro ao verificar autenticação',
+          });
+        })
+      );
   }
 
   /**
@@ -180,7 +202,7 @@ export class AuthService {
     this.storageService.removeToken();
     this.storageService.removeItem(this.USER_DATA_KEY);
   }
-  
+
   /**
    * Armazena o token de autenticação após login bem-sucedido
    * @param token Token de autenticação a ser armazenado
@@ -204,23 +226,34 @@ export class AuthService {
   getUserData(): IUserData | null {
     return this.storageService.getObject<IUserData>(this.USER_DATA_KEY);
   }
-  
+
   /**
    * Verifica se existe um token válido
    * @returns true se existir um token válido, false caso contrário
    */
   hasValidToken(): boolean {
-    const token = this.storageService.getToken();
-    if (!token) {
+    try {
+      const token = this.storageService.getToken();
+      if (!token) {
+        return false;
+      }
+      
+      const isValid = JwtUtils.isValidToken(token);
+      if (!isValid) {
+        // Se o token não for válido, faz logout para limpar dados
+        this.logout();
+      }
+      
+      return isValid;
+    } catch (error) {
+      console.error('Erro ao verificar validade do token:', error);
+      // Em caso de erro, faz logout e retorna false para segurança
+      try {
+        this.logout();
+      } catch (logoutError) {
+        console.error('Erro ao fazer logout após falha na validação do token:', logoutError);
+      }
       return false;
     }
-    
-    const isValid = JwtUtils.isValidToken(token);
-    if (!isValid) {
-      // Se o token não for válido, faz logout para limpar dados
-      this.logout();
-    }
-    
-    return isValid;
   }
 }

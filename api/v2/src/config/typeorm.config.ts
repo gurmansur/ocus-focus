@@ -1,13 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
+  private readonly logger = new Logger(TypeOrmConfigService.name);
+
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    switch (process.env.NODE_ENV) {
+    const nodeEnv = process.env.NODE_ENV || 'dev';
+    this.logger.log(`Using environment: ${nodeEnv}`);
+
+    switch (nodeEnv) {
       case 'dev':
         return this.getDevConfig();
       case 'prod':
@@ -20,6 +25,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   }
 
   private getDevConfig(): TypeOrmModuleOptions {
+    this.logger.log(
+      `Using database: ${this.configService.get<string>('DB_DATABASE')} (from .env.dev)`,
+    );
+
     return {
       type: 'mysql',
       host: this.configService.get<string>('DB_HOST'),
@@ -34,6 +43,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   }
 
   private getProdConfig(): TypeOrmModuleOptions {
+    this.logger.log(
+      `Using database: ${this.configService.get<string>('DB_DATABASE')} (from .env.prod)`,
+    );
+
     return {
       type: 'mysql',
       host: this.configService.get<string>('DB_HOST'),
@@ -48,6 +61,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   }
 
   private getTestConfig(): TypeOrmModuleOptions {
+    this.logger.log(
+      `Using database: ${this.configService.get<string>('DB_DATABASE')} (from .env.test)`,
+    );
+
     return {
       type: 'mysql',
       host: this.configService.get<string>('DB_HOST'),
@@ -57,9 +74,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('DB_DATABASE'),
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       dropSchema: true,
-      migrationsRun: true,
+      migrationsRun: false,
     };
   }
 }

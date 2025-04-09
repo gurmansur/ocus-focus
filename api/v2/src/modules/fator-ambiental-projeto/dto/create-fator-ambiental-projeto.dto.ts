@@ -1,12 +1,12 @@
-import { IsNumberString } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class CreateFatorAmbientalProjetoDto {
-  @IsNumberString()
+  @IsNumber()
   valor: number;
 
-  @IsNumberString()
+  @IsNumber()
   fatorAmb: number;
 
-  @IsNumberString()
+  @IsNumber()
   fatorPro: number;
 }

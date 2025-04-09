@@ -1,34 +1,54 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StakeholderService } from '../../services/stakeholder.service';
 import { StakeholderSignup } from '../../models/stakeholderSignup';
 import { Projeto } from '../../models/projeto';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjetoService } from '../../services/projeto.service';
+import { AuthService } from '../../../auth/services/auth.service';
+import { StorageService } from '../../../shared/services/storage.service';
 
 @Component({
   selector: 'app-inserir-stakeholder',
   templateUrl: './inserir-stakeholder.component.html',
   styleUrls: ['./inserir-stakeholder.component.css']
 })
-export class InserirStakeholderComponent {
+export class InserirStakeholderComponent implements OnInit {
   projetoId!: number;
   projeto!: Projeto;
-  userId!: number;
+  userId: number = 0;
   stakeholderFormGroup!: FormGroup;
+  errorMessage: string = '';
 
   constructor(
     private stakeholderService: StakeholderService,
     private projetoService: ProjetoService,
     private router: Router,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private storageService: StorageService
   ) {
     this.projetoId = this.route.snapshot.params['id'];
-    this.userId = Number(localStorage.getItem('usu_id'));
+    
+    // Get user ID from AuthService or StorageService as fallback
+    const userData = this.authService.getUserData();
+    if (userData && userData.id) {
+      this.userId = Number(userData.id);
+    } else {
+      // Fallback to StorageService
+      const storedId = this.storageService.getItem('usu_id');
+      this.userId = storedId ? Number(storedId) : 0;
+    }
   }
 
   ngOnInit(): void {
+    if (this.userId === 0) {
+      console.error('ID de usuário não encontrado');
+      this.router.navigate(['/']);
+      return;
+    }
+    
     this.stakeholderFormGroup = this.formBuilder.group({
       nome: new FormControl('', [
         Validators.required,
@@ -65,8 +85,13 @@ export class InserirStakeholderComponent {
   }
 
   buscarProjeto(id: number, user: number) {
-    this.projetoService.findById(id, user).subscribe((projeto) => {
-      this.projeto = projeto;
+    this.projetoService.findById(id, user).subscribe({
+      next: (projeto) => {
+        this.projeto = projeto;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar projeto:', err);
+      }
     });
   }
 
@@ -106,16 +131,16 @@ export class InserirStakeholderComponent {
       this.stakeholderFormGroup.markAllAsTouched();
       return;
     } else {
+      this.errorMessage = '';
       const signupStakeholder = this.createStakeholder();
 
       this.stakeholderService.create(signupStakeholder).subscribe({
-        next: (response) => {
-          console.log(response);
+        next: () => {
           this.router.navigate(['/dashboard/projeto/', this.projetoId, 'stakeholders']);
         },
-
         error: (err) => {
-          alert(err.error.message);
+          console.error('Erro ao criar stakeholder:', err);
+          this.errorMessage = err.error?.message || 'Erro ao criar stakeholder. Verifique os dados.';
         },
       });
     }

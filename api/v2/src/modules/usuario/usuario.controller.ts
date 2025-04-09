@@ -14,7 +14,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiDocs, Roles } from '../../decorators';
+import { ApiDocs, Role, Roles } from '../../decorators';
 import { AuthGuard, RolesGuard } from '../../guards';
 import {
   LoggingInterceptor,
@@ -60,7 +60,7 @@ export class UsuarioController {
     status: HttpStatus.CREATED,
     responseDescription: 'Usuário criado com sucesso',
   })
-  @Roles('admin')
+  @Roles(Role.GERENTE_PROJETO)
   create(@Body(SanitizePipe) createUsuarioDto: CreateUsuarioDto) {
     this.logOperation('create', { dto: createUsuarioDto });
     return this.usuarioService.create(createUsuarioDto);
@@ -112,7 +112,7 @@ export class UsuarioController {
     summary: 'Atualizar um usuário',
     responseDescription: 'Usuário atualizado com sucesso',
   })
-  @Roles('admin')
+  @Roles(Role.GERENTE_PROJETO)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body(SanitizePipe) updateUsuarioDto: UpdateUsuarioDto,
@@ -132,7 +132,7 @@ export class UsuarioController {
     responseDescription: 'Usuário removido com sucesso',
     status: HttpStatus.NO_CONTENT,
   })
-  @Roles('admin')
+  @Roles(Role.GERENTE_PROJETO)
   remove(@Param('id', ParseIntPipe) id: number) {
     this.logOperation('remove', { id });
     return this.usuarioService.remove(id);

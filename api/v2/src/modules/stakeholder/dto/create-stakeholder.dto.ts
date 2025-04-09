@@ -1,4 +1,4 @@
-import { IsNumberString, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateStakeholderDto {
   @IsString()
@@ -16,6 +16,6 @@ export class CreateStakeholderDto {
   @IsString()
   confirmarSenha: string;
 
-  @IsNumberString()
+  @IsNumber()
   projeto_id: number;
 }

@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../auth/services/auth.service';
+import { StorageService } from '../../../shared/services/storage.service';
 import { Projeto } from '../../models/projeto';
 import { ResultadoRequisito } from '../../models/resultadoRequisito';
 import { PriorizacaoService } from '../../services/priorizacao.service';
@@ -12,8 +14,8 @@ import { StakeholderService } from '../../services/stakeholder.service';
   templateUrl: './painel-prioreasy.component.html',
   styleUrls: ['./painel-prioreasy.component.css'],
 })
-export class PainelPrioreasyComponent {
-  userId!: number;
+export class PainelPrioreasyComponent implements OnInit {
+  userId: number = 0;
   projetoId!: number;
   projeto!: Projeto;
 
@@ -23,10 +25,21 @@ export class PainelPrioreasyComponent {
     private stakeholderService: StakeholderService,
     private priorizacaoService: PriorizacaoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private storageService: StorageService
   ) {
     this.projetoId = this.route.snapshot.params['id'];
-    this.userId = Number(localStorage.getItem('usu_id'));
+
+    // Get user ID from AuthService or StorageService as fallback
+    const userData = this.authService.getUserData();
+    if (userData && userData.id) {
+      this.userId = Number(userData.id);
+    } else {
+      // Fallback to StorageService
+      const storedId = this.storageService.getItem('usu_id');
+      this.userId = storedId ? Number(storedId) : 0;
+    }
   }
 
   // datasource
@@ -65,13 +78,24 @@ export class PainelPrioreasyComponent {
   mensagemDialogo: string = 'Tem certeza que deseja realizar esta operação?';
 
   ngOnInit() {
+    if (this.userId === 0) {
+      console.error('ID de usuário não encontrado');
+      this.router.navigate(['/']);
+      return;
+    }
+
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
 
   buscarProjeto(id: number, user: number) {
-    this.projetoService.findById(id, user).subscribe((projeto) => {
-      this.projeto = projeto;
+    this.projetoService.findById(id, user).subscribe({
+      next: (projeto) => {
+        this.projeto = projeto;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar projeto:', err);
+      },
     });
   }
 
@@ -84,7 +108,12 @@ export class PainelPrioreasyComponent {
     if (!this.filterValue) {
       this.requisitoService
         .listResultado(this.projetoId, this.paginaAtual, this.tamanhoPagina)
-        .subscribe(this.processarResultado());
+        .subscribe({
+          next: this.processarResultado(),
+          error: (err) => {
+            console.error('Erro ao buscar resultados:', err);
+          },
+        });
     } else {
       this.requisitoService
         .listResultadoByName(
@@ -93,7 +122,12 @@ export class PainelPrioreasyComponent {
           this.paginaAtual,
           this.tamanhoPagina
         )
-        .subscribe(this.processarResultado());
+        .subscribe({
+          next: this.processarResultado(),
+          error: (err) => {
+            console.error('Erro ao buscar resultados por nome:', err);
+          },
+        });
     }
   }
 
@@ -134,29 +168,40 @@ export class PainelPrioreasyComponent {
   confirmarPriorizacao() {
     this.stakeholderService.verifyParticipation(this.projetoId).subscribe({
       next: () => {
-        this.requisitos.forEach((requisito) => {
-          this.priorizacaoService
-            .getRequirementFinalClassification(requisito.id || 0)
-            .subscribe((response) => {
-              const classificacaoFinal =
-                response[0].PRS_CLASSIFICACAO_REQUISITO;
+        // Usar promessas para controlar o fluxo de requisições
+        const processarRequisitos = async () => {
+          try {
+            for (const requisito of this.requisitos) {
+              const response = await this.priorizacaoService
+                .getRequirementFinalClassification(requisito.id || 0)
+                .toPromise();
 
-              console.log(classificacaoFinal);
+              if (response && response.length > 0) {
+                const classificacaoFinal =
+                  response[0].PRS_CLASSIFICACAO_REQUISITO;
 
-              this.priorizacaoService
-                .insertResultadoClassificacao(
-                  requisito.id || 0,
-                  classificacaoFinal
-                )
-                .subscribe(() => {
-                  this.executarBusca();
-                  this.showModalConfirmacao = false;
-                });
-            });
-        });
+                await this.priorizacaoService
+                  .insertResultadoClassificacao(
+                    requisito.id || 0,
+                    classificacaoFinal
+                  )
+                  .toPromise();
+              }
+            }
+
+            this.executarBusca();
+            this.showModalConfirmacao = false;
+          } catch (error) {
+            console.error('Erro ao processar resultados:', error);
+            this.showModalConfirmacao = false;
+            this.showModalMensagem = true;
+          }
+        };
+
+        processarRequisitos();
       },
-
       error: (err) => {
+        console.error('Erro na verificação de participação:', err);
         this.showModalConfirmacao = false;
         this.showModalMensagem = true;
       },

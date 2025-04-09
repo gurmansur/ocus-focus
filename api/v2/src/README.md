@@ -68,7 +68,9 @@ export class ExemploController {
   constructor(private readonly exemploService: ExemploService) {}
 
   private logOperation(operation: string, details?: any): void {
-    this.logger.log(`Operação: ${operation}${details ? ` - ${JSON.stringify(details)}` : ''}`);
+    this.logger.log(
+      `Operação: ${operation}${details ? ` - ${JSON.stringify(details)}` : ''}`,
+    );
   }
 
   @Post()
@@ -76,7 +78,7 @@ export class ExemploController {
     summary: 'Criar exemplo',
     status: HttpStatus.CREATED,
   })
-  @Roles('admin')
+  @Roles(Role.GERENTE_PROJETO)
   create(@Body(SanitizePipe) createDto: CreateDto) {
     this.logOperation('create', { dto: createDto });
     return this.exemploService.create(createDto);
@@ -105,4 +107,4 @@ export class ExemploService {
 
 ## Conclusão
 
-As melhorias implementadas seguem as boas práticas de desenvolvimento moderno, garantindo um código mais seguro, manutenível e performático, seguindo princípios SOLID e padrões estabelecidos na comunidade. 
+As melhorias implementadas seguem as boas práticas de desenvolvimento moderno, garantindo um código mais seguro, manutenível e performático, seguindo princípios SOLID e padrões estabelecidos na comunidade.

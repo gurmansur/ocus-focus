@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { StorageService } from '../../shared/services/storage.service';
 import { Stakeholder } from '../models/stakeholder';
 import { StakeholderSignup } from '../models/stakeholderSignup';
 
@@ -10,8 +11,18 @@ import { StakeholderSignup } from '../models/stakeholderSignup';
 export class StakeholderService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
+    private storageService: StorageService
   ) {}
+
+  /**
+   * Obtém os cabeçalhos de autorização para as requisições
+   */
+  private getHeaders() {
+    return {
+      Authorization: `Bearer ${this.storageService.getToken()}`,
+    };
+  }
 
   listByProjeto(
     id: number,
@@ -21,9 +32,7 @@ export class StakeholderService {
     return this.httpClient.get<GetResponseStakeholders[]>(
       `${this.servicesRootUrl}/stakeholders/findByProjeto?projeto=${id}&page=${page}&pageSize=${pageSize}`,
       {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
+        headers: this.getHeaders(),
       }
     );
   }
@@ -37,9 +46,7 @@ export class StakeholderService {
     return this.httpClient.get<GetResponseStakeholders[]>(
       `${this.servicesRootUrl}/stakeholders/findByNome?projeto=${id}&page=${page}&pageSize=${pageSize}&nome=${nome}`,
       {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
+        headers: this.getHeaders(),
       }
     );
   }
@@ -49,9 +56,7 @@ export class StakeholderService {
       `${this.servicesRootUrl}/create-stakeholder`,
       stakeholder,
       {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
+        headers: this.getHeaders(),
       }
     );
   }
@@ -60,9 +65,7 @@ export class StakeholderService {
     return this.httpClient.delete<Stakeholder>(
       `${this.servicesRootUrl}/stakeholders/delete?stakeholder=${idStakeholder}`,
       {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
+        headers: this.getHeaders(),
       }
     );
   }
@@ -72,9 +75,7 @@ export class StakeholderService {
       `${this.servicesRootUrl}/stakeholders/alert?id=${idStakeholder}`,
       {},
       {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
+        headers: this.getHeaders(),
       }
     );
   }
@@ -83,9 +84,7 @@ export class StakeholderService {
     return this.httpClient.get<Stakeholder>(
       `${this.servicesRootUrl}/stakeholders/verifyParticipation?projetoId=${idProjeto}`,
       {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
+        headers: this.getHeaders(),
       }
     );
   }

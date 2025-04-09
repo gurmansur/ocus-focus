@@ -23,6 +23,12 @@
         Efetuar Login como
         <span class="font-medium text-violet-700">Stakeholder</span>
       </h2>
+      
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="w-full mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
+        {{ errorMessage }}
+      </div>
+      
       <div class="relative mb-4 w-full">
         <label for="chave" class="leading-7 text-sm text-gray-600"
           >Chave de Acesso</label
@@ -33,7 +39,12 @@
           id="chave"
           name="chave"
           class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          [class.border-red-500]="chave?.invalid && chave?.touched"
         />
+        <div *ngIf="chave?.invalid && chave?.touched" class="text-red-500 text-xs mt-1">
+          <span *ngIf="chave?.errors?.['required']">Chave de acesso é obrigatória</span>
+          <span *ngIf="chave?.errors?.['minlength']">Chave deve ter pelo menos 5 caracteres</span>
+        </div>
       </div>
       <div class="relative mb-4 w-full">
         <label for="password" class="leading-7 text-sm text-gray-600"
@@ -45,12 +56,25 @@
           id="password"
           name="password"
           class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          [class.border-red-500]="senha?.invalid && senha?.touched"
         />
+        <div *ngIf="senha?.invalid && senha?.touched" class="text-red-500 text-xs mt-1">
+          <span *ngIf="senha?.errors?.['required']">Senha é obrigatória</span>
+          <span *ngIf="senha?.errors?.['minlength']">Senha deve ter pelo menos 5 caracteres</span>
+        </div>
       </div>
       <button
         class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 w-1/3 justify-center focus:outline-none hover:bg-violet-800 text-white mt-4"
+        [disabled]="isLoading || signinFormGroup.invalid"
       >
-        Efetuar Login
+        <span *ngIf="!isLoading">Efetuar Login</span>
+        <span *ngIf="isLoading" class="flex items-center">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Processando...
+        </span>
       </button>
       <p class="text-gray-700 text-center text-sm mt-6 font-light">
         Ainda não possui uma chave de acesso?

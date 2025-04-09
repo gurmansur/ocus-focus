@@ -12,6 +12,8 @@ import { RequisitoService } from '../../services/requisito.service';
 import { PriorizacaoRequisito } from '../../models/priorizacaoRequisito';
 import calcularResultadoFinal from '../../utils/calcularResultadoFinal';
 import { PriorizacaoService } from '../../services/priorizacao.service';
+import { AuthService } from '../../../auth/services/auth.service';
+import { StorageService } from '../../../shared/services/storage.service';
 
 @Component({
   selector: 'app-priorizar-requisitos',
@@ -35,6 +37,7 @@ export class PriorizarRequisitosComponent {
     'Ao completar a priorização de requisitos, você não poderá mais alterar as respostas. Deseja continuar?';
   showModal: boolean = false;
   mostrarDialogoConfirmacao: boolean = false;
+  isSubmitting: boolean = false;
 
   constructor(
     private projetoService: ProjetoService,
@@ -42,13 +45,30 @@ export class PriorizarRequisitosComponent {
     private priorizacaoService: PriorizacaoService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private storageService: StorageService
   ) {
     this.projetoId = this.route.snapshot.params['id'];
-    this.userId = Number(localStorage.getItem('usu_id'));
+    
+    // Get user ID from AuthService or StorageService as fallback
+    const userData = this.authService.getUserData();
+    if (userData && userData.id) {
+      this.userId = Number(userData.id);
+    } else {
+      // Fallback to StorageService
+      const storedId = this.storageService.getItem('usu_id');
+      this.userId = storedId ? Number(storedId) : 0;
+    }
   }
 
   ngOnInit(): void {
+    if (this.userId === 0) {
+      console.error('ID de usuário não encontrado');
+      this.router.navigate(['/']);
+      return;
+    }
+    
     this.priorizacaoFormGroup = this.formBuilder.group({
       numeroIdentificador: new FormControl('', [
         Validators.required,
@@ -98,11 +118,20 @@ export class PriorizarRequisitosComponent {
   getRequisitoList() {
     this.requisitoService
       .listRequisitosPriorizacaoStakeholder(this.projetoId)
-      .subscribe((requisitos) => {
-        this.requisitoAtual = requisitos.items[0];
-        this.indiceAtual = 0;
-        this.requisitoList = requisitos.items;
-        this.atualizarForm();
+      .subscribe({
+        next: (requisitos) => {
+          if (requisitos.items && requisitos.items.length > 0) {
+            this.requisitoAtual = requisitos.items[0];
+            this.indiceAtual = 0;
+            this.requisitoList = requisitos.items;
+            this.atualizarForm();
+          } else {
+            console.warn('Nenhum requisito encontrado para priorização');
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao buscar requisitos:', error);
+        }
       });
   }
 
@@ -131,14 +160,18 @@ export class PriorizarRequisitosComponent {
       this.indiceAtual++;
       this.requisitoAtual = this.requisitoList[this.indiceAtual];
 
-      console.log(this.requisitoList);
       this.atualizarForm();
     }
   }
 
   buscarProjeto(id: number, user: number) {
-    this.projetoService.findById(id, user).subscribe((projeto) => {
-      this.projeto = projeto;
+    this.projetoService.findById(id, user).subscribe({
+      next: (projeto) => {
+        this.projeto = projeto;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar projeto:', err);
+      }
     });
   }
 
@@ -175,7 +208,17 @@ export class PriorizarRequisitosComponent {
       this.priorizacaoFormGroup.markAllAsTouched();
       return;
     } else {
+      // Save the final requisito
+      this.classificacaoFinalAtual = calcularResultadoFinal(
+        this.respostaPositiva!.value,
+        this.respostaNegativa!.value
+      );
+      this.requisitoAtual = this.newPriorizacaoRequisito();
+      this.requisitoList[this.indiceAtual] = this.requisitoAtual;
+      
+      // Show the confirmation dialog
       this.showModal = true;
+      this.mostrarDialogoConfirmacao = true;
     }
   }
 
@@ -185,31 +228,22 @@ export class PriorizarRequisitosComponent {
   }
 
   confirmarExclusao() {
-    this.showModal = false;
-    this.mostrarDialogoConfirmacao = false;
-    // Implementação necessária para a exclusão ou finalização
-  }
-
-  cancelarPriorizacao() {
-    this.showModal = false;
-    this.mostrarDialogoConfirmacao = false;
-  }
-
-  confirmarPriorizacao() {
-    this.showModal = false;
-    this.mostrarDialogoConfirmacao = false;
     this.finalizar();
   }
 
   finalizar() {
-    this.classificacaoFinalAtual = calcularResultadoFinal(
-      this.respostaPositiva!.value,
-      this.respostaNegativa!.value
-    );
-    this.requisitoAtual = this.newPriorizacaoRequisito();
-    this.requisitoList[this.indiceAtual] = this.requisitoAtual;
+    if (this.isSubmitting) {
+      return; // Prevent double submission
+    }
+    
+    this.isSubmitting = true;
+    this.showModal = false;
+    this.mostrarDialogoConfirmacao = false;
 
-    this.requisitoList.forEach((requisito) => {
+    let completed = 0;
+    const total = this.requisitoList.length;
+    
+    for (const requisito of this.requisitoList) {
       this.priorizacaoService
         .insertPriorizacao(
           {
@@ -220,13 +254,29 @@ export class PriorizarRequisitosComponent {
           },
           this.userId
         )
-        .subscribe((response) => {
-          this.priorizacaoService
-            .completePriorizacao(this.userId)
-            .subscribe((response) => {
-              this.router.navigate(['/dashboard/painel-stakeholder']);
-            });
+        .subscribe({
+          next: () => {
+            completed++;
+            // Only complete when all are done
+            if (completed === total) {
+              this.priorizacaoService
+                .completePriorizacao(this.userId)
+                .subscribe({
+                  next: () => {
+                    this.router.navigate(['/dashboard/painel-stakeholder']);
+                  },
+                  error: (err) => {
+                    console.error('Erro ao completar priorização:', err);
+                    this.isSubmitting = false;
+                  }
+                });
+            }
+          },
+          error: (err) => {
+            console.error('Erro ao inserir priorização:', err);
+            this.isSubmitting = false;
+          }
         });
-    });
+    }
   }
 }

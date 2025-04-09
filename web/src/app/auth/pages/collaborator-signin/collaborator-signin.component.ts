@@ -103,13 +103,27 @@ export class CollaboratorSigninComponent implements OnInit {
         })
       )
       .subscribe({
-        next: () => {
-          this.router.navigate(['/dashboard']);
+        next: (response) => {
+          try {
+            // Use navigateByUrl which can be more reliable than navigate in some cases
+            this.router
+              .navigateByUrl('/dashboard')
+              .then(() => console.log('Navigation to dashboard successful'))
+              .catch((navError) => {
+                console.error('Erro ao navegar para o dashboard:', navError);
+                this.errorMessage = 'Erro ao redirecionar para o dashboard.';
+              });
+          } catch (error) {
+            console.error('Erro durante o processo de navegação:', error);
+            this.errorMessage = 'Erro ao processar o login. Tente novamente.';
+          }
         },
         error: (err) => {
+          console.error('Erro no login de colaborador:', err);
           this.errorMessage =
             err.error?.message ||
             'Erro ao realizar login. Verifique suas credenciais.';
+          this.isLoading = false;
         },
       });
   }

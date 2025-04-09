@@ -28,12 +28,23 @@ export class JwtUtils {
       // Verifica se é um JWT válido (3 partes separadas por ponto)
       const parts = token.split('.');
       if (parts.length !== 3) {
+        console.warn('Token JWT inválido: formato incorreto');
         return null;
       }
 
       // Decodifica a parte do payload (segunda parte)
-      const payload = JSON.parse(atob(parts[1]));
-      return payload;
+      // Adiciona padding se necessário para evitar erros de base64
+      const base64Payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const padding = '='.repeat((4 - base64Payload.length % 4) % 4);
+      const base64 = base64Payload + padding;
+      
+      try {
+        const payload = JSON.parse(atob(base64));
+        return payload;
+      } catch (parseError) {
+        console.error('Erro ao fazer parse do payload JWT:', parseError);
+        return null;
+      }
     } catch (error) {
       console.error('Erro ao decodificar token JWT:', error);
       return null;
@@ -46,6 +57,10 @@ export class JwtUtils {
    * @returns true se o token estiver expirado, false caso contrário
    */
   static isTokenExpired(token: string): boolean {
+    if (!token) {
+      return true;
+    }
+    
     const payload = this.decodeToken(token);
 
     if (!payload || !payload.exp) {
@@ -54,8 +69,13 @@ export class JwtUtils {
       return true;
     }
 
-    // A expiração é em segundos, então multiplicamos por 1000 para comparar com Date.now()
-    return payload.exp * 1000 < Date.now();
+    try {
+      // A expiração é em segundos, então multiplicamos por 1000 para comparar com Date.now()
+      return payload.exp * 1000 < Date.now();
+    } catch (error) {
+      console.error('Erro ao verificar expiração do token:', error);
+      return true; // Por segurança, considera expirado em caso de erro
+    }
   }
 
   /**
@@ -68,9 +88,14 @@ export class JwtUtils {
       return false;
     }
 
-    // Verifica se o token é bem formado e não está expirado
-    const payload = this.decodeToken(token);
-    return !!payload && !this.isTokenExpired(token);
+    try {
+      // Verifica se o token é bem formado e não está expirado
+      const payload = this.decodeToken(token);
+      return !!payload && !this.isTokenExpired(token);
+    } catch (error) {
+      console.error('Erro ao validar token:', error);
+      return false;
+    }
   }
 
   /**
@@ -81,18 +106,27 @@ export class JwtUtils {
   static extractUserInfo(
     token: string
   ): { id?: number | string; email?: string; role?: string } | null {
-    const payload = this.decodeToken(token);
-
-    if (!payload) {
+    if (!token) {
       return null;
     }
+    
+    try {
+      const payload = this.decodeToken(token);
 
-    // Aqui assumimos uma estrutura comum em JWTs para informações de usuário,
-    // mas isso pode variar dependendo de como o token é gerado no backend
-    return {
-      id: payload.sub || payload['id'] || payload['userId'],
-      email: payload['email'],
-      role: payload['role'],
-    };
+      if (!payload) {
+        return null;
+      }
+
+      // Aqui assumimos uma estrutura comum em JWTs para informações de usuário,
+      // mas isso pode variar dependendo de como o token é gerado no backend
+      return {
+        id: payload.sub || payload['id'] || payload['userId'],
+        email: payload['email'],
+        role: payload['role'],
+      };
+    } catch (error) {
+      console.error('Erro ao extrair informações do usuário do token:', error);
+      return null;
+    }
   }
 }

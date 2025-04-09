@@ -1,28 +1,56 @@
 import { CanActivateFn, Router } from '@angular/router';
-import {inject} from '@angular/core';
+import { inject } from '@angular/core';
+import { StorageService } from '../../shared/services/storage.service';
+import { AuthService } from '../../auth/services/auth.service';
 
 export const colaboradorGuard: CanActivateFn = () => {
-  const role = localStorage.getItem('usu_role');
-
   const router = inject(Router);
+  const authService = inject(AuthService);
+  const storageService = inject(StorageService);
 
-  if(role === 'colaborador'){
-    return true;
+  try {
+    // Verificar se existe um token válido primeiro
+    if (!authService.hasValidToken()) {
+      return router.parseUrl('/');
+    }
+
+    // Obter dados do usuário do AuthService
+    const userData = authService.getUserData();
+    const role = userData?.role || storageService.getItem('usu_role');
+
+    if (role === 'colaborador') {
+      return true;
+    }
+
+    return router.parseUrl('/dashboard/painel-stakeholder');
+  } catch (error) {
+    console.error('Erro no guard de colaborador:', error);
+    return router.parseUrl('/');
   }
-
-  return router.parseUrl('/dashboard/painel-stakeholder');
-
 };
 
 export const stakeholderGuard: CanActivateFn = () => {
-  const role = localStorage.getItem('usu_role');
-
   const router = inject(Router);
+  const authService = inject(AuthService);
+  const storageService = inject(StorageService);
 
-  if(role === 'stakeholder'){
-    return true;
+  try {
+    // Verificar se existe um token válido primeiro
+    if (!authService.hasValidToken()) {
+      return router.parseUrl('/');
+    }
+
+    // Obter dados do usuário do AuthService
+    const userData = authService.getUserData();
+    const role = userData?.role || storageService.getItem('usu_role');
+
+    if (role === 'stakeholder') {
+      return true;
+    }
+
+    return router.parseUrl('/dashboard/projetos');
+  } catch (error) {
+    console.error('Erro no guard de stakeholder:', error);
+    return router.parseUrl('/');
   }
-
-  return router.parseUrl('/dashboard/projetos');
-
 };

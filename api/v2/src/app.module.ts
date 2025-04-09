@@ -52,7 +52,9 @@ import { ValidationPipe as CustomValidationPipe } from './pipes/validation.pipe'
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`,
+      envFilePath: process.env.NODE_ENV
+        ? `.env.${process.env.NODE_ENV}`
+        : '.env.dev',
       load: [authConfig, cacheConfig, throttlerConfig, loggerConfig],
     }),
     TypeOrmModule.forRootAsync({

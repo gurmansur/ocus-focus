@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { StakeholderSignin } from '../../models/stakeholder-signin';
 import { AuthService } from '../../services/auth.service';
 
@@ -16,6 +17,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class StakeholderSigninComponent {
   signinFormGroup!: FormGroup;
+  isLoading = false;
+  errorMessage = '';
 
   constructor(
     private authService: AuthService,
@@ -55,22 +58,36 @@ export class StakeholderSigninComponent {
       this.signinFormGroup.markAllAsTouched();
       return;
     } else {
+      this.isLoading = true;
+      this.errorMessage = '';
+      
       const signinUser = this.createUser();
 
-      this.authService.signinStakeholder(signinUser).subscribe({
-        next: (response) => {
-          localStorage.setItem('token', response.accessToken);
-          localStorage.setItem('usu_email', response['usu_email'] as string);
-          localStorage.setItem('usu_name', response['usu_name'] as string);
-          localStorage.setItem('usu_id', String(response['usu_id']));
-          localStorage.setItem('usu_role', response['usu_role'] as string);
-          this.router.navigate(['/dashboard']);
-        },
-
-        error: (err) => {
-          alert(err.error.message);
-        },
-      });
+      this.authService.signinStakeholder(signinUser)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            try {
+              this.router.navigateByUrl('/dashboard')
+                .then(() => console.log('Navigation to dashboard successful'))
+                .catch(navError => {
+                  console.error('Erro ao navegar para o dashboard:', navError);
+                  this.errorMessage = 'Erro ao redirecionar para o dashboard.';
+                });
+            } catch (error) {
+              console.error('Erro durante o processo de navegação:', error);
+              this.errorMessage = 'Erro ao processar o login. Tente novamente.';
+            }
+          },
+          error: (err) => {
+            console.error('Erro de login:', err);
+            this.errorMessage = err.error?.message || 'Erro ao realizar login. Verifique suas credenciais.';
+          },
+        });
     }
   }
 }

@@ -1,0 +1,15 @@
+FROM mysql:latest
+
+# Environment variables for MySQL
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=ocus_focus_test
+
+# Copy the SQL scripts to initialize the database
+COPY ./create_tables.sql /docker-entrypoint-initdb.d/1-schema.sql
+COPY ./populate_test_db.sql /docker-entrypoint-initdb.d/2-data.sql
+
+# Port to expose
+EXPOSE 3306
+
+# Start MySQL
+CMD ["mysqld"] 
