@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { StakeholderService } from '../../services/stakeholder.service';
-import { StakeholderSignup } from '../../models/stakeholderSignup';
-import { Projeto } from '../../models/projeto';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Projeto } from '../../models/projeto';
+import { StakeholderSignup } from '../../models/stakeholderSignup';
 import { ProjetoService } from '../../services/projeto.service';
+import { StakeholderService } from '../../services/stakeholder.service';
 
 @Component({
   selector: 'app-inserir-stakeholder',
@@ -28,6 +28,17 @@ export class InserirStakeholderComponent {
     this.userId = Number(localStorage.getItem('usu_id'));
   }
 
+  passwordsMatchValidator(formGroup: FormGroup){
+    const senha = formGroup.get('senha')?.value;
+    const confirmarSenha = formGroup.get('confirmarSenha')?.value;
+
+    if (senha !== confirmarSenha){
+      formGroup.get('confirmarSenha')?.setErrors({ passwordMismatch: true });
+    } else {
+      formGroup.get('confirmarSenha')?.setErrors(null);
+    }
+  }
+
   ngOnInit(): void {
     this.stakeholderFormGroup = this.formBuilder.group({
       nome: new FormControl('', [
@@ -40,6 +51,7 @@ export class InserirStakeholderComponent {
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(255),
+        Validators.email,
       ]),
 
       cargo: new FormControl('', [
@@ -59,7 +71,7 @@ export class InserirStakeholderComponent {
         Validators.minLength(5),
         Validators.maxLength(100),
       ]),
-    });
+    }, {validators: this.passwordsMatchValidator.bind(this)});
 
     this.buscarProjeto(this.projetoId, this.userId);
   }
