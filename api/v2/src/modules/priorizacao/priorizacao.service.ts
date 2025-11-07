@@ -40,7 +40,7 @@ export class PriorizacaoService {
   }
 
   createResultado(
-    requisitoId: number,
+    requisito: number,
     resultadoFinal:
       | 'DEVE SER FEITO'
       | 'PERFORMANCE'
@@ -49,7 +49,7 @@ export class PriorizacaoService {
       | 'QUESTIONAVEL'
       | 'REVERSO',
   ) {
-    return this.resultadoService.create(requisitoId, resultadoFinal);
+    return this.resultadoService.create(requisito, resultadoFinal);
   }
 
   async findByProjeto(projetoId: number) {
