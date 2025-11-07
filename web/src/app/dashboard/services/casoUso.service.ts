@@ -26,7 +26,7 @@ export class CasoUsoService {
 
   update(casoUso: casoUso, requisito: number): Observable<any> {
     return this.httpClient.patch<casoUso>(
-      `${this.servicesRootUrl}/caso-de-uso/update?caso=${casoUso.id}&requsito=${requisito}`,
+      `${this.servicesRootUrl}/caso-de-uso/update?caso=${casoUso.id}&requisito=${requisito}`,
       casoUso,
       {
         headers: {
@@ -38,7 +38,7 @@ export class CasoUsoService {
 
   delete(idCaso: number): Observable<any> {
     return this.httpClient.delete<casoUso>(
-      `${this.servicesRootUrl}/caso-de-uso/delete?caso=${idCaso}`,
+      `${this.servicesRootUrl}/caso-de-uso/delete?id=${idCaso}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
