@@ -41,9 +41,9 @@ export class CenariosController {
 
   @Post('new')
   create(@Body() createCenarioDto: CreateCenarioDto, 
-  @Query('caso') casoId: number
+  @Query('caso') casoId: string
   ) {
-    return this.cenariosService.create(createCenarioDto, casoId);
+    return this.cenariosService.create(createCenarioDto, +casoId);
   }
 
   @Patch('update')
