@@ -13,4 +13,6 @@ export class CreateCenarioDto {
   @MinLength(5)
   @MaxLength(255)
   descricao: string;
+
+  casoUso: number;
 }
