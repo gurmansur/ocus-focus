@@ -48,7 +48,7 @@ export class CenariosController {
 
   @Patch('update')
   update(
-    @Query('id') id: string,
+    @Query('cenario') id: string,
     @Query('caso') casoId: string,
     @Body() updateCenarioDto: UpdateCenarioDto,
   ) {
