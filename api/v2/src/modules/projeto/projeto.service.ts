@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { ColaboradorProjetoService } from '../colaborador-projeto/colaborador-projeto.service';
@@ -257,8 +257,16 @@ export class ProjetoService {
     return this.projetoRepository.update(id, updateProjetoDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} projeto`;
+  async remove(id: number) {
+    const projeto = await this.projetoRepository.findOneBy({ id });
+
+    if (!projeto){
+      throw new NotFoundException(`Projeto com ID ${id} não encontrado`);
+    }
+
+    projeto.status = 'CANCELADO';
+
+    return this.projetoRepository.save(projeto);
   }
 
   async findColaboradores(id: number, page?: number, pageSize?: number) {
