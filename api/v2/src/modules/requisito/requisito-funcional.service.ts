@@ -88,6 +88,14 @@ export class RequisitoService {
     return this.requisitoRepository.delete({ id: requsitoId });
   }
 
+  async findAll(projetoId: number){
+    return await this.requisitoRepository.find({
+      where: { projeto: { id: projetoId } },
+      relations: ['projeto'],
+      loadEagerRelations: true,
+    });
+  }
+
   async listResultados(projetoId: number, page: number, pageSize: number) {
     const take = pageSize ? pageSize : 5;
     const skip = page ? page * take : 0;

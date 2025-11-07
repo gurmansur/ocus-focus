@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { ResultadoRequisito } from '../../models/resultadoRequisito';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Projeto } from '../../models/projeto';
+import { ResultadoRequisito } from '../../models/resultadoRequisito';
+import { PriorizacaoService } from '../../services/priorizacao.service';
 import { ProjetoService } from '../../services/projeto.service';
 import { RequisitoService } from '../../services/requisito.service';
 import { StakeholderService } from '../../services/stakeholder.service';
-import { PriorizacaoService } from '../../services/priorizacao.service';
 
 @Component({
   selector: 'app-painel-prioreasy',
@@ -122,16 +122,15 @@ export class PainelPrioreasyComponent {
     this.stakeholderService.verifyParticipation(this.projetoId).subscribe({
 
       next: () => {
-        this.requisitos.forEach((requisito) => {
+        this.requisitoService.findAllByProjeto(this.projetoId).subscribe((todosRequisitos) => {
+          todosRequisitos.forEach((requisito: any) => {
+            this.priorizacaoService.getRequirementFinalClassification(requisito.id || 0).subscribe((response) => {
+              const classificacaoFinal = response[0].PRS_CLASSIFICACAO_REQUISITO;
 
-          this.priorizacaoService.getRequirementFinalClassification(requisito.id || 0).subscribe((response) => {
-            const classificacaoFinal = response[0].PRS_CLASSIFICACAO_REQUISITO;
-
-            console.log(classificacaoFinal);
-
-            this.priorizacaoService.insertResultadoClassificacao(requisito.id || 0, classificacaoFinal).subscribe(() => {
-              this.executarBusca();
-              this.showModalConfirmacao = false;
+              this.priorizacaoService.insertResultadoClassificacao(requisito.id || 0, classificacaoFinal).subscribe(() => {
+                this.executarBusca();
+                this.showModalConfirmacao = false;
+              });
             });
           });
         });
