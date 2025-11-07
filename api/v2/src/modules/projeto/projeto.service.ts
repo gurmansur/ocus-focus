@@ -74,6 +74,7 @@ export class ProjetoService {
           nome: Like(`%${nome}%`),
           colaboradores: { colaborador: { id: colaboradorId } },
         },
+        order: { status: 'ASC' },
         relations: ['colaboradores', 'colaboradores.colaborador'],
         loadEagerRelations: true,
         take: take,
