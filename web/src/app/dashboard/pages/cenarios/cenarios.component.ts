@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { CenarioService } from '../../services/cenario.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Cenarios } from '../../models/cenarios';
 import { Projeto } from '../../models/projeto';
+import { CenarioService } from '../../services/cenario.service';
 import { ProjetoService } from '../../services/projeto.service';
 
 @Component({

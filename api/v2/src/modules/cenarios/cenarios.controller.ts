@@ -56,7 +56,7 @@ export class CenariosController {
   }
 
   @Delete('delete')
-  remove(@Query('id') id: string) {
+  remove(@Query('cenario') id: string) {
     return this.cenariosService.remove(+id);
   }
 }
