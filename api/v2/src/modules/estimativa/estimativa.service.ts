@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Ator } from '../ator/entities/ator.entity';
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
+import { FatorAmbientalProjeto } from '../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
+import { FatorTecnicoProjeto } from '../fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
 import { ProjetoService } from '../projeto/projeto.service';
 import { Estimativa } from './entities/estimativa.entity';
 
@@ -15,6 +17,10 @@ export class EstimativaService {
     @InjectRepository(Ator) private readonly atorRepository: Repository<Ator>,
     @InjectRepository(CasoUso)
     private readonly casoRepository: Repository<CasoUso>,
+    @InjectRepository(FatorAmbientalProjeto)
+    private readonly fatorAmbientalRepository: Repository<FatorAmbientalProjeto>,
+    @InjectRepository(FatorTecnicoProjeto)
+    private readonly fatorTecnicoRepository: Repository<FatorTecnicoProjeto>,
   ) {}
 
   async findAll(projetoId: number, page = 0, pageSize = 10) {
@@ -39,26 +45,26 @@ export class EstimativaService {
 
   async create(projetoId: number) {
     try {
-      const projeto = await this.projetoService.findOne(projetoId);
-      const Tfactor = projeto.restFactor;
-      const Efactor = projeto.reseFactor;
+      const Tfactor = await this.calcularTFactor(projetoId);
+      const Efactor = await this.calcularEFactor(projetoId);
 
       const totalCasoSimples = await this.getTotalCasosSimples(projetoId);
       const totalCasoMedio = await this.getTotalCasosMedios(projetoId);
       const totalCasoComplexo = await this.getTotalCasosComplexos(projetoId);
 
-      const somaCasos =
-        totalCasoSimples * 5 + totalCasoMedio * 10 + totalCasoComplexo * 15;
+      const casoUsoGeral = totalCasoSimples * 5 + totalCasoMedio * 10 + totalCasoComplexo * 15;
 
       const totalAtorSimples = await this.getTotalAtoresSimples(projetoId);
       const totalAtorMedio = await this.getTotalAtoresMedios(projetoId);
       const totalAtorComplexo = await this.getTotalAtoresComplexos(projetoId);
-      const somaAtores =
-        totalAtorSimples + totalAtorMedio * 2 + totalAtorComplexo * 3;
 
-      const pesoPontos = somaCasos + somaAtores;
-      const ResPontos = (somaCasos + somaAtores) * Tfactor * Efactor;
-      const ResHoras = (somaCasos + somaAtores) * Tfactor * Efactor * 20;
+      const atoresGeral = totalAtorSimples + totalAtorMedio * 2 + totalAtorComplexo * 3;
+
+      const pontosGerais = casoUsoGeral + atoresGeral;
+
+      const pontosCasoUso = pontosGerais * Tfactor * Efactor;
+
+      const estimativaHoras = pontosCasoUso * 20;
 
       const options = {
         timeZone: 'America/Sao_Paulo',
@@ -85,11 +91,11 @@ export class EstimativaService {
         dataEstimativa: dataHoraFormatada,
         eFactor: Efactor,
         tFactor: Tfactor,
-        pesoAtores: somaAtores,
-        pesoCasosUso: somaCasos,
-        pesoPontosCasosUso: pesoPontos,
-        resultadoPontosCasosUso: ResPontos,
-        resultadoHoras: ResHoras,
+        pesoAtores: atoresGeral,
+        pesoCasosUso: casoUsoGeral,
+        pesoPontosCasosUso: pontosGerais,
+        resultadoPontosCasosUso: pontosCasoUso,
+        resultadoHoras: estimativaHoras,
         projeto: { id: projetoId },
       });
 
@@ -149,5 +155,33 @@ export class EstimativaService {
         requisitoFuncional: { projeto: { id: projetoId } },
       },
     });
+  }
+
+  private async calcularEFactor(projetoId: number): Promise<number>{
+    const fatores = await this.fatorAmbientalRepository.find({
+      where: {  projeto: { id: projetoId } },
+      relations: ['fatorAmbiental'],
+    });
+
+    const soma = fatores.reduce((total, fatorProj) => {
+      return total + fatorProj.valor * fatorProj.fatorAmbiental.peso;
+    }, 0);
+
+    const Efactor = (1.4 + (soma * (-0.03)));
+    return parseFloat(Efactor.toFixed(3));
+  }
+
+  private async calcularTFactor(projetoId: number): Promise<number>{
+    const fatores = await this.fatorTecnicoRepository.find({
+      where: {  projeto: { id: projetoId } },
+      relations: ['fatorTecnico'],
+    });
+
+    const soma = fatores.reduce((total, fatorProj) => {
+      return total + fatorProj.valor * fatorProj.fatorTecnico.peso;
+    }, 0);
+
+    const Tfactor = (0.6 + (soma/100));
+    return parseFloat(Tfactor.toFixed(3));
   }
 }
