@@ -3,6 +3,12 @@ import { Exclude, Type } from 'class-transformer';
 import { CasoDeTesteDto } from '../../caso-de-teste/dto/caso-de-teste.dto';
 
 export class SuiteDeTesteDto {
+  constructor(partial?: Partial<SuiteDeTesteDto>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+  }
+
   @ApiProperty({
     type: 'number',
     description: 'Id da suite de teste',
@@ -59,4 +65,16 @@ export class SuiteDeTesteDto {
   })
   @Type(() => CasoDeTesteDto)
   casosDeTeste: CasoDeTesteDto[];
+
+  @ApiPropertyOptional({
+    type: 'number',
+    description: 'Id da suite de teste pai',
+  })
+  suitePaiId: number;
+
+  @ApiPropertyOptional({
+    type: 'number',
+    description: 'Id do projeto',
+  })
+  projetoId: number;
 }

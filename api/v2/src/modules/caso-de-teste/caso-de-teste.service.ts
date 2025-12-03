@@ -12,6 +12,7 @@ import { CreateCasoDeTesteBo } from './bo/create-caso-de-teste.bo';
 import { UpdateCasoDeTesteBo } from './bo/update-caso-de-teste.bo';
 import { CasoDeTesteMapper } from './caso-de-teste.mapper';
 import { CasoDeTeste } from './entities/caso-de-teste.entity';
+import { CasoDeTesteRepository } from './repositories/caso-de-teste.repository';
 
 @Injectable()
 export class CasoDeTesteService {
@@ -20,50 +21,48 @@ export class CasoDeTesteService {
     private casoDeTesteRepository: Repository<CasoDeTeste>,
     @Inject(forwardRef(() => SuiteDeTesteService))
     private suiteDeTesteService: SuiteDeTesteService,
+    private casoDeTesteCustomRepository: CasoDeTesteRepository,
   ) {}
 
-  async create(createCasoDeTesteBo: CreateCasoDeTesteBo, projeto: Projeto) {
+  async create(createCasoDeTesteBo: CreateCasoDeTesteBo, projetoId: number) {
     const entity =
       CasoDeTesteMapper.createCasoDeTesteBoToEntity(createCasoDeTesteBo);
 
     if (createCasoDeTesteBo.suiteDeTesteId) {
-      entity.suiteDeTeste = await this.suiteDeTesteService.findOne(
+      const suiteDeTeste = await this.suiteDeTesteService.findOne(
         createCasoDeTesteBo.suiteDeTesteId,
       );
 
-      if (!entity.suiteDeTeste) {
+      if (!suiteDeTeste) {
         throw new BadRequestException('Suite de teste não encontrada');
       }
+
+      entity.suiteDeTeste = { id: createCasoDeTesteBo.suiteDeTesteId } as any;
     }
 
-    entity.projeto = projeto;
+    entity.projeto = { id: projetoId } as Projeto;
 
     return CasoDeTesteMapper.entityToCasoDeTesteBo(
       await this.casoDeTesteRepository.save(entity),
     );
   }
 
-  async findAll(projeto: Projeto) {
-    return (
-      await this.casoDeTesteRepository.find({
-        relations: [
-          'testadorDesignado',
-          'suiteDeTeste',
-          'casoDeUso',
-          'projeto',
-        ],
-        where: { projeto },
-      })
-    ).map((casoDeTeste) =>
-      CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),
+  async findAll(projetoId: number, page: number = 0, pageSize: number = 10) {
+    return this.casoDeTesteCustomRepository.findAllPaginated(
+      projetoId,
+      page,
+      pageSize,
     );
   }
 
-  async findAllWithoutSuite(projeto: Projeto) {
+  async findAllWithoutSuite(projetoId: number) {
     return (
       await this.casoDeTesteRepository.find({
         relations: ['testadorDesignado', 'suiteDeTeste', 'casoDeUso'],
-        where: { suiteDeTeste: IsNull(), projeto },
+        where: {
+          suiteDeTeste: IsNull(),
+          projeto: { id: projetoId },
+        },
       })
     ).map((casoDeTeste) =>
       CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),
@@ -83,13 +82,51 @@ export class CasoDeTesteService {
     return CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste);
   }
 
-  async update(id: number, updateCasoDeTesteBo: UpdateCasoDeTesteBo) {
-    const caso = await this.casoDeTesteRepository.findOne({ where: { id } });
+  async findByNome(
+    nome: string,
+    projetoId: number,
+    page: number = 0,
+    pageSize: number = 10,
+  ) {
+    return this.casoDeTesteCustomRepository.findByNome(
+      nome,
+      projetoId,
+      page,
+      pageSize,
+    );
+  }
+
+  async findBySuiteDeTeste(
+    suiteDeTesteId: number,
+    page: number = 0,
+    pageSize: number = 10,
+  ) {
+    return this.casoDeTesteCustomRepository.findBySuiteDeTeste(
+      suiteDeTesteId,
+      page,
+      pageSize,
+    );
+  }
+
+  async update(
+    id: number,
+    updateCasoDeTesteBo: UpdateCasoDeTesteBo,
+    projetoId: number,
+  ) {
+    const caso = await this.casoDeTesteRepository.findOne({
+      where: { id },
+      relations: ['suiteDeTeste', 'projeto'],
+    });
+
+    if (!caso) {
+      throw new BadRequestException('Caso de teste não encontrado');
+    }
 
     const entity =
       CasoDeTesteMapper.updateCasoDeTesteBoToEntity(updateCasoDeTesteBo);
 
     entity.suiteDeTeste = caso.suiteDeTeste;
+    entity.projeto = { id: projetoId } as Projeto;
 
     return this.casoDeTesteRepository.update(id, entity);
   }

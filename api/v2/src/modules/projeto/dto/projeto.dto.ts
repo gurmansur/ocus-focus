@@ -1,13 +1,26 @@
+import { IsString, IsOptional, IsNumber, IsBoolean, IsEmail, IsEnum, IsArray, IsDate, IsNotEmpty } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class ProjetoDto {
-  nome: string;
+@ApiProperty({ description: 'Propriedade nome' })
+  @IsString()
+  nome: string
 
-  descricao: string;
+@ApiProperty({ description: 'Propriedade descricao' })
+  @IsString()
+  descricao: string
 
-  empresa: string;
+@ApiProperty({ description: 'Propriedade empresa' })
+  @IsString()
+  empresa: string
 
-  dataInicio: Date;
+@ApiProperty({ description: 'Propriedade dataInicio' })
+  @IsDate()
+  dataInicio: Date
 
-  previsaoFim: Date;
+@ApiProperty({ description: 'Propriedade previsaoFim' })
+  @IsDate()
+  previsaoFim: Date
 
-  status: 'EM ANDAMENTO' | 'FINALIZADO' | 'CANCELADO';
+@ApiProperty({ description: 'Propriedade status' })
+  status: 'EM ANDAMENTO' | 'FINALIZADO' | 'CANCELADO'
 }

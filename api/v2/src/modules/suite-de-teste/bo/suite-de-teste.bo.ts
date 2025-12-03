@@ -16,4 +16,14 @@ export class SuiteDeTesteBo {
   suitesFilhas: SuiteDeTesteBo[];
 
   casosDeTeste: CasoDeTesteBo[];
+
+  dataCriacao: Date;
+
+  dataAtualizacao: Date;
+
+  dataExclusao: Date;
+
+  projeto: any;
+
+  suites: SuiteDeTesteBo[];
 }

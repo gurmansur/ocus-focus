@@ -3,140 +3,220 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { ApiPaginatedResponse } from '../../decorators/api-paginated-response.decorator';
+import { ProtectedRoute } from '../../decorators/protected-route.decorator';
 import { AtorService } from './ator.service';
 import { AtoresMetricsQueryDto } from './dto/atores-metrics-query.dto';
 import { AtoresMetricsDto } from './dto/atores-metrics.dto';
-import { CreateAtorQueryDto } from './dto/create-ator-query.dto';
 import { CreateAtorDto } from './dto/create-ator.dto';
 import { DeleteAtorQueryDto } from './dto/delete-ator-query.dto';
-import { FindAtorByIdQueryDto } from './dto/find-ator-by-id-query.dto';
 import { FindAtorByIdDto } from './dto/find-ator-by-id.dto';
-import { FindAtorByNomeQueryDto } from './dto/find-ator-by-nome-query.dto';
-import { FindAtoresQueryDto } from './dto/find-atores-query.dto';
-import { FindAtoresDto } from './dto/find-atores.dto';
 import { UpdateAtorQueryDto } from './dto/update-ator-query.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
 
-@UseGuards(AuthGuard)
+/**
+ * Controlador para gerenciamento de atores
+ */
 @ApiTags('Ator')
-@ApiResponse({ status: 401, description: 'Não autorizado' })
 @ApiBearerAuth()
 @Controller('atores')
 export class AtorController {
   constructor(private readonly atorService: AtorService) {}
 
-  @ApiResponse({
-    status: 200,
-    description: 'Cria um novo ator e retorna o ator criado',
+  /**
+   * Lista atores com paginação
+   */
+  @ProtectedRoute()
+  @Get()
+  @ApiOperation({ summary: 'Listar atores' })
+  @ApiPaginatedResponse(FindAtorByIdDto)
+  findAll(
+    @Query('projeto') projetoId: number,
+    @Query('page') page?: number,
+    @Query('pageSize') pageSize?: number,
+  ) {
+    return this.atorService.findAll(projetoId, page || 0, pageSize || 10);
+  }
+
+  /**
+   * Lista atores filtrados por nome
+   */
+  @ProtectedRoute()
+  @Get('findByNome')
+  @ApiOperation({ summary: 'Buscar atores por nome' })
+  @ApiPaginatedResponse(FindAtorByIdDto)
+  findByNome(
+    @Query('nome') nome: string,
+    @Query('projeto') projetoId: number,
+    @Query('page') page?: number,
+    @Query('pageSize') pageSize?: number,
+  ) {
+    return this.atorService.findByNome(
+      nome,
+      projetoId,
+      page || 0,
+      pageSize || 10,
+    );
+  }
+
+  /**
+   * Cria um novo ator
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista')
+  @Post()
+  @ApiOperation({ summary: 'Criar ator' })
+  @ApiOkResponse({
+    description: 'Ator criado com sucesso',
     type: FindAtorByIdDto,
   })
-  @Post('new')
   create(
     @Body() createAtorDto: CreateAtorDto,
-    @Query() { projeto }: CreateAtorQueryDto,
+    @Query('projeto') projetoId: number,
   ) {
-    return this.atorService.create(createAtorDto, +projeto);
+    return this.atorService.create(createAtorDto, projetoId);
   }
 
-  @ApiResponse({
-    status: 200,
-    description: 'Retorna a lista de atores',
-    type: FindAtoresDto,
-  })
-  @Get()
-  findAll(@Query() { projeto, page, size }: FindAtoresQueryDto) {
-    return this.atorService.findAll(projeto, page, size);
+  /**
+   * Busca um ator pelo ID
+   */
+  @ProtectedRoute()
+  @Get(':id')
+  @ApiOperation({ summary: 'Buscar ator por ID' })
+  @ApiOkResponse({ description: 'Ator encontrado', type: FindAtorByIdDto })
+  findOne(@Param('id') id: number) {
+    return this.atorService.findOne(id);
   }
 
-  @ApiResponse({
-    status: 200,
-    description: 'Retorna o ator',
+  /**
+   * Atualiza um ator pelo ID
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista')
+  @Patch(':id')
+  @ApiOperation({ summary: 'Atualizar ator' })
+  @ApiOkResponse({
+    description: 'Ator atualizado com sucesso',
     type: FindAtorByIdDto,
   })
-  @Get('findById')
-  findOne(@Query() { id }: FindAtorByIdQueryDto) {
-    return this.atorService.findOne(+id);
-  }
-
-  @ApiResponse({
-    status: 200,
-    description: 'Retorna a lista de atores',
-    type: FindAtoresDto,
-  })
-  @Get('findByNome')
-  findByNome(
-    @Query() { nome, projeto, page, pageSize }: FindAtorByNomeQueryDto,
+  update(
+    @Param('id') id: number,
+    @Body() updateAtorDto: UpdateAtorDto,
+    @Query('projeto') projetoId: number,
   ) {
-    return this.atorService.findByNome(nome, projeto, page, pageSize);
+    return this.atorService.update(id, projetoId, updateAtorDto);
   }
 
-  // ? Atores recebe o ID do projeto ?????????????
+  /**
+   * Remove um ator
+   */
+  @ProtectedRoute('admin', 'gerente')
+  @Delete(':id')
+  @ApiOperation({ summary: 'Remover ator' })
+  @ApiOkResponse({ description: 'Ator removido com sucesso' })
+  remove(@Param('id') id: number) {
+    return this.atorService.remove(id);
+  }
+
+  /**
+   * Obtém métricas de atores
+   */
+  @ProtectedRoute()
+  @Get('metrics/total')
+  @ApiOperation({ summary: 'Obter total de atores' })
   @ApiResponse({
     status: 200,
     description: 'Retorna a quantidade de atores do projeto',
     type: AtoresMetricsDto,
   })
-  @Get('metrics/total')
   getTotal(@Query() { atores }: AtoresMetricsQueryDto) {
     return this.atorService.getMetrics(atores);
   }
 
+  /**
+   * Obtém métricas de atores simples
+   */
+  @ProtectedRoute()
+  @Get('metrics/simples')
+  @ApiOperation({ summary: 'Obter total de atores simples' })
   @ApiResponse({
     status: 200,
     description: 'Retorna a quantidade de atores simples',
     type: AtoresMetricsDto,
   })
-  @Get('metrics/simples')
   getTotalSimples(@Query() { atores }: AtoresMetricsQueryDto) {
     return this.atorService.getMetrics(atores, 'SIMPLES');
   }
 
+  /**
+   * Obtém métricas de atores médios
+   */
+  @ProtectedRoute()
+  @Get('metrics/medios')
+  @ApiOperation({ summary: 'Obter total de atores médios' })
   @ApiResponse({
     status: 200,
     description: 'Retorna a quantidade de atores médios',
     type: AtoresMetricsDto,
   })
-  @Get('metrics/medios')
   getTotalMedio(@Query() { atores }: AtoresMetricsQueryDto) {
     return this.atorService.getMetrics(atores, 'MEDIO');
   }
 
+  /**
+   * Obtém métricas de atores complexos
+   */
+  @ProtectedRoute()
+  @Get('metrics/complexos')
+  @ApiOperation({ summary: 'Obter total de atores complexos' })
   @ApiResponse({
     status: 200,
     description: 'Retorna a quantidade de atores complexos',
     type: AtoresMetricsDto,
   })
-  @Get('metrics/complexos')
   getTotalComplexo(@Query() { atores }: AtoresMetricsQueryDto) {
     return this.atorService.getMetrics(atores, 'COMPLEXO');
   }
 
+  /**
+   * Atualiza um ator pela query
+   */
+  @ProtectedRoute('admin', 'gerente', 'analista')
+  @Patch('update')
+  @ApiOperation({ summary: 'Atualizar ator pela query' })
   @ApiResponse({
     status: 200,
     description: 'Atualiza o ator',
     type: FindAtorByIdDto,
   })
-  @Patch('update')
-  update(
+  updateByQuery(
     @Query() { atores, projeto }: UpdateAtorQueryDto,
     @Body() updateAtorDto: UpdateAtorDto,
   ) {
     return this.atorService.update(atores, projeto, updateAtorDto);
   }
 
+  /**
+   * Remove um ator pela query
+   */
+  @ProtectedRoute('admin', 'gerente')
+  @Delete('delete')
+  @ApiOperation({ summary: 'Remover ator pela query' })
   @ApiResponse({
     status: 200,
     description: 'Remove o ator',
   })
-  @Delete('delete')
-  remove(@Query() { atores }: DeleteAtorQueryDto) {
+  removeByQuery(@Query() { atores }: DeleteAtorQueryDto) {
     return this.atorService.remove(atores);
   }
 }

@@ -24,9 +24,7 @@ export class AuthMapper {
     dto.email = colaborador.email;
     dto.empresa = colaborador.empresa;
     dto.cargo = colaborador.cargo;
-    dto.usuario = colaborador.usuario;
     dto.id = colaborador.id;
-    dto.senha = colaborador.senha;
 
     return dto;
   }

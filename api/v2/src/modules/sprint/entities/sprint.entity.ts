@@ -2,10 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserStory } from '../../user-story/entities/user-story.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
 
 @Entity('SPRINTS')
 export class Sprint {
@@ -29,4 +32,8 @@ export class Sprint {
 
   @ManyToMany(() => UserStory, (userStory) => userStory.sprints)
   userStories: UserStory[] | null;
+  
+  @ManyToOne(() => Projeto)
+  @JoinColumn({ name: 'FK_PROJETO_PRO_ID' })
+  projeto: Projeto;
 }

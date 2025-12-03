@@ -1,16 +1,22 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateCasoUsoDto {
   @IsString()
   @MinLength(5)
   @MaxLength(100)
-  nome: string;
+@ApiProperty({ description: 'Propriedade nome' })
+  @IsString()
+  nome: string
 
   @IsEnum(['SIMPLES', 'MEDIO', 'COMPLEXO'])
-  complexidade: 'SIMPLES' | 'MEDIO' | 'COMPLEXO';
+@ApiProperty({ description: 'Propriedade complexidade' })
+  complexidade: 'SIMPLES' | 'MEDIO' | 'COMPLEXO'
 
   @IsString()
   @MinLength(5)
   @MaxLength(255)
-  descricao: string;
+@ApiProperty({ description: 'Propriedade descricao' })
+  @IsString()
+  descricao: string
 }
