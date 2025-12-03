@@ -1,27 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsString } from 'class-validator';
 
-/**
- * DTO para autenticação de stakeholder
- */
 export class SignInStakeholderDto {
   @ApiProperty({
-    description: 'Chave única do stakeholder fornecida pela equipe do projeto',
-    example: '5e9f8f8f8f8f8f8f8f8f8f8f',
-    required: true,
+    description: 'Chave do stakeholder',
+    example: '21e1bbf8af3b3c8bb37f0104672df1f4c6ff9c84',
   })
-  @IsString({ message: 'Chave deve ser uma string' })
-  @IsNotEmpty({ message: 'Chave é obrigatória' })
+  @IsString()
   chave: string;
 
   @ApiProperty({
-    description: 'Senha de acesso do stakeholder',
-    example: 'Senha@123',
-    required: true,
-    minLength: 8,
+    description: 'Senha do stakeholder',
+    example: 'Abcd1234!',
   })
-  @IsString({ message: 'Senha deve ser uma string' })
-  @IsNotEmpty({ message: 'Senha é obrigatória' })
-  @MinLength(8, { message: 'Senha deve ter no mínimo 8 caracteres' })
+  @IsString()
   senha: string;
 }

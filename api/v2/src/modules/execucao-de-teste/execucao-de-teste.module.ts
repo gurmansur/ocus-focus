@@ -5,11 +5,10 @@ import { SuiteDeTesteModule } from '../suite-de-teste/suite-de-teste.module';
 import { ExecucaoDeTeste } from './entities/execucao-de-teste.entity';
 import { ExecucaoDeTesteController } from './execucao-de-teste.controller';
 import { ExecucaoDeTesteService } from './execucao-de-teste.service';
-import { ExecucaoDeTesteRepository } from './repositories/execucao-de-teste.repository';
 
 @Module({
   controllers: [ExecucaoDeTesteController],
-  providers: [ExecucaoDeTesteService, ExecucaoDeTesteRepository],
+  providers: [ExecucaoDeTesteService],
   imports: [
     TypeOrmModule.forFeature([ExecucaoDeTeste]),
     CasoDeTesteModule,

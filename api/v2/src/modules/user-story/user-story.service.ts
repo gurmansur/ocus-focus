@@ -24,12 +24,9 @@ export class UserStoryService {
     private readonly swimlaneRepository: Repository<Swimlane>,
   ) {}
 
-  async findAll(projetoId?: any) {
-    if (!projetoId) {
-      return this.userStoryRepository.find({
-        relations: ['swimlane'],
-      });
-    }
+  async findAll(projetoId: Projeto) {
+    if (!projetoId)
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
 
     const userStories = await this.userStoryRepository.find({
       where: { projeto: { id: projetoId.id } },
@@ -168,21 +165,5 @@ export class UserStoryService {
 
   async remove(id: number) {
     return await this.userStoryRepository.delete(id);
-  }
-
-  async findByProjeto(projetoId: number) {
-    const userStories = await this.userStoryRepository.find({
-      where: { projeto: { id: projetoId } },
-      relations: ['swimlane', 'responsavel'],
-    });
-
-    return userStories.map((us) => ({
-      id: us.id,
-      titulo: us.titulo,
-      descricao: us.descricao,
-      estimativa_tempo: us.estimativa_tempo,
-      swimlane: us.swimlane.id,
-      responsavel: us.responsavel?.id,
-    }));
   }
 }

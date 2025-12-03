@@ -1,91 +1,21 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
-import { IsDateString, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsString } from 'class-validator';
 
-/**
- * DTO para criação de novo projeto
- */
 export class CreateProjetoDto {
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'Nome do projeto',
-    example: 'Sistema de Gestão de Requisitos',
-    required: true,
-  })
   nome: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'Descrição detalhada do projeto',
-    example:
-      'Desenvolvimento de um sistema para gerenciamento de requisitos de software, incluindo controle de versões e rastreabilidade.',
-    required: true,
-  })
   descricao: string;
 
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'Nome da empresa cliente do projeto',
-    example: 'TechSolutions Ltda.',
-    required: true,
-  })
   empresa: string;
 
-  @IsDateString(
-    {},
-    {
-      message:
-        'dataInicio deve estar no formato ISO 8601 (YYYY-MM-DDTHH:mm:ss.sssZ)',
-    },
-  )
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'Data de início do projeto (formato ISO 8601)',
-    example: '2023-04-01T00:00:00.000Z',
-    required: true,
-    type: String,
-  })
-  dataInicio: string;
+  @IsDateString()
+  dataInicio: Date;
 
-  @IsDateString(
-    {},
-    {
-      message:
-        'previsaoFim deve estar no formato ISO 8601 (YYYY-MM-DDTHH:mm:ss.sssZ)',
-    },
-  )
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'Data prevista para a conclusão do projeto (formato ISO 8601)',
-    example: '2023-10-31T23:59:59.000Z',
-    required: true,
-    type: String,
-  })
-  previsaoFim: string;
+  @IsDateString()
+  previsaoFim: Date;
 
-  @IsEnum(['EM ANDAMENTO', 'FINALIZADO', 'CANCELADO'], {
-    message:
-      'status deve ser um dos valores: EM ANDAMENTO, FINALIZADO, CANCELADO',
-  })
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'Status atual do projeto',
-    example: 'EM ANDAMENTO',
-    enum: ['EM ANDAMENTO', 'FINALIZADO', 'CANCELADO'],
-    required: true,
-  })
+  @IsEnum(['EM ANDAMENTO', 'FINALIZADO', 'CANCELADO'])
   status: 'EM ANDAMENTO' | 'FINALIZADO' | 'CANCELADO';
-
-  /**
-   * Este campo não deve ser enviado no payload
-   */
-  @Exclude()
-  @ApiPropertyOptional({
-    description: 'Campo deprecated, não deve ser utilizado',
-    deprecated: true,
-  })
-  admin?: any;
 }

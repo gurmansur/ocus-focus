@@ -1,13 +1,13 @@
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { Projeto } from '../modules/projeto/entities/projeto.entity';
+import { CreateProjetoDto } from '../modules/projeto/dto/create-projeto.dto';
 import { ProjetoService } from '../modules/projeto/projeto.service';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
-      currentProject?: Projeto;
+      currentProject?: CreateProjetoDto;
     }
     interface Headers {
       projeto?: string;

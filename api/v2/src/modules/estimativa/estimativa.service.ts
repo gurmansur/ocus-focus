@@ -150,36 +150,4 @@ export class EstimativaService {
       },
     });
   }
-
-  async getFatorDeAjuste(projetoId: number) {
-    const projeto = await this.projetoService.findOne(projetoId);
-    return {
-      tFactor: projeto.restFactor,
-      eFactor: projeto.reseFactor,
-      total: projeto.restFactor * projeto.reseFactor,
-    };
-  }
-
-  async getPontosDeNaoAjustados(projetoId: number) {
-    const totalCasoSimples = await this.getTotalCasosSimples(projetoId);
-    const totalCasoMedio = await this.getTotalCasosMedios(projetoId);
-    const totalCasoComplexo = await this.getTotalCasosComplexos(projetoId);
-
-    const somaCasos =
-      totalCasoSimples * 5 + totalCasoMedio * 10 + totalCasoComplexo * 15;
-
-    const totalAtorSimples = await this.getTotalAtoresSimples(projetoId);
-    const totalAtorMedio = await this.getTotalAtoresMedios(projetoId);
-    const totalAtorComplexo = await this.getTotalAtoresComplexos(projetoId);
-    const somaAtores =
-      totalAtorSimples + totalAtorMedio * 2 + totalAtorComplexo * 3;
-
-    const pesoPontos = somaCasos + somaAtores;
-
-    return {
-      casosPeso: somaCasos,
-      atoresPeso: somaAtores,
-      total: pesoPontos,
-    };
-  }
 }

@@ -12,9 +12,8 @@ export class UsuarioService {
     private readonly usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async create(createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
-    const usuario = new Usuario();
-    Object.assign(usuario, createUsuarioDto);
+  async create(createUsuarioDto: CreateUsuarioDto) {
+    const usuario = this.usuarioRepository.create(createUsuarioDto);
     return await this.usuarioRepository.save(usuario);
   }
 

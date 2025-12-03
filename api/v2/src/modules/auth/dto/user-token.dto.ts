@@ -1,49 +1,42 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-/**
- * DTO para resposta de autenticação com token JWT
- */
 export class UserTokenDto {
   @ApiProperty({
-    description: 'Mensagem informativa sobre a operação de autenticação',
+    description: 'Mensagem de sucesso',
     example: 'Usuário autenticado com sucesso',
-    type: String
   })
   message: string;
 
   @ApiProperty({
-    description: 'ID único do usuário autenticado',
-    example: 42,
-    type: Number
+    description: 'Token de acesso',
+    example:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VfZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJ1c3VfbmFtZSI6IkFkbWluIiwidXN1X2lkIjoxLCJ1c3Vfcm9sZSI6IkFkbWluIiwiaWF0IjoxNjE4MjI5NzY2LCJleHAiOjE2MTgzMTYxNjZ9.1J2zH6mX1iRb4zvz2H4J8W4Kq2p2vXq1YK3n3J4n3J4',
   })
-  usu_id: number;
+  accessToken: string;
 
   @ApiProperty({
-    description: 'Nome do usuário autenticado',
-    example: 'João da Silva',
-    type: String
-  })
-  usu_name: string;
-
-  @ApiProperty({
-    description: 'Email do usuário autenticado',
-    example: 'joao.silva@empresa.com',
-    type: String
+    description: 'Email do usuário',
+    example: 'teste@teste.com',
   })
   usu_email: string;
 
   @ApiProperty({
-    description: 'Perfil/papel do usuário no sistema',
-    example: 'colaborador',
-    enum: ['admin', 'gerente', 'colaborador', 'stakeholder', 'cliente'],
-    type: String
+    description: 'Nome do usuário',
+    example: 'Teste',
   })
-  usu_role: string;
+  usu_name: string;
 
   @ApiProperty({
-    description: 'Token JWT de autenticação para uso nas requisições subsequentes',
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MiIsIm5hbWUiOiJKb8OjbyBkYSBTaWx2YSIsImVtYWlsIjoiam9hby5zaWx2YUBlbXByZXNhLmNvbSIsImlhdCI6MTcxMjY0NjQ4MCwiZXhwIjoxNzEyNzMyODgwfQ.5zKUEeGfHvgz9LPdZEQTXqWWjJVHCxjM_XJxj2lcOsA',
-    type: String
+    description: 'ID do usuário',
+    example: 1,
   })
-  accessToken: string;
+  usu_id: number;
+
+  @ApiProperty({
+    description: 'Role do usuário',
+    example: 'colaborador',
+    type: 'enum',
+    enum: ['stakeholder', 'colaborador'],
+  })
+  usu_role: 'stakeholder' | 'colaborador';
 }

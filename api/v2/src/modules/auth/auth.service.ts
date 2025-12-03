@@ -35,7 +35,6 @@ export class AuthService {
     const newUser = await this.usuarioService.create({
       ...payload,
       senha: senhaHashed,
-      perfil: 'cliente',
     });
 
     const entity = await this.colaboradorService.create(
@@ -56,13 +55,7 @@ export class AuthService {
     }
 
     if (await bcrypt.compare(signInDto.senha, user.senha)) {
-      const { senha, ...userData } = user;
-
-      // Add roles array to payload
-      const payload = {
-        ...userData,
-        roles: ['colaborador'],
-      };
+      const { senha, ...payload } = user;
 
       const token = await this.jwtService.signAsync(payload);
 
@@ -86,13 +79,7 @@ export class AuthService {
     }
 
     if (await bcrypt.compare(signInDto.senha, user.senha)) {
-      const { senha, ...userData } = user;
-
-      // Add roles array to payload
-      const payload = {
-        ...userData,
-        roles: ['stakeholder'],
-      };
+      const { senha, ...payload } = user;
 
       const token = await this.jwtService.signAsync(payload);
 
@@ -111,9 +98,7 @@ export class AuthService {
 
   async verifyToken(token: string) {
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_SECRET,
-      });
+      const payload = await this.jwtService.verifyAsync(token);
       return { auth: true, message: 'Token válido.' };
     } catch (error) {
       return { auth: false, message: 'Token inválido.' };

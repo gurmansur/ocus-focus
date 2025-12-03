@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { Like } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateRequisitoDto } from './dto/create-requisito.dto';
 import { UpdateRequisitoDto } from './dto/update-requisito.dto';
-import { RequisitoFuncionalRepository } from './repositories/requisito-funcional.repository';
+import { RequisitoFuncional } from './entities/requisito-funcional.entity';
 
 @Injectable()
 export class RequisitoService {
   constructor(
-    private readonly requisitoRepository: RequisitoFuncionalRepository,
+    @InjectRepository(RequisitoFuncional)
+    private readonly requisitoRepository: Repository<RequisitoFuncional>,
   ) {}
 
   async list(projetoId: number, page: number, pageSize: number) {
@@ -279,7 +281,7 @@ export class RequisitoService {
   create(createRequisitoDto: CreateRequisitoDto, projetoId: number) {
     return this.requisitoRepository.save({
       ...createRequisitoDto,
-      projeto: { id: projetoId } as any,
+      projeto: { id: projetoId },
     });
   }
 
@@ -288,8 +290,9 @@ export class RequisitoService {
     projetoId: number,
     requisitoId: number,
   ) {
-    return this.requisitoRepository.update(requisitoId, {
-      ...updateRequisitoDto,
-    });
+    return this.requisitoRepository.update(
+      { id: requisitoId, projeto: { id: projetoId } },
+      updateRequisitoDto,
+    );
   }
 }
