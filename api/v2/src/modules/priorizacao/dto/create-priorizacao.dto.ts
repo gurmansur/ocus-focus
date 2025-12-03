@@ -1,11 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNumber } from 'class-validator';
 
 export class CreatePriorizacaoDto {
   @IsNumber()
-@ApiProperty({ description: 'Propriedade requisito' })
-  @IsNumber()
-  requisito: number
+  requisito: number;
 
   @IsEnum([
     'GOSTARIA',
@@ -14,8 +11,7 @@ export class CreatePriorizacaoDto {
     'CONVIVO COM ISSO',
     'NAO GOSTARIA',
   ])
-@ApiProperty({ description: 'Propriedade respostaNegativa' })
-  respostaNegativa: 
+  respostaNegativa:
     | 'GOSTARIA'
     | 'ESPERADO'
     | 'NAO IMPORTA'
@@ -29,8 +25,7 @@ export class CreatePriorizacaoDto {
     'CONVIVO COM ISSO',
     'NAO GOSTARIA',
   ])
-@ApiProperty({ description: 'Propriedade respostaPositiva' })
-  respostaPositiva: 
+  respostaPositiva:
     | 'GOSTARIA'
     | 'ESPERADO'
     | 'NAO IMPORTA'
@@ -45,8 +40,7 @@ export class CreatePriorizacaoDto {
     'QUESTIONAVEL',
     'REVERSO',
   ])
-@ApiProperty({ description: 'Propriedade classificacaoRequisito' })
-  classificacaoRequisito: 
+  classificacaoRequisito:
     | 'DEVE SER FEITO'
     | 'PERFORMANCE'
     | 'ATRATIVO'

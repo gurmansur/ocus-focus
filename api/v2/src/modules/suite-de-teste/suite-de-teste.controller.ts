@@ -1,4 +1,3 @@
-import { ApiBearerAuth } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -8,154 +7,143 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiOperation,
+  ApiBearerAuth,
+  ApiExcludeEndpoint,
+  ApiParam,
   ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ApiPaginatedResponse } from '../../decorators/api-paginated-response.decorator';
-import { ProtectedRoute } from '../../decorators/protected-route.decorator';
+import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { Serialize } from '../../decorators/serialize.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSuiteDeTesteDto } from './dto/create-suite-de-teste.dto';
 import { SuiteDeTesteDto } from './dto/suite-de-teste.dto';
 import { UpdateSuiteDeTesteDto } from './dto/update-suite-de-teste.dto';
+import { SuiteDeTesteMapper } from './suite-de-teste.mapper';
 import { SuiteDeTesteService } from './suite-de-teste.service';
 
-/**
- * Controlador para gerenciamento de suites de teste
- */
 @ApiTags('Suite de Teste')
 @ApiBearerAuth()
-@Controller('suites-de-teste')
+@UseGuards(AuthGuard)
+@Serialize()
+@ApiUnauthorizedResponse({ description: 'Não autorizado' })
+@Controller('suite-de-teste')
 export class SuiteDeTesteController {
   constructor(private readonly suiteDeTesteService: SuiteDeTesteService) {}
 
-  /**
-   * Lista suites de teste com paginação
-   * @param projetoId ID do projeto
-   * @param page Número da página
-   * @param pageSize Tamanho da página
-   * @returns Lista paginada de suites de teste
-   */
-  @ProtectedRoute()
-  @Get()
-  @ApiOperation({
-    summary: 'Buscar',
-    description: 'Busca recursos específicos',
-  })
-  @ApiOperation({ summary: 'Listar', description: 'Lista todos os recursos' })
-  @ApiPaginatedResponse(SuiteDeTesteDto)
-  findAll(
-    @Query('projeto') projetoId: number,
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-  ) {
-    return this.suiteDeTesteService.findAll(projetoId, page, pageSize);
-  }
-
-  /**
-   * Busca suites de teste por nome
-   * @param nome Nome para filtrar
-   * @param projetoId ID do projeto
-   * @param page Número da página
-   * @param pageSize Tamanho da página
-   * @returns Lista paginada de suites de teste
-   */
-  @ProtectedRoute()
-  @Get('findByNome')
-  @ApiOperation({
-    summary: 'Buscar',
-    description: 'Busca recursos específicos',
-  })
-  @ApiPaginatedResponse(SuiteDeTesteDto)
-  findByNome(
-    @Query('nome') nome: string,
-    @Query('projeto') projetoId: number,
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-  ) {
-    return this.suiteDeTesteService.findByNome(nome, projetoId, page, pageSize);
-  }
-
-  /**
-   * Busca suite de teste por ID
-   * @param id ID da suite de teste
-   * @returns Suite de teste encontrada
-   */
-  @ProtectedRoute()
-  @Get(':id')
-  @ApiOperation({
-    summary: 'Buscar',
-    description: 'Busca recursos específicos',
-  })
-  @ApiOkResponse({
-    description: 'Suite de teste encontrada',
-    type: SuiteDeTesteDto,
-  })
-  findOne(@Param('id') id: number) {
-    return this.suiteDeTesteService.findOne(id);
-  }
-
-  /**
-   * Cria uma nova suite de teste
-   * @param createSuiteDeTesteDto Dados da suite de teste
-   * @param projetoId ID do projeto
-   * @returns Suite de teste criada
-   */
-  @ProtectedRoute('admin', 'gerente', 'analista', 'testador')
   @Post()
-  @ApiOperation({ summary: 'Criar', description: 'Cria um novo recurso' })
-  @ApiCreatedResponse({ description: 'Recurso criado com sucesso' })
-  @ApiOperation({ summary: 'Criar', description: 'Cria um novo recurso' })
-  @ApiCreatedResponse({ description: 'Recurso criado com sucesso' })
-  @ApiOkResponse({
+  @ApiResponse({
+    status: 201,
     description: 'Suite de teste criada com sucesso',
     type: SuiteDeTesteDto,
   })
-  create(
+  async create(
     @Body() createSuiteDeTesteDto: CreateSuiteDeTesteDto,
-    @Query('projeto') projetoId: number,
+    @ProjetoAtual() projeto: Projeto,
   ) {
-    return this.suiteDeTesteService.create(createSuiteDeTesteDto, projetoId);
+    const bo = SuiteDeTesteMapper.createSuiteDeTesteDtoToBo(
+      createSuiteDeTesteDto,
+    );
+
+    const response = await this.suiteDeTesteService.create(bo, projeto);
+    return SuiteDeTesteMapper.boToDto(response);
   }
 
-  /**
-   * Atualiza uma suite de teste
-   * @param id ID da suite de teste
-   * @param updateSuiteDeTesteDto Dados a serem atualizados
-   * @returns Suite de teste atualizada
-   */
-  @ProtectedRoute('admin', 'gerente', 'analista', 'testador')
-  @Patch(':id')
-  @ApiOperation({
-    summary: 'Atualizar',
-    description: 'Atualiza um recurso existente',
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de suites de teste',
+    type: [SuiteDeTesteDto],
   })
-  @ApiResponse({ status: 200, description: 'Recurso atualizado com sucesso' })
-  @ApiOkResponse({
-    description: 'Suite de teste atualizada com sucesso',
+  async findAll() {
+    const response = await this.suiteDeTesteService.findAll();
+
+    return response.map((bo) => SuiteDeTesteMapper.boToDto(bo));
+  }
+
+  @Get('file-tree')
+  @ApiResponse({
+    status: 200,
+    description: 'Árvore de arquivos',
+    type: [SuiteDeTesteDto],
+  })
+  async getFileTree(
+    @ProjetoAtual() projeto: Projeto,
+    @Query('id') id?: string,
+  ) {
+    const response = await this.suiteDeTesteService.getFileTree(projeto, +id);
+
+    return SuiteDeTesteMapper.fileTreeBoToDto(response);
+  }
+
+  @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Suite de teste encontrada',
     type: SuiteDeTesteDto,
   })
-  update(
-    @Param('id') id: number,
-    @Body() updateSuiteDeTesteDto: UpdateSuiteDeTesteDto,
-  ) {
-    return this.suiteDeTesteService.update(id, updateSuiteDeTesteDto);
+  @ApiParam({ name: 'id', description: 'Id da suite de teste' })
+  findOne(@Param('id') id: string) {
+    return this.suiteDeTesteService.findOne(+id);
   }
 
-  /**
-   * Remove uma suite de teste
-   * @param id ID da suite de teste
-   * @returns Mensagem de confirmação
-   */
-  @ProtectedRoute('admin', 'gerente')
+  @Patch(':id/change-suite')
+  @ApiResponse({
+    status: 200,
+    description: 'Suite de teste atualizada',
+    type: SuiteDeTesteDto,
+  })
+  @ApiParam({ name: 'id', description: 'Id da suite de teste' })
+  changeSuite(
+    @Param('id') id: string,
+    @Body() { suiteId }: { suiteId: number },
+  ) {
+    return this.suiteDeTesteService.changeSuite(+id, suiteId);
+  }
+
+  @Patch(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Suite de teste atualizada',
+    type: SuiteDeTesteDto,
+  })
+  @ApiParam({ name: 'id', description: 'Id da suite de teste' })
+  async update(
+    @Param('id') id: string,
+    @Body() updateSuiteDeTesteDto: UpdateSuiteDeTesteDto,
+  ) {
+    const bo = SuiteDeTesteMapper.updateSuiteDeTesteDtoToBo(
+      updateSuiteDeTesteDto,
+    );
+    const response = await this.suiteDeTesteService.update(+id, bo);
+
+    return SuiteDeTesteMapper.boToDto(response);
+  }
+
   @Delete(':id')
-  @ApiOperation({ summary: 'Remover', description: 'Remove um recurso' })
-  @ApiResponse({ status: 200, description: 'Recurso removido com sucesso' })
-  @ApiOkResponse({ description: 'Suite de teste removida com sucesso' })
-  remove(@Param('id') id: number) {
-    return this.suiteDeTesteService.remove(id);
+  @ApiResponse({
+    status: 200,
+    description: 'Suite de teste removida',
+  })
+  @ApiParam({ name: 'id', description: 'Id da suite de teste' })
+  remove(@Param('id') id: string) {
+    return this.suiteDeTesteService.remove(+id);
+  }
+
+  @Get(':id/run')
+  @ApiResponse({
+    status: 200,
+    description: 'Suite de teste executada de forma automatizada',
+  })
+  //TODO: Implementar a execução da suite de teste
+  @ApiExcludeEndpoint()
+  @ApiParam({ name: 'id', description: 'Id da suite de teste' })
+  runSuite(@Param('id') id: string) {
+    return this.suiteDeTesteService.runSuite(+id);
   }
 }

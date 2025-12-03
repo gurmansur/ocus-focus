@@ -163,37 +163,4 @@ export class KanbanService {
 
     return await this.kanbanRepository.save(kanban);
   }
-
-  async create(createKanbanDto: any) {
-    const projeto = await this.projetoRepository.findOne({
-      where: { id: createKanbanDto.projetoId }
-    });
-    return this.createKanban(projeto);
-  }
-  
-  async findAll() {
-    return this.kanbanRepository.find({
-      relations: ['projeto']
-    });
-  }
-  
-  async findByProjeto(projetoId: number) {
-    return this.findBoard(projetoId);
-  }
-  
-  async findOne(id: number) {
-    return this.kanbanRepository.findOne({
-      where: { id },
-      relations: ['projeto']
-    });
-  }
-  
-  async update(id: number, updateKanbanDto: any) {
-    await this.kanbanRepository.update(id, updateKanbanDto);
-    return this.findOne(id);
-  }
-  
-  async remove(id: number) {
-    return this.kanbanRepository.delete(id);
-  }
 }

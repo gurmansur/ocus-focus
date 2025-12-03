@@ -49,10 +49,7 @@ export class PriorizacaoService {
       | 'QUESTIONAVEL'
       | 'REVERSO',
   ) {
-    return this.resultadoService.create({
-      requisitoId,
-      resultadoFinal,
-    });
+    return this.resultadoService.create(requisitoId, resultadoFinal);
   }
 
   async findByProjeto(projetoId: number) {

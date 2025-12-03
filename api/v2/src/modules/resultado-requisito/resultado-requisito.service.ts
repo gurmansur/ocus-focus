@@ -12,20 +12,18 @@ export class ResultadoRequisitoService {
   ) {}
 
   create(
-    createResultadoRequisitoDto: {
-      requisitoId: number;
-      resultadoFinal:
-        | 'DEVE SER FEITO'
-        | 'PERFORMANCE'
-        | 'ATRATIVO'
-        | 'INDIFERENTE'
-        | 'QUESTIONAVEL'
-        | 'REVERSO';
-    }
+    requisitoId: number,
+    resultadoFinal:
+      | 'DEVE SER FEITO'
+      | 'PERFORMANCE'
+      | 'ATRATIVO'
+      | 'INDIFERENTE'
+      | 'QUESTIONAVEL'
+      | 'REVERSO',
   ) {
     return this.resultadoRequisitoRepository.save({
-      requisito: { id: createResultadoRequisitoDto.requisitoId },
-      resultadoFinal: createResultadoRequisitoDto.resultadoFinal,
+      requisito: { id: requisitoId },
+      resultadoFinal,
     });
   }
 

@@ -11,7 +11,6 @@ import { GetExecucaoDeTesteGraficoQueryBo } from './bo/get-execucao-de-teste-gra
 import { UpdateExecucaoDeTesteBo } from './bo/update-execucao-de-teste.bo';
 import { ExecucaoDeTeste } from './entities/execucao-de-teste.entity';
 import { ExecucaoDeTesteMapper } from './execucao-de-teste.mapper';
-import { ExecucaoDeTesteRepository } from './repositories/execucao-de-teste.repository';
 
 @Injectable()
 export class ExecucaoDeTesteService {
@@ -20,10 +19,9 @@ export class ExecucaoDeTesteService {
     private execucaoDeTesteRepository: Repository<ExecucaoDeTeste>,
     private casoDeTesteService: CasoDeTesteService,
     private suiteDeTesteService: SuiteDeTesteService,
-    private execucaoDeTesteCustomRepository: ExecucaoDeTesteRepository,
   ) {}
 
-  async create(createExecucaoDeTesteBo: CreateExecucaoDeTesteBo, projetoId: number) {
+  async create(createExecucaoDeTesteBo: CreateExecucaoDeTesteBo) {
     const entity = ExecucaoDeTesteMapper.createBoToEntity(
       createExecucaoDeTesteBo,
     );
@@ -36,8 +34,6 @@ export class ExecucaoDeTesteService {
       if (!caso) {
         throw new BadRequestException('Caso de teste não encontrado');
       }
-      
-      entity.casoDeTeste = { id: createExecucaoDeTesteBo.casoDeTesteId } as any;
     }
 
     return ExecucaoDeTesteMapper.entityToBo(
@@ -45,33 +41,23 @@ export class ExecucaoDeTesteService {
     );
   }
 
-  async findAll(projetoId: number, page: number = 0, pageSize: number = 10) {
-    return this.execucaoDeTesteCustomRepository.findAllPaginated(projetoId, page, pageSize);
-  }
-
-  async findByNome(nome: string, projetoId: number, page: number = 0, pageSize: number = 10) {
-    return this.execucaoDeTesteCustomRepository.findByNome(nome, projetoId, page, pageSize);
-  }
-
-  async findByCasoDeTeste(casoDeTesteId: number, page: number = 0, pageSize: number = 10) {
-    return this.execucaoDeTesteCustomRepository.findByCasoDeTeste(casoDeTesteId, page, pageSize);
-  }
-
-  async findOne(id: number) {
-    const entity = await this.execucaoDeTesteRepository.findOne({ 
-      where: { id },
+  async findAll(projeto: Projeto) {
+    const entities = await this.execucaoDeTesteRepository.find({
       relations: [
         'casoDeTeste',
         'casoDeTeste.projeto',
         'casoDeTeste.testadorDesignado',
       ],
+      where: { casoDeTeste: { projeto } },
     });
-    
-    if (!entity) {
-      throw new BadRequestException('Execução de teste não encontrada');
-    }
-    
-    return ExecucaoDeTesteMapper.entityToBo(entity);
+
+    return entities.map((entity) => ExecucaoDeTesteMapper.entityToBo(entity));
+  }
+
+  async findOne(id: number) {
+    return ExecucaoDeTesteMapper.entityToBo(
+      await this.execucaoDeTesteRepository.findOne({ where: { id } }),
+    );
   }
 
   update(id: number, updateExecucaoDeTesteBo: UpdateExecucaoDeTesteBo) {
@@ -89,10 +75,6 @@ export class ExecucaoDeTesteService {
     const entity = await this.execucaoDeTesteRepository.findOne({
       where: { id },
     });
-
-    if (!entity) {
-      throw new BadRequestException('Execução de teste não encontrada');
-    }
 
     const updatedEntity = ExecucaoDeTesteMapper.changeStatusBoToEntity(
       changeStatusExecucaoDeTesteBo,

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, forwardRef } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StakeholderAtualMiddleware } from '../../middlewares/stakeholder-atual.middleware';
 import { ProjetoModule } from '../projeto/projeto.module';
@@ -15,7 +15,7 @@ import { StakeholderService } from './stakeholder.service';
   imports: [
     TypeOrmModule.forFeature([Stakeholder]),
     UsuarioModule,
-    forwardRef(() => ProjetoModule),
+    ProjetoModule,
     StatusPriorizacaoModule,
   ],
 })

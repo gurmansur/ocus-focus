@@ -23,8 +23,4 @@ export class SubtarefaService {
   remove(id: number) {
     return `This action removes a #${id} subtarefa`;
   }
-
-  findByTarefa(tarefaId: number) {
-    return `This action returns all subtarefas of tarefa ${tarefaId}`;
-  }
 }

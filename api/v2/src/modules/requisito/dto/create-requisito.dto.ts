@@ -1,19 +1,12 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateRequisitoDto {
   @IsString()
-@ApiProperty({ description: 'Propriedade nome' })
-  @IsString()
-  nome: string
+  nome: string;
 
   @IsString()
-@ApiProperty({ description: 'Propriedade especificacao' })
-  @IsString()
-  especificacao: string
+  especificacao: string;
 
   @IsNumber()
-@ApiProperty({ description: 'Propriedade numeroIdentificador' })
-  @IsNumber()
-  numeroIdentificador: number
+  numeroIdentificador: number;
 }
