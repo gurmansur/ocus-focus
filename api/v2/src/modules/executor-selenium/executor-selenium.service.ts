@@ -46,16 +46,18 @@ export class ExecutorSeleniumService {
     // If both quotes are present, use concat with proper escaping
     // Split by single quote and build concat expression
     const parts = value.split("'");
-    const concatParts = parts
-      .map((part, index) => {
-        if (index === parts.length - 1) {
-          // Last part, no quote after
-          return part ? `'${part}'` : '';
-        }
-        // Add the part and the quote that was removed by split
-        return part ? `'${part}',"'"` : `"'"`;
-      })
-      .filter(part => part !== '');
+    const concatParts: string[] = [];
+    
+    parts.forEach((part, index) => {
+      // Add the text part if not empty
+      if (part) {
+        concatParts.push(`'${part}'`);
+      }
+      // Add the single quote that was removed by split (except after the last part)
+      if (index < parts.length - 1) {
+        concatParts.push(`"'"`);
+      }
+    });
     
     return `concat(${concatParts.join(',')})`;
   }

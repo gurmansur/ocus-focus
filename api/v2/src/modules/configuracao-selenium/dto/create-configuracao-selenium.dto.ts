@@ -128,7 +128,7 @@ export class CreateConfiguracaoSeleniumDto {
     protocols: ['http', 'https'],
     require_protocol: true,
   })
-  @Matches(/^https?:\/\/(localhost|127\.0\.0\.1|[\w.-]+\.(com|net|org|io))(:\d+)?(\/.*)?$/, {
+  @Matches(/^https?:\/\/(localhost|127\.0\.0\.1|[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.(com|net|org|io))(:\d+)?(\/.*)?$/, {
     message: 'urlSeleniumGrid must be a valid URL with allowed domain (localhost, 127.0.0.1, or public domains ending in .com, .net, .org, .io)',
   })
   @IsOptional()
