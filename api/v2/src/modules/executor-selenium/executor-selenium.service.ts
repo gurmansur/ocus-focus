@@ -36,7 +36,7 @@ export class ExecutorSeleniumService {
     }
     // If both quotes are present, use concat
     const parts = value.split("'");
-    return `concat('${parts.join("',\"'\",'")}')`;;
+    return `concat('${parts.join("',\"'\",'")}')`;
   }
 
   async executarTeste(
