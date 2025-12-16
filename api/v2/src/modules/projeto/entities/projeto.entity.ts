@@ -1,4 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Ator } from '../../ator/entities/ator.entity';
 import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
 import { ColaboradorProjeto } from '../../colaborador-projeto/entities/colaborador-projeto.entity';
@@ -16,6 +24,15 @@ import { UserStory } from '../../user-story/entities/user-story.entity';
 export class Projeto {
   @PrimaryGeneratedColumn({ type: 'int', name: 'PRO_ID' })
   id: number;
+
+  @CreateDateColumn({ name: 'PRO_DATA_CRIACAO' })
+  dataCriacao: Date;
+
+  @UpdateDateColumn({ name: 'PRO_DATA_ATUALIZACAO' })
+  dataAtualizacao: Date;
+
+  @DeleteDateColumn({ name: 'PRO_DATA_EXCLUSAO' })
+  dataExclusao: Date;
 
   @Column('varchar', { name: 'PRO_NOME', length: 100 })
   nome: string;

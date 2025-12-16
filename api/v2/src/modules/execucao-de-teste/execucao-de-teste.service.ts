@@ -56,7 +56,7 @@ export class ExecucaoDeTesteService {
         'casoDeTeste.projeto',
         'casoDeTeste.testadorDesignado',
       ],
-      where: { casoDeTeste: { projeto } },
+      where: { casoDeTeste: { projeto: { id: projeto.id } } },
     });
 
     return entities.map((entity) => ExecucaoDeTesteMapper.entityToBo(entity));

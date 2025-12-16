@@ -258,7 +258,7 @@ export class ProjetoService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} projeto`;
+    return this.projetoRepository.softDelete(id);
   }
 
   async findColaboradores(id: number, page?: number, pageSize?: number) {
