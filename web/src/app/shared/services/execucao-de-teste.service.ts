@@ -29,6 +29,8 @@ export class ExecucaoDeTesteService {
       const projetoId = localStorage.getItem('projeto_id');
       const url = `${environment.apiBaseUrl}/execucao-de-teste/executar/${casoDeTesteId}/stream`;
 
+      console.log('[SSE] Connecting to:', url);
+
       const eventSource = token
         ? new EventSourcePolyfill(url, {
             headers: {
@@ -39,21 +41,32 @@ export class ExecucaoDeTesteService {
           })
         : new EventSource(url);
 
+      eventSource.onopen = () => {
+        console.log('[SSE] Connection opened');
+      };
+
       eventSource.onmessage = (event: MessageEvent) => {
+        console.log('[SSE] Message received:', event.data);
         const data = JSON.parse(event.data);
+        console.log('[SSE] Parsed data:', data);
         observer.next(data);
         if (data.type === 'complete' || data.type === 'error') {
+          console.log('[SSE] Closing connection, type:', data.type);
           eventSource.close();
           observer.complete();
         }
       };
 
       eventSource.onerror = (error: Event) => {
+        console.error('[SSE] Error:', error);
         eventSource.close();
         observer.error(error);
       };
 
-      return () => eventSource.close();
+      return () => {
+        console.log('[SSE] Cleanup: closing connection');
+        eventSource.close();
+      };
     });
   }
 

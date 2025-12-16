@@ -423,34 +423,48 @@ export class ArcatestFileTreeComponent {
       next: (event) => {
         this.ngZone.run(() => {
           if (event.type === 'log' || event.type === 'start') {
-            this.log.push({ type: 'text', content: event.message });
+            this.log = [...this.log, { type: 'text', content: event.message }];
           } else if (event.type === 'image') {
-            this.log.push({ type: 'image', content: event.src });
+            this.log = [...this.log, { type: 'image', content: event.src }];
           } else if (event.type === 'complete') {
             this.resultado = event;
-            this.log.push({
-              type: 'text',
-              content: `✓ Execução concluída: ${
-                event.sucesso ? 'SUCESSO' : 'FALHA'
-              }`,
-            });
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✓ Execução concluída: ${
+                  event.sucesso ? 'SUCESSO' : 'FALHA'
+                }`,
+              },
+            ];
             this.executando = false;
           } else if (event.type === 'error') {
-            this.log.push({
-              type: 'text',
-              content: `✗ Erro: ${event.message}`,
-            });
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✗ Erro: ${event.message}`,
+              },
+            ];
             this.executando = false;
           }
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
         });
       },
       error: (err) => {
-        this.log.push({
-          type: 'text',
-          content: `✗ Erro de conexão: ${err.message || 'Erro desconhecido'}`,
+        this.ngZone.run(() => {
+          this.log = [
+            ...this.log,
+            {
+              type: 'text',
+              content: `✗ Erro de conexão: ${
+                err.message || 'Erro desconhecido'
+              }`,
+            },
+          ];
+          this.executando = false;
+          this.cdr.markForCheck();
         });
-        this.executando = false;
       },
     });
   }
@@ -471,32 +485,46 @@ export class ArcatestFileTreeComponent {
       next: (event) => {
         this.ngZone.run(() => {
           if (event.type === 'log' || event.type === 'start') {
-            this.log.push({ type: 'text', content: event.message });
+            this.log = [...this.log, { type: 'text', content: event.message }];
           } else if (event.type === 'image') {
-            this.log.push({ type: 'image', content: event.src });
+            this.log = [...this.log, { type: 'image', content: event.src }];
           } else if (event.type === 'complete') {
             this.resultado = event;
-            this.log.push({
-              type: 'text',
-              content: `✓ ${event.message}`,
-            });
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✓ ${event.message}`,
+              },
+            ];
             this.executando = false;
           } else if (event.type === 'error') {
-            this.log.push({
-              type: 'text',
-              content: `✗ Erro: ${event.message}`,
-            });
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✗ Erro: ${event.message}`,
+              },
+            ];
             this.executando = false;
           }
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
         });
       },
       error: (err) => {
-        this.log.push({
-          type: 'text',
-          content: `✗ Erro de conexão: ${err.message || 'Erro desconhecido'}`,
+        this.ngZone.run(() => {
+          this.log = [
+            ...this.log,
+            {
+              type: 'text',
+              content: `✗ Erro de conexão: ${
+                err.message || 'Erro desconhecido'
+              }`,
+            },
+          ];
+          this.executando = false;
+          this.cdr.markForCheck();
         });
-        this.executando = false;
       },
     });
   }
@@ -515,32 +543,49 @@ export class ArcatestFileTreeComponent {
         next: (event) => {
           this.ngZone.run(() => {
             if (event.type === 'log' || event.type === 'start') {
-              this.log.push({ type: 'text', content: event.message });
+              this.log = [
+                ...this.log,
+                { type: 'text', content: event.message },
+              ];
             } else if (event.type === 'image') {
-              this.log.push({ type: 'image', content: event.src });
+              this.log = [...this.log, { type: 'image', content: event.src }];
             } else if (event.type === 'complete') {
               this.resultado = event;
-              this.log.push({
-                type: 'text',
-                content: `✓ ${event.message}`,
-              });
+              this.log = [
+                ...this.log,
+                {
+                  type: 'text',
+                  content: `✓ ${event.message}`,
+                },
+              ];
               this.executando = false;
             } else if (event.type === 'error') {
-              this.log.push({
-                type: 'text',
-                content: `✗ Erro: ${event.message}`,
-              });
+              this.log = [
+                ...this.log,
+                {
+                  type: 'text',
+                  content: `✗ Erro: ${event.message}`,
+                },
+              ];
               this.executando = false;
             }
-            this.cdr.detectChanges();
+            this.cdr.markForCheck();
           });
         },
         error: (err) => {
-          this.log.push({
-            type: 'text',
-            content: `✗ Erro de conexão: ${err.message || 'Erro desconhecido'}`,
+          this.ngZone.run(() => {
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✗ Erro de conexão: ${
+                  err.message || 'Erro desconhecido'
+                }`,
+              },
+            ];
+            this.executando = false;
+            this.cdr.markForCheck();
           });
-          this.executando = false;
         },
       });
   }

@@ -1,4 +1,4 @@
-<div class="app-wrapper min-h-screen flex w-full overflow-x-hidden">
+<div class="app-wrapper min-h-screen max-h-screen flex w-full overflow-hidden">
   <app-sidebar
     (closeMenuClick)="onMenuClick()"
     [isExpanded]="sidebarExpanded"
@@ -10,7 +10,7 @@
       [sidebarExpanded]="sidebarExpanded"
     ></app-header>
 
-    <main style="height: 100%">
+    <main class="flex-1 overflow-y-auto">
       <router-outlet></router-outlet>
     </main>
 

@@ -11,6 +11,8 @@ import { AtoresComponent } from './pages/atores/atores.component';
 import { CasoDeUsoComponent } from './pages/caso-de-uso/caso-de-uso.component';
 import { CenariosComponent } from './pages/cenarios/cenarios.component';
 import { ColaboradoresProjetoComponent } from './pages/colaboradores-projeto/colaboradores-projeto.component';
+import { ConfiguracaoSeleniumFormComponent } from './pages/configuracao-selenium-form/configuracao-selenium-form.component';
+import { ConfiguracaoSeleniumComponent } from './pages/configuracao-selenium/configuracao-selenium.component';
 import { EditarAtoresComponent } from './pages/editar-atores/editar-atores.component';
 import { EditarCasoComponent } from './pages/editar-caso/editar-caso.component';
 import { EditarCenariosComponent } from './pages/editar-cenarios/editar-cenarios.component';
@@ -290,6 +292,24 @@ const routes: Routes = [
           {
             path: 'suites-teste/:idSuite/editar',
             component: ArcatestSuitesFormComponent,
+            canActivate: [colaboradorGuard],
+          },
+
+          //ArcaTest - Configuração Selenium
+
+          {
+            path: 'configuracao-selenium',
+            component: ConfiguracaoSeleniumComponent,
+            canActivate: [colaboradorGuard],
+          },
+          {
+            path: 'configuracao-selenium/criar',
+            component: ConfiguracaoSeleniumFormComponent,
+            canActivate: [colaboradorGuard],
+          },
+          {
+            path: 'configuracao-selenium/:configuracaoId/editar',
+            component: ConfiguracaoSeleniumFormComponent,
             canActivate: [colaboradorGuard],
           },
         ],

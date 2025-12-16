@@ -259,38 +259,70 @@ export class ArcatestCasosFormComponent {
     this.log = [];
     this.resultado = null;
 
+    console.log('[Component] Starting test execution for case:', this.idCaso);
+
     this.execService.executarComStream(this.idCaso).subscribe({
       next: (event) => {
+        console.log('[Component] Event received:', event);
         this.ngZone.run(() => {
+          console.log(
+            '[Component] Processing in NgZone, current log length:',
+            this.log.length
+          );
           if (event.type === 'log' || event.type === 'start') {
-            this.log.push({ type: 'text', content: event.message });
+            this.log = [...this.log, { type: 'text', content: event.message }];
+            console.log(
+              '[Component] Added log entry, new length:',
+              this.log.length
+            );
           } else if (event.type === 'image') {
-            this.log.push({ type: 'image', content: event.src });
+            this.log = [...this.log, { type: 'image', content: event.src }];
+            console.log(
+              '[Component] Added image entry, new length:',
+              this.log.length
+            );
           } else if (event.type === 'complete') {
             this.resultado = event;
-            this.log.push({
-              type: 'text',
-              content: `✓ Execução concluída: ${
-                event.sucesso ? 'SUCESSO' : 'FALHA'
-              }`,
-            });
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✓ Execução concluída: ${
+                  event.sucesso ? 'SUCESSO' : 'FALHA'
+                }`,
+              },
+            ];
             this.executando = false;
+            console.log('[Component] Execution complete');
           } else if (event.type === 'error') {
-            this.log.push({
-              type: 'text',
-              content: `✗ Erro: ${event.message}`,
-            });
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✗ Erro: ${event.message}`,
+              },
+            ];
             this.executando = false;
+            console.log('[Component] Execution error');
           }
-          this.cdr.detectChanges();
+          this.cdr.markForCheck();
         });
       },
       error: (err) => {
-        this.log.push({
-          type: 'text',
-          content: `✗ Erro de conexão: ${err.message || 'Erro desconhecido'}`,
+        console.error('[Component] Stream error:', err);
+        this.ngZone.run(() => {
+          this.log = [
+            ...this.log,
+            {
+              type: 'text',
+              content: `✗ Erro de conexão: ${
+                err.message || 'Erro desconhecido'
+              }`,
+            },
+          ];
+          this.executando = false;
+          this.cdr.markForCheck();
         });
-        this.executando = false;
       },
     });
   }

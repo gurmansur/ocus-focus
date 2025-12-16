@@ -4,22 +4,27 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface ConfiguracaoSeleniumDto {
-  id: number;
+  id?: number;
   nome: string;
-  navegador: 'Chrome' | 'Firefox' | 'Edge' | 'Safari';
+  navegador: 'CHROME' | 'FIREFOX' | 'EDGE' | 'SAFARI';
   headless: boolean;
-  timeoutImplicito?: number;
-  timeoutPagina?: number;
-  timeoutScript?: number;
-  options?: Record<string, any>;
-  gridUrl?: string;
-  projetoId: number;
+  timeoutPadrao: number;
+  timeoutImplicito: number;
+  timeoutCarregamentoPagina: number;
+  resolucao: string;
+  maximizarJanela: boolean;
+  aceitarCertificadosSSL: boolean;
+  capturarScreenshots: boolean;
+  capturarLogs: boolean;
+  urlSeleniumGrid?: string;
+  opcoesAdicionais?: Record<string, any>;
+  userAgent?: string;
+  proxy?: string;
+  ativa: boolean;
 }
 
 export interface CreateConfiguracaoSeleniumDto
-  extends Omit<ConfiguracaoSeleniumDto, 'id' | 'projetoId'> {
-  projetoId: number;
-}
+  extends Omit<ConfiguracaoSeleniumDto, 'id'> {}
 
 export interface UpdateConfiguracaoSeleniumDto
   extends Partial<CreateConfiguracaoSeleniumDto> {}
@@ -30,10 +35,16 @@ export class ConfiguracaoSeleniumService {
 
   constructor(private http: HttpClient) {}
 
-  listByProjeto(projetoId: number): Observable<ConfiguracaoSeleniumDto[]> {
-    return this.http.get<ConfiguracaoSeleniumDto[]>(
-      `${this.baseUrl}/projeto/${projetoId}`
-    );
+  getAll(): Observable<ConfiguracaoSeleniumDto[]> {
+    return this.http.get<ConfiguracaoSeleniumDto[]>(this.baseUrl);
+  }
+
+  getAtiva(): Observable<ConfiguracaoSeleniumDto> {
+    return this.http.get<ConfiguracaoSeleniumDto>(`${this.baseUrl}/ativa`);
+  }
+
+  getById(id: number): Observable<ConfiguracaoSeleniumDto> {
+    return this.http.get<ConfiguracaoSeleniumDto>(`${this.baseUrl}/${id}`);
   }
 
   create(
@@ -52,7 +63,7 @@ export class ConfiguracaoSeleniumService {
     );
   }
 
-  remove(id: number): Observable<void> {
+  delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
