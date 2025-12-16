@@ -154,7 +154,7 @@
                   {{ node.ordem }}
                 </div>
                 <div class="text-base font-semibold text-white">
-                  {{ node.tipo }}
+                  {{ getTipoLabel(node.tipo) }}
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@
             <div class="flex-1 min-w-0">
               <div class="flex items-center justify-between mb-2">
                 <h4 class="text-base font-semibold text-white">
-                  {{ node.tipo }}
+                  {{ getTipoLabel(node.tipo) }}
                 </h4>
                 <button
                   (click)="removerNode(node); $event.stopPropagation()"
@@ -197,7 +197,7 @@
               @if (node.dados.seletor) {
               <div class="text-sm text-gray-300 mb-1 flex items-center gap-2">
                 <span class="text-xs text-gray-500 uppercase">{{
-                  node.dados.tipoSeletor || "CSS"
+                  getTipoSeletorLabel(node.dados.tipoSeletor) || "CSS"
                 }}</span>
                 <span class="truncate">{{ node.dados.seletor }}</span>
               </div>
@@ -252,8 +252,8 @@
               [(ngModel)]="selectedNode.tipo"
               class="w-full text-sm bg-white border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500"
             >
-              @for (tipo of tiposAcao; track tipo) {
-              <option [value]="tipo">{{ tipo }}</option>
+              @for (tipo of tiposAcao; track tipo.value) {
+              <option [value]="tipo.value">{{ tipo.label }}</option>
               }
             </select>
           </div>
@@ -289,8 +289,8 @@
               [(ngModel)]="selectedNode.dados.tipoSeletor"
               class="w-full text-sm bg-white border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500"
             >
-              @for (tipo of tiposSeletor; track tipo) {
-              <option [value]="tipo">{{ tipo }}</option>
+              @for (tipo of tiposSeletor; track tipo.value) {
+              <option [value]="tipo.value">{{ tipo.label }}</option>
               }
             </select>
           </div>

@@ -37,30 +37,38 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
   enlargedImage: string | null = null;
 
   tiposAcao = [
-    'NAVEGAR',
-    'CLICAR',
-    'DIGITAR',
-    'SELECIONAR',
-    'ESPERAR',
-    'VALIDAR_TEXTO',
-    'VALIDAR_ELEMENTO',
-    'SCREENSHOT',
-    'EXECUTAR_SCRIPT',
-    'SCROLL',
-    'HOVER',
-    'DUPLO_CLIQUE',
-    'CLICAR_DIREITO',
-    'LIMPAR_CAMPO',
-    'PRESSIONAR_TECLA',
-    'UPLOAD_ARQUIVO',
-    'TROCAR_JANELA',
-    'TROCAR_FRAME',
-    'ACEITAR_ALERTA',
-    'REJEITAR_ALERTA',
-    'OBTER_TEXTO_ALERTA',
+    { label: 'Navegar', value: 'NAVEGAR' },
+    { label: 'Clique', value: 'CLICAR' },
+    { label: 'Digitar', value: 'DIGITAR' },
+    { label: 'Selecionar', value: 'SELECIONAR' },
+    { label: 'Esperar', value: 'ESPERAR' },
+    { label: 'Validar texto', value: 'VALIDAR_TEXTO' },
+    { label: 'Validar elemento', value: 'VALIDAR_ELEMENTO' },
+    { label: 'Screenshot', value: 'SCREENSHOT' },
+    { label: 'Executar script', value: 'EXECUTAR_SCRIPT' },
+    { label: 'Scroll', value: 'SCROLL' },
+    { label: 'Hover', value: 'HOVER' },
+    { label: 'Duplo clique', value: 'DUPLO_CLIQUE' },
+    { label: 'Clique direito', value: 'CLICAR_DIREITO' },
+    { label: 'Limpar campo', value: 'LIMPAR_CAMPO' },
+    { label: 'Pressionar tecla', value: 'PRESSIONAR_TECLA' },
+    { label: 'Upload de arquivo', value: 'UPLOAD_ARQUIVO' },
+    { label: 'Trocar janela', value: 'TROCAR_JANELA' },
+    { label: 'Trocar frame', value: 'TROCAR_FRAME' },
+    { label: 'Aceitar alerta', value: 'ACEITAR_ALERTA' },
+    { label: 'Rejeitar alerta', value: 'REJEITAR_ALERTA' },
+    { label: 'Obter texto do alerta', value: 'OBTER_TEXTO_ALERTA' },
   ];
 
-  tiposSeletor = ['ID', 'CLASS', 'CSS', 'XPATH', 'NAME', 'TAG', 'LINK_TEXT'];
+  tiposSeletor = [
+    { label: 'ID', value: 'ID' },
+    { label: 'Classe', value: 'CLASS' },
+    { label: 'CSS', value: 'CSS' },
+    { label: 'XPath', value: 'XPATH' },
+    { label: 'Name', value: 'NAME' },
+    { label: 'Tag', value: 'TAG' },
+    { label: 'Link text', value: 'LINK_TEXT' },
+  ];
 
   constructor(
     private acaoService: AcaoDeTesteService,
@@ -257,6 +265,15 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
 
   openImage(src: string) {
     this.enlargedImage = src;
+  }
+
+  getTipoLabel(tipo: string) {
+    return this.tiposAcao.find((t) => t.value === tipo)?.label || tipo;
+  }
+
+  getTipoSeletorLabel(tipo: string | undefined) {
+    if (!tipo) return '';
+    return this.tiposSeletor.find((t) => t.value === tipo)?.label || tipo;
   }
 
   closeImage() {
