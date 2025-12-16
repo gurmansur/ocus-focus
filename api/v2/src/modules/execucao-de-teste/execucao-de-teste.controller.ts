@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -193,5 +194,32 @@ export class ExecucaoDeTesteController {
     @ProjetoAtual() projeto: Projeto,
   ): Observable<MessageEvent> {
     return this.execucaoDeTesteService.streamExecution(+casoDeTesteId, projeto);
+  }
+
+  @Sse('executar-projeto/stream')
+  @ApiOperation({
+    summary: 'Executa todos os testes automatizados do projeto em lote',
+  })
+  streamProjectExecution(
+    @ProjetoAtual() projeto: Projeto,
+  ): Observable<MessageEvent> {
+    return this.execucaoDeTesteService.streamProjectExecution(projeto);
+  }
+
+  @Sse('executar-suite/:suiteId/stream')
+  @ApiParam({
+    name: 'suiteId',
+    type: Number,
+    description: 'ID da suite de teste a ser executada',
+    example: 1,
+  })
+  @ApiOperation({
+    summary: 'Executa todos os testes automatizados de uma suite em lote',
+  })
+  streamSuiteExecution(
+    @Param('suiteId') suiteId: string,
+    @ProjetoAtual() projeto: Projeto,
+  ): Observable<MessageEvent> {
+    return this.execucaoDeTesteService.streamSuiteExecution(+suiteId, projeto);
   }
 }

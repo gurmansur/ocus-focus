@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -10,8 +10,10 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardComponent } from 'src/app/shared/card/card.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
+import { ContentModalComponent } from '../../../shared/content-modal/content-modal.component';
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
+import { ExecucaoDeTesteService } from '../../../shared/services/execucao-de-teste.service';
 import {
   CasoDeTeste,
   ECategoria,
@@ -27,6 +29,7 @@ import { CasoDeTesteService } from '../../services/casoDeTeste.service';
 import { CasoUsoService } from '../../services/casoUso.service';
 import { ProjetoService } from '../../services/projeto.service';
 import { AcoesAutomatizadasComponent } from '../acoes-automatizadas/acoes-automatizadas.component';
+import { TestExecutionModalComponent } from '../shared/test-execution-modal/test-execution-modal.component';
 
 @Component({
   selector: 'app-arcatest-casos-form',
@@ -42,6 +45,8 @@ import { AcoesAutomatizadasComponent } from '../acoes-automatizadas/acoes-automa
     PlusIconComponent,
     ButtonComponent,
     AcoesAutomatizadasComponent,
+    ContentModalComponent,
+    TestExecutionModalComponent,
   ],
 })
 export class ArcatestCasosFormComponent {
@@ -58,13 +63,20 @@ export class ArcatestCasosFormComponent {
 
   mockupData: CasoDeTeste[] = [];
   casosDeUso: casoUso[] = [];
+  executando = false;
+  showModal = false;
+  log: { type: 'text' | 'image'; content: string }[] = [];
+  resultado?: any;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private readonly casoDeTesteService: CasoDeTesteService,
     private readonly casoDeUsoService: CasoUsoService,
-    private readonly projetoService: ProjetoService
+    private readonly projetoService: ProjetoService,
+    private readonly execService: ExecucaoDeTesteService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {
     this.projectId = this.route.parent?.snapshot.params['id'];
     this.idCaso = this.route.snapshot.params['idCaso'];
@@ -237,5 +249,55 @@ export class ArcatestCasosFormComponent {
       'painel-arcatest',
       'arvore',
     ]);
+  }
+
+  executarTeste() {
+    if (!this.idCaso) return;
+
+    this.executando = true;
+    this.showModal = true;
+    this.log = [];
+    this.resultado = null;
+
+    this.execService.executarComStream(this.idCaso).subscribe({
+      next: (event) => {
+        this.ngZone.run(() => {
+          if (event.type === 'log' || event.type === 'start') {
+            this.log.push({ type: 'text', content: event.message });
+          } else if (event.type === 'image') {
+            this.log.push({ type: 'image', content: event.src });
+          } else if (event.type === 'complete') {
+            this.resultado = event;
+            this.log.push({
+              type: 'text',
+              content: `✓ Execução concluída: ${
+                event.sucesso ? 'SUCESSO' : 'FALHA'
+              }`,
+            });
+            this.executando = false;
+          } else if (event.type === 'error') {
+            this.log.push({
+              type: 'text',
+              content: `✗ Erro: ${event.message}`,
+            });
+            this.executando = false;
+          }
+          this.cdr.detectChanges();
+        });
+      },
+      error: (err) => {
+        this.log.push({
+          type: 'text',
+          content: `✗ Erro de conexão: ${err.message || 'Erro desconhecido'}`,
+        });
+        this.executando = false;
+      },
+    });
+  }
+
+  closeExecuteModal() {
+    this.showModal = false;
+    this.log = [];
+    this.executando = false;
   }
 }

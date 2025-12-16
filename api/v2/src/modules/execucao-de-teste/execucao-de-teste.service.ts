@@ -228,7 +228,10 @@ export class ExecucaoDeTesteService {
       (async () => {
         try {
           observer.next({
-            data: { type: 'start', message: 'Iniciando execução...' },
+            data: JSON.stringify({
+              type: 'start',
+              message: 'Iniciando execução...',
+            }),
           } as MessageEvent);
 
           // Buscar as ações do caso de teste
@@ -237,27 +240,30 @@ export class ExecucaoDeTesteService {
 
           if (!acoes || acoes.length === 0) {
             observer.next({
-              data: {
+              data: JSON.stringify({
                 type: 'error',
                 message: 'Caso de teste não possui ações configuradas',
-              },
+              }),
             } as MessageEvent);
             observer.complete();
             return;
           }
 
           observer.next({
-            data: { type: 'log', message: `${acoes.length} ações encontradas` },
+            data: JSON.stringify({
+              type: 'log',
+              message: `${acoes.length} ações encontradas`,
+            }),
           } as MessageEvent);
 
           // Buscar configuração ativa do Selenium
           const configuracao =
             await this.configuracaoSeleniumService.findAtivaPorProjeto(projeto);
           observer.next({
-            data: {
+            data: JSON.stringify({
               type: 'log',
               message: `Configuração: ${configuracao?.nome || 'Padrão'}`,
-            },
+            }),
           } as MessageEvent);
 
           // Criar registro de execução
@@ -270,7 +276,10 @@ export class ExecucaoDeTesteService {
           });
 
           observer.next({
-            data: { type: 'log', message: `Execução #${execucaoBo.id} criada` },
+            data: JSON.stringify({
+              type: 'log',
+              message: `Execução #${execucaoBo.id} criada`,
+            }),
           } as MessageEvent);
 
           // Executar o teste com Selenium, emitindo logs/screenshots em tempo real
@@ -279,11 +288,11 @@ export class ExecucaoDeTesteService {
             configuracao,
             (log) =>
               observer.next({
-                data: { type: 'log', message: log },
+                data: JSON.stringify({ type: 'log', message: log }),
               } as MessageEvent),
             (screenshot) =>
               observer.next({
-                data: { type: 'image', src: screenshot },
+                data: JSON.stringify({ type: 'image', src: screenshot }),
               } as MessageEvent),
           );
 
@@ -297,23 +306,379 @@ export class ExecucaoDeTesteService {
           });
 
           observer.next({
-            data: {
+            data: JSON.stringify({
               type: 'complete',
               execucaoId: execucaoBo.id,
               sucesso: resultado.sucesso,
               mensagem: resultado.mensagem,
               screenshots: resultado.screenshots,
-            },
+            }),
           } as MessageEvent);
 
           observer.complete();
         } catch (error) {
           observer.next({
-            data: { type: 'error', message: error.message },
+            data: JSON.stringify({ type: 'error', message: error.message }),
           } as MessageEvent);
           observer.complete();
         }
       })();
     });
+  }
+
+  streamProjectExecution(projeto: Projeto): Observable<MessageEvent> {
+    return new Observable((observer) => {
+      (async () => {
+        try {
+          observer.next({
+            data: JSON.stringify({
+              type: 'start',
+              message: 'Iniciando execução em lote do projeto...',
+            }),
+          } as MessageEvent);
+
+          // Buscar todos os casos de teste automatizados do projeto
+          const casos = await this.casoDeTesteService.findAll(projeto);
+          const casosAutomatizados = casos.filter(
+            (caso) => caso.metodo === 'AUTOMATIZADO',
+          );
+
+          if (casosAutomatizados.length === 0) {
+            observer.next({
+              data: JSON.stringify({
+                type: 'error',
+                message: 'Nenhum teste automatizado encontrado no projeto',
+              }),
+            } as MessageEvent);
+            observer.complete();
+            return;
+          }
+
+          observer.next({
+            data: JSON.stringify({
+              type: 'log',
+              message: `Encontrados ${casosAutomatizados.length} testes automatizados`,
+            }),
+          } as MessageEvent);
+
+          let sucessos = 0;
+          let falhas = 0;
+
+          // Executar cada teste
+          for (let i = 0; i < casosAutomatizados.length; i++) {
+            const caso = casosAutomatizados[i];
+            observer.next({
+              data: JSON.stringify({
+                type: 'log',
+                message: `\n[${i + 1}/${casosAutomatizados.length}] Executando: ${caso.nome}`,
+              }),
+            } as MessageEvent);
+
+            try {
+              // Buscar as ações do caso de teste
+              const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(
+                caso.id,
+              );
+
+              if (!acoes || acoes.length === 0) {
+                observer.next({
+                  data: JSON.stringify({
+                    type: 'log',
+                    message: `⚠ Teste "${caso.nome}" não possui ações configuradas`,
+                  }),
+                } as MessageEvent);
+                continue;
+              }
+
+              // Buscar configuração ativa do Selenium
+              const configuracao =
+                await this.configuracaoSeleniumService.findAtivaPorProjeto(
+                  projeto,
+                );
+
+              // Criar registro de execução
+              const execucaoBo = await this.create({
+                nome: `Execução Automatizada - Lote`,
+                dataExecucao: new Date(),
+                metodo: EXECUTION_TYPES.AUTOMATED,
+                resultado: RESULT_TYPES.PENDING,
+                casoDeTesteId: caso.id,
+              });
+
+              // Executar o teste
+              const resultado =
+                await this.executorSeleniumService.executarTeste(
+                  acoes,
+                  configuracao,
+                  (log) =>
+                    observer.next({
+                      data: JSON.stringify({
+                        type: 'log',
+                        message: `  ${log}`,
+                      }),
+                    } as MessageEvent),
+                  (screenshot) =>
+                    observer.next({
+                      data: JSON.stringify({ type: 'image', src: screenshot }),
+                    } as MessageEvent),
+                );
+
+              // Atualizar status da execução
+              await this.changeStatus(execucaoBo.id, {
+                resultado: resultado.sucesso
+                  ? RESULT_TYPES.SUCCESS
+                  : RESULT_TYPES.FAILURE,
+                resposta: resultado.mensagem,
+                observacao: resultado.logs.join('\n'),
+              });
+
+              if (resultado.sucesso) {
+                sucessos++;
+                observer.next({
+                  data: JSON.stringify({
+                    type: 'log',
+                    message: `✓ "${caso.nome}" - SUCESSO`,
+                  }),
+                } as MessageEvent);
+              } else {
+                falhas++;
+                observer.next({
+                  data: JSON.stringify({
+                    type: 'log',
+                    message: `✗ "${caso.nome}" - FALHA: ${resultado.mensagem}`,
+                  }),
+                } as MessageEvent);
+              }
+            } catch (error) {
+              falhas++;
+              observer.next({
+                data: JSON.stringify({
+                  type: 'log',
+                  message: `✗ "${caso.nome}" - ERRO: ${error.message}`,
+                }),
+              } as MessageEvent);
+            }
+          }
+
+          observer.next({
+            data: JSON.stringify({
+              type: 'complete',
+              message: `Execução em lote concluída: ${sucessos} sucesso(s), ${falhas} falha(s)`,
+              sucessos,
+              falhas,
+              total: casosAutomatizados.length,
+            }),
+          } as MessageEvent);
+
+          observer.complete();
+        } catch (error) {
+          observer.next({
+            data: JSON.stringify({ type: 'error', message: error.message }),
+          } as MessageEvent);
+          observer.complete();
+        }
+      })();
+    });
+  }
+
+  streamSuiteExecution(
+    suiteId: number,
+    projeto: Projeto,
+  ): Observable<MessageEvent> {
+    return new Observable((observer) => {
+      (async () => {
+        try {
+          observer.next({
+            data: JSON.stringify({
+              type: 'start',
+              message: 'Iniciando execução em lote da suite...',
+            }),
+          } as MessageEvent);
+
+          // Buscar a suite
+          const suite = await this.suiteDeTesteService.findOne(suiteId);
+          if (!suite) {
+            observer.next({
+              data: JSON.stringify({
+                type: 'error',
+                message: 'Suite de teste não encontrada',
+              }),
+            } as MessageEvent);
+            observer.complete();
+            return;
+          }
+
+          observer.next({
+            data: JSON.stringify({
+              type: 'log',
+              message: `Suite: ${suite.nome}`,
+            }),
+          } as MessageEvent);
+
+          // Buscar todos os casos de teste da suite (recursivamente)
+          const casos = await this.getCasosFromSuite(suite, projeto);
+          const casosAutomatizados = casos.filter(
+            (caso) => caso.metodo === 'AUTOMATIZADO',
+          );
+
+          if (casosAutomatizados.length === 0) {
+            observer.next({
+              data: JSON.stringify({
+                type: 'error',
+                message: 'Nenhum teste automatizado encontrado na suite',
+              }),
+            } as MessageEvent);
+            observer.complete();
+            return;
+          }
+
+          observer.next({
+            data: JSON.stringify({
+              type: 'log',
+              message: `Encontrados ${casosAutomatizados.length} testes automatizados`,
+            }),
+          } as MessageEvent);
+
+          let sucessos = 0;
+          let falhas = 0;
+
+          // Executar cada teste
+          for (let i = 0; i < casosAutomatizados.length; i++) {
+            const caso = casosAutomatizados[i];
+            observer.next({
+              data: JSON.stringify({
+                type: 'log',
+                message: `\n[${i + 1}/${casosAutomatizados.length}] Executando: ${caso.nome}`,
+              }),
+            } as MessageEvent);
+
+            try {
+              // Buscar as ações do caso de teste
+              const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(
+                caso.id,
+              );
+
+              if (!acoes || acoes.length === 0) {
+                observer.next({
+                  data: JSON.stringify({
+                    type: 'log',
+                    message: `⚠ Teste "${caso.nome}" não possui ações configuradas`,
+                  }),
+                } as MessageEvent);
+                continue;
+              }
+
+              // Buscar configuração ativa do Selenium
+              const configuracao =
+                await this.configuracaoSeleniumService.findAtivaPorProjeto(
+                  projeto,
+                );
+
+              // Criar registro de execução
+              const execucaoBo = await this.create({
+                nome: `Execução Automatizada - Lote Suite`,
+                dataExecucao: new Date(),
+                metodo: EXECUTION_TYPES.AUTOMATED,
+                resultado: RESULT_TYPES.PENDING,
+                casoDeTesteId: caso.id,
+              });
+
+              // Executar o teste
+              const resultado =
+                await this.executorSeleniumService.executarTeste(
+                  acoes,
+                  configuracao,
+                  (log) =>
+                    observer.next({
+                      data: JSON.stringify({
+                        type: 'log',
+                        message: `  ${log}`,
+                      }),
+                    } as MessageEvent),
+                  (screenshot) =>
+                    observer.next({
+                      data: JSON.stringify({ type: 'image', src: screenshot }),
+                    } as MessageEvent),
+                );
+
+              // Atualizar status da execução
+              await this.changeStatus(execucaoBo.id, {
+                resultado: resultado.sucesso
+                  ? RESULT_TYPES.SUCCESS
+                  : RESULT_TYPES.FAILURE,
+                resposta: resultado.mensagem,
+                observacao: resultado.logs.join('\n'),
+              });
+
+              if (resultado.sucesso) {
+                sucessos++;
+                observer.next({
+                  data: JSON.stringify({
+                    type: 'log',
+                    message: `✓ "${caso.nome}" - SUCESSO`,
+                  }),
+                } as MessageEvent);
+              } else {
+                falhas++;
+                observer.next({
+                  data: JSON.stringify({
+                    type: 'log',
+                    message: `✗ "${caso.nome}" - FALHA: ${resultado.mensagem}`,
+                  }),
+                } as MessageEvent);
+              }
+            } catch (error) {
+              falhas++;
+              observer.next({
+                data: JSON.stringify({
+                  type: 'log',
+                  message: `✗ "${caso.nome}" - ERRO: ${error.message}`,
+                }),
+              } as MessageEvent);
+            }
+          }
+
+          observer.next({
+            data: JSON.stringify({
+              type: 'complete',
+              message: `Execução em lote concluída: ${sucessos} sucesso(s), ${falhas} falha(s)`,
+              sucessos,
+              falhas,
+              total: casosAutomatizados.length,
+            }),
+          } as MessageEvent);
+
+          observer.complete();
+        } catch (error) {
+          observer.next({
+            data: JSON.stringify({ type: 'error', message: error.message }),
+          } as MessageEvent);
+          observer.complete();
+        }
+      })();
+    });
+  }
+
+  private async getCasosFromSuite(
+    suite: any,
+    projeto: Projeto,
+  ): Promise<any[]> {
+    const casos = [...suite.casosDeTeste];
+
+    // Recursivamente buscar casos de suites filhas
+    if (suite.suitesFilhas && suite.suitesFilhas.length > 0) {
+      for (const suiteFilha of suite.suitesFilhas) {
+        const suiteCompleta = await this.suiteDeTesteService.findOne(
+          suiteFilha.id,
+        );
+        const casosFilhos = await this.getCasosFromSuite(
+          suiteCompleta,
+          projeto,
+        );
+        casos.push(...casosFilhos);
+      }
+    }
+
+    return casos;
   }
 }

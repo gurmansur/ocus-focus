@@ -57,6 +57,74 @@ export class ExecucaoDeTesteService {
     });
   }
 
+  executarProjetoComStream(): Observable<any> {
+    return new Observable((observer) => {
+      const token = localStorage.getItem('token');
+      const projetoId = localStorage.getItem('projeto_id');
+      const url = `${environment.apiBaseUrl}/execucao-de-teste/executar-projeto/stream`;
+
+      const eventSource = token
+        ? new EventSourcePolyfill(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              ...(projetoId ? { projeto: projetoId } : {}),
+            },
+            withCredentials: true,
+          })
+        : new EventSource(url);
+
+      eventSource.onmessage = (event: MessageEvent) => {
+        const data = JSON.parse(event.data);
+        observer.next(data);
+        if (data.type === 'complete' || data.type === 'error') {
+          eventSource.close();
+          observer.complete();
+        }
+      };
+
+      eventSource.onerror = (error: Event) => {
+        eventSource.close();
+        observer.error(error);
+      };
+
+      return () => eventSource.close();
+    });
+  }
+
+  executarSuiteComStream(suiteId: number): Observable<any> {
+    return new Observable((observer) => {
+      const token = localStorage.getItem('token');
+      const projetoId = localStorage.getItem('projeto_id');
+      const url = `${environment.apiBaseUrl}/execucao-de-teste/executar-suite/${suiteId}/stream`;
+
+      const eventSource = token
+        ? new EventSourcePolyfill(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              ...(projetoId ? { projeto: projetoId } : {}),
+            },
+            withCredentials: true,
+          })
+        : new EventSource(url);
+
+      eventSource.onmessage = (event: MessageEvent) => {
+        const data = JSON.parse(event.data);
+        observer.next(data);
+        if (data.type === 'complete' || data.type === 'error') {
+          eventSource.close();
+          observer.complete();
+        }
+      };
+
+      eventSource.onerror = (error: Event) => {
+        eventSource.close();
+        observer.error(error);
+      };
+
+      return () => eventSource.close();
+    });
+  }
+
   mudarStatus(
     id: number,
     status: 'SUCESSO' | 'FALHA' | 'PENDENTE',

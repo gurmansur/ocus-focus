@@ -4,7 +4,14 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  NgZone,
+  OnChanges,
+  OnInit,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   AcaoDeTesteDto,
@@ -12,11 +19,17 @@ import {
 } from '../../../shared/models/test-flow.models';
 import { AcaoDeTesteService } from '../../../shared/services/acao-de-teste.service';
 import { ExecucaoDeTesteService } from '../../../shared/services/execucao-de-teste.service';
+import { TestExecutionModalComponent } from '../shared/test-execution-modal/test-execution-modal.component';
 
 @Component({
   selector: 'app-acoes-automatizadas',
   standalone: true,
-  imports: [CommonModule, FormsModule, DragDropModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DragDropModule,
+    TestExecutionModalComponent,
+  ],
   templateUrl: './acoes-automatizadas.component.html',
   styleUrls: ['./acoes-automatizadas.component.css'],
 })
@@ -34,7 +47,6 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
   snackbarType: 'success' | 'error' | 'info' = 'info';
   snackbarVisible = false;
   snackbarTimeout?: any;
-  enlargedImage: string | null = null;
 
   tiposAcao = [
     { label: 'Navegar', value: 'NAVEGAR' },
@@ -72,7 +84,9 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
 
   constructor(
     private acaoService: AcaoDeTesteService,
-    private execService: ExecucaoDeTesteService
+    private execService: ExecucaoDeTesteService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit() {
@@ -212,23 +226,29 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
 
     this.execService.executarComStream(this.casoDeTesteId).subscribe({
       next: (event) => {
-        if (event.type === 'log' || event.type === 'start') {
-          this.log.push({ type: 'text', content: event.message });
-        } else if (event.type === 'image') {
-          this.log.push({ type: 'image', content: event.src });
-        } else if (event.type === 'complete') {
-          this.resultado = event;
-          this.log.push({
-            type: 'text',
-            content: `✓ Execução concluída: ${
-              event.sucesso ? 'SUCESSO' : 'FALHA'
-            }`,
-          });
-          this.executando = false;
-        } else if (event.type === 'error') {
-          this.log.push({ type: 'text', content: `✗ Erro: ${event.message}` });
-          this.executando = false;
-        }
+        this.ngZone.run(() => {
+          if (event.type === 'log' || event.type === 'start') {
+            this.log.push({ type: 'text', content: event.message });
+          } else if (event.type === 'image') {
+            this.log.push({ type: 'image', content: event.src });
+          } else if (event.type === 'complete') {
+            this.resultado = event;
+            this.log.push({
+              type: 'text',
+              content: `✓ Execução concluída: ${
+                event.sucesso ? 'SUCESSO' : 'FALHA'
+              }`,
+            });
+            this.executando = false;
+          } else if (event.type === 'error') {
+            this.log.push({
+              type: 'text',
+              content: `✗ Erro: ${event.message}`,
+            });
+            this.executando = false;
+          }
+          this.cdr.detectChanges();
+        });
       },
       error: (err) => {
         this.log.push({
@@ -263,10 +283,6 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
     }, 3000);
   }
 
-  openImage(src: string) {
-    this.enlargedImage = src;
-  }
-
   getTipoLabel(tipo: string) {
     return this.tiposAcao.find((t) => t.value === tipo)?.label || tipo;
   }
@@ -274,10 +290,6 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
   getTipoSeletorLabel(tipo: string | undefined) {
     if (!tipo) return '';
     return this.tiposSeletor.find((t) => t.value === tipo)?.label || tipo;
-  }
-
-  closeImage() {
-    this.enlargedImage = null;
   }
 
   onDrop(event: CdkDragDrop<NodeDeTeste[]>) {
