@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './containers/dashboard.component';
 import { colaboradorGuard, stakeholderGuard } from './guards/role.guard';
+import { AjudaManuaisComponent } from './pages/ajuda-manuais/ajuda-manuais.component';
 import { ArcatestCasosFormComponent } from './pages/arcatest-casos-form/arcatest-casos-form.component';
 import { ArcatestExecucoesFormComponent } from './pages/arcatest-execucoes-form/arcatest-execucoes-form.component';
 import { ArcatestExecucoesComponent } from './pages/arcatest-execucoes/arcatest-execucoes.component';
@@ -53,6 +54,13 @@ const routes: Routes = [
       {
         path: 'projetos',
         component: ProjetosComponent,
+        canActivate: [colaboradorGuard],
+      },
+
+      // Ajuda e Manuais
+      {
+        path: 'ajuda-manuais',
+        component: AjudaManuaisComponent,
         canActivate: [colaboradorGuard],
       },
 
