@@ -52,7 +52,7 @@ export class CasoDeTesteService {
           'casoDeUso',
           'projeto',
         ],
-        where: { projeto },
+        where: { projeto: { id: projeto.id } },
       })
     ).map((casoDeTeste) =>
       CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),
