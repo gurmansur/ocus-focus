@@ -11,25 +11,18 @@ export class ExecucaoDeTesteService {
 
   constructor(private http: HttpClient) {}
 
-  executar(
-    casoDeTesteId: number,
-    configuracaoId?: number
-  ): Observable<ResultadoExecucao> {
-    const body: any = { casoDeTesteId };
-    if (configuracaoId) body.configuracaoSeleniumId = configuracaoId;
-    return this.http.post<ResultadoExecucao>(
-      `${this.baseUrl}/executar/${casoDeTesteId}`,
-      body
-    );
-  }
-
-  executarComStream(casoDeTesteId: number): Observable<any> {
+  /**
+   * Creates an SSE stream Observable with proper error handling and cleanup.
+   * Centralizes the event source initialization and message handling logic.
+   * @param url - The SSE endpoint URL
+   * @returns Observable that emits parsed SSE events
+   */
+  private createSseStream(url: string): Observable<any> {
     return new Observable((observer) => {
       // NOTE: Security consideration - tokens stored in localStorage are vulnerable to XSS attacks.
       // Consider migrating to httpOnly cookies or a more secure storage mechanism for production.
       const token = localStorage.getItem('token');
       const projetoId = localStorage.getItem('projeto_id');
-      const url = `${environment.apiBaseUrl}/execucao-de-teste/executar/${casoDeTesteId}/stream`;
 
       const eventSource = token
         ? new EventSourcePolyfill(url, {
@@ -51,7 +44,8 @@ export class ExecucaoDeTesteService {
           }
         } catch (error) {
           console.error('[SSE] Error parsing JSON:', error);
-          observer.error(new Error('Failed to parse server response'));
+          const parseError = new Error('Failed to parse server response');
+          observer.error(parseError);
           eventSource.close();
         }
       };
@@ -67,84 +61,31 @@ export class ExecucaoDeTesteService {
     });
   }
 
+  executar(
+    casoDeTesteId: number,
+    configuracaoId?: number
+  ): Observable<ResultadoExecucao> {
+    const body: any = { casoDeTesteId };
+    if (configuracaoId) body.configuracaoSeleniumId = configuracaoId;
+    return this.http.post<ResultadoExecucao>(
+      `${this.baseUrl}/executar/${casoDeTesteId}`,
+      body
+    );
+  }
+
+  executarComStream(casoDeTesteId: number): Observable<any> {
+    const url = `${environment.apiBaseUrl}/execucao-de-teste/executar/${casoDeTesteId}/stream`;
+    return this.createSseStream(url);
+  }
+
   executarProjetoComStream(): Observable<any> {
-    return new Observable((observer) => {
-      const token = localStorage.getItem('token');
-      const projetoId = localStorage.getItem('projeto_id');
-      const url = `${environment.apiBaseUrl}/execucao-de-teste/executar-projeto/stream`;
-
-      const eventSource = token
-        ? new EventSourcePolyfill(url, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              ...(projetoId ? { projeto: projetoId } : {}),
-            },
-            withCredentials: true,
-          })
-        : new EventSource(url);
-
-      eventSource.onmessage = (event: MessageEvent) => {
-        try {
-          const data = JSON.parse(event.data);
-          observer.next(data);
-          if (data.type === 'complete' || data.type === 'error') {
-            eventSource.close();
-            observer.complete();
-          }
-        } catch (error) {
-          console.error('[SSE] Error parsing JSON:', error);
-          observer.error(new Error('Failed to parse server response'));
-          eventSource.close();
-        }
-      };
-
-      eventSource.onerror = (error: Event) => {
-        eventSource.close();
-        observer.error(error);
-      };
-
-      return () => eventSource.close();
-    });
+    const url = `${environment.apiBaseUrl}/execucao-de-teste/executar-projeto/stream`;
+    return this.createSseStream(url);
   }
 
   executarSuiteComStream(suiteId: number): Observable<any> {
-    return new Observable((observer) => {
-      const token = localStorage.getItem('token');
-      const projetoId = localStorage.getItem('projeto_id');
-      const url = `${environment.apiBaseUrl}/execucao-de-teste/executar-suite/${suiteId}/stream`;
-
-      const eventSource = token
-        ? new EventSourcePolyfill(url, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              ...(projetoId ? { projeto: projetoId } : {}),
-            },
-            withCredentials: true,
-          })
-        : new EventSource(url);
-
-      eventSource.onmessage = (event: MessageEvent) => {
-        try {
-          const data = JSON.parse(event.data);
-          observer.next(data);
-          if (data.type === 'complete' || data.type === 'error') {
-            eventSource.close();
-            observer.complete();
-          }
-        } catch (error) {
-          console.error('[SSE] Error parsing JSON:', error);
-          observer.error(new Error('Failed to parse server response'));
-          eventSource.close();
-        }
-      };
-
-      eventSource.onerror = (error: Event) => {
-        eventSource.close();
-        observer.error(error);
-      };
-
-      return () => eventSource.close();
-    });
+    const url = `${environment.apiBaseUrl}/execucao-de-teste/executar-suite/${suiteId}/stream`;
+    return this.createSseStream(url);
   }
 
   mudarStatus(

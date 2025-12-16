@@ -8,7 +8,6 @@ import {
   IsOptional,
   IsString,
   IsUrl,
-  Matches,
   MaxLength,
   Min,
   ValidateIf,
@@ -128,7 +127,6 @@ export class CreateConfiguracaoSeleniumDto {
     protocols: ['http', 'https'],
     require_protocol: true,
     require_valid_protocol: true,
-    allow_underscores: true,
   })
   @IsOptional()
   urlSeleniumGrid?: string;
