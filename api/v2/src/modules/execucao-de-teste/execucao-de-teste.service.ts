@@ -320,11 +320,16 @@ export class ExecucaoDeTesteService {
             return;
           }
 
-          // Buscar as ações do caso de teste
-          const acoes =
-            await this.acaoDeTesteService.findByCasoDeTesteId(casoDeTesteId);
+          // Execute test using helper (which will handle actions and config retrieval)
+          const { sucesso, resultado } = await this.executeSingleTestCase(
+            caso,
+            projeto,
+            observer,
+            'Execução Automatizada',
+          );
 
-          if (!acoes || acoes.length === 0) {
+          // If no result, test had no actions (already logged by helper)
+          if (!resultado) {
             observer.next({
               data: JSON.stringify({
                 type: 'error',
@@ -337,35 +342,10 @@ export class ExecucaoDeTesteService {
 
           observer.next({
             data: JSON.stringify({
-              type: 'log',
-              message: `${acoes.length} ações encontradas`,
-            }),
-          } as MessageEvent);
-
-          // Buscar configuração ativa do Selenium
-          const configuracao =
-            await this.configuracaoSeleniumService.findAtivaPorProjeto(projeto);
-          observer.next({
-            data: JSON.stringify({
-              type: 'log',
-              message: `Configuração: ${configuracao?.nome || 'Padrão'}`,
-            }),
-          } as MessageEvent);
-
-          // Execute test using helper
-          const { sucesso, resultado } = await this.executeSingleTestCase(
-            caso,
-            projeto,
-            observer,
-            'Execução Automatizada',
-          );
-
-          observer.next({
-            data: JSON.stringify({
               type: 'complete',
               sucesso,
-              mensagem: resultado?.mensagem || 'Teste sem ações',
-              screenshots: resultado?.screenshots || [],
+              mensagem: resultado.mensagem,
+              screenshots: resultado.screenshots,
             }),
           } as MessageEvent);
 
