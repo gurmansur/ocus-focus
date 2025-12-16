@@ -23,6 +23,22 @@ export interface ResultadoExecucao {
 export class ExecutorSeleniumService {
   private readonly logger = new Logger(ExecutorSeleniumService.name);
 
+  /**
+   * Escapes a string for safe use in XPath expressions.
+   * Handles strings containing both single and double quotes.
+   */
+  private escapeXPath(value: string): string {
+    if (!value.includes("'")) {
+      return `'${value}'`;
+    }
+    if (!value.includes('"')) {
+      return `"${value}"`;
+    }
+    // If both quotes are present, use concat
+    const parts = value.split("'");
+    return `concat('${parts.join("',\"'\",'")}')`;
+  }
+
   async executarTeste(
     acoes: AcaoDeTeste[],
     configuracao: ConfiguracaoSeleniumBo,
@@ -281,7 +297,7 @@ export class ExecutorSeleniumService {
         );
         await elementoSelecionar.click();
         const opcao = await elementoSelecionar.findElement(
-          By.xpath(`//option[text()='${acao.valor}']`),
+          By.xpath(`//option[text()=${this.escapeXPath(acao.valor)}]`),
         );
         await opcao.click();
         break;

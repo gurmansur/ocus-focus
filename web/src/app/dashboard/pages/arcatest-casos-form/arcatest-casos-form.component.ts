@@ -259,28 +259,13 @@ export class ArcatestCasosFormComponent {
     this.log = [];
     this.resultado = null;
 
-    console.log('[Component] Starting test execution for case:', this.idCaso);
-
     this.execService.executarComStream(this.idCaso).subscribe({
       next: (event) => {
-        console.log('[Component] Event received:', event);
         this.ngZone.run(() => {
-          console.log(
-            '[Component] Processing in NgZone, current log length:',
-            this.log.length
-          );
           if (event.type === 'log' || event.type === 'start') {
             this.log = [...this.log, { type: 'text', content: event.message }];
-            console.log(
-              '[Component] Added log entry, new length:',
-              this.log.length
-            );
           } else if (event.type === 'image') {
             this.log = [...this.log, { type: 'image', content: event.src }];
-            console.log(
-              '[Component] Added image entry, new length:',
-              this.log.length
-            );
           } else if (event.type === 'complete') {
             this.resultado = event;
             this.log = [
@@ -293,7 +278,6 @@ export class ArcatestCasosFormComponent {
               },
             ];
             this.executando = false;
-            console.log('[Component] Execution complete');
           } else if (event.type === 'error') {
             this.log = [
               ...this.log,
@@ -303,13 +287,12 @@ export class ArcatestCasosFormComponent {
               },
             ];
             this.executando = false;
-            console.log('[Component] Execution error');
           }
           this.cdr.markForCheck();
         });
       },
       error: (err) => {
-        console.error('[Component] Stream error:', err);
+        console.error('Stream error:', err);
         this.ngZone.run(() => {
           this.log = [
             ...this.log,
