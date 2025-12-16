@@ -1,7 +1,7 @@
-import { resultTypes } from '../execucao-de-teste.constants';
+import { RESULT_TYPES } from '../execucao-de-teste.constants';
 
 export class GetExecucaoDeTesteGraficoBo {
-  [resultTypes.SUCCESS]: number;
-  [resultTypes.FAILURE]: number;
-  [resultTypes.PENDING]: number;
+  [RESULT_TYPES.SUCCESS]: number;
+  [RESULT_TYPES.FAILURE]: number;
+  [RESULT_TYPES.PENDING]: number;
 }

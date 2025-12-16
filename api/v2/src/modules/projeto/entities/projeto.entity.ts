@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Ator } from '../../ator/entities/ator.entity';
 import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
 import { ColaboradorProjeto } from '../../colaborador-projeto/entities/colaborador-projeto.entity';
+import { ConfiguracaoSelenium } from '../../configuracao-selenium/entities/configuracao-selenium.entity';
 import { Estimativa } from '../../estimativa/entities/estimativa.entity';
 import { FatorAmbientalProjeto } from '../../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 import { FatorTecnicoProjeto } from '../../fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
@@ -86,6 +87,12 @@ export class Projeto {
 
   @OneToMany(() => CasoDeTeste, (casoDeTeste) => casoDeTeste.projeto)
   casosDeTeste: CasoDeTeste[];
+
+  @OneToMany(
+    () => ConfiguracaoSelenium,
+    (configuracaoSelenium) => configuracaoSelenium.projeto,
+  )
+  configuracoesSelenium: ConfiguracaoSelenium[];
 
   @OneToMany(() => Sprint, (sprint) => sprint.id)
   sprints: Sprint[];

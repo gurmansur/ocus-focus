@@ -20,7 +20,8 @@ export class StakeholderAtualMiddleware implements NestMiddleware {
     private jwtService: JwtService,
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {
-    const access_token = req.headers.authorization?.split(' ')[1];
+    const access_token =
+      req.headers.authorization?.split(' ')[1] || (req.query.token as string);
 
     if (access_token) {
       try {

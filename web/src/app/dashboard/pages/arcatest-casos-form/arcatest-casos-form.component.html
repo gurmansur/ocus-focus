@@ -339,4 +339,9 @@
       </app-button>
     </div>
   </form>
+
+  <!-- Ações Automatizadas Section -->
+  @if (idCaso) {
+  <app-acoes-automatizadas [casoDeTesteId]="idCaso"></app-acoes-automatizadas>
+  }
 </div>

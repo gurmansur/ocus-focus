@@ -26,6 +26,7 @@ import { SuiteDeTeste } from '../../models/suiteDeTeste';
 import { CasoDeTesteService } from '../../services/casoDeTeste.service';
 import { CasoUsoService } from '../../services/casoUso.service';
 import { ProjetoService } from '../../services/projeto.service';
+import { AcoesAutomatizadasComponent } from '../acoes-automatizadas/acoes-automatizadas.component';
 
 @Component({
   selector: 'app-arcatest-casos-form',
@@ -40,6 +41,7 @@ import { ProjetoService } from '../../services/projeto.service';
     CardComponent,
     PlusIconComponent,
     ButtonComponent,
+    AcoesAutomatizadasComponent,
   ],
 })
 export class ArcatestCasosFormComponent {
