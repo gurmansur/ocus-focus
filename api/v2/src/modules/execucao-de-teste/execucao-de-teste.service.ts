@@ -229,7 +229,7 @@ export class ExecucaoDeTesteService {
    * @param observer - The observer to emit events to
    * @param executionName - Name to use for the execution record
    * @param logPrefix - Optional prefix for log messages
-   * @returns Success status and result details
+   * @returns Success status, execution ID, and result details
    */
   private async executeSingleTestCase(
     caso: CasoDeTesteBo,
@@ -237,7 +237,7 @@ export class ExecucaoDeTesteService {
     observer: Observer<MessageEvent>,
     executionName: string,
     logPrefix = '',
-  ): Promise<{ sucesso: boolean; resultado: any }> {
+  ): Promise<{ sucesso: boolean; execucaoId?: number; resultado: any }> {
     // Buscar as ações do caso de teste
     const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(caso.id);
 
@@ -290,7 +290,7 @@ export class ExecucaoDeTesteService {
       observacao: resultado.logs.join('\n'),
     });
 
-    return { sucesso: resultado.sucesso, resultado };
+    return { sucesso: resultado.sucesso, execucaoId: execucaoBo.id, resultado };
   }
 
   streamExecution(
@@ -321,7 +321,7 @@ export class ExecucaoDeTesteService {
           }
 
           // Execute test using helper (which will handle actions and config retrieval)
-          const { sucesso, resultado } = await this.executeSingleTestCase(
+          const { sucesso, execucaoId, resultado } = await this.executeSingleTestCase(
             caso,
             projeto,
             observer,
@@ -343,6 +343,7 @@ export class ExecucaoDeTesteService {
           observer.next({
             data: JSON.stringify({
               type: 'complete',
+              execucaoId,
               sucesso,
               mensagem: resultado.mensagem,
               screenshots: resultado.screenshots,
