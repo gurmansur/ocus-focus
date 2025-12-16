@@ -87,6 +87,7 @@ describe('CasoDeTesteController', () => {
         stakeholders: [],
         suitesDeTeste: [],
         userStories: [],
+        configuracoesSelenium: [],
       };
 
       const mockResult: CasoDeTesteDto = {
@@ -154,6 +155,7 @@ describe('CasoDeTesteController', () => {
         stakeholders: [],
         suitesDeTeste: [],
         userStories: [],
+        configuracoesSelenium: [],
       };
 
       const casoDeTesteDtoArray: CasoDeTesteDto[] = [

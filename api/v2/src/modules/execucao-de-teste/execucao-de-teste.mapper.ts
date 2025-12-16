@@ -10,6 +10,7 @@ import { ExecucaoDeTesteDto } from './dto/execucao-de-teste.dto';
 import { GetExecucaoDeTesteGraficoQueryDto } from './dto/get-execucao-de-teste-grafico-query.dto';
 import { UpdateExecucaoDeTesteDto } from './dto/update-execucao-de-teste.dto';
 import { ExecucaoDeTeste } from './entities/execucao-de-teste.entity';
+import { EXECUTION_TYPES, RESULT_TYPES } from './execucao-de-teste.constants';
 
 export class ExecucaoDeTesteMapper {
   static createDtoToBo(
@@ -27,6 +28,9 @@ export class ExecucaoDeTesteMapper {
     entity.nome = bo.nome;
     entity.casoDeTeste = { id: bo.casoDeTesteId } as CasoDeTeste;
     entity.dataExecucao = bo.dataExecucao;
+    entity.metodo = (bo.metodo as 'MANUAL' | 'AUTOMATIZADO') || 'MANUAL';
+    entity.resultado =
+      (bo.resultado as 'SUCESSO' | 'FALHA' | 'PENDENTE') || 'PENDENTE';
     return entity;
   }
 
@@ -61,8 +65,9 @@ export class ExecucaoDeTesteMapper {
     bo: ChangeStatusExecucaoDeTesteBo,
   ): ExecucaoDeTeste {
     const entity = new ExecucaoDeTeste();
-    entity.resultado = bo.resultado;
+    entity.resultado = bo.resultado as 'SUCESSO' | 'FALHA' | 'PENDENTE';
     entity.observacao = bo.observacao;
+    entity.resposta = bo.resposta;
     return entity;
   }
 
@@ -74,10 +79,10 @@ export class ExecucaoDeTesteMapper {
       ? CasoDeTesteMapper.entityToCasoDeTesteBo(entity.casoDeTeste)
       : null;
     bo.dataExecucao = entity.dataExecucao;
-    bo.metodo = entity.metodo;
+    bo.metodo = entity.metodo as EXECUTION_TYPES;
     bo.observacao = entity.observacao;
     bo.resposta = entity.resposta;
-    bo.resultado = entity.resultado;
+    bo.resultado = entity.resultado as RESULT_TYPES;
 
     return bo;
   }

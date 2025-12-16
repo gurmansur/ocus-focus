@@ -1,0 +1,12 @@
+<div class="backdrop" *ngIf="open">
+  <div class="modal">
+    <div class="header">
+      <h3>Execução de Teste</h3>
+      <button (click)="onClose()">Fechar</button>
+    </div>
+    <div class="body">
+      <div *ngIf="loading">Executando...</div>
+      <pre *ngIf="!loading">{{ logs.join("\n") }}</pre>
+    </div>
+  </div>
+</div>

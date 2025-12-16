@@ -31,7 +31,7 @@ export class ExecucaoDeTeste {
   })
   resultado: 'SUCESSO' | 'FALHA' | 'PENDENTE';
 
-  @Column('varchar', { name: 'EDT_OBSERVACAO', length: 255, nullable: true })
+  @Column('text', { name: 'EDT_OBSERVACAO', nullable: true })
   observacao: string;
 
   @Column('enum', {

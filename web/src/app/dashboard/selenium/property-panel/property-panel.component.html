@@ -1,0 +1,46 @@
+<div *ngIf="node; else empty" class="panel">
+  <h3>Propriedades da ação</h3>
+  <label>
+    Tipo
+    <select [(ngModel)]="node!.tipo">
+      <option *ngFor="let t of tiposAcao" [value]="t">{{ t }}</option>
+    </select>
+  </label>
+
+  <label>
+    Descrição
+    <input [(ngModel)]="node!.dados.descricao" />
+  </label>
+
+  <label>
+    Seletor
+    <input [(ngModel)]="node!.dados.seletor" />
+  </label>
+
+  <label>
+    Tipo do seletor
+    <select [(ngModel)]="node!.dados.tipoSeletor">
+      <option *ngFor="let s of tiposSeletor" [value]="s">{{ s }}</option>
+    </select>
+  </label>
+
+  <label>
+    Valor
+    <input [(ngModel)]="node!.dados.valor" />
+  </label>
+
+  <label>
+    Timeout (ms)
+    <input type="number" [(ngModel)]="node!.dados.timeout" />
+  </label>
+
+  <label>
+    Obrigatório
+    <input type="checkbox" [(ngModel)]="node!.dados.obrigatorio" />
+  </label>
+
+  <button (click)="onSave()">Salvar</button>
+</div>
+<ng-template #empty>
+  <div class="panel">Selecione uma ação no canvas.</div>
+</ng-template>

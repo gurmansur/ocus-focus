@@ -1,5 +1,10 @@
-export enum resultTypes {
+export enum RESULT_TYPES {
   SUCCESS = 'SUCESSO',
   FAILURE = 'FALHA',
   PENDING = 'PENDENTE',
+}
+
+export enum EXECUTION_TYPES {
+  MANUAL = 'MANUAL',
+  AUTOMATED = 'AUTOMATIZADO',
 }

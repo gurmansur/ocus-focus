@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ClickableCardComponent } from '../../../shared/clickable-card/clickable-card.component';
+import { GearIconComponent } from '../../../shared/icons/gear-icon/gear-icon.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
 import { TableComponent } from '../../../shared/table/table.component';
 import { ArcatestExecucoesComponent } from '../arcatest-execucoes/arcatest-execucoes.component';
@@ -28,19 +29,24 @@ import { TestSuiteIconComponent } from './components/test-suite-icon/test-suite-
     TestSidebarItemComponent,
     ArcatestExecucoesComponent,
     ArcatestFileTreeComponent,
+    GearIconComponent,
     RouterModule,
     CommonModule,
   ],
 })
 export class PainelArcatestComponent {
   projectId!: number;
-  selectedTab: 'execucoes' | 'arvore' = 'execucoes';
+  selectedTab: 'execucoes' | 'arvore' | 'configuracao' = 'execucoes';
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.projectId = this.route.snapshot.params['id'];
-    this.selectedTab = this.router.url.includes('arvore')
-      ? 'arvore'
-      : 'execucoes';
+    if (this.router.url.includes('arvore')) {
+      this.selectedTab = 'arvore';
+    } else if (this.router.url.includes('configuracao-selenium')) {
+      this.selectedTab = 'configuracao';
+    } else {
+      this.selectedTab = 'execucoes';
+    }
   }
 
   navigateToTestExecutions() {
@@ -60,6 +66,16 @@ export class PainelArcatestComponent {
       this.projectId,
       'painel-arcatest',
       'arvore',
+    ]);
+  }
+
+  navigateToSeleniumConfig() {
+    this.selectedTab = 'configuracao';
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'painel-arcatest',
+      'configuracao-selenium',
     ]);
   }
 

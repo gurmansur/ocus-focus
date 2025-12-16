@@ -1,0 +1,125 @@
+<div class="py-5 px-8 min-h-screen bg-gray-50">
+  @if (!selectedTopic) {
+  <!-- Topics List View -->
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Ajuda & Manuais</h1>
+    <p class="text-gray-600 text-lg">
+      Encontre respostas e aprenda como usar cada ferramenta do Ocus Focus
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (topic of helpTopics; track topic.id) {
+    <div
+      (click)="selectTopic(topic)"
+      class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-violet-700 p-6 group"
+    >
+      <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">
+        {{ topic.icon }}
+      </div>
+      <h2
+        class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-violet-700"
+      >
+        {{ topic.title }}
+      </h2>
+      <p class="text-gray-600">{{ topic.description }}</p>
+      <div class="mt-4 flex items-center text-violet-700 font-medium">
+        Saiba mais
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </div>
+    </div>
+    }
+  </div>
+  } @else {
+  <!-- Topic Detail View -->
+  <div class="bg-white rounded-lg shadow-md">
+    <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <span class="text-5xl">{{ selectedTopic.icon }}</span>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">
+            {{ selectedTopic.title }}
+          </h1>
+          <p class="text-gray-600 mt-1">{{ selectedTopic.description }}</p>
+        </div>
+      </div>
+      <button
+        (click)="backToTopics()"
+        class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-6 h-6 text-gray-600"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6 space-y-8">
+      @for (section of selectedTopic.sections; track $index) {
+      <div class="border-b border-gray-100 pb-6 last:border-b-0">
+        <h2 class="text-2xl font-bold text-gray-900 mb-3">
+          {{ section.title }}
+        </h2>
+        <p class="text-gray-600 leading-relaxed mb-4">{{ section.content }}</p>
+
+        @if (section.steps && section.steps.length > 0) {
+        <div class="bg-violet-50 rounded-lg p-4">
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <div
+              class="w-8 h-8 bg-violet-700 rounded-lg flex items-center justify-center p-1"
+            >
+              <app-passos-icon class="text-white w-6 h-6"></app-passos-icon>
+            </div>
+            Passos:
+          </h3>
+          <ol class="space-y-2">
+            @for (step of section.steps; track $index) {
+            <li class="flex items-start gap-3">
+              <span
+                class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-violet-700 text-white text-sm font-semibold flex-shrink-0"
+              >
+                {{ $index + 1 }}
+              </span>
+              <span class="text-gray-700">{{ step }}</span>
+            </li>
+            }
+          </ol>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="p-6 bg-gray-50 border-t border-gray-200 flex gap-3">
+      <button
+        (click)="backToTopics()"
+        class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-100 transition-colors"
+      >
+        Voltar aos Tópicos
+      </button>
+      <app-button (onClick)="navigateToDashboard()" class="ml-auto">
+        Ir para Dashboard
+      </app-button>
+    </div>
+  </div>
+  }
+</div>
