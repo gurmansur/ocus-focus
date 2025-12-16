@@ -8,8 +8,10 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  Matches,
   MaxLength,
   Min,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateConfiguracaoSeleniumDto {
@@ -121,7 +123,14 @@ export class CreateConfiguracaoSeleniumDto {
     example: 'http://localhost:4444/wd/hub',
     required: false,
   })
-  @IsUrl()
+  @ValidateIf((o) => o.urlSeleniumGrid !== null && o.urlSeleniumGrid !== '')
+  @IsUrl({
+    protocols: ['http', 'https'],
+    require_protocol: true,
+  })
+  @Matches(/^https?:\/\/(localhost|127\.0\.0\.1|[\w.-]+\.(com|net|org|io))(:\d+)?(\/.*)?$/, {
+    message: 'urlSeleniumGrid must be a valid URL with allowed domain (localhost, 127.0.0.1, or public domains ending in .com, .net, .org, .io)',
+  })
   @IsOptional()
   urlSeleniumGrid?: string;
 

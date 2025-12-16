@@ -132,7 +132,6 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
 
   adicionarAcao() {
     const id = `new-${Date.now()}`;
-    const index = this.nodes.length;
 
     const newNode: NodeDeTeste = {
       id,
