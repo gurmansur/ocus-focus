@@ -50,13 +50,13 @@ export class ExecutorSeleniumService {
       /require\s*\(/i,
       /fetch\s*\(/i,
       /XMLHttpRequest/i,
-      /addEventListener\s*\(/i,
-      /removeEventListener\s*\(/i,
     ];
 
     for (const pattern of dangerousPatterns) {
       if (pattern.test(script)) {
-        this.logger.warn(`Potentially dangerous script detected: ${script}`);
+        // Log only a truncated version to avoid exposing sensitive information
+        const truncated = script.length > 50 ? `${script.substring(0, 50)}...` : script;
+        this.logger.warn(`Potentially dangerous script detected (truncated): ${truncated}`);
         throw new Error(
           `Script contains potentially dangerous operations. Pattern: ${pattern.source}`,
         );
