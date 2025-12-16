@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { PassosIconComponent } from '../../../shared/components/passos-icon/passos-icon.component';
-import { HelpTopic, HelpSection } from './ajuda-manuais.models';
+import { HelpTopic } from './ajuda-manuais.models';
 
 @Component({
   selector: 'app-ajuda-manuais',

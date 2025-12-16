@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Observable } from 'rxjs';
 import { In, Repository } from 'typeorm';
 import { AcaoDeTesteService } from '../acao-de-teste/acao-de-teste.service';
-import { CasoDeTeste } from '../caso-de-teste/entities/caso-de-teste.entity';
-import { CasoDeTesteDto } from '../caso-de-teste/dto/caso-de-teste.dto';
 import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
 import { ConfiguracaoSeleniumService } from '../configuracao-selenium/configuracao-selenium.service';
 import { ExecutorSeleniumService } from '../executor-selenium/executor-selenium.service';

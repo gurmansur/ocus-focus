@@ -26,17 +26,40 @@ export class ExecutorSeleniumService {
   /**
    * Escapes a string for safe use in XPath expressions.
    * Handles strings containing both single and double quotes.
+   * Uses concat() function to properly escape all quote combinations.
    */
   private escapeXPath(value: string): string {
+    if (!value) {
+      return "''";
+    }
+    
+    // If no single quotes, wrap in single quotes
     if (!value.includes("'")) {
       return `'${value}'`;
     }
+    
+    // If no double quotes, wrap in double quotes
     if (!value.includes('"')) {
       return `"${value}"`;
     }
-    // If both quotes are present, use concat
+    
+    // If both quotes are present, use concat with proper escaping
+    // Split by single quote and build concat expression
     const parts = value.split("'");
-    return `concat('${parts.join("',\"'\",'")}')`;
+    const concatParts: string[] = [];
+    
+    parts.forEach((part, index) => {
+      // Add the text part if not empty
+      if (part) {
+        concatParts.push(`'${part}'`);
+      }
+      // Add the single quote that was removed by split (except after the last part)
+      if (index < parts.length - 1) {
+        concatParts.push(`"'"`);
+      }
+    });
+    
+    return `concat(${concatParts.join(',')})`;
   }
 
   async executarTeste(

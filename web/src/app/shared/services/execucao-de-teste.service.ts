@@ -25,11 +25,11 @@ export class ExecucaoDeTesteService {
 
   executarComStream(casoDeTesteId: number): Observable<any> {
     return new Observable((observer) => {
+      // NOTE: Security consideration - tokens stored in localStorage are vulnerable to XSS attacks.
+      // Consider migrating to httpOnly cookies or a more secure storage mechanism for production.
       const token = localStorage.getItem('token');
       const projetoId = localStorage.getItem('projeto_id');
       const url = `${environment.apiBaseUrl}/execucao-de-teste/executar/${casoDeTesteId}/stream`;
-
-      console.log('[SSE] Connecting to:', url);
 
       const eventSource = token
         ? new EventSourcePolyfill(url, {
@@ -41,30 +41,27 @@ export class ExecucaoDeTesteService {
           })
         : new EventSource(url);
 
-      eventSource.onopen = () => {
-        console.log('[SSE] Connection opened');
-      };
-
       eventSource.onmessage = (event: MessageEvent) => {
-        console.log('[SSE] Message received:', event.data);
-        const data = JSON.parse(event.data);
-        console.log('[SSE] Parsed data:', data);
-        observer.next(data);
-        if (data.type === 'complete' || data.type === 'error') {
-          console.log('[SSE] Closing connection, type:', data.type);
+        try {
+          const data = JSON.parse(event.data);
+          observer.next(data);
+          if (data.type === 'complete' || data.type === 'error') {
+            eventSource.close();
+            observer.complete();
+          }
+        } catch (error) {
+          console.error('[SSE] Error parsing JSON:', error);
+          observer.error(new Error('Failed to parse server response'));
           eventSource.close();
-          observer.complete();
         }
       };
 
       eventSource.onerror = (error: Event) => {
-        console.error('[SSE] Error:', error);
         eventSource.close();
         observer.error(error);
       };
 
       return () => {
-        console.log('[SSE] Cleanup: closing connection');
         eventSource.close();
       };
     });
@@ -87,11 +84,17 @@ export class ExecucaoDeTesteService {
         : new EventSource(url);
 
       eventSource.onmessage = (event: MessageEvent) => {
-        const data = JSON.parse(event.data);
-        observer.next(data);
-        if (data.type === 'complete' || data.type === 'error') {
+        try {
+          const data = JSON.parse(event.data);
+          observer.next(data);
+          if (data.type === 'complete' || data.type === 'error') {
+            eventSource.close();
+            observer.complete();
+          }
+        } catch (error) {
+          console.error('[SSE] Error parsing JSON:', error);
+          observer.error(new Error('Failed to parse server response'));
           eventSource.close();
-          observer.complete();
         }
       };
 
@@ -121,11 +124,17 @@ export class ExecucaoDeTesteService {
         : new EventSource(url);
 
       eventSource.onmessage = (event: MessageEvent) => {
-        const data = JSON.parse(event.data);
-        observer.next(data);
-        if (data.type === 'complete' || data.type === 'error') {
+        try {
+          const data = JSON.parse(event.data);
+          observer.next(data);
+          if (data.type === 'complete' || data.type === 'error') {
+            eventSource.close();
+            observer.complete();
+          }
+        } catch (error) {
+          console.error('[SSE] Error parsing JSON:', error);
+          observer.error(new Error('Failed to parse server response'));
           eventSource.close();
-          observer.complete();
         }
       };
 
