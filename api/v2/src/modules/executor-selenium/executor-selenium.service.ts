@@ -50,7 +50,7 @@ export class ExecutorSeleniumService {
     
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
-      // Add the text part (even if empty, as it may be needed for proper spacing)
+      // Add the text part if not empty
       if (part.length > 0) {
         concatParts.push(`'${part}'`);
       }

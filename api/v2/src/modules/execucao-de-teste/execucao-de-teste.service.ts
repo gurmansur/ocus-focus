@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable, MessageEvent } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import { In, Repository } from 'typeorm';
 import { AcaoDeTesteService } from '../acao-de-teste/acao-de-teste.service';
+import { CasoDeTesteBo } from '../caso-de-teste/bo/caso-de-teste.bo';
 import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
 import { ConfiguracaoSeleniumService } from '../configuracao-selenium/configuracao-selenium.service';
 import { ExecutorSeleniumService } from '../executor-selenium/executor-selenium.service';
@@ -231,9 +232,9 @@ export class ExecucaoDeTesteService {
    * @returns Success status and result details
    */
   private async executeSingleTestCase(
-    caso: any,
+    caso: CasoDeTesteBo,
     projeto: Projeto,
-    observer: any,
+    observer: Observer<MessageEvent>,
     executionName: string,
     logPrefix = '',
   ): Promise<{ sucesso: boolean; resultado: any }> {
