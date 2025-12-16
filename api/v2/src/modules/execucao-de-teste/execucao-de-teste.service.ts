@@ -221,6 +221,77 @@ export class ExecucaoDeTesteService {
     return resultados;
   }
 
+  /**
+   * Private helper method to execute a single test case and emit events
+   * @param caso - The test case to execute
+   * @param projeto - The project context
+   * @param observer - The observer to emit events to
+   * @param executionName - Name to use for the execution record
+   * @param logPrefix - Optional prefix for log messages
+   * @returns Success status and result details
+   */
+  private async executeSingleTestCase(
+    caso: any,
+    projeto: Projeto,
+    observer: any,
+    executionName: string,
+    logPrefix = '',
+  ): Promise<{ sucesso: boolean; resultado: any }> {
+    // Buscar as ações do caso de teste
+    const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(caso.id);
+
+    if (!acoes || acoes.length === 0) {
+      observer.next({
+        data: JSON.stringify({
+          type: 'log',
+          message: `${logPrefix}⚠ Teste "${caso.nome}" não possui ações configuradas`,
+        }),
+      } as MessageEvent);
+      return { sucesso: false, resultado: null };
+    }
+
+    // Buscar configuração ativa do Selenium
+    const configuracao =
+      await this.configuracaoSeleniumService.findAtivaPorProjeto(projeto);
+
+    // Criar registro de execução
+    const execucaoBo = await this.create({
+      nome: executionName,
+      dataExecucao: new Date(),
+      metodo: EXECUTION_TYPES.AUTOMATED,
+      resultado: RESULT_TYPES.PENDING,
+      casoDeTesteId: caso.id,
+    });
+
+    // Executar o teste
+    const resultado = await this.executorSeleniumService.executarTeste(
+      acoes,
+      configuracao,
+      (log) =>
+        observer.next({
+          data: JSON.stringify({
+            type: 'log',
+            message: `${logPrefix}${log}`,
+          }),
+        } as MessageEvent),
+      (screenshot) =>
+        observer.next({
+          data: JSON.stringify({ type: 'image', src: screenshot }),
+        } as MessageEvent),
+    );
+
+    // Atualizar status da execução
+    await this.changeStatus(execucaoBo.id, {
+      resultado: resultado.sucesso
+        ? RESULT_TYPES.SUCCESS
+        : RESULT_TYPES.FAILURE,
+      resposta: resultado.mensagem,
+      observacao: resultado.logs.join('\n'),
+    });
+
+    return { sucesso: resultado.sucesso, resultado };
+  }
+
   streamExecution(
     casoDeTesteId: number,
     projeto: Projeto,
@@ -234,6 +305,19 @@ export class ExecucaoDeTesteService {
               message: 'Iniciando execução...',
             }),
           } as MessageEvent);
+
+          // Get the test case
+          const caso = await this.casoDeTesteService.findOne(casoDeTesteId);
+          if (!caso) {
+            observer.next({
+              data: JSON.stringify({
+                type: 'error',
+                message: 'Caso de teste não encontrado',
+              }),
+            } as MessageEvent);
+            observer.complete();
+            return;
+          }
 
           // Buscar as ações do caso de teste
           const acoes =
@@ -267,52 +351,20 @@ export class ExecucaoDeTesteService {
             }),
           } as MessageEvent);
 
-          // Criar registro de execução
-          const execucaoBo = await this.create({
-            nome: `Execução Automatizada`,
-            dataExecucao: new Date(),
-            metodo: EXECUTION_TYPES.AUTOMATED,
-            resultado: RESULT_TYPES.PENDING,
-            casoDeTesteId: casoDeTesteId,
-          });
-
-          observer.next({
-            data: JSON.stringify({
-              type: 'log',
-              message: `Execução #${execucaoBo.id} criada`,
-            }),
-          } as MessageEvent);
-
-          // Executar o teste com Selenium, emitindo logs/screenshots em tempo real
-          const resultado = await this.executorSeleniumService.executarTeste(
-            acoes,
-            configuracao,
-            (log) =>
-              observer.next({
-                data: JSON.stringify({ type: 'log', message: log }),
-              } as MessageEvent),
-            (screenshot) =>
-              observer.next({
-                data: JSON.stringify({ type: 'image', src: screenshot }),
-              } as MessageEvent),
+          // Execute test using helper
+          const { sucesso, resultado } = await this.executeSingleTestCase(
+            caso,
+            projeto,
+            observer,
+            'Execução Automatizada',
           );
-
-          // Atualizar status da execução
-          await this.changeStatus(execucaoBo.id, {
-            resultado: resultado.sucesso
-              ? RESULT_TYPES.SUCCESS
-              : RESULT_TYPES.FAILURE,
-            resposta: resultado.mensagem,
-            observacao: resultado.logs.join('\n'),
-          });
 
           observer.next({
             data: JSON.stringify({
               type: 'complete',
-              execucaoId: execucaoBo.id,
-              sucesso: resultado.sucesso,
-              mensagem: resultado.mensagem,
-              screenshots: resultado.screenshots,
+              sucesso,
+              mensagem: resultado?.mensagem || 'Teste sem ações',
+              screenshots: resultado?.screenshots || [],
             }),
           } as MessageEvent);
 
@@ -376,64 +428,20 @@ export class ExecucaoDeTesteService {
             } as MessageEvent);
 
             try {
-              // Buscar as ações do caso de teste
-              const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(
-                caso.id,
+              const { sucesso, resultado } = await this.executeSingleTestCase(
+                caso,
+                projeto,
+                observer,
+                'Execução Automatizada - Lote',
+                '  ',
               );
 
-              if (!acoes || acoes.length === 0) {
-                observer.next({
-                  data: JSON.stringify({
-                    type: 'log',
-                    message: `⚠ Teste "${caso.nome}" não possui ações configuradas`,
-                  }),
-                } as MessageEvent);
+              if (!resultado) {
+                // Test had no actions, already logged by helper
                 continue;
               }
 
-              // Buscar configuração ativa do Selenium
-              const configuracao =
-                await this.configuracaoSeleniumService.findAtivaPorProjeto(
-                  projeto,
-                );
-
-              // Criar registro de execução
-              const execucaoBo = await this.create({
-                nome: `Execução Automatizada - Lote`,
-                dataExecucao: new Date(),
-                metodo: EXECUTION_TYPES.AUTOMATED,
-                resultado: RESULT_TYPES.PENDING,
-                casoDeTesteId: caso.id,
-              });
-
-              // Executar o teste
-              const resultado =
-                await this.executorSeleniumService.executarTeste(
-                  acoes,
-                  configuracao,
-                  (log) =>
-                    observer.next({
-                      data: JSON.stringify({
-                        type: 'log',
-                        message: `  ${log}`,
-                      }),
-                    } as MessageEvent),
-                  (screenshot) =>
-                    observer.next({
-                      data: JSON.stringify({ type: 'image', src: screenshot }),
-                    } as MessageEvent),
-                );
-
-              // Atualizar status da execução
-              await this.changeStatus(execucaoBo.id, {
-                resultado: resultado.sucesso
-                  ? RESULT_TYPES.SUCCESS
-                  : RESULT_TYPES.FAILURE,
-                resposta: resultado.mensagem,
-                observacao: resultado.logs.join('\n'),
-              });
-
-              if (resultado.sucesso) {
+              if (sucesso) {
                 sucessos++;
                 observer.next({
                   data: JSON.stringify({
@@ -554,64 +562,20 @@ export class ExecucaoDeTesteService {
             } as MessageEvent);
 
             try {
-              // Buscar as ações do caso de teste
-              const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(
-                caso.id,
+              const { sucesso, resultado } = await this.executeSingleTestCase(
+                caso,
+                projeto,
+                observer,
+                'Execução Automatizada - Lote Suite',
+                '  ',
               );
 
-              if (!acoes || acoes.length === 0) {
-                observer.next({
-                  data: JSON.stringify({
-                    type: 'log',
-                    message: `⚠ Teste "${caso.nome}" não possui ações configuradas`,
-                  }),
-                } as MessageEvent);
+              if (!resultado) {
+                // Test had no actions, already logged by helper
                 continue;
               }
 
-              // Buscar configuração ativa do Selenium
-              const configuracao =
-                await this.configuracaoSeleniumService.findAtivaPorProjeto(
-                  projeto,
-                );
-
-              // Criar registro de execução
-              const execucaoBo = await this.create({
-                nome: `Execução Automatizada - Lote Suite`,
-                dataExecucao: new Date(),
-                metodo: EXECUTION_TYPES.AUTOMATED,
-                resultado: RESULT_TYPES.PENDING,
-                casoDeTesteId: caso.id,
-              });
-
-              // Executar o teste
-              const resultado =
-                await this.executorSeleniumService.executarTeste(
-                  acoes,
-                  configuracao,
-                  (log) =>
-                    observer.next({
-                      data: JSON.stringify({
-                        type: 'log',
-                        message: `  ${log}`,
-                      }),
-                    } as MessageEvent),
-                  (screenshot) =>
-                    observer.next({
-                      data: JSON.stringify({ type: 'image', src: screenshot }),
-                    } as MessageEvent),
-                );
-
-              // Atualizar status da execução
-              await this.changeStatus(execucaoBo.id, {
-                resultado: resultado.sucesso
-                  ? RESULT_TYPES.SUCCESS
-                  : RESULT_TYPES.FAILURE,
-                resposta: resultado.mensagem,
-                observacao: resultado.logs.join('\n'),
-              });
-
-              if (resultado.sucesso) {
+              if (sucesso) {
                 sucessos++;
                 observer.next({
                   data: JSON.stringify({

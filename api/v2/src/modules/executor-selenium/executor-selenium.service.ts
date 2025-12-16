@@ -48,16 +48,22 @@ export class ExecutorSeleniumService {
     const parts = value.split("'");
     const concatParts: string[] = [];
     
-    parts.forEach((part, index) => {
-      // Add the text part if not empty
-      if (part) {
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      // Add the text part (even if empty, as it may be needed for proper spacing)
+      if (part.length > 0) {
         concatParts.push(`'${part}'`);
       }
       // Add the single quote that was removed by split (except after the last part)
-      if (index < parts.length - 1) {
+      if (i < parts.length - 1) {
         concatParts.push(`"'"`);
       }
-    });
+    }
+    
+    // Ensure we always have at least one part
+    if (concatParts.length === 0) {
+      return "''";
+    }
     
     return `concat(${concatParts.join(',')})`;
   }
