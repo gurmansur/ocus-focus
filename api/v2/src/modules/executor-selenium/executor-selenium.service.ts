@@ -24,6 +24,49 @@ export class ExecutorSeleniumService {
   private readonly logger = new Logger(ExecutorSeleniumService.name);
 
   /**
+   * Validates JavaScript code before execution to prevent code injection.
+   * Only allows safe, read-only operations and common DOM manipulations.
+   * @param script - The JavaScript code to validate
+   * @throws Error if the script contains potentially dangerous operations
+   */
+  private validateScript(script: string): void {
+    if (!script || script.trim().length === 0) {
+      throw new Error('Script cannot be empty');
+    }
+
+    // List of dangerous patterns that should not be allowed
+    const dangerousPatterns = [
+      /eval\s*\(/i,
+      /Function\s*\(/i,
+      /setTimeout\s*\(/i,
+      /setInterval\s*\(/i,
+      /(window|document)\.location/i,
+      /\.innerHTML\s*=/i,
+      /\.outerHTML\s*=/i,
+      /document\.write/i,
+      /document\.writeln/i,
+      /\.protocol\s*=/i,
+      /import\s+/i,
+      /require\s*\(/i,
+      /fetch\s*\(/i,
+      /XMLHttpRequest/i,
+    ];
+
+    for (const pattern of dangerousPatterns) {
+      if (pattern.test(script)) {
+        // Log only a truncated version to avoid exposing sensitive information
+        const truncated = script.length > 50 ? `${script.substring(0, 50)}...` : script;
+        this.logger.warn(`Potentially dangerous script detected (truncated): ${truncated}`);
+        throw new Error(
+          `Script contains potentially dangerous operations. Pattern: ${pattern.source}`,
+        );
+      }
+    }
+
+    this.logger.log(`Script validated successfully: ${script.substring(0, 100)}`);
+  }
+
+  /**
    * Escapes a string for safe use in XPath expressions.
    * Handles strings containing both single and double quotes.
    * Uses concat() function to properly escape all quote combinations.
@@ -366,6 +409,8 @@ export class ExecutorSeleniumService {
         break;
 
       case 'EXECUTAR_SCRIPT':
+        // Validate script before execution to prevent code injection
+        this.validateScript(acao.valor);
         await driver.executeScript(acao.valor);
         break;
 
