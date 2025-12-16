@@ -310,10 +310,6 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
     const previousIndex = event.previousIndex;
     const currentIndex = event.currentIndex;
 
-    console.log(
-      `Dropped: previousIndex=${previousIndex}, currentIndex=${currentIndex}`
-    );
-
     // If position didn't change, nothing to do
     if (previousIndex === currentIndex) {
       this.draggingNodeId = null;
@@ -327,27 +323,20 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
     const startIdx = Math.min(previousIndex, currentIndex);
     const endIdx = Math.max(previousIndex, currentIndex);
 
-    console.log(`Updating items from index ${startIdx} to ${endIdx}`);
-
     // Update ordem for all affected items and send PATCH requests
     for (let i = startIdx; i <= endIdx; i++) {
       const node = this.nodes[i];
       const newOrdem = i + 1;
 
-      console.log(`Node ${node.id}: ordem ${node.ordem} -> ${newOrdem}`);
-
       node.ordem = newOrdem;
 
       // Send PATCH request for saved nodes
       if (!node.id.startsWith('new-') && this.casoDeTesteId) {
-        console.log(`Sending PATCH for node ${node.id} with ordem ${newOrdem}`);
         this.acaoService
           .update(parseInt(node.id), { ordem: newOrdem })
           .subscribe({
-            next: () =>
-              console.log(`✓ Node ${node.id} updated to ordem ${newOrdem}`),
             error: (err) =>
-              console.error(`✗ Error updating node ${node.id}:`, err),
+              console.error(`Error updating node ${node.id}:`, err),
           });
       }
     }
@@ -357,10 +346,9 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
 
   onDragStarted(node: NodeDeTeste) {
     this.draggingNodeId = node.id;
-    console.log('Drag started for node:', node.id);
   }
 
   onDragEnded() {
-    console.log('Drag ended');
+    // Drag ended
   }
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Observable } from 'rxjs';
 import { In, Repository } from 'typeorm';
 import { AcaoDeTesteService } from '../acao-de-teste/acao-de-teste.service';
+import { CasoDeTesteDto } from '../caso-de-teste/dto/caso-de-teste.dto';
 import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
 import { ConfiguracaoSeleniumService } from '../configuracao-selenium/configuracao-selenium.service';
 import { ExecutorSeleniumService } from '../executor-selenium/executor-selenium.service';
@@ -660,9 +661,9 @@ export class ExecucaoDeTesteService {
   }
 
   private async getCasosFromSuite(
-    suite: any,
+    suite: SuiteDeTesteDto,
     projeto: Projeto,
-  ): Promise<any[]> {
+  ): Promise<CasoDeTesteDto[]> {
     const casos = [...suite.casosDeTeste];
 
     // Recursivamente buscar casos de suites filhas
