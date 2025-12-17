@@ -129,19 +129,29 @@ export class PainelPrioreasyComponent {
   confirmarPriorizacao() {
     this.stakeholderService.verifyParticipation(this.projetoId).subscribe({
       next: () => {
-        this.requisitoService.findAllByProjeto(this.projetoId).subscribe((todosRequisitos) => {
-          todosRequisitos.forEach((requisito: any) => {
-            this.priorizacaoService.getRequirementFinalClassification(requisito.id || 0).subscribe((response) => {
-              const classificacaoFinal = response[0].PRS_CLASSIFICACAO_REQUISITO;
+        this.requisitoService
+          .findAllByProjeto(this.projetoId)
+          .subscribe((todosRequisitos) => {
+            todosRequisitos.forEach((requisito: any) => {
+              this.priorizacaoService
+                .getRequirementFinalClassification(requisito.id || 0)
+                .subscribe((response) => {
+                  const classificacaoFinal =
+                    response[0].PRS_CLASSIFICACAO_REQUISITO;
 
-              this.priorizacaoService.insertResultadoClassificacao(requisito.id || 0, classificacaoFinal).subscribe(() => {
-                this.executarBusca();
-                this.showModalConfirmacao = false;
-              });
+                  this.priorizacaoService
+                    .insertResultadoClassificacao(
+                      requisito.id || 0,
+                      classificacaoFinal
+                    )
+                    .subscribe(() => {
+                      this.executarBusca();
+                      this.showModalConfirmacao = false;
+                    });
+                });
             });
-        });
+          });
       },
-
       error: (err) => {
         this.showModalConfirmacao = false;
         this.showModalMensagem = true;
