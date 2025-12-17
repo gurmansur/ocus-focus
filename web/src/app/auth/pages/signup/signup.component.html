@@ -55,6 +55,7 @@
           <div *ngIf="signupFormGroup.get('email')?.errors?.['required']">Campo obrigatório.</div>
           <div *ngIf="signupFormGroup.get('email')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
           <div *ngIf="signupFormGroup.get('email')?.errors?.['maxlength']">Máximo de 255 caracteres.</div>
+          <div *ngIf="signupFormGroup.get('email')?.errors?.['email']">Formato inválido.</div>
         </div>
       </div>
       <div class="relative mb-4 w-full">
@@ -125,6 +126,7 @@
             <div *ngIf="signupFormGroup.get('confirmarSenha')?.errors?.['required']">Campo obrigatório.</div>
             <div *ngIf="signupFormGroup.get('confirmarSenha')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
             <div *ngIf="signupFormGroup.get('confirmarSenha')?.errors?.['maxlength']">Máximo de 30 caracteres.</div>
+            <div *ngIf="signupFormGroup.get('confirmarSenha')?.errors?.['passwordMismatch']">As senhas não coincidem.</div>
           </div>
         </div>
       </div>

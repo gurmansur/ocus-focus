@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Cenarios } from '../../models/cenarios';
-import { CenarioService } from '../../services/cenario.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Cenarios } from '../../models/cenarios';
 import { Projeto } from '../../models/projeto';
+import { CenarioService } from '../../services/cenario.service';
 import { ProjetoService } from '../../services/projeto.service';
 
 @Component({
@@ -92,8 +92,6 @@ export class InserirCenariosComponent {
       return;
     } else {
       this.cenario = this.createCenario();
-      console.log(this.cenario);
-
       this.cenarioService.create(this.cenario, this.casoId).subscribe({
         next: () => {
           this.router.navigate(['dashboard/projeto/', this.projetoId, 'requisitos', this.requisitoId, 'caso-de-uso', this.casoId, 'cenarios']);

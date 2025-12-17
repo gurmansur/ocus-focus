@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Projeto } from '../../models/projeto';
-import { ProjetoService } from '../../services/projeto.service';
-import { EstimativaService } from '../../services/estimativa.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Estimativa } from '../../models/estimativa';
+import { Projeto } from '../../models/projeto';
+import { EstimativaService } from '../../services/estimativa.service';
+import { ProjetoService } from '../../services/projeto.service';
 
 @Component({
   selector: 'app-estimativa',
@@ -43,14 +43,14 @@ export class EstimativaComponent {
   ];
 
   camposEntidade: string[] = [
-    'DataEstimativa',
-    'Efactor',
-    'Tfactor',
-    'PesoCaso',
-    'PesoAtor',
-    'PesoPontos',
-    'ResPontos',
-    'ResHoras'
+    'dataEstimativa',
+    'eFactor',
+    'tFactor',
+    'pesoCasosUso',
+    'pesoAtores',
+    'pesoPontosCasosUso',
+    'resultadoPontosCasosUso',
+    'resultadoHoras'
   ];
 
   // formulario de busca

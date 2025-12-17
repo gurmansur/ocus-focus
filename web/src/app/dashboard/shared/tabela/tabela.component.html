@@ -64,7 +64,7 @@
           </svg>
         </button>
         <button
-          *ngIf="hasView"
+          *ngIf="hasView && item.status !== 'CANCELADO'"
           (click)="onView(item)"
           class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
         >
@@ -88,6 +88,7 @@
             />
           </svg>
         </button>
+        <span *ngIf="item.status === 'CANCELADO'">N/A</span>
         <button
           *ngIf="hasEdit && (item.admin === undefined || item.admin === 1)"
           (click)="onEdit(item)"

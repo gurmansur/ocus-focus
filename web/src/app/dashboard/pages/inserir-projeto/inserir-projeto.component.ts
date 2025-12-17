@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ProjetoService } from '../../services/projeto.service';
-import { Projeto } from '../../models/projeto';
 import { Router } from '@angular/router';
+import { Projeto } from '../../models/projeto';
+import { ProjetoService } from '../../services/projeto.service';
 
 @Component({
   selector: 'app-inserir-projeto',
@@ -19,6 +19,8 @@ export class InserirProjetoComponent {
     private router: Router,
     private formBuilder: FormBuilder
   ) {}
+
+  dataHoje: string = new Date().toISOString().split('T')[0];
 
   ngOnInit(): void {
     this.projetoFormGroup = this.formBuilder.group({

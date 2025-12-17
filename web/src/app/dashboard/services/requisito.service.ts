@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PriorizacaoRequisito } from '../models/priorizacaoRequisito';
 import { Requisito } from '../models/requisito';
 import { ResultadoRequisito } from '../models/resultadoRequisito';
-import { PriorizacaoRequisito } from '../models/priorizacaoRequisito';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +52,17 @@ export class RequisitoService {
   getById(idRequisito: number): Observable<Requisito> {
     return this.httpClient.get<Requisito>(
       `${this.servicesRootUrl}/requisitos/findById?id=${idRequisito}`,
+      {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      }
+    );
+  }
+
+  findAllByProjeto(idProjeto: number): Observable<Requisito[]>{
+    return this.httpClient.get<Requisito[]>(
+      `${this.servicesRootUrl}/requisitos/all?projeto=${idProjeto}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),

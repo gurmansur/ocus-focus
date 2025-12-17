@@ -40,13 +40,15 @@ export class CenariosController {
   }
 
   @Post('new')
-  create(@Body() createCenarioDto: CreateCenarioDto) {
-    return this.cenariosService.create(createCenarioDto);
+  create(@Body() createCenarioDto: CreateCenarioDto, 
+  @Query('caso') casoId: string
+  ) {
+    return this.cenariosService.create(createCenarioDto, +casoId);
   }
 
   @Patch('update')
   update(
-    @Query('id') id: string,
+    @Query('cenario') id: string,
     @Query('caso') casoId: string,
     @Body() updateCenarioDto: UpdateCenarioDto,
   ) {
@@ -54,7 +56,7 @@ export class CenariosController {
   }
 
   @Delete('delete')
-  remove(@Query('id') id: string) {
+  remove(@Query('cenario') id: string) {
     return this.cenariosService.remove(+id);
   }
 }

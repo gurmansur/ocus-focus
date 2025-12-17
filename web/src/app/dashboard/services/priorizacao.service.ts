@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@angular/core';
-import { PriorizacaoRequest } from '../models/priorizacaoRequest';
 import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PriorizacaoRequest } from '../models/priorizacaoRequest';
 
 @Injectable({
   providedIn: 'root'

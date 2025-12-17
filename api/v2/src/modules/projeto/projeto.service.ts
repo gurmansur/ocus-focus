@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { ColaboradorProjetoService } from '../colaborador-projeto/colaborador-projeto.service';
@@ -74,6 +74,7 @@ export class ProjetoService {
           nome: Like(`%${nome}%`),
           colaboradores: { colaborador: { id: colaboradorId } },
         },
+        order: { status: 'ASC' },
         relations: ['colaboradores', 'colaboradores.colaborador'],
         loadEagerRelations: true,
         take: take,

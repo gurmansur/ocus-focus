@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Projeto } from '../../models/projeto';
 import { Stakeholder } from '../../models/stakeholder';
 import { ProjetoService } from '../../services/projeto.service';
@@ -29,11 +29,12 @@ export class StakeholdersProjetoComponent {
   stakeholders: Stakeholder[] = [];
 
   // tabela
-  colunasTabela: string[] = ['Nome', 'Cargo', 'Participação', 'Alerta'];
+  colunasTabela: string[] = ['Nome', 'Cargo', 'Chave','Participação', 'Alerta'];
 
   camposEntidade: string[] = [
     'nome',
     'cargo',
+    'chave',
     'participacaoRealizada',
     'alertaEmitido',
   ];

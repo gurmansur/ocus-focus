@@ -22,7 +22,7 @@ export class ResultadoRequisitoService {
       | 'REVERSO',
   ) {
     return this.resultadoRequisitoRepository.save({
-      requisito: { id: requisitoId },
+      requisitoFuncional: { id: requisitoId },
       resultadoFinal,
     });
   }

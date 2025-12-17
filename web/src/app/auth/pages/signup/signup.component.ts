@@ -23,6 +23,17 @@ export class SignupComponent {
     private formBuilder: FormBuilder
   ) {}
 
+  passwordsMatchValidator(formGroup: FormGroup){
+    const senha = formGroup.get('senha')?.value;
+    const confirmarSenha = formGroup.get('confirmarSenha')?.value;
+
+    if (senha !== confirmarSenha){
+      formGroup.get('confirmarSenha')?.setErrors({ passwordMismatch: true });
+    } else {
+      formGroup.get('confirmarSenha')?.setErrors(null);
+    }
+  }
+
   ngOnInit(): void {
     this.signupFormGroup = this.formBuilder.group({
       nome: new FormControl('', [
@@ -35,6 +46,7 @@ export class SignupComponent {
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(255),
+        Validators.email
       ]),
 
       cargo: new FormControl('', [Validators.required]),
@@ -56,7 +68,7 @@ export class SignupComponent {
         Validators.minLength(5),
         Validators.maxLength(100),
       ]),
-    });
+    }, {validators: this.passwordsMatchValidator.bind(this)});
   }
 
   get nome() {

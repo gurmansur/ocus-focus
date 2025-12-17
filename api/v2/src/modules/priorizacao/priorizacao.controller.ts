@@ -32,7 +32,7 @@ export class PriorizacaoController {
   @Post('result')
   createResultado(
     @Query('requisito') requisitoId: number,
-    @Query('resultado')
+    @Query('resultadoFinal')
     resultadoFinal:
       | 'DEVE SER FEITO'
       | 'PERFORMANCE'

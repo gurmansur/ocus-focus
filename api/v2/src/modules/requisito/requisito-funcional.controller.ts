@@ -50,6 +50,11 @@ export class RequisitoController {
     return this.requisitoService.getById(id);
   }
 
+  @Get('all')
+  findAll(@Query('projeto') projetoId: number){
+    return this.requisitoService.findAll(projetoId);
+  }
+
   @Post('/new')
   create(
     @Body() createRequisitoDto: CreateRequisitoDto,
