@@ -83,7 +83,6 @@ export class EstimativaComponent {
   private processarResultado() {
     return (data: any) => {
       this.estimativa = data.items;
-      console.log(this.estimativa);
       this.paginaAtual = data.page.number;
       this.tamanhoPagina = data.page.size;
       this.quantidadeElementos = data.page.totalElements;
