@@ -8,10 +8,9 @@ import { Projeto } from '../../models/projeto';
 @Component({
   selector: 'app-fatores-ambientais',
   templateUrl: './fatores-ambientais.component.html',
-  styleUrls: ['./fatores-ambientais.component.css']
+  styleUrls: ['./fatores-ambientais.component.css'],
 })
 export class FatoresAmbientaisComponent {
-
   userId!: number;
   projetoId!: number;
   projeto!: Projeto;
@@ -20,31 +19,22 @@ export class FatoresAmbientaisComponent {
     private projetoService: ProjetoService,
     private fatAmbService: FatAmbProService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
   }
 
-
   // datasource
-  fat: fatAmbPro  [] = [];
+  fat: fatAmbPro[] = [];
 
   // tabela
-  colunasTabela: string[] = [
-    'Descrição',
-    'Peso',
-    'Valor'
-  ];
+  colunasTabela: string[] = ['Descrição', 'Peso', 'Valor'];
 
-  camposEntidade: string[] = [
-    'descricao',
-    'peso',
-    'valor'
-  ];
+  camposEntidade: string[] = ['descricao', 'peso', 'valor'];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -55,10 +45,11 @@ export class FatoresAmbientaisComponent {
   // diálogo de confirmação
   showModal: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente excluir este Fator Ambiente?";
-  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do Fator Ambiente em questão serão excluídos do sistema.";
+  tituloDialogo: string = 'Deseja realmente excluir este Fator Ambiente?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. Todos os dados do Fator Ambiente em questão serão excluídos do sistema.';
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
@@ -69,11 +60,10 @@ export class FatoresAmbientaisComponent {
     });
   }
 
-
   private executarBusca(): void {
-
-    this.fatAmbService.list(this.projetoId, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
-
+    this.fatAmbService
+      .list(this.projetoId, this.paginaAtual, this.tamanhoPagina)
+      .subscribe(this.processarResultado());
   }
 
   private processarResultado() {
@@ -86,12 +76,16 @@ export class FatoresAmbientaisComponent {
     };
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
-  openNewFator(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'inserir-fator-ambiental']);
+  openNewFator() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'inserir-fator-ambiental',
+    ]);
   }
 
   excluirItem(item: any) {
@@ -100,7 +94,12 @@ export class FatoresAmbientaisComponent {
   }
 
   editarItem(item: any) {
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'editar-fator-ambiental', item.id]);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'editar-fator-ambiental',
+      item.id,
+    ]);
   }
 
   cancelarExclusao() {
@@ -127,5 +126,4 @@ export class FatoresAmbientaisComponent {
       this.executarBusca();
     }
   }
-
 }

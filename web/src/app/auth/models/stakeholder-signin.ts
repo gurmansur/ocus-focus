@@ -1,6 +1,6 @@
 export class StakeholderSignin {
   constructor(
     public chave: string,
-    public senha: string
-  ){}
+    public senha: string,
+  ) {}
 }

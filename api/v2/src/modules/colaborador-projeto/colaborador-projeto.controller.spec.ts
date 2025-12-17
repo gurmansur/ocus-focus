@@ -30,7 +30,9 @@ describe('ColaboradorProjetoController', () => {
       ],
     }).compile();
 
-    controller = module.get<ColaboradorProjetoController>(ColaboradorProjetoController);
+    controller = module.get<ColaboradorProjetoController>(
+      ColaboradorProjetoController,
+    );
   });
 
   it('should be defined', () => {

@@ -1,17 +1,16 @@
 import { CanActivateFn, Router } from '@angular/router';
-import {inject} from '@angular/core';
+import { inject } from '@angular/core';
 
 export const colaboradorGuard: CanActivateFn = () => {
   const role = localStorage.getItem('usu_role');
 
   const router = inject(Router);
 
-  if(role === 'colaborador'){
+  if (role === 'colaborador') {
     return true;
   }
 
   return router.parseUrl('/dashboard/painel-stakeholder');
-
 };
 
 export const stakeholderGuard: CanActivateFn = () => {
@@ -19,10 +18,9 @@ export const stakeholderGuard: CanActivateFn = () => {
 
   const router = inject(Router);
 
-  if(role === 'stakeholder'){
+  if (role === 'stakeholder') {
     return true;
   }
 
   return router.parseUrl('/dashboard/projetos');
-
 };

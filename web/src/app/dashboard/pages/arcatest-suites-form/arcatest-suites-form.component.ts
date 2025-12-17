@@ -44,7 +44,7 @@ export class ArcatestSuitesFormComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private suiteDeTesteService: SuiteDeTesteService
+    private suiteDeTesteService: SuiteDeTesteService,
   ) {
     this.projectId = this.route.parent?.snapshot.params['id'];
     this.suiteId = this.route.snapshot.params['idSuite'];
@@ -72,7 +72,7 @@ export class ArcatestSuitesFormComponent {
       nome: new FormControl(this.suite?.nome || '', Validators.required),
       descricao: new FormControl(
         this.suite?.descricao || '',
-        Validators.required
+        Validators.required,
       ),
       observacoes: new FormControl(this.suite?.observacoes || ''),
       suitePaiId: this.route.snapshot.queryParams['suiteId'] || '',
@@ -93,7 +93,7 @@ export class ArcatestSuitesFormComponent {
 
   deleteTestSuite() {
     this.mockupData = this.mockupData.filter(
-      (suite) => suite.id !== this.suiteToDelete?.id
+      (suite) => suite.id !== this.suiteToDelete?.id,
     );
     this.openModal = false;
   }

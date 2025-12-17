@@ -9,7 +9,7 @@ import { Colaborador } from '../models/colaborador';
 export class ColaboradorService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   findByNome(nome: string, projeto: number): Observable<any> {
@@ -19,7 +19,7 @@ export class ColaboradorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -30,7 +30,7 @@ export class ColaboradorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

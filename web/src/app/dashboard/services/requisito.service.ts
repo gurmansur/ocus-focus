@@ -11,7 +11,7 @@ import { ResultadoRequisito } from '../models/resultadoRequisito';
 export class RequisitoService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   create(requisito: Requisito, projeto: number): Observable<any> {
@@ -22,7 +22,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -34,7 +34,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -45,7 +45,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -56,25 +56,25 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
-  findAllByProjeto(idProjeto: number): Observable<Requisito[]>{
+  findAllByProjeto(idProjeto: number): Observable<Requisito[]> {
     return this.httpClient.get<Requisito[]>(
       `${this.servicesRootUrl}/requisitos/all?projeto=${idProjeto}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
   list(
     idProjeto: number,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseRequisitos> {
     return this.httpClient.get<GetResponseRequisitos>(
       `${this.servicesRootUrl}/requisitos?projeto=${idProjeto}&page=${page}&size=${pageSize}`,
@@ -82,7 +82,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -90,7 +90,7 @@ export class RequisitoService {
     idProjeto: number,
     nome: string,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseRequisitos> {
     return this.httpClient.get<GetResponseRequisitos>(
       `${this.servicesRootUrl}/requisitos/findByNome?projeto=${idProjeto}&nome=${nome}&page=${page}&size=${pageSize}`,
@@ -98,14 +98,14 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
   listResultado(
     idProjeto: number,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseResultados> {
     return this.httpClient.get<GetResponseResultados>(
       `${this.servicesRootUrl}/requisitos/resultados/list?projeto=${idProjeto}&page=${page}&size=${pageSize}`,
@@ -113,7 +113,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -121,7 +121,7 @@ export class RequisitoService {
     idProjeto: number,
     nome: string,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseResultados> {
     return this.httpClient.get<GetResponseResultados>(
       `${this.servicesRootUrl}/requisitos/resultados/findByNome?projeto=${idProjeto}&nome=${nome}&page=${page}&size=${pageSize}`,
@@ -129,7 +129,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -137,7 +137,7 @@ export class RequisitoService {
     idProjeto: number,
     idStakeholder: number,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponsePriorizacoes> {
     return this.httpClient.get<GetResponsePriorizacoes>(
       `${this.servicesRootUrl}/requisitos/priorizacao-stakeholders/list?projeto=${idProjeto}&stakeholder=${idStakeholder}&page=${page}&size=${pageSize}`,
@@ -145,7 +145,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -154,7 +154,7 @@ export class RequisitoService {
     idStakeholder: number,
     nome: string,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponsePriorizacoes> {
     return this.httpClient.get<GetResponsePriorizacoes>(
       `${this.servicesRootUrl}/requisitos/priorizacao-stakeholders/findByNome?projeto=${idProjeto}&stakeholder=${idStakeholder}&nome=${nome}&page=${page}&size=${pageSize}`,
@@ -162,7 +162,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -175,7 +175,7 @@ export class RequisitoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

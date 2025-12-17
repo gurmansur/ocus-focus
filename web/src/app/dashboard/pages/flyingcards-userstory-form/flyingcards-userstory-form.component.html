@@ -23,7 +23,11 @@
       </svg>
     </div>
     <h2 class="my-4 text-xl text-center">
-      @if (isEdit) { Editar } @else { Inserir }
+      @if (isEdit) {
+        Editar
+      } @else {
+        Inserir
+      }
       <span class="font-medium text-violet-700">User Story</span>
     </h2>
     <div class="mb-4 flex flex-wrap" style="gap: 1rem 0">
@@ -38,15 +42,17 @@
           formControlName="titulo"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        @if (userStoryFormGroup.get('titulo').invalid &&
-        userStoryFormGroup.get('titulo').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            userStoryFormGroup.get("titulo").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          userStoryFormGroup.get("titulo").invalid &&
+          userStoryFormGroup.get("titulo").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              userStoryFormGroup.get("titulo").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
 
@@ -77,15 +83,17 @@
             {{ usuario.nome }}
           </option>
         </select>
-        @if (userStoryFormGroup.get('responsavel').invalid &&
-        userStoryFormGroup.get('responsavel').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            userStoryFormGroup.get("responsavel").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          userStoryFormGroup.get("responsavel").invalid &&
+          userStoryFormGroup.get("responsavel").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              userStoryFormGroup.get("responsavel").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
 
@@ -100,15 +108,17 @@
           formControlName="estimativa_tempo"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-5 transition-colors duration-200 ease-in-out"
         />
-        @if (userStoryFormGroup.get('estimativa_tempo').invalid &&
-        userStoryFormGroup.get('estimativa_tempo').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            userStoryFormGroup.get("estimativa_tempo").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          userStoryFormGroup.get("estimativa_tempo").invalid &&
+          userStoryFormGroup.get("estimativa_tempo").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              userStoryFormGroup.get("estimativa_tempo").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
 
@@ -130,9 +140,10 @@
     </div>
     <div class="flex w-full justify-between">
       @if (isEdit) {
-      <app-button color="danger" (onClick)="deletarUserStory()">
-        Deletar </app-button
-      >}
+        <app-button color="danger" (onClick)="deletarUserStory()">
+          Deletar
+        </app-button>
+      }
 
       <div class="flex w-full justify-end gap-2">
         <app-button
@@ -145,7 +156,12 @@
 
         <app-button (onClick)="handleUserStory()">
           <app-plus-icon></app-plus-icon>
-          @if(isEdit) { Editar } @else { Adicionar } User Story
+          @if (isEdit) {
+            Editar
+          } @else {
+            Adicionar
+          }
+          User Story
         </app-button>
       </div>
     </div>

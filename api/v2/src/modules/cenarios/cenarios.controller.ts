@@ -40,8 +40,9 @@ export class CenariosController {
   }
 
   @Post('new')
-  create(@Body() createCenarioDto: CreateCenarioDto, 
-  @Query('caso') casoId: string
+  create(
+    @Body() createCenarioDto: CreateCenarioDto,
+    @Query('caso') casoId: string,
   ) {
     return this.cenariosService.create(createCenarioDto, +casoId);
   }

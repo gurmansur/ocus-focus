@@ -9,45 +9,45 @@ import { CasoDeTeste } from '../models/casoDeTeste';
 export class CasoDeTesteService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   create(casoDeTeste: CasoDeTeste): Observable<any> {
     return this.httpClient.post<CasoDeTeste>(
       `${this.servicesRootUrl}/caso-de-teste`,
-      casoDeTeste
+      casoDeTeste,
     );
   }
 
   update(id: number, casoDeTeste: CasoDeTeste): Observable<any> {
     return this.httpClient.patch<CasoDeTeste>(
       `${this.servicesRootUrl}/caso-de-teste/${id}`,
-      casoDeTeste
+      casoDeTeste,
     );
   }
 
   delete(idCasoDeTeste: number): Observable<any> {
     return this.httpClient.delete<CasoDeTeste>(
-      `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}`
+      `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}`,
     );
   }
 
   getById(idCasoDeTeste: number): Observable<CasoDeTeste> {
     return this.httpClient.get<CasoDeTeste>(
-      `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}`
+      `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}`,
     );
   }
 
   getAll(): Observable<CasoDeTeste[]> {
     return this.httpClient.get<CasoDeTeste[]>(
-      `${this.servicesRootUrl}/caso-de-teste`
+      `${this.servicesRootUrl}/caso-de-teste`,
     );
   }
 
   changeSuite(idCasoDeTeste: number, suiteId: number): Observable<any> {
     return this.httpClient.patch<CasoDeTeste>(
       `${this.servicesRootUrl}/caso-de-teste/${idCasoDeTeste}/change-suite`,
-      { suiteId }
+      { suiteId },
     );
   }
 }

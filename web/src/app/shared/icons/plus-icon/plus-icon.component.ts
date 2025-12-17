@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './plus-icon.component.html',
-  styleUrl: './plus-icon.component.css'
+  styleUrl: './plus-icon.component.css',
 })
-export class PlusIconComponent {
-
-}
+export class PlusIconComponent {}

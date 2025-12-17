@@ -1,30 +1,33 @@
 <section class="px-8 py-5">
-  <div *ngIf="projeto" class="flex justify-between items-center pb-3 border-b border-gray-400">
+  <div
+    *ngIf="projeto"
+    class="flex justify-between items-center pb-3 border-b border-gray-400"
+  >
     <div class="flex items-center">
       <div
         class="w-10 h-10 rounded-full bg-violet-200 flex items-center text-xl justify-center"
       >
-        {{projeto.nome[0]}}
+        {{ projeto.nome[0] }}
       </div>
-      <h3 class="text-xl ms-3 font-medium">{{projeto.nome}}</h3>
+      <h3 class="text-xl ms-3 font-medium">{{ projeto.nome }}</h3>
     </div>
     <div class="ms-auto">
       <button
         (click)="backToPrioreasy()"
         class="bg-violet-700 text-white p-2 rounded-md hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
       >
-      <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      class="w-5 h-5 me-2"
-    >
-      <path
-        fill-rule="evenodd"
-        d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H15a6.75 6.75 0 010 13.5h-3a.75.75 0 010-1.5h3a5.25 5.25 0 100-10.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z"
-        clip-rule="evenodd"
-      />
-      </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-5 h-5 me-2"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H15a6.75 6.75 0 010 13.5h-3a.75.75 0 010-1.5h3a5.25 5.25 0 100-10.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
         Retornar ao Início
       </button>
     </div>
@@ -64,10 +67,23 @@
           name="name"
           class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        <div *ngIf="stakeholderFormGroup.get('nome')?.invalid && (stakeholderFormGroup.get('nome')?.dirty || stakeholderFormGroup.get('nome')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="stakeholderFormGroup.get('nome')?.errors?.['required']">Campo obrigatório.</div>
-          <div *ngIf="stakeholderFormGroup.get('nome')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-          <div *ngIf="stakeholderFormGroup.get('nome')?.errors?.['maxlength']">Máximo de 100 caracteres.</div>
+        <div
+          *ngIf="
+            stakeholderFormGroup.get('nome')?.invalid &&
+            (stakeholderFormGroup.get('nome')?.dirty ||
+              stakeholderFormGroup.get('nome')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div *ngIf="stakeholderFormGroup.get('nome')?.errors?.['required']">
+            Campo obrigatório.
+          </div>
+          <div *ngIf="stakeholderFormGroup.get('nome')?.errors?.['minlength']">
+            Mínimo de 5 caracteres.
+          </div>
+          <div *ngIf="stakeholderFormGroup.get('nome')?.errors?.['maxlength']">
+            Máximo de 100 caracteres.
+          </div>
         </div>
       </div>
       <div class="relative mb-4 w-full">
@@ -81,17 +97,30 @@
           name="email"
           class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        <div *ngIf="stakeholderFormGroup.get('email')?.invalid && (stakeholderFormGroup.get('email')?.dirty || stakeholderFormGroup.get('email')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="stakeholderFormGroup.get('email')?.errors?.['required']">Campo obrigatório.</div>
-          <div *ngIf="stakeholderFormGroup.get('email')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-          <div *ngIf="stakeholderFormGroup.get('email')?.errors?.['maxlength']">Máximo de 255 caracteres.</div>
-          <div *ngIf="stakeholderFormGroup.get('email')?.errors?.['email']">Formato inválido.</div>
+        <div
+          *ngIf="
+            stakeholderFormGroup.get('email')?.invalid &&
+            (stakeholderFormGroup.get('email')?.dirty ||
+              stakeholderFormGroup.get('email')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div *ngIf="stakeholderFormGroup.get('email')?.errors?.['required']">
+            Campo obrigatório.
+          </div>
+          <div *ngIf="stakeholderFormGroup.get('email')?.errors?.['minlength']">
+            Mínimo de 5 caracteres.
+          </div>
+          <div *ngIf="stakeholderFormGroup.get('email')?.errors?.['maxlength']">
+            Máximo de 255 caracteres.
+          </div>
+          <div *ngIf="stakeholderFormGroup.get('email')?.errors?.['email']">
+            Formato inválido.
+          </div>
         </div>
       </div>
       <div class="relative mb-4 w-full">
-        <label for="role" class="leading-7 text-sm text-gray-600"
-          >Cargo</label
-        >
+        <label for="role" class="leading-7 text-sm text-gray-600">Cargo</label>
         <input
           formControlName="cargo"
           type="text"
@@ -99,10 +128,23 @@
           name="role"
           class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        <div *ngIf="stakeholderFormGroup.get('cargo')?.invalid && (stakeholderFormGroup.get('cargo')?.dirty || stakeholderFormGroup.get('cargo')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="stakeholderFormGroup.get('cargo')?.errors?.['required']">Campo obrigatório.</div>
-          <div *ngIf="stakeholderFormGroup.get('cargo')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-          <div *ngIf="stakeholderFormGroup.get('cargo')?.errors?.['maxlength']">Máximo de 50 caracteres.</div>
+        <div
+          *ngIf="
+            stakeholderFormGroup.get('cargo')?.invalid &&
+            (stakeholderFormGroup.get('cargo')?.dirty ||
+              stakeholderFormGroup.get('cargo')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div *ngIf="stakeholderFormGroup.get('cargo')?.errors?.['required']">
+            Campo obrigatório.
+          </div>
+          <div *ngIf="stakeholderFormGroup.get('cargo')?.errors?.['minlength']">
+            Mínimo de 5 caracteres.
+          </div>
+          <div *ngIf="stakeholderFormGroup.get('cargo')?.errors?.['maxlength']">
+            Máximo de 50 caracteres.
+          </div>
         </div>
       </div>
       <div class="flex gap-2 w-full">
@@ -117,10 +159,29 @@
             name="password"
             class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
-          <div *ngIf="stakeholderFormGroup.get('senha')?.invalid && (stakeholderFormGroup.get('senha')?.dirty || stakeholderFormGroup.get('senha')?.touched)" class="text-red-600 text-xs mt-1">
-            <div *ngIf="stakeholderFormGroup.get('senha')?.errors?.['required']">Campo obrigatório.</div>
-            <div *ngIf="stakeholderFormGroup.get('senha')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-            <div *ngIf="stakeholderFormGroup.get('senha')?.errors?.['maxlength']">Máximo de 30 caracteres.</div>
+          <div
+            *ngIf="
+              stakeholderFormGroup.get('senha')?.invalid &&
+              (stakeholderFormGroup.get('senha')?.dirty ||
+                stakeholderFormGroup.get('senha')?.touched)
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            <div
+              *ngIf="stakeholderFormGroup.get('senha')?.errors?.['required']"
+            >
+              Campo obrigatório.
+            </div>
+            <div
+              *ngIf="stakeholderFormGroup.get('senha')?.errors?.['minlength']"
+            >
+              Mínimo de 5 caracteres.
+            </div>
+            <div
+              *ngIf="stakeholderFormGroup.get('senha')?.errors?.['maxlength']"
+            >
+              Máximo de 30 caracteres.
+            </div>
           </div>
         </div>
         <div class="relative mb-4 w-full">
@@ -134,11 +195,48 @@
             name="confirm_password"
             class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
-          <div *ngIf="stakeholderFormGroup.get('confirmarSenha')?.invalid && (stakeholderFormGroup.get('confirmarSenha')?.dirty || stakeholderFormGroup.get('confirmarSenha')?.touched)" class="text-red-600 text-xs mt-1">
-            <div *ngIf="stakeholderFormGroup.get('confirmarSenha')?.errors?.['required']">Campo obrigatório.</div>
-            <div *ngIf="stakeholderFormGroup.get('confirmarSenha')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-            <div *ngIf="stakeholderFormGroup.get('confirmarSenha')?.errors?.['maxlength']">Máximo de 30 caracteres.</div>
-            <div *ngIf="stakeholderFormGroup.get('confirmarSenha')?.errors?.['passwordMismatch']">As senhas não coincidem.</div>
+          <div
+            *ngIf="
+              stakeholderFormGroup.get('confirmarSenha')?.invalid &&
+              (stakeholderFormGroup.get('confirmarSenha')?.dirty ||
+                stakeholderFormGroup.get('confirmarSenha')?.touched)
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            <div
+              *ngIf="
+                stakeholderFormGroup.get('confirmarSenha')?.errors?.['required']
+              "
+            >
+              Campo obrigatório.
+            </div>
+            <div
+              *ngIf="
+                stakeholderFormGroup.get('confirmarSenha')?.errors?.[
+                  'minlength'
+                ]
+              "
+            >
+              Mínimo de 5 caracteres.
+            </div>
+            <div
+              *ngIf="
+                stakeholderFormGroup.get('confirmarSenha')?.errors?.[
+                  'maxlength'
+                ]
+              "
+            >
+              Máximo de 30 caracteres.
+            </div>
+            <div
+              *ngIf="
+                stakeholderFormGroup.get('confirmarSenha')?.errors?.[
+                  'passwordMismatch'
+                ]
+              "
+            >
+              As senhas não coincidem.
+            </div>
           </div>
         </div>
       </div>

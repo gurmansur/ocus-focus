@@ -1,4 +1,10 @@
-import { IsEnum, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateCenarioDto {
   @IsString()

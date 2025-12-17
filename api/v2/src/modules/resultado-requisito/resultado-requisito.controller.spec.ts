@@ -30,7 +30,9 @@ describe('ResultadoRequisitoController', () => {
       ],
     }).compile();
 
-    controller = module.get<ResultadoRequisitoController>(ResultadoRequisitoController);
+    controller = module.get<ResultadoRequisitoController>(
+      ResultadoRequisitoController,
+    );
   });
 
   it('should be defined', () => {

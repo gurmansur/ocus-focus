@@ -11,7 +11,7 @@ import { UserStory } from '../models/userStory';
 export class KanbanService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   getBoardFromProject(idProjeto: string): Observable<Board> {
@@ -21,7 +21,7 @@ export class KanbanService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -32,21 +32,21 @@ export class KanbanService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
   createUserStory(userStory: UserStory) {
     return this.httpClient.post<UserStory>(
       `${this.servicesRootUrl}/user-story/new`,
-      userStory
+      userStory,
     );
   }
 
   updateUserStory(id: number, userStory: EditUserstory) {
     return this.httpClient.patch<EditUserstory>(
       `${this.servicesRootUrl}/user-story/${id}`,
-      userStory
+      userStory,
     );
   }
 
@@ -57,32 +57,32 @@ export class KanbanService {
         headers: {
           Authorization: 'Bearer: ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
   createSwimlane(swimlane: Swimlane): Observable<Swimlane> {
     return this.httpClient.post<Swimlane>(
       `${this.servicesRootUrl}/kanban/swimlane`,
-      swimlane
+      swimlane,
     );
   }
 
   findSwimlane(id: number) {
     return this.httpClient.get<IEditSwimlane>(
-      `${this.servicesRootUrl}/kanban/swimlane?id=${id}`
+      `${this.servicesRootUrl}/kanban/swimlane?id=${id}`,
     );
   }
 
   updateSwimlane(id: number, swimlane: IEditSwimlane) {
     return this.httpClient.patch<EditUserstory>(
       `${this.servicesRootUrl}/kanban/swimlane/${id}`,
-      swimlane
+      swimlane,
     );
   }
 
   updateUserStoriesInSwimlane(
-    swimlane: IUpdateUserStorySwimlane
+    swimlane: IUpdateUserStorySwimlane,
   ): Observable<any> {
     return this.httpClient.patch<IUpdateUserStorySwimlane>(
       `${this.servicesRootUrl}/kanban/user-story/update`,
@@ -91,7 +91,7 @@ export class KanbanService {
         headers: {
           Authorization: 'Bearer: ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -102,13 +102,13 @@ export class KanbanService {
         headers: {
           Authorization: 'Bearer: ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
   getKanbanId(projeto: number): Observable<number> {
     return this.httpClient.get<number>(
-      `${this.servicesRootUrl}/kanban/id?projeto=${projeto}`
+      `${this.servicesRootUrl}/kanban/id?projeto=${projeto}`,
     );
   }
 
@@ -119,7 +119,7 @@ export class KanbanService {
         headers: {
           Authorization: 'Bearer: ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

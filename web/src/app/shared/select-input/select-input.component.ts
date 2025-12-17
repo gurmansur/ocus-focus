@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './select-input.component.html',
-  styleUrl: './select-input.component.css'
+  styleUrl: './select-input.component.css',
 })
-export class SelectInputComponent {
-
-}
+export class SelectInputComponent {}

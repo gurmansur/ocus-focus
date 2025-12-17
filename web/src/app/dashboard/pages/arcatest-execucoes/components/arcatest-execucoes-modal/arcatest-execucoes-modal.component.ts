@@ -36,7 +36,7 @@ export class ArcatestExecucoesModalComponent {
       status: new FormControl(this.value?.resultado || '', Validators.required),
       observacoes: new FormControl(
         this.value?.observacao || '',
-        Validators.required
+        Validators.required,
       ),
     });
   }
@@ -53,7 +53,7 @@ export class ArcatestExecucoesModalComponent {
     const value = new ExecutarTeste(
       this.value.id,
       this.status.value,
-      this.observacoes.value
+      this.observacoes.value,
     );
     this.valueChange.emit(value);
   }

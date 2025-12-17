@@ -47,7 +47,7 @@ export class ArcatestExecucoesComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private execucaoDeTesteService: ExecucaoDeTesteService
+    private execucaoDeTesteService: ExecucaoDeTesteService,
   ) {
     this.casoId = this.route.snapshot.queryParams['casoId'];
 
@@ -86,7 +86,7 @@ export class ArcatestExecucoesComponent {
   filterTestCasesByCaso() {
     if (this.casoId !== undefined) {
       this.execucoes = this.execucoes.filter(
-        (execution) => execution.casoDeTeste.id === Number(this.casoId)
+        (execution) => execution.casoDeTeste.id === Number(this.casoId),
       );
     }
   }
@@ -116,7 +116,7 @@ export class ArcatestExecucoesComponent {
 
   openDeleteModal(id: number) {
     this.executionToDelete = this.execucoes.find(
-      (execution) => execution.id === id
+      (execution) => execution.id === id,
     );
     this.openDelete = true;
   }

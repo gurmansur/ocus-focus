@@ -107,7 +107,7 @@ export class ArcatestFileTreeComponent {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit() {
@@ -234,7 +234,7 @@ export class ArcatestFileTreeComponent {
                       ? this.selectedNode?.data.id
                       : undefined,
                 },
-              }
+              },
             );
           },
         },
@@ -340,7 +340,7 @@ export class ArcatestFileTreeComponent {
         this.suiteDeTesteService
           .changeSuite(
             event.dragNode?.data.id,
-            target.tagName === 'LI' ? null : event.dropNode?.data.id
+            target.tagName === 'LI' ? null : event.dropNode?.data.id,
           )
           .subscribe();
       } else if (event.dragNode?.type === 'case') {
@@ -348,7 +348,7 @@ export class ArcatestFileTreeComponent {
         this.casoDeTesteService
           .changeSuite(
             event.dragNode?.data.id,
-            target.tagName === 'LI' ? null : event.dropNode?.data.id
+            target.tagName === 'LI' ? null : event.dropNode?.data.id,
           )
           .subscribe();
       }

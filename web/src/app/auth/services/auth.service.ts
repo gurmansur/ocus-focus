@@ -11,7 +11,7 @@ import { StakeholderSignin } from '../models/stakeholder-signin';
 export class AuthService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   signinColaborador(colaboradorSignin: ColaboradorSignin): Observable<{
@@ -37,14 +37,14 @@ export class AuthService {
   signinStakeholder(stakeholderSignin: StakeholderSignin): Observable<any> {
     return this.httpClient.post<StakeholderSignin>(
       this.servicesRootUrl + '/signin-stakeholder',
-      stakeholderSignin
+      stakeholderSignin,
     );
   }
 
   signup(colaborador: Colaborador): Observable<any> {
     return this.httpClient.post<Colaborador>(
       this.servicesRootUrl + '/signup',
-      colaborador
+      colaborador,
     );
   }
 

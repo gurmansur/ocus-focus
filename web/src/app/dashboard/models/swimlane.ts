@@ -6,6 +6,6 @@ export class Swimlane {
     public vertical: number | boolean = 0,
     public cor: string = '',
     public userStories: UserStory[] = [],
-    public id?: number
+    public id?: number,
   ) {}
 }

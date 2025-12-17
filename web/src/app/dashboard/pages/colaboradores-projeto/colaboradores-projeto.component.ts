@@ -7,7 +7,7 @@ import { Projeto } from '../../models/projeto';
 @Component({
   selector: 'app-colaboradores-projeto',
   templateUrl: './colaboradores-projeto.component.html',
-  styleUrls: ['./colaboradores-projeto.component.css']
+  styleUrls: ['./colaboradores-projeto.component.css'],
 })
 export class ColaboradoresProjetoComponent {
   userId!: number;
@@ -17,7 +17,7 @@ export class ColaboradoresProjetoComponent {
   constructor(
     private projetoService: ProjetoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -27,20 +27,12 @@ export class ColaboradoresProjetoComponent {
   colaboradores: Colaborador[] = [];
 
   // tabela
-  colunasTabela: string[] = [
-    'Nome',
-    'Email',
-    'Cargo',
-  ];
+  colunasTabela: string[] = ['Nome', 'Email', 'Cargo'];
 
-  camposEntidade: string[] = [
-    'nome',
-    'email',
-    'cargo',
-  ];
+  camposEntidade: string[] = ['nome', 'email', 'cargo'];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -57,10 +49,11 @@ export class ColaboradoresProjetoComponent {
   // diálogo de confirmação
   showModal: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente remover o colaborador do projeto?";
-  mensagemDialogo: string = "Essa ação é irreversível. O colaborador perderá acesso total ao projeto.";
+  tituloDialogo: string = 'Deseja realmente remover o colaborador do projeto?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. O colaborador perderá acesso total ao projeto.';
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
@@ -77,23 +70,23 @@ export class ColaboradoresProjetoComponent {
   }
 
   private executarBusca(): void {
-    if(!this.filterValue){
+    if (!this.filterValue) {
       this.projetoService
-      .getColaboradoresByProjeto(
-        this.projetoId,
-        this.paginaAtual,
-        this.tamanhoPagina
-      )
-      .subscribe(this.processarResultado());
+        .getColaboradoresByProjeto(
+          this.projetoId,
+          this.paginaAtual,
+          this.tamanhoPagina,
+        )
+        .subscribe(this.processarResultado());
     } else {
       this.projetoService
-      .getColaboradoresByProjetoAndNome(
-        this.projetoId,
-        this.filterValue,
-        this.paginaAtual,
-        this.tamanhoPagina
-      )
-      .subscribe(this.processarResultado());
+        .getColaboradoresByProjetoAndNome(
+          this.projetoId,
+          this.filterValue,
+          this.paginaAtual,
+          this.tamanhoPagina,
+        )
+        .subscribe(this.processarResultado());
     }
   }
 
@@ -107,12 +100,16 @@ export class ColaboradoresProjetoComponent {
     };
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
-  openNewColaborador(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'inserir-colaborador']);
+  openNewColaborador() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'inserir-colaborador',
+    ]);
   }
 
   excluirItem(item: any) {
@@ -125,10 +122,12 @@ export class ColaboradoresProjetoComponent {
   }
 
   confirmarExclusao() {
-    this.projetoService.removeColaborador(this.projetoId, this.itemExclusao).subscribe(() => {
-      this.showModal = false;
-      this.executarBusca();
-    });
+    this.projetoService
+      .removeColaborador(this.projetoId, this.itemExclusao)
+      .subscribe(() => {
+        this.showModal = false;
+        this.executarBusca();
+      });
   }
 
   prevPage() {

@@ -16,7 +16,10 @@ export class SidebarComponent {
   userId!: number;
   user_role!: string;
 
-  constructor(private projetoService: ProjetoService, private router: Router) {
+  constructor(
+    private projetoService: ProjetoService,
+    private router: Router,
+  ) {
     this.user_role = String(localStorage.getItem('usu_role'));
     this.userId = Number(localStorage.getItem('usu_id'));
   }

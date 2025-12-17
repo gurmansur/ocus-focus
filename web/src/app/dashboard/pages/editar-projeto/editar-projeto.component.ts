@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ProjetoService } from '../../services/projeto.service';
 import { Projeto } from '../../models/projeto';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-editar-projeto',
   templateUrl: './editar-projeto.component.html',
-  styleUrls: ['./editar-projeto.component.css']
+  styleUrls: ['./editar-projeto.component.css'],
 })
 export class EditarProjetoComponent {
   projetoFormGroup!: FormGroup;
@@ -19,7 +24,7 @@ export class EditarProjetoComponent {
     private projetoService: ProjetoService,
     private router: Router,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = +this.route.snapshot.paramMap.get('id')!;
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -45,17 +50,11 @@ export class EditarProjetoComponent {
         Validators.maxLength(50),
       ]),
 
-      status: new FormControl('', [
-        Validators.required,
-      ]),
+      status: new FormControl('', [Validators.required]),
 
-      dataInicio: new FormControl('', [
-        Validators.required,
-      ]),
+      dataInicio: new FormControl('', [Validators.required]),
 
-      previsaoFim: new FormControl('', [
-        Validators.required,
-      ]),
+      previsaoFim: new FormControl('', [Validators.required]),
     });
 
     this.inicializarFormulario();
@@ -80,12 +79,24 @@ export class EditarProjetoComponent {
     });
   }
 
-  get nome() {  return this.projetoFormGroup.get('nome'); }
-  get descricao() {  return this.projetoFormGroup.get('descricao'); }
-  get empresa() {  return this.projetoFormGroup.get('empresa'); }
-  get status() {  return this.projetoFormGroup.get('status'); }
-  get dataInicio() {  return this.projetoFormGroup.get('dataInicio'); }
-  get previsaoFim() {  return this.projetoFormGroup.get('previsaoFim'); }
+  get nome() {
+    return this.projetoFormGroup.get('nome');
+  }
+  get descricao() {
+    return this.projetoFormGroup.get('descricao');
+  }
+  get empresa() {
+    return this.projetoFormGroup.get('empresa');
+  }
+  get status() {
+    return this.projetoFormGroup.get('status');
+  }
+  get dataInicio() {
+    return this.projetoFormGroup.get('dataInicio');
+  }
+  get previsaoFim() {
+    return this.projetoFormGroup.get('previsaoFim');
+  }
 
   createProjeto(): Projeto {
     return new Projeto(
@@ -96,7 +107,7 @@ export class EditarProjetoComponent {
       this.dataInicio!.value,
       this.previsaoFim!.value,
       true,
-      this.projetoId
+      this.projetoId,
     );
   }
 

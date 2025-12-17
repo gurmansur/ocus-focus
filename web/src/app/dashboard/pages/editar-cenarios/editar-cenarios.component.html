@@ -1,13 +1,15 @@
-
 <section class="px-8 py-5">
-  <div *ngIf="projeto" class="flex justify-between items-center pb-3 border-b border-gray-400">
+  <div
+    *ngIf="projeto"
+    class="flex justify-between items-center pb-3 border-b border-gray-400"
+  >
     <div class="flex items-center">
       <div
         class="w-10 h-10 rounded-full bg-violet-200 flex items-center text-xl justify-center"
       >
-        {{projeto.nome[0]}}
+        {{ projeto.nome[0] }}
       </div>
-      <h3 class="text-xl ms-3 font-medium">{{projeto.nome}}</h3>
+      <h3 class="text-xl ms-3 font-medium">{{ projeto.nome }}</h3>
     </div>
     <div class="ms-auto">
       <button
@@ -82,9 +84,7 @@
         </div>
       </div>
       <div class="relative mb-4 w-full">
-        <label for="tipo" class="leading-7 text-sm text-gray-600"
-          >Tipo</label
-        >
+        <label for="tipo" class="leading-7 text-sm text-gray-600">Tipo</label>
         <select
           formControlName="tipo"
           id="tipo"
@@ -96,7 +96,7 @@
         </select>
         <div
           *ngIf="
-             cenarioFormGroup.get('tipo')?.invalid &&
+            cenarioFormGroup.get('tipo')?.invalid &&
             (cenarioFormGroup.get('tipo')?.dirty ||
               cenarioFormGroup.get('tipo')?.touched)
           "

@@ -8,7 +8,7 @@ import { RequisitoService } from '../../services/requisito.service';
 @Component({
   selector: 'app-painel-stakeholder',
   templateUrl: './painel-stakeholder.component.html',
-  styleUrls: ['./painel-stakeholder.component.css']
+  styleUrls: ['./painel-stakeholder.component.css'],
 })
 export class PainelStakeholderComponent {
   userId!: number;
@@ -18,7 +18,7 @@ export class PainelStakeholderComponent {
     private projetoService: ProjetoService,
     private requisitoService: RequisitoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.userId = Number(localStorage.getItem('usu_id'));
   }
@@ -32,7 +32,7 @@ export class PainelStakeholderComponent {
     'Nome',
     'Resposta Positiva',
     'Resposta Negativa',
-    'Classificação Requisito'
+    'Classificação Requisito',
   ];
 
   camposEntidade: string[] = [
@@ -40,11 +40,11 @@ export class PainelStakeholderComponent {
     'nome',
     'respostaPositiva',
     'respostaNegativa',
-    'classificacaoRequisito'
+    'classificacaoRequisito',
   ];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -52,9 +52,8 @@ export class PainelStakeholderComponent {
   quantidadeElementos: number = 0;
   totalPaginas: number = 0;
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.userId);
-
   }
 
   buscarProjeto(id: number) {
@@ -70,10 +69,25 @@ export class PainelStakeholderComponent {
   }
 
   private executarBusca(id: number): void {
-    if(!this.filterValue){
-      this.requisitoService.listPriorizacaoStakeholder(id, this.userId, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+    if (!this.filterValue) {
+      this.requisitoService
+        .listPriorizacaoStakeholder(
+          id,
+          this.userId,
+          this.paginaAtual,
+          this.tamanhoPagina,
+        )
+        .subscribe(this.processarResultado());
     } else {
-      this.requisitoService.listPriorizacaoStakeholderByName(id, this.userId, this.filterValue, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+      this.requisitoService
+        .listPriorizacaoStakeholderByName(
+          id,
+          this.userId,
+          this.filterValue,
+          this.paginaAtual,
+          this.tamanhoPagina,
+        )
+        .subscribe(this.processarResultado());
     }
   }
 
@@ -87,8 +101,11 @@ export class PainelStakeholderComponent {
     };
   }
 
-  openPriorizacao(){
-    this.router.navigate(['/dashboard/priorizacao-stakeholder/', this.projeto.id!]);
+  openPriorizacao() {
+    this.router.navigate([
+      '/dashboard/priorizacao-stakeholder/',
+      this.projeto.id!,
+    ]);
   }
 
   prevPage() {

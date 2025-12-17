@@ -36,7 +36,7 @@ export class FlyingcardsSprintsComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private projectService: ProjetoService
+    private projectService: ProjetoService,
   ) {
     this.projectId = this.route.snapshot.params['id'];
   }
@@ -60,14 +60,14 @@ export class FlyingcardsSprintsComponent {
       moveItemInArray(
         event.container.data,
         event.previousIndex,
-        event.currentIndex
+        event.currentIndex,
       );
     } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex
+        event.currentIndex,
       );
     }
 

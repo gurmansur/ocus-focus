@@ -21,15 +21,17 @@
           <option value="3">3 semanas</option>
           <option value="4">4 semanas</option>
         </select>
-        @if (configureFormGroup.get('tempo').invalid &&
-        configureFormGroup.get('tempo').touched) {
-        <p class="text-red-500 text-xs font-semibold">
-          {{
-            configureFormGroup.get("tempo").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          configureFormGroup.get("tempo").invalid &&
+          configureFormGroup.get("tempo").touched
+        ) {
+          <p class="text-red-500 text-xs font-semibold">
+            {{
+              configureFormGroup.get("tempo").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
 
@@ -43,15 +45,17 @@
           type="text"
           class="bg-slate-200 p-2 rounded-sm w-1/4"
         />
-        @if (configureFormGroup.get('maximo').invalid &&
-        configureFormGroup.get('maximo').touched) {
-        <p class="text-red-500 text-xs font-semibold">
-          {{
-            configureFormGroup.get("maximo").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          configureFormGroup.get("maximo").invalid &&
+          configureFormGroup.get("maximo").touched
+        ) {
+          <p class="text-red-500 text-xs font-semibold">
+            {{
+              configureFormGroup.get("maximo").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
     </form>

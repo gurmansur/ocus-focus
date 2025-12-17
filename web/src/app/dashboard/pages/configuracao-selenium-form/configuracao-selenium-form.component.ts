@@ -53,7 +53,7 @@ export class ConfiguracaoSeleniumFormComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private configuracaoService: ConfiguracaoSeleniumService
+    private configuracaoService: ConfiguracaoSeleniumService,
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +83,10 @@ export class ConfiguracaoSeleniumFormComponent implements OnInit {
       resolucao: ['1920x1080'],
       timeoutPadrao: [30000, [Validators.required, Validators.min(0)]],
       timeoutImplicito: [10000, [Validators.required, Validators.min(0)]],
-      timeoutCarregamentoPagina: [60000, [Validators.required, Validators.min(0)]],
+      timeoutCarregamentoPagina: [
+        60000,
+        [Validators.required, Validators.min(0)],
+      ],
       urlSeleniumGrid: [''],
       userAgent: [''],
       proxy: [''],
@@ -118,7 +121,7 @@ export class ConfiguracaoSeleniumFormComponent implements OnInit {
       timeoutPadrao: Number(this.form.value.timeoutPadrao),
       timeoutImplicito: Number(this.form.value.timeoutImplicito),
       timeoutCarregamentoPagina: Number(
-        this.form.value.timeoutCarregamentoPagina
+        this.form.value.timeoutCarregamentoPagina,
       ),
     };
 

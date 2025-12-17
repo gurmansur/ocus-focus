@@ -60,7 +60,7 @@ export class ConfiguracaoSeleniumComponent implements OnInit {
   constructor(
     private configuracaoSeleniumService: ConfiguracaoSeleniumService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {

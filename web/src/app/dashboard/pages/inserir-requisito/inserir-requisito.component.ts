@@ -29,7 +29,7 @@ export class InserirRequisitoComponent {
     private requisitoService: RequisitoService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -58,7 +58,7 @@ export class InserirRequisitoComponent {
     this.buscarProjeto(this.projetoId, this.userId);
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
@@ -82,7 +82,7 @@ export class InserirRequisitoComponent {
     return new Requisito(
       this.nome?.value,
       this.especificacao?.value,
-      this.numeroIdentificador?.value
+      this.numeroIdentificador?.value,
     );
   }
 
@@ -92,11 +92,15 @@ export class InserirRequisitoComponent {
       return;
     } else {
       this.requisito = this.createRequisito();
-    console.log(this.requisito);
+      console.log(this.requisito);
 
       this.requisitoService.create(this.requisito, this.projetoId).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard/projeto/', this.projetoId, 'requisitos']);
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projetoId,
+            'requisitos',
+          ]);
         },
 
         error: (err) => {

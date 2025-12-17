@@ -63,13 +63,13 @@ export class ExecucaoDeTesteService {
 
   executar(
     casoDeTesteId: number,
-    configuracaoId?: number
+    configuracaoId?: number,
   ): Observable<ResultadoExecucao> {
     const body: any = { casoDeTesteId };
     if (configuracaoId) body.configuracaoSeleniumId = configuracaoId;
     return this.http.post<ResultadoExecucao>(
       `${this.baseUrl}/executar/${casoDeTesteId}`,
-      body
+      body,
     );
   }
 
@@ -92,7 +92,7 @@ export class ExecucaoDeTesteService {
     id: number,
     status: 'SUCESSO' | 'FALHA' | 'PENDENTE',
     observacao?: string,
-    resposta?: string
+    resposta?: string,
   ): Observable<void> {
     return this.http.patch<void>(`${this.baseUrl}/${id}/status`, {
       resultado: status,
@@ -102,10 +102,10 @@ export class ExecucaoDeTesteService {
   }
 
   getGrafico(
-    projetoId: number
+    projetoId: number,
   ): Observable<{ labels: string[]; data: number[] }> {
     return this.http.get<{ labels: string[]; data: number[] }>(
-      `${this.baseUrl}/grafico/${projetoId}`
+      `${this.baseUrl}/grafico/${projetoId}`,
     );
   }
 }

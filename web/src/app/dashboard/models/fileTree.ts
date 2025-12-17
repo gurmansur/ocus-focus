@@ -5,6 +5,6 @@ export class FileTree {
   constructor(
     public suites: SuiteDeTeste[],
 
-    public casos: CasoDeTeste[]
+    public casos: CasoDeTeste[],
   ) {}
 }

@@ -23,7 +23,7 @@ export class PainelPrioreasyComponent {
     private stakeholderService: StakeholderService,
     private priorizacaoService: PriorizacaoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -86,7 +86,7 @@ export class PainelPrioreasyComponent {
           this.projetoId,
           this.filterValue,
           this.paginaAtual,
-          this.tamanhoPagina
+          this.tamanhoPagina,
         )
         .subscribe(this.processarResultado());
     }
@@ -142,7 +142,7 @@ export class PainelPrioreasyComponent {
                   this.priorizacaoService
                     .insertResultadoClassificacao(
                       requisito.id || 0,
-                      classificacaoFinal
+                      classificacaoFinal,
                     )
                     .subscribe(() => {
                       this.executarBusca();

@@ -23,7 +23,11 @@
       </svg>
     </div>
     <h2 class="my-4 text-xl text-center">
-      @if (isEdit) { Editar } @else { Inserir }
+      @if (isEdit) {
+        Editar
+      } @else {
+        Inserir
+      }
       <span class="font-medium text-violet-700">Swimlane</span>
     </h2>
     <div class="mb-4 flex flex-wrap" style="gap: 1rem 0">
@@ -38,15 +42,17 @@
           formControlName="nome"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        @if (swimlaneFormGroup.get('nome').invalid &&
-        swimlaneFormGroup.get('nome').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            swimlaneFormGroup.get("nome").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          swimlaneFormGroup.get("nome").invalid &&
+          swimlaneFormGroup.get("nome").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              swimlaneFormGroup.get("nome").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
 
@@ -64,9 +70,10 @@
     </div>
     <div class="flex w-full justify-between">
       @if (isEdit) {
-      <app-button color="danger" (onClick)="deletarSwimlane()">
-        Deletar </app-button
-      >}
+        <app-button color="danger" (onClick)="deletarSwimlane()">
+          Deletar
+        </app-button>
+      }
 
       <div class="flex w-full justify-end gap-2">
         <app-button
@@ -79,7 +86,12 @@
 
         <app-button (onClick)="handleSwimlane()">
           <app-plus-icon></app-plus-icon>
-          @if(isEdit) { Editar } @else { Adicionar } Swimlane
+          @if (isEdit) {
+            Editar
+          } @else {
+            Adicionar
+          }
+          Swimlane
         </app-button>
       </div>
     </div>

@@ -30,7 +30,9 @@ describe('StatusPriorizacaoController', () => {
       ],
     }).compile();
 
-    controller = module.get<StatusPriorizacaoController>(StatusPriorizacaoController);
+    controller = module.get<StatusPriorizacaoController>(
+      StatusPriorizacaoController,
+    );
   });
 
   it('should be defined', () => {

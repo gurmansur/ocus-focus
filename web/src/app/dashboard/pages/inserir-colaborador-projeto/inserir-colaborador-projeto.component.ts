@@ -22,7 +22,7 @@ export class InserirColaboradorProjetoComponent {
     private projetoService: ProjetoService,
     private colaboradorService: ColaboradorService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -36,7 +36,7 @@ export class InserirColaboradorProjetoComponent {
     this.executarBusca();
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 

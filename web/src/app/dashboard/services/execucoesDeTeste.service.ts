@@ -10,48 +10,48 @@ import { ExecutarTeste } from '../models/executarTeste';
 export class ExecucaoDeTesteService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   create(execucaoDeTeste: ExecucaoDeTeste): Observable<any> {
     return this.httpClient.post<ExecucaoDeTeste>(
       `${this.servicesRootUrl}/execucao-de-teste`,
-      execucaoDeTeste
+      execucaoDeTeste,
     );
   }
 
   update(id: number, execucaoDeTeste: ExecucaoDeTeste): Observable<any> {
     return this.httpClient.patch<ExecucaoDeTeste>(
       `${this.servicesRootUrl}/execucao-de-teste/${id}`,
-      execucaoDeTeste
+      execucaoDeTeste,
     );
   }
 
   changeStatus(
     id: number,
-    executarTeste: Partial<ExecutarTeste>
+    executarTeste: Partial<ExecutarTeste>,
   ): Observable<any> {
     return this.httpClient.patch<ExecutarTeste>(
       `${this.servicesRootUrl}/execucao-de-teste/${id}/status`,
-      executarTeste
+      executarTeste,
     );
   }
 
   delete(idExecucaoDeTeste: number): Observable<any> {
     return this.httpClient.delete<ExecucaoDeTeste>(
-      `${this.servicesRootUrl}/execucao-de-teste/${idExecucaoDeTeste}`
+      `${this.servicesRootUrl}/execucao-de-teste/${idExecucaoDeTeste}`,
     );
   }
 
   getById(idExecucaoDeTeste: number): Observable<ExecucaoDeTeste> {
     return this.httpClient.get<ExecucaoDeTeste>(
-      `${this.servicesRootUrl}/execucao-de-teste/${idExecucaoDeTeste}`
+      `${this.servicesRootUrl}/execucao-de-teste/${idExecucaoDeTeste}`,
     );
   }
 
   getAll(): Observable<ExecucaoDeTeste[]> {
     return this.httpClient.get<ExecucaoDeTeste[]>(
-      `${this.servicesRootUrl}/execucao-de-teste`
+      `${this.servicesRootUrl}/execucao-de-teste`,
     );
   }
 
@@ -60,7 +60,7 @@ export class ExecucaoDeTesteService {
       `${this.servicesRootUrl}/execucao-de-teste/grafico`,
       {
         params: suiteId ? { suiteId: suiteId.toString() } : {},
-      }
+      },
     );
   }
 }

@@ -8,10 +8,9 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-atores',
   templateUrl: './atores.component.html',
-  styleUrls: ['./atores.component.css']
+  styleUrls: ['./atores.component.css'],
 })
 export class AtoresComponent {
-
   userId!: number;
   projetoId!: number;
   projeto!: Projeto;
@@ -20,31 +19,22 @@ export class AtoresComponent {
     private projetoService: ProjetoService,
     private atoresService: AtorService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
   }
 
-
   // datasource
   atores: Atores[] = [];
 
   // tabela
-  colunasTabela: string[] = [
-    'Nome',
-    'Complexidade',
-    'Descrição'
-  ];
+  colunasTabela: string[] = ['Nome', 'Complexidade', 'Descrição'];
 
-  camposEntidade: string[] = [
-    'nome',
-    'complexidade',
-    'descricao',
-  ];
+  camposEntidade: string[] = ['nome', 'complexidade', 'descricao'];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -61,10 +51,11 @@ export class AtoresComponent {
   // diálogo de confirmação
   showModal: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente excluir este ator?";
-  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do ator em questão serão excluídos do sistema.";
+  tituloDialogo: string = 'Deseja realmente excluir este ator?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. Todos os dados do ator em questão serão excluídos do sistema.';
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
     this.buscarMetricas();
@@ -82,10 +73,19 @@ export class AtoresComponent {
   }
 
   private executarBusca(): void {
-    if(!this.filterValue){
-      this.atoresService.list(this.projetoId, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+    if (!this.filterValue) {
+      this.atoresService
+        .list(this.projetoId, this.paginaAtual, this.tamanhoPagina)
+        .subscribe(this.processarResultado());
     } else {
-      this.atoresService.listByName(this.projetoId, this.filterValue, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+      this.atoresService
+        .listByName(
+          this.projetoId,
+          this.filterValue,
+          this.paginaAtual,
+          this.tamanhoPagina,
+        )
+        .subscribe(this.processarResultado());
     }
   }
 
@@ -99,12 +99,16 @@ export class AtoresComponent {
     };
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
-  openNewAtor(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'inserir-atores']);
+  openNewAtor() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'inserir-atores',
+    ]);
   }
 
   excluirItem(item: any) {
@@ -113,7 +117,12 @@ export class AtoresComponent {
   }
 
   editarItem(item: any) {
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'editar-atores', item.id]);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'editar-atores',
+      item.id,
+    ]);
   }
 
   cancelarExclusao() {
@@ -142,37 +151,26 @@ export class AtoresComponent {
   }
 
   private buscarMetricas(): void {
-
-    this.atoresService
-    .getNumberOfAtores(
-      this.projetoId
-    )
-    .subscribe((data) => {
+    this.atoresService.getNumberOfAtores(this.projetoId).subscribe((data) => {
       this.totalAtores = data.totalCount;
     });
 
     this.atoresService
-    .getNumberOfAtoresSimples(
-      this.projetoId
-    )
-    .subscribe((data) => {
-      this.atoresSimples = data.totalCount;
-    });
+      .getNumberOfAtoresSimples(this.projetoId)
+      .subscribe((data) => {
+        this.atoresSimples = data.totalCount;
+      });
 
     this.atoresService
-    .getNumberOfAtoresMedios(
-      this.projetoId
-    )
-    .subscribe((data) => {
-      this.atoresMedios = data.totalCount;
-    });
+      .getNumberOfAtoresMedios(this.projetoId)
+      .subscribe((data) => {
+        this.atoresMedios = data.totalCount;
+      });
 
     this.atoresService
-    .getNumberOfAtoresComplexos(
-      this.projetoId
-    )
-    .subscribe((data) => {
-      this.atoresComplexos = data.totalCount;
-    });
+      .getNumberOfAtoresComplexos(this.projetoId)
+      .subscribe((data) => {
+        this.atoresComplexos = data.totalCount;
+      });
   }
 }

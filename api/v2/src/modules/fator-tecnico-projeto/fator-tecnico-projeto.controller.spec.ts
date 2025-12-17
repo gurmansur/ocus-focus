@@ -30,7 +30,9 @@ describe('FatorTecnicoProjetoController', () => {
       ],
     }).compile();
 
-    controller = module.get<FatorTecnicoProjetoController>(FatorTecnicoProjetoController);
+    controller = module.get<FatorTecnicoProjetoController>(
+      FatorTecnicoProjetoController,
+    );
   });
 
   it('should be defined', () => {

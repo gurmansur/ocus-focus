@@ -45,7 +45,9 @@ describe('FatorAmbientalProjetoController', () => {
       ],
     }).compile();
 
-    controller = module.get<FatorAmbientalProjetoController>(FatorAmbientalProjetoController);
+    controller = module.get<FatorAmbientalProjetoController>(
+      FatorAmbientalProjetoController,
+    );
   });
 
   it('should be defined', () => {

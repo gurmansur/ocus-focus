@@ -14,7 +14,7 @@ export class ProjetoInterceptor implements HttpInterceptor {
 
   intercept(
     req: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     const projetoId = localStorage.getItem('projeto_id');
 

@@ -42,7 +42,7 @@ export class FlyingcardsSwimlaneFormComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private kanbanService: KanbanService
+    private kanbanService: KanbanService,
   ) {
     this.projectId = parseInt(this.route.snapshot.params['id']);
     this.isEdit = this.route.snapshot.params['swimlaneId'] ? true : false;
@@ -65,11 +65,11 @@ export class FlyingcardsSwimlaneFormComponent {
     this.swimlaneFormGroup = this.formBuilder.group({
       nome: new FormControl<string>(
         this.swimlane?.nome || '',
-        Validators.required
+        Validators.required,
       ),
       cor: new FormControl<string>(
         this.swimlane.cor || '#6d28d9',
-        Validators.required
+        Validators.required,
       ),
     });
   }

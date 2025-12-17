@@ -55,15 +55,20 @@ export class ExecutorSeleniumService {
     for (const pattern of dangerousPatterns) {
       if (pattern.test(script)) {
         // Log only a truncated version to avoid exposing sensitive information
-        const truncated = script.length > 50 ? `${script.substring(0, 50)}...` : script;
-        this.logger.warn(`Potentially dangerous script detected (truncated): ${truncated}`);
+        const truncated =
+          script.length > 50 ? `${script.substring(0, 50)}...` : script;
+        this.logger.warn(
+          `Potentially dangerous script detected (truncated): ${truncated}`,
+        );
         throw new Error(
           `Script contains potentially dangerous operations. Pattern: ${pattern.source}`,
         );
       }
     }
 
-    this.logger.log(`Script validated successfully: ${script.substring(0, 100)}`);
+    this.logger.log(
+      `Script validated successfully: ${script.substring(0, 100)}`,
+    );
   }
 
   /**
@@ -75,22 +80,22 @@ export class ExecutorSeleniumService {
     if (!value) {
       return "''";
     }
-    
+
     // If no single quotes, wrap in single quotes
     if (!value.includes("'")) {
       return `'${value}'`;
     }
-    
+
     // If no double quotes, wrap in double quotes
     if (!value.includes('"')) {
       return `"${value}"`;
     }
-    
+
     // If both quotes are present, use concat with proper escaping
     // Split by single quote and build concat expression
     const parts = value.split("'");
     const concatParts: string[] = [];
-    
+
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
       // Add the text part if not empty
@@ -102,12 +107,12 @@ export class ExecutorSeleniumService {
         concatParts.push(`"'"`);
       }
     }
-    
+
     // Ensure we always have at least one part
     if (concatParts.length === 0) {
       return "''";
     }
-    
+
     return `concat(${concatParts.join(',')})`;
   }
 

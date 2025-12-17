@@ -18,20 +18,20 @@ const routes: Routes = [
       },
       {
         path: 'role-selection',
-        component: RoleSelectionComponent
+        component: RoleSelectionComponent,
       },
       {
         path: 'collaborator-signin',
-        component: CollaboratorSigninComponent
+        component: CollaboratorSigninComponent,
       },
       {
         path: 'stakeholder-signin',
-        component: StakeholderSigninComponent
+        component: StakeholderSigninComponent,
       },
       {
         path: 'signup',
-        component: SignupComponent
-      }
+        component: SignupComponent,
+      },
     ],
   },
 ];

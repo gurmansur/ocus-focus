@@ -1,30 +1,32 @@
 <div class="m-5">
-
-  <div *ngIf="projeto" class="flex justify-between items-center pb-3 border-b border-gray-400">
+  <div
+    *ngIf="projeto"
+    class="flex justify-between items-center pb-3 border-b border-gray-400"
+  >
     <div class="flex items-center">
       <div
         class="w-10 h-10 rounded-full bg-violet-200 flex items-center text-xl justify-center"
       >
-        {{projeto.nome[0]}}
+        {{ projeto.nome[0] }}
       </div>
-      <h3 class="text-xl ms-3 font-medium">{{projeto.nome}}</h3>
+      <h3 class="text-xl ms-3 font-medium">{{ projeto.nome }}</h3>
     </div>
     <div class="ms-auto">
       <button
         (click)="backToProjectHome()"
         class="bg-violet-700 text-white p-2 rounded-md hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
       >
-          <svg
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
           class="w-5 h-5 me-2"
-          >
+        >
           <path
             fill-rule="evenodd"
             d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H15a6.75 6.75 0 010 13.5h-3a.75.75 0 010-1.5h3a5.25 5.25 0 100-10.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z"
             clip-rule="evenodd"
-            />
+          />
         </svg>
         Retornar ao Início
       </button>
@@ -181,57 +183,68 @@
   </div>
 
   <div class="table-container mt-5 overflow-x-auto shadow-md">
-
-    <table id="tabelaCasoUso" class="w-full rounded bg-white table-fixed text-center">
+    <table
+      id="tabelaCasoUso"
+      class="w-full rounded bg-white table-fixed text-center"
+    >
       <thead>
         <tr class="text-white">
-          <th class="bg-violet-700 py-2" *ngFor="let column of colunasTabela">{{ column }}</th>
+          <th class="bg-violet-700 py-2" *ngFor="let column of colunasTabela">
+            {{ column }}
+          </th>
           <th class="bg-violet-700 py-2">Ações</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of caso" class="border-b" >
-          <td class="p-3">{{item.nome}}</td>
-          <td class="p-3">{{item.complexidade}}</td>
-          <td class="p-3">{{item.descricao}}</td>
-          <td class="flex p-3 justify-center" (click)="VisualizarCenarios(item.id)" ><span class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
-            >Cenários</span></td>
-        <td>
-          <button
+        <tr *ngFor="let item of caso" class="border-b">
+          <td class="p-3">{{ item.nome }}</td>
+          <td class="p-3">{{ item.complexidade }}</td>
+          <td class="p-3">{{ item.descricao }}</td>
+          <td
+            class="flex p-3 justify-center"
+            (click)="VisualizarCenarios(item.id)"
+          >
+            <span
+              class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
+              >Cenários</span
+            >
+          </td>
+          <td>
+            <button
               (click)="editarItem(item)"
               class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium items-center shadow-md mr-2"
             >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-               d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"
-              />
-            </svg>
-            </button>
-            <button
-              (click)="excluirItem(item)"
-              data-bs-toggle="modal"
-              data-bs-target="#modalConfirmacao"
-              class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium items-center shadow-md"
-              >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 class="w-5 h-5"
               >
-              <path
-                fill-rule="evenodd"
-                d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                clip-rule="evenodd"
-              />
+                <path
+                  d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"
+                />
               </svg>
             </button>
-        </td>
+            <button
+              (click)="excluirItem(item)"
+              data-bs-toggle="modal"
+              data-bs-target="#modalConfirmacao"
+              class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium items-center shadow-md"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -261,6 +274,4 @@
       Avançar
     </button>
   </div>
-
-
 </div>

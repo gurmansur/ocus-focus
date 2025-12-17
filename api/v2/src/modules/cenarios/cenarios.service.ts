@@ -61,12 +61,10 @@ export class CenariosService {
   }
 
   async create(createCenarioDto: CreateCenarioDto, casoId: number) {
-    const cenario = this.cenarioRepository.create(
-      {
-        ...createCenarioDto,
-        casoUso: {id: casoId},
-      }
-    );
+    const cenario = this.cenarioRepository.create({
+      ...createCenarioDto,
+      casoUso: { id: casoId },
+    });
     return await this.cenarioRepository.save(cenario);
   }
 

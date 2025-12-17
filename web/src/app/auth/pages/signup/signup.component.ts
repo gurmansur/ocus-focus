@@ -20,14 +20,14 @@ export class SignupComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
 
-  passwordsMatchValidator(formGroup: FormGroup){
+  passwordsMatchValidator(formGroup: FormGroup) {
     const senha = formGroup.get('senha')?.value;
     const confirmarSenha = formGroup.get('confirmarSenha')?.value;
 
-    if (senha !== confirmarSenha){
+    if (senha !== confirmarSenha) {
       formGroup.get('confirmarSenha')?.setErrors({ passwordMismatch: true });
     } else {
       formGroup.get('confirmarSenha')?.setErrors(null);
@@ -35,40 +35,43 @@ export class SignupComponent {
   }
 
   ngOnInit(): void {
-    this.signupFormGroup = this.formBuilder.group({
-      nome: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(100),
-      ]),
+    this.signupFormGroup = this.formBuilder.group(
+      {
+        nome: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ]),
 
-      email: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(255),
-        Validators.email
-      ]),
+        email: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(255),
+          Validators.email,
+        ]),
 
-      cargo: new FormControl('', [Validators.required]),
+        cargo: new FormControl('', [Validators.required]),
 
-      empresa: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(30),
-      ]),
+        empresa: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(30),
+        ]),
 
-      senha: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(100),
-      ]),
+        senha: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ]),
 
-      confirmarSenha: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(100),
-      ]),
-    }, {validators: this.passwordsMatchValidator.bind(this)});
+        confirmarSenha: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ]),
+      },
+      { validators: this.passwordsMatchValidator.bind(this) },
+    );
   }
 
   get nome() {
@@ -97,7 +100,7 @@ export class SignupComponent {
       this.empresa!.value,
       this.cargo!.value,
       this.senha!.value,
-      this.confirmarSenha!.value
+      this.confirmarSenha!.value,
     );
   }
 

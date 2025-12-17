@@ -51,7 +51,7 @@ export class RequisitoController {
   }
 
   @Get('all')
-  findAll(@Query('projeto') projetoId: number){
+  findAll(@Query('projeto') projetoId: number) {
     return this.requisitoService.findAll(projetoId);
   }
 

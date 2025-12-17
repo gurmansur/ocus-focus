@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Projeto } from '../../models/projeto';
 import { Requisito } from '../../models/requisito';
@@ -9,7 +14,7 @@ import { RequisitoService } from '../../services/requisito.service';
 @Component({
   selector: 'app-editar-requisito',
   templateUrl: './editar-requisito.component.html',
-  styleUrls: ['./editar-requisito.component.css']
+  styleUrls: ['./editar-requisito.component.css'],
 })
 export class EditarRequisitoComponent {
   requisitoFormGroup!: FormGroup;
@@ -25,7 +30,7 @@ export class EditarRequisitoComponent {
     private requisitoService: RequisitoService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.requisitoId = this.route.snapshot.params['idReq'];
@@ -56,13 +61,13 @@ export class EditarRequisitoComponent {
     this.inicializarForm();
   }
 
-  inicializarForm(){
+  inicializarForm() {
     this.requisitoService.getById(this.requisitoId).subscribe((requisito) => {
       this.requisitoFormGroup.patchValue(requisito);
-    })
+    });
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
@@ -87,7 +92,7 @@ export class EditarRequisitoComponent {
       this.nome?.value,
       this.especificacao?.value,
       this.numeroIdentificador?.value,
-      this.requisitoId
+      this.requisitoId,
     );
   }
 
@@ -100,7 +105,11 @@ export class EditarRequisitoComponent {
 
       this.requisitoService.update(this.requisito, this.projetoId).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard/projeto/', this.projetoId, 'requisitos']);
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projetoId,
+            'requisitos',
+          ]);
         },
 
         error: (err) => {

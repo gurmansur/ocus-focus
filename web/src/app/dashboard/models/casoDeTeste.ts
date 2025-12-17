@@ -64,6 +64,6 @@ export class CasoDeTeste {
 
     public testadorDesignadoId?: number,
 
-    public testadorDesignado?: Colaborador
+    public testadorDesignado?: Colaborador,
   ) {}
 }

@@ -88,7 +88,7 @@ export class RequisitoService {
     return this.requisitoRepository.delete({ id: requsitoId });
   }
 
-  async findAll(projetoId: number){
+  async findAll(projetoId: number) {
     return await this.requisitoRepository.find({
       where: { projeto: { id: projetoId } },
       relations: ['projeto'],

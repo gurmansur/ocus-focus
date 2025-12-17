@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-dialogo-confirmacao',
   templateUrl: './dialogo-confirmacao.component.html',
-  styleUrls: ['./dialogo-confirmacao.component.css']
+  styleUrls: ['./dialogo-confirmacao.component.css'],
 })
 export class DialogoConfirmacaoComponent {
   @Input() titulo!: String;

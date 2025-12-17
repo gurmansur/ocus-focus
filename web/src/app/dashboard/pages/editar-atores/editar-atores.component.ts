@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Atores } from '../../models/atores';
 import { AtorService } from '../../services/ator.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,10 +14,9 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-editar-atores',
   templateUrl: './editar-atores.component.html',
-  styleUrls: ['./editar-atores.component.css']
+  styleUrls: ['./editar-atores.component.css'],
 })
 export class EditarAtoresComponent {
-
   atorFormGroup!: FormGroup;
   projeto!: Projeto;
   projetoId!: number;
@@ -26,7 +30,7 @@ export class EditarAtoresComponent {
     private atorService: AtorService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.AtorId = this.route.snapshot.params['idAtor'];
@@ -47,22 +51,20 @@ export class EditarAtoresComponent {
         Validators.maxLength(255),
       ]),
 
-      complexidade: new FormControl('', [
-        Validators.required,
-      ]),
+      complexidade: new FormControl('', [Validators.required]),
     });
 
     this.buscarProjeto(this.projetoId, this.userId);
     this.inicializarForm();
   }
 
-  inicializarForm(){
+  inicializarForm() {
     this.atorService.getById(this.AtorId).subscribe((ator) => {
       this.atorFormGroup.patchValue(ator);
-    })
+    });
   }
 
-  backToAtorHome(){
+  backToAtorHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId, 'atores']);
   }
 
@@ -87,7 +89,7 @@ export class EditarAtoresComponent {
       this.nome?.value,
       this.complexidade?.value,
       this.descricao?.value,
-      this.AtorId
+      this.AtorId,
     );
   }
 
@@ -100,7 +102,11 @@ export class EditarAtoresComponent {
 
       this.atorService.update(this.Atores, this.projetoId).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard/projeto/', this.projetoId, 'atores']);
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projetoId,
+            'atores',
+          ]);
         },
 
         error: (err) => {

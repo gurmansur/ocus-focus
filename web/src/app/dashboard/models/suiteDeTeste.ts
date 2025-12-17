@@ -16,6 +16,6 @@ export class SuiteDeTeste {
 
     public casosDeTeste: CasoDeTeste[],
 
-    public id?: number
+    public id?: number,
   ) {}
 }

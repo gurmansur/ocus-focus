@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Atores } from '../../models/atores';
 import { AtorService } from '../../services/ator.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,11 +14,9 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-inserir-atores',
   templateUrl: './inserir-atores.component.html',
-  styleUrls: ['./inserir-atores.component.css']
+  styleUrls: ['./inserir-atores.component.css'],
 })
-
 export class InserirAtoresComponent {
-
   atorFormGroup!: FormGroup;
   projeto!: Projeto;
   projetoId!: number;
@@ -26,7 +29,7 @@ export class InserirAtoresComponent {
     private atorService: AtorService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -34,16 +37,13 @@ export class InserirAtoresComponent {
 
   ngOnInit(): void {
     this.atorFormGroup = this.formBuilder.group({
-
       nome: new FormControl('', [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(100),
       ]),
 
-      complexidade: new FormControl('', [
-        Validators.required,
-      ]),
+      complexidade: new FormControl('', [Validators.required]),
 
       descricao: new FormControl('', [
         Validators.required,
@@ -55,7 +55,7 @@ export class InserirAtoresComponent {
     this.buscarProjeto(this.projetoId, this.userId);
   }
 
-  backToAtorHome(){
+  backToAtorHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId, 'atores']);
   }
 
@@ -79,7 +79,7 @@ export class InserirAtoresComponent {
     return new Atores(
       this.nome?.value,
       this.complexidade?.value,
-      this.descricao?.value
+      this.descricao?.value,
     );
   }
 
@@ -93,7 +93,11 @@ export class InserirAtoresComponent {
 
       this.atorService.create(this.atores, this.projetoId).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard/projeto/', this.projetoId, 'atores']);
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projetoId,
+            'atores',
+          ]);
         },
 
         error: (err) => {

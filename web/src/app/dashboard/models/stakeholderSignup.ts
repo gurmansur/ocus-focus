@@ -6,6 +6,6 @@ export class StakeholderSignup {
     public senha: string,
     public confirmarSenha: string,
     public projeto_id: number,
-    public id?: number
-  ){}
+    public id?: number,
+  ) {}
 }

@@ -4,16 +4,18 @@ import { Observable } from 'rxjs';
 import { PriorizacaoRequest } from '../models/priorizacaoRequest';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PriorizacaoService {
-
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
-  insertPriorizacao(priorizacao: PriorizacaoRequest, stakeholder: number): Observable<any> {
+  insertPriorizacao(
+    priorizacao: PriorizacaoRequest,
+    stakeholder: number,
+  ): Observable<any> {
     return this.httpClient.post<PriorizacaoRequest>(
       `${this.servicesRootUrl}/priorizacao-stakeholders/new?stakeholder=${stakeholder}`,
       priorizacao,
@@ -21,7 +23,7 @@ export class PriorizacaoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -33,7 +35,7 @@ export class PriorizacaoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -44,7 +46,7 @@ export class PriorizacaoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -56,7 +58,7 @@ export class PriorizacaoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

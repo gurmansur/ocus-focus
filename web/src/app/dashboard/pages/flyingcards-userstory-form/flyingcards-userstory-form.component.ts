@@ -55,7 +55,7 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private colaboradorService: ColaboradorService,
-    private kanbanService: KanbanService
+    private kanbanService: KanbanService,
   ) {
     this.projectId = parseInt(this.route.snapshot.params['id']);
     this.isEdit = this.route.snapshot.params['usId'] ? true : false;
@@ -93,23 +93,23 @@ export class FlyingcardsUserstoryFormComponent implements OnInit {
     this.userStoryFormGroup = this.formBuilder.group({
       titulo: new FormControl<string>(
         this.userStory?.titulo || '',
-        Validators.required
+        Validators.required,
       ),
       descricao: new FormControl<string>(
         this.userStory.descricao || '',
-        Validators.required
+        Validators.required,
       ),
       responsavel: new FormControl<number | string>(
         this.userStory?.responsavel || -1,
-        Validators.required
+        Validators.required,
       ),
       estimativa_tempo: new FormControl<number>(
         this.userStory?.estimativa_tempo || 0,
-        Validators.required
+        Validators.required,
       ),
       swimlane: new FormControl<number>(
         this.userStory?.swimlane || -1,
-        Validators.required
+        Validators.required,
       ),
     });
   }

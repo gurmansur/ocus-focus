@@ -5,6 +5,6 @@ export class Colaborador {
     public empresa: string,
     public cargo: string,
     public senha: string,
-    public confirmarSenha: string
-  ){}
+    public confirmarSenha: string,
+  ) {}
 }

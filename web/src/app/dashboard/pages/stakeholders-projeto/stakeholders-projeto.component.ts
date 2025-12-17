@@ -19,7 +19,7 @@ export class StakeholdersProjetoComponent {
     private projetoService: ProjetoService,
     private stakeholderService: StakeholderService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -29,7 +29,13 @@ export class StakeholdersProjetoComponent {
   stakeholders: Stakeholder[] = [];
 
   // tabela
-  colunasTabela: string[] = ['Nome', 'Cargo', 'Chave','Participação', 'Alerta'];
+  colunasTabela: string[] = [
+    'Nome',
+    'Cargo',
+    'Chave',
+    'Participação',
+    'Alerta',
+  ];
 
   camposEntidade: string[] = [
     'nome',
@@ -95,7 +101,7 @@ export class StakeholdersProjetoComponent {
           this.projetoId,
           this.filterValue,
           this.paginaAtual,
-          this.tamanhoPagina
+          this.tamanhoPagina,
         )
         .subscribe(this.processarResultado());
     }
@@ -137,12 +143,10 @@ export class StakeholdersProjetoComponent {
   }
 
   confirmarExclusao() {
-    this.stakeholderService
-    .delete(this.itemExclusao)
-      .subscribe(() => {
-        this.showModal = false;
-        this.executarBusca();
-      });
+    this.stakeholderService.delete(this.itemExclusao).subscribe(() => {
+      this.showModal = false;
+      this.executarBusca();
+    });
   }
 
   alertarItem(item: any) {

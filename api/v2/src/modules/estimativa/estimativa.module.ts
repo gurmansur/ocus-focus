@@ -13,7 +13,13 @@ import { EstimativaService } from './estimativa.service';
   controllers: [EstimativaController],
   providers: [EstimativaService],
   imports: [
-    TypeOrmModule.forFeature([Estimativa, Ator, CasoUso, FatorAmbientalProjeto, FatorTecnicoProjeto]),
+    TypeOrmModule.forFeature([
+      Estimativa,
+      Ator,
+      CasoUso,
+      FatorAmbientalProjeto,
+      FatorTecnicoProjeto,
+    ]),
     ProjetoModule,
   ],
 })

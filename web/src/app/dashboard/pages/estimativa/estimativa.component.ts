@@ -8,10 +8,9 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-estimativa',
   templateUrl: './estimativa.component.html',
-  styleUrls: ['./estimativa.component.css']
+  styleUrls: ['./estimativa.component.css'],
 })
 export class EstimativaComponent {
-
   userId!: number;
   projetoId!: number;
   projeto!: Projeto;
@@ -20,12 +19,11 @@ export class EstimativaComponent {
     private projetoService: ProjetoService,
     private estimativaService: EstimativaService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
   }
-
 
   // datasource
   estimativa: Estimativa[] = [];
@@ -39,7 +37,7 @@ export class EstimativaComponent {
     'Peso por Ator',
     'Peso por Pontos por Caso de Uso',
     'Resultado dos Pontos por Caso de Uso',
-    'Resultado em Horas'
+    'Resultado em Horas',
   ];
 
   camposEntidade: string[] = [
@@ -50,11 +48,11 @@ export class EstimativaComponent {
     'pesoAtores',
     'pesoPontosCasosUso',
     'resultadoPontosCasosUso',
-    'resultadoHoras'
+    'resultadoHoras',
   ];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -62,8 +60,7 @@ export class EstimativaComponent {
   quantidadeElementos: number = 0;
   totalPaginas: number = 0;
 
-
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
@@ -74,10 +71,10 @@ export class EstimativaComponent {
     });
   }
 
-
   private executarBusca(): void {
-
-      this.estimativaService.list(this.projetoId, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+    this.estimativaService
+      .list(this.projetoId, this.paginaAtual, this.tamanhoPagina)
+      .subscribe(this.processarResultado());
   }
 
   private processarResultado() {
@@ -90,12 +87,14 @@ export class EstimativaComponent {
     };
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
-  openNewEstimativa(){
-    this.estimativaService.create(this.estimativa[0], this.projetoId).subscribe(this.processarResultado());
+  openNewEstimativa() {
+    this.estimativaService
+      .create(this.estimativa[0], this.projetoId)
+      .subscribe(this.processarResultado());
     window.location.reload();
   }
 
@@ -112,5 +111,4 @@ export class EstimativaComponent {
       this.executarBusca();
     }
   }
-
 }

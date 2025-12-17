@@ -10,20 +10,20 @@ import { Projeto } from '../models/projeto';
 export class ProjetoService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   create(projeto: Projeto): Observable<any> {
     return this.httpClient.post<Projeto>(
       `${this.servicesRootUrl}/projetos/new?user=${localStorage.getItem(
-        'usu_id'
+        'usu_id',
       )}`,
       projeto,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -35,7 +35,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -46,7 +46,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -57,7 +57,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -68,7 +68,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -81,7 +81,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -89,7 +89,7 @@ export class ProjetoService {
     id: number,
     nome: string,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseProjetos[]> {
     return this.httpClient.get<GetResponseProjetos[]>(
       `${this.servicesRootUrl}/projetos/findByNome?user=${id}&nome=${nome}&page=${page}&pageSize=${pageSize}`,
@@ -97,14 +97,14 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
   getColaboradoresByProjeto(
     id: number,
     page?: number,
-    pageSize?: number
+    pageSize?: number,
   ): Observable<GetResponseColaboradores> {
     return this.httpClient.get<GetResponseColaboradores>(
       `${this.servicesRootUrl}/projetos/colaboradores?projeto=${id}&page=${page}&pageSize=${pageSize}`,
@@ -112,7 +112,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -120,7 +120,7 @@ export class ProjetoService {
     id: number,
     nome: string,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseColaboradores[]> {
     return this.httpClient.get<GetResponseColaboradores[]>(
       `${this.servicesRootUrl}/projetos/colaboradores/findByNome?projeto=${id}&nome=${nome}&page=${page}&pageSize=${pageSize}`,
@@ -128,7 +128,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -140,7 +140,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -151,7 +151,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -162,7 +162,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -173,7 +173,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -184,7 +184,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -195,7 +195,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -206,7 +206,7 @@ export class ProjetoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

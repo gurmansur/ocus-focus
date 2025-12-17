@@ -5,6 +5,6 @@ export class PlanoDeTeste {
     public data: string,
     public status: string,
     public observacoes?: string,
-    public id?: number
+    public id?: number,
   ) {}
 }

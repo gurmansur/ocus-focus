@@ -9,7 +9,7 @@ import { casoUso } from '../models/casoUso';
 export class CasoUsoService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   create(casoUso: casoUso, requisito: number): Observable<any> {
@@ -20,7 +20,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -32,7 +32,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -43,7 +43,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -54,7 +54,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -62,7 +62,7 @@ export class CasoUsoService {
     idPro?: number,
     idReq?: number,
     page?: number,
-    pageSize?: number
+    pageSize?: number,
   ): Observable<GetResponseCaso> {
     const params: any = {};
     if (idPro !== undefined) params.projeto = idPro.toString();
@@ -77,7 +77,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -85,7 +85,7 @@ export class CasoUsoService {
     idReq: number,
     nome: string,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseCaso[]> {
     return this.httpClient.get<GetResponseCaso[]>(
       `${this.servicesRootUrl}/caso-de-uso/findByNome?projeto=${idReq}&nome=${nome}&page=${page}&size=${pageSize}`,
@@ -93,7 +93,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -104,7 +104,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -115,7 +115,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -126,7 +126,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -137,7 +137,7 @@ export class CasoUsoService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

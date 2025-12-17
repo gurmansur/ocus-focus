@@ -16,6 +16,6 @@ export class UserStory {
 
     public swimlane: number = -1,
 
-    public id?: number
+    public id?: number,
   ) {}
 }

@@ -23,11 +23,12 @@ export interface ConfiguracaoSeleniumDto {
   ativa: boolean;
 }
 
-export interface CreateConfiguracaoSeleniumDto
-  extends Omit<ConfiguracaoSeleniumDto, 'id'> {}
+export interface CreateConfiguracaoSeleniumDto extends Omit<
+  ConfiguracaoSeleniumDto,
+  'id'
+> {}
 
-export interface UpdateConfiguracaoSeleniumDto
-  extends Partial<CreateConfiguracaoSeleniumDto> {}
+export interface UpdateConfiguracaoSeleniumDto extends Partial<CreateConfiguracaoSeleniumDto> {}
 
 @Injectable({ providedIn: 'root' })
 export class ConfiguracaoSeleniumService {
@@ -48,18 +49,18 @@ export class ConfiguracaoSeleniumService {
   }
 
   create(
-    data: CreateConfiguracaoSeleniumDto
+    data: CreateConfiguracaoSeleniumDto,
   ): Observable<ConfiguracaoSeleniumDto> {
     return this.http.post<ConfiguracaoSeleniumDto>(this.baseUrl, data);
   }
 
   update(
     id: number,
-    data: UpdateConfiguracaoSeleniumDto
+    data: UpdateConfiguracaoSeleniumDto,
   ): Observable<ConfiguracaoSeleniumDto> {
     return this.http.patch<ConfiguracaoSeleniumDto>(
       `${this.baseUrl}/${id}`,
-      data
+      data,
     );
   }
 

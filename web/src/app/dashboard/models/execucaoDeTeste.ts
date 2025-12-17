@@ -9,6 +9,6 @@ export class ExecucaoDeTeste {
     public data: string,
     public hora: string,
     public dataExecucao: string,
-    public casoDeTeste: CasoDeTeste
+    public casoDeTeste: CasoDeTeste,
   ) {}
 }

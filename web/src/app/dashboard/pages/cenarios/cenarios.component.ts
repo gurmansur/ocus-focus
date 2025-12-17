@@ -8,11 +8,9 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-cenarios',
   templateUrl: './cenarios.component.html',
-  styleUrls: ['./cenarios.component.css']
+  styleUrls: ['./cenarios.component.css'],
 })
 export class CenariosComponent {
-
-
   userId!: number;
   projetoId!: number;
   requisitoId!: number;
@@ -23,7 +21,7 @@ export class CenariosComponent {
     private projetoService: ProjetoService,
     private cenarioService: CenarioService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['idPro'];
     this.requisitoId = this.route.snapshot.params['idReq'];
@@ -31,25 +29,16 @@ export class CenariosComponent {
     this.userId = Number(localStorage.getItem('usu_id'));
   }
 
-
   // datasource
   cenarios: Cenarios[] = [];
 
   // tabela
-  colunasTabela: string[] = [
-    'Nome',
-    'Tipo',
-    'Descrição'
-  ];
+  colunasTabela: string[] = ['Nome', 'Tipo', 'Descrição'];
 
-  camposEntidade: string[] = [
-    'nome',
-    'tipo',
-    'descricao',
-  ];
+  camposEntidade: string[] = ['nome', 'tipo', 'descricao'];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -57,14 +46,14 @@ export class CenariosComponent {
   quantidadeElementos: number = 0;
   totalPaginas: number = 0;
 
-
   // diálogo de confirmação
   showModal: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente excluir este cenario?";
-  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do cenario em questão serão excluídos do sistema.";
+  tituloDialogo: string = 'Deseja realmente excluir este cenario?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. Todos os dados do cenario em questão serão excluídos do sistema.';
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
@@ -81,10 +70,25 @@ export class CenariosComponent {
   }
 
   private executarBusca(): void {
-    if(!this.filterValue){
-      this.cenarioService.list(this.projetoId,this.requisitoId,this.casoId ,this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+    if (!this.filterValue) {
+      this.cenarioService
+        .list(
+          this.projetoId,
+          this.requisitoId,
+          this.casoId,
+          this.paginaAtual,
+          this.tamanhoPagina,
+        )
+        .subscribe(this.processarResultado());
     } else {
-      this.cenarioService.listByName(this.projetoId, this.filterValue, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+      this.cenarioService
+        .listByName(
+          this.projetoId,
+          this.filterValue,
+          this.paginaAtual,
+          this.tamanhoPagina,
+        )
+        .subscribe(this.processarResultado());
     }
   }
 
@@ -98,12 +102,26 @@ export class CenariosComponent {
     };
   }
 
-  backToProjectHome(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'requisitos', this.requisitoId, 'caso-de-uso']);
+  backToProjectHome() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'requisitos',
+      this.requisitoId,
+      'caso-de-uso',
+    ]);
   }
 
-  openNewCenario(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'requisitos', this.requisitoId, 'caso-de-uso', this.casoId, 'inserir-cenarios']);
+  openNewCenario() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'requisitos',
+      this.requisitoId,
+      'caso-de-uso',
+      this.casoId,
+      'inserir-cenarios',
+    ]);
   }
 
   excluirItem(item: any) {
@@ -112,7 +130,16 @@ export class CenariosComponent {
   }
 
   editarItem(item: any) {
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'requisitos', this.requisitoId, 'caso-de-uso', this.casoId, 'editar-cenarios', item.id]);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'requisitos',
+      this.requisitoId,
+      'caso-de-uso',
+      this.casoId,
+      'editar-cenarios',
+      item.id,
+    ]);
   }
 
   cancelarExclusao() {
@@ -139,6 +166,4 @@ export class CenariosComponent {
       this.executarBusca();
     }
   }
-
 }
-

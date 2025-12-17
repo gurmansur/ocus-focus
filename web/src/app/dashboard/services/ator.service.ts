@@ -9,7 +9,7 @@ import { Atores } from '../models/atores';
 export class AtorService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   create(atores: Atores, projeto: number): Observable<any> {
@@ -20,7 +20,7 @@ export class AtorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -32,7 +32,7 @@ export class AtorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -43,7 +43,7 @@ export class AtorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -54,29 +54,38 @@ export class AtorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
-  list(idProjeto: number, page: number, pageSize: number): Observable<GetResponseAtores[]> {
+  list(
+    idProjeto: number,
+    page: number,
+    pageSize: number,
+  ): Observable<GetResponseAtores[]> {
     return this.httpClient.get<GetResponseAtores[]>(
       `${this.servicesRootUrl}/atores?projeto=${idProjeto}&page=${page}&size=${pageSize}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
-  listByName(idProjeto: number, nome: string, page: number, pageSize: number): Observable<GetResponseAtores[]> {
+  listByName(
+    idProjeto: number,
+    nome: string,
+    page: number,
+    pageSize: number,
+  ): Observable<GetResponseAtores[]> {
     return this.httpClient.get<GetResponseAtores[]>(
       `${this.servicesRootUrl}/atores/findByNome?projeto=${idProjeto}&nome=${nome}&page=${page}&size=${pageSize}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -87,7 +96,7 @@ export class AtorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -98,7 +107,7 @@ export class AtorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -109,7 +118,7 @@ export class AtorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -120,10 +129,9 @@ export class AtorService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
-
 }
 
 interface GetResponseAtores {

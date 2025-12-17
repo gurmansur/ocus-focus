@@ -8,7 +8,7 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-requisitos-projeto',
   templateUrl: './requisitos-projeto.component.html',
-  styleUrls: ['./requisitos-projeto.component.css']
+  styleUrls: ['./requisitos-projeto.component.css'],
 })
 export class RequisitosProjetoComponent {
   userId!: number;
@@ -19,7 +19,7 @@ export class RequisitosProjetoComponent {
     private projetoService: ProjetoService,
     private requisitoService: RequisitoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -29,20 +29,12 @@ export class RequisitosProjetoComponent {
   requisitos: Requisito[] = [];
 
   // tabela
-  colunasTabela: string[] = [
-    'RF#',
-    'Nome',
-    'Especificação',
-  ];
+  colunasTabela: string[] = ['RF#', 'Nome', 'Especificação'];
 
-  camposEntidade: string[] = [
-    'numeroIdentificador',
-    'nome',
-    'especificacao',
-  ];
+  camposEntidade: string[] = ['numeroIdentificador', 'nome', 'especificacao'];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -53,10 +45,11 @@ export class RequisitosProjetoComponent {
   // diálogo de confirmação
   showModal: boolean = false;
   itemExclusao!: number;
-  tituloDialogo: string = "Deseja realmente remover o requisito do projeto?";
-  mensagemDialogo: string = "Ao confirmar, o requisito será removido do projeto.";
+  tituloDialogo: string = 'Deseja realmente remover o requisito do projeto?';
+  mensagemDialogo: string =
+    'Ao confirmar, o requisito será removido do projeto.';
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
@@ -73,10 +66,19 @@ export class RequisitosProjetoComponent {
   }
 
   private executarBusca(): void {
-    if(!this.filterValue){
-      this.requisitoService.list(this.projetoId, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+    if (!this.filterValue) {
+      this.requisitoService
+        .list(this.projetoId, this.paginaAtual, this.tamanhoPagina)
+        .subscribe(this.processarResultado());
     } else {
-      this.requisitoService.listByName(this.projetoId, this.filterValue, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+      this.requisitoService
+        .listByName(
+          this.projetoId,
+          this.filterValue,
+          this.paginaAtual,
+          this.tamanhoPagina,
+        )
+        .subscribe(this.processarResultado());
     }
   }
 
@@ -90,12 +92,16 @@ export class RequisitosProjetoComponent {
     };
   }
 
-  backToProjectHome(){
+  backToProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
-  openNewRequisito(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'inserir-requisito']);
+  openNewRequisito() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'inserir-requisito',
+    ]);
   }
 
   excluirItem(item: any) {
@@ -104,11 +110,22 @@ export class RequisitosProjetoComponent {
   }
 
   editarItem(item: any) {
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'editar-requisito', item.id]);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'editar-requisito',
+      item.id,
+    ]);
   }
 
-  visualizarCasoDeUso(item: any){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId,'requisitos', item.id, 'caso-de-uso' ]);
+  visualizarCasoDeUso(item: any) {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'requisitos',
+      item.id,
+      'caso-de-uso',
+    ]);
   }
 
   cancelarExclusao() {
@@ -135,5 +152,4 @@ export class RequisitosProjetoComponent {
       this.executarBusca();
     }
   }
-
 }

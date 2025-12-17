@@ -16,7 +16,7 @@ export class AcaoDeTesteService {
 
   findByCasoDeTesteId(casoDeTesteId: number): Observable<AcaoDeTesteDto[]> {
     return this.http.get<AcaoDeTesteDto[]>(
-      `${this.baseUrl}?casoDeTesteId=${casoDeTesteId}`
+      `${this.baseUrl}?casoDeTesteId=${casoDeTesteId}`,
     );
   }
 

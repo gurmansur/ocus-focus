@@ -52,13 +52,15 @@ export class EstimativaService {
       const totalCasoMedio = await this.getTotalCasosMedios(projetoId);
       const totalCasoComplexo = await this.getTotalCasosComplexos(projetoId);
 
-      const casoUsoGeral = totalCasoSimples * 5 + totalCasoMedio * 10 + totalCasoComplexo * 15;
+      const casoUsoGeral =
+        totalCasoSimples * 5 + totalCasoMedio * 10 + totalCasoComplexo * 15;
 
       const totalAtorSimples = await this.getTotalAtoresSimples(projetoId);
       const totalAtorMedio = await this.getTotalAtoresMedios(projetoId);
       const totalAtorComplexo = await this.getTotalAtoresComplexos(projetoId);
 
-      const atoresGeral = totalAtorSimples + totalAtorMedio * 2 + totalAtorComplexo * 3;
+      const atoresGeral =
+        totalAtorSimples + totalAtorMedio * 2 + totalAtorComplexo * 3;
 
       const pontosGerais = casoUsoGeral + atoresGeral;
 
@@ -157,9 +159,9 @@ export class EstimativaService {
     });
   }
 
-  private async calcularEFactor(projetoId: number): Promise<number>{
+  private async calcularEFactor(projetoId: number): Promise<number> {
     const fatores = await this.fatorAmbientalRepository.find({
-      where: {  projeto: { id: projetoId } },
+      where: { projeto: { id: projetoId } },
       relations: ['fatorAmbiental'],
     });
 
@@ -167,13 +169,13 @@ export class EstimativaService {
       return total + fatorProj.valor * fatorProj.fatorAmbiental.peso;
     }, 0);
 
-    const Efactor = (1.4 + (soma * (-0.03)));
+    const Efactor = 1.4 + soma * -0.03;
     return parseFloat(Efactor.toFixed(3));
   }
 
-  private async calcularTFactor(projetoId: number): Promise<number>{
+  private async calcularTFactor(projetoId: number): Promise<number> {
     const fatores = await this.fatorTecnicoRepository.find({
-      where: {  projeto: { id: projetoId } },
+      where: { projeto: { id: projetoId } },
       relations: ['fatorTecnico'],
     });
 
@@ -181,7 +183,7 @@ export class EstimativaService {
       return total + fatorProj.valor * fatorProj.fatorTecnico.peso;
     }, 0);
 
-    const Tfactor = (0.6 + (soma/100));
+    const Tfactor = 0.6 + soma / 100;
     return parseFloat(Tfactor.toFixed(3));
   }
 }

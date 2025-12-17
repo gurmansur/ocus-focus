@@ -7,5 +7,5 @@ export class PriorizacaoRequisito {
     public respostaNegativa: string,
     public classificacaoRequisito: string,
     public id?: number,
-  ){}
+  ) {}
 }

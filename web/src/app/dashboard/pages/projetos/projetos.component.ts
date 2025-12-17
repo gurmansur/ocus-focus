@@ -10,7 +10,10 @@ import { ProjetoService } from '../../services/projeto.service';
   styleUrls: ['./projetos.component.css'],
 })
 export class ProjetosComponent {
-  constructor(private projetoService: ProjetoService, private router: Router) {}
+  constructor(
+    private projetoService: ProjetoService,
+    private router: Router,
+  ) {}
 
   userId: number = +localStorage.getItem('usu_id')!;
 
@@ -72,7 +75,7 @@ export class ProjetosComponent {
         this.userId,
         this.filterValue,
         this.paginaAtual,
-        this.tamanhoPagina
+        this.tamanhoPagina,
       )
       .subscribe(this.processarResultado());
 

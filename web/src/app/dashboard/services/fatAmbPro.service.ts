@@ -9,17 +9,21 @@ import { fatAmbPro } from '../models/fatAmbPro';
 export class FatAmbProService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
-  list(idPro: number, page: number, pageSize: number): Observable<GetResponseFatores[]> {
+  list(
+    idPro: number,
+    page: number,
+    pageSize: number,
+  ): Observable<GetResponseFatores[]> {
     return this.httpClient.get<GetResponseFatores[]>(
       `${this.servicesRootUrl}/fatores-ambientais?projeto=${idPro}&page=${page}&size=${pageSize}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
   create(fatAmb: fatAmbPro, projeto: number): Observable<any> {
@@ -30,7 +34,7 @@ export class FatAmbProService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -41,7 +45,7 @@ export class FatAmbProService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -52,7 +56,7 @@ export class FatAmbProService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -64,7 +68,7 @@ export class FatAmbProService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Projeto } from '../../models/projeto';
 import { ProjetoService } from '../../services/projeto.service';
@@ -7,7 +12,7 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-inserir-projeto',
   templateUrl: './inserir-projeto.component.html',
-  styleUrls: ['./inserir-projeto.component.css']
+  styleUrls: ['./inserir-projeto.component.css'],
 })
 export class InserirProjetoComponent {
   projetoFormGroup!: FormGroup;
@@ -17,7 +22,7 @@ export class InserirProjetoComponent {
   constructor(
     private projetoService: ProjetoService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
 
   dataHoje: string = new Date().toISOString().split('T')[0];
@@ -42,26 +47,32 @@ export class InserirProjetoComponent {
         Validators.maxLength(50),
       ]),
 
-      status: new FormControl('', [
-        Validators.required,
-      ]),
+      status: new FormControl('', [Validators.required]),
 
-      dataInicio: new FormControl('', [
-        Validators.required,
-      ]),
+      dataInicio: new FormControl('', [Validators.required]),
 
-      previsaoFim: new FormControl('', [
-        Validators.required,
-      ]),
+      previsaoFim: new FormControl('', [Validators.required]),
     });
   }
 
-  get nome() {  return this.projetoFormGroup.get('nome'); }
-  get descricao() {  return this.projetoFormGroup.get('descricao'); }
-  get empresa() {  return this.projetoFormGroup.get('empresa'); }
-  get status() {  return this.projetoFormGroup.get('status'); }
-  get dataInicio() {  return this.projetoFormGroup.get('dataInicio'); }
-  get previsaoFim() {  return this.projetoFormGroup.get('previsaoFim'); }
+  get nome() {
+    return this.projetoFormGroup.get('nome');
+  }
+  get descricao() {
+    return this.projetoFormGroup.get('descricao');
+  }
+  get empresa() {
+    return this.projetoFormGroup.get('empresa');
+  }
+  get status() {
+    return this.projetoFormGroup.get('status');
+  }
+  get dataInicio() {
+    return this.projetoFormGroup.get('dataInicio');
+  }
+  get previsaoFim() {
+    return this.projetoFormGroup.get('previsaoFim');
+  }
 
   createProjeto(): Projeto {
     return new Projeto(

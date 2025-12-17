@@ -12,7 +12,16 @@ import { StakeholderSigninComponent } from './pages/stakeholder-signin/stakehold
 import { SignupComponent } from './pages/signup/signup.component';
 
 @NgModule({
-  declarations: [AuthComponent, HomeComponent, HeaderComponent, FooterComponent, RoleSelectionComponent, CollaboratorSigninComponent, StakeholderSigninComponent, SignupComponent],
+  declarations: [
+    AuthComponent,
+    HomeComponent,
+    HeaderComponent,
+    FooterComponent,
+    RoleSelectionComponent,
+    CollaboratorSigninComponent,
+    StakeholderSigninComponent,
+    SignupComponent,
+  ],
   imports: [CommonModule, AuthRoutingModule, FormsModule, ReactiveFormsModule],
 })
 export class AuthModule {}

@@ -10,13 +10,13 @@ import { StakeholderSignup } from '../models/stakeholderSignup';
 export class StakeholderService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   listByProjeto(
     id: number,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseStakeholders[]> {
     return this.httpClient.get<GetResponseStakeholders[]>(
       `${this.servicesRootUrl}/stakeholders/findByProjeto?projeto=${id}&page=${page}&pageSize=${pageSize}`,
@@ -24,7 +24,7 @@ export class StakeholderService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -32,7 +32,7 @@ export class StakeholderService {
     id: number,
     nome: string,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseStakeholders[]> {
     return this.httpClient.get<GetResponseStakeholders[]>(
       `${this.servicesRootUrl}/stakeholders/findByNome?projeto=${id}&page=${page}&pageSize=${pageSize}&nome=${nome}`,
@@ -40,7 +40,7 @@ export class StakeholderService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -52,7 +52,7 @@ export class StakeholderService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -63,7 +63,7 @@ export class StakeholderService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -75,7 +75,7 @@ export class StakeholderService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -86,7 +86,7 @@ export class StakeholderService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

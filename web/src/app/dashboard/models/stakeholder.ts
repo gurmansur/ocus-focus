@@ -6,6 +6,6 @@ export class Stakeholder {
     public chave: string,
     public participacaoRealizada: string,
     public alertaEmitido: string,
-    public id?: number
-  ){}
+    public id?: number,
+  ) {}
 }

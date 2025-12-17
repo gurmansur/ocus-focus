@@ -3,6 +3,6 @@ export class Requisito {
     public nome: string,
     public especificacao: string,
     public numeroIdentificador: number,
-    public id?: number
-  ){}
+    public id?: number,
+  ) {}
 }

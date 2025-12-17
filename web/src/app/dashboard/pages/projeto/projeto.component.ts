@@ -21,7 +21,7 @@ export class ProjetoComponent {
   constructor(
     private projetoService: ProjetoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projectId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));

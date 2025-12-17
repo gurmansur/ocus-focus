@@ -9,7 +9,7 @@ import { Cenarios } from '../models/cenarios';
 export class CenarioService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   create(cenario: Cenarios, caso: number): Observable<any> {
@@ -20,7 +20,7 @@ export class CenarioService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -32,7 +32,7 @@ export class CenarioService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -43,7 +43,7 @@ export class CenarioService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -54,29 +54,40 @@ export class CenarioService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
-  list(idPro: number, idReq: number, idCaso: number, page: number, pageSize: number): Observable<GetResponseCenario[]> {
+  list(
+    idPro: number,
+    idReq: number,
+    idCaso: number,
+    page: number,
+    pageSize: number,
+  ): Observable<GetResponseCenario[]> {
     return this.httpClient.get<GetResponseCenario[]>(
       `${this.servicesRootUrl}/cenarios?projeto=${idPro}&requisito=${idReq}&caso=${idCaso}&page=${page}&size=${pageSize}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
-  listByName(idCen: number, nome: string, page: number, pageSize: number): Observable<GetResponseCenario[]> {
+  listByName(
+    idCen: number,
+    nome: string,
+    page: number,
+    pageSize: number,
+  ): Observable<GetResponseCenario[]> {
     return this.httpClient.get<GetResponseCenario[]>(
       `${this.servicesRootUrl}/cenarios/findByNome?caso=${idCen}&nome=${nome}&page=${page}&size=${pageSize}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

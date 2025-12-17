@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Cenarios } from '../../models/cenarios';
 import { Projeto } from '../../models/projeto';
@@ -9,10 +14,9 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-inserir-cenarios',
   templateUrl: './inserir-cenarios.component.html',
-  styleUrls: ['./inserir-cenarios.component.css']
+  styleUrls: ['./inserir-cenarios.component.css'],
 })
 export class InserirCenariosComponent {
-
   cenarioFormGroup!: FormGroup;
   projeto!: Projeto;
   projetoId!: number;
@@ -27,7 +31,7 @@ export class InserirCenariosComponent {
     private cenarioService: CenarioService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['idPro'];
     this.requisitoId = this.route.snapshot.params['idReq'];
@@ -37,16 +41,13 @@ export class InserirCenariosComponent {
 
   ngOnInit(): void {
     this.cenarioFormGroup = this.formBuilder.group({
-
       nome: new FormControl('', [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(100),
       ]),
 
-      tipo: new FormControl('', [
-        Validators.required,
-      ]),
+      tipo: new FormControl('', [Validators.required]),
 
       descricao: new FormControl('', [
         Validators.required,
@@ -58,8 +59,16 @@ export class InserirCenariosComponent {
     this.buscarProjeto(this.projetoId, this.userId);
   }
 
-  backToCasoHome(){
-    this.router.navigate(['dashboard/projeto/', this.projetoId, 'requisitos', this.requisitoId, 'caso-de-uso', this.casoId, 'cenarios']);
+  backToCasoHome() {
+    this.router.navigate([
+      'dashboard/projeto/',
+      this.projetoId,
+      'requisitos',
+      this.requisitoId,
+      'caso-de-uso',
+      this.casoId,
+      'cenarios',
+    ]);
   }
 
   buscarProjeto(id: number, user: number) {
@@ -82,7 +91,7 @@ export class InserirCenariosComponent {
     return new Cenarios(
       this.nome?.value,
       this.descricao?.value,
-      this.tipo?.value
+      this.tipo?.value,
     );
   }
 
@@ -94,7 +103,15 @@ export class InserirCenariosComponent {
       this.cenario = this.createCenario();
       this.cenarioService.create(this.cenario, this.casoId).subscribe({
         next: () => {
-          this.router.navigate(['dashboard/projeto/', this.projetoId, 'requisitos', this.requisitoId, 'caso-de-uso', this.casoId, 'cenarios']);
+          this.router.navigate([
+            'dashboard/projeto/',
+            this.projetoId,
+            'requisitos',
+            this.requisitoId,
+            'caso-de-uso',
+            this.casoId,
+            'cenarios',
+          ]);
         },
 
         error: (err) => {

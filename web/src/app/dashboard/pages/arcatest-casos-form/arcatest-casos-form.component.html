@@ -19,32 +19,36 @@
     </div>
     <div class="flex items-center justify-between w-full mb-4">
       <h2 class="text-xl text-center flex-1">
-        @if (isEdit) { Editar } @else { Inserir }
+        @if (isEdit) {
+          Editar
+        } @else {
+          Inserir
+        }
         <span class="font-medium text-violet-700">Caso de Teste</span>
       </h2>
       @if (isEdit && idCaso) {
-      <button
-        type="button"
-        (click)="executarTeste()"
-        [disabled]="executando"
-        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm font-medium flex items-center gap-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-4 h-4"
+        <button
+          type="button"
+          (click)="executarTeste()"
+          [disabled]="executando"
+          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm font-medium flex items-center gap-2"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-          />
-        </svg>
-        {{ executando ? "Executando..." : "Executar Teste" }}
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-4 h-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+            />
+          </svg>
+          {{ executando ? "Executando..." : "Executar Teste" }}
+        </button>
       }
     </div>
     <div class="mb-4 flex flex-wrap" style="gap: 1rem 0">
@@ -60,13 +64,13 @@
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
         @if (nome.invalid && nome.touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("nome").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("nome").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-full">
@@ -81,18 +85,20 @@
         >
           <option value="{{ undefined }}" disabled selected>Nenhum</option>
           @for (casoDeUso of casosDeUso; track $index) {
-          <option value="{{ casoDeUso.id }}">{{ casoDeUso.nome }}</option>
+            <option value="{{ casoDeUso.id }}">{{ casoDeUso.nome }}</option>
           }
         </select>
-        @if (casoDeTesteFormGroup.get('casoDeUsoId').invalid &&
-        casoDeTesteFormGroup.get('casoDeUsoId').touched ) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("casoDeUsoId").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("casoDeUsoId").invalid &&
+          casoDeTesteFormGroup.get("casoDeUsoId").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("casoDeUsoId").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-full">
@@ -107,18 +113,20 @@
         >
           <option value="{{ undefined }}" selected>Nenhum</option>
           @for (testador of testadores; track $index) {
-          <option value="{{ testador.id }}">{{ testador.nome }}</option>
+            <option value="{{ testador.id }}">{{ testador.nome }}</option>
           }
         </select>
-        @if (casoDeTesteFormGroup.get('testadorDesignadoId').invalid &&
-        casoDeTesteFormGroup.get('testadorDesignadoId').touched ) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("testadorDesignadoId").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("testadorDesignadoId").invalid &&
+          casoDeTesteFormGroup.get("testadorDesignadoId").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("testadorDesignadoId").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/4 pr-1">
@@ -134,15 +142,17 @@
           <option value="FUNCIONAL">Funcional</option>
           <option value="ESTRUTURAL">Estrutural</option>
         </select>
-        @if (casoDeTesteFormGroup.get('tecnica').invalid &&
-        casoDeTesteFormGroup.get('tecnica').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("tecnica").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("tecnica").invalid &&
+          casoDeTesteFormGroup.get("tecnica").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("tecnica").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/4 px-1">
@@ -158,15 +168,17 @@
           <option value="MANUAL">Manual</option>
           <option value="AUTOMATIZADO">Automatizado</option>
         </select>
-        @if (casoDeTesteFormGroup.get('metodo').invalid &&
-        casoDeTesteFormGroup.get('metodo').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("metodo").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("metodo").invalid &&
+          casoDeTesteFormGroup.get("metodo").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("metodo").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/4 px-1">
@@ -183,15 +195,17 @@
           <option value="MEDIA">Média</option>
           <option value="BAIXA">Baixa</option>
         </select>
-        @if (casoDeTesteFormGroup.get('prioridade').invalid &&
-        casoDeTesteFormGroup.get('prioridade').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("prioridade").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("prioridade").invalid &&
+          casoDeTesteFormGroup.get("prioridade").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("prioridade").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/4 pl-1">
@@ -208,15 +222,17 @@
           <option value="MEDIO">Médio</option>
           <option value="SIMPLES">Simples</option>
         </select>
-        @if (casoDeTesteFormGroup.get('complexidade').invalid &&
-        casoDeTesteFormGroup.get('complexidade').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("complexidade").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("complexidade").invalid &&
+          casoDeTesteFormGroup.get("complexidade").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("complexidade").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/2 pr-1">
@@ -229,15 +245,17 @@
           formControlName="descricao"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('descricao').invalid &&
-        casoDeTesteFormGroup.get('descricao').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("descricao").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("descricao").invalid &&
+          casoDeTesteFormGroup.get("descricao").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("descricao").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/2 pl-1">
@@ -250,15 +268,17 @@
           formControlName="observacoes"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('observacoes').invalid &&
-        casoDeTesteFormGroup.get('observacoes').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("observacoes").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("observacoes").invalid &&
+          casoDeTesteFormGroup.get("observacoes").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("observacoes").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/2 pr-1">
@@ -271,15 +291,17 @@
           formControlName="preCondicao"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('preCondicao').invalid &&
-        casoDeTesteFormGroup.get('preCondicao').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("preCondicao").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("preCondicao").invalid &&
+          casoDeTesteFormGroup.get("preCondicao").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("preCondicao").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/2 pl-1">
@@ -292,15 +314,17 @@
           formControlName="posCondicao"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('posCondicao').invalid &&
-        casoDeTesteFormGroup.get('posCondicao').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("posCondicao").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("posCondicao").invalid &&
+          casoDeTesteFormGroup.get("posCondicao").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("posCondicao").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/2 pr-1">
@@ -313,15 +337,17 @@
           formControlName="dadosEntrada"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('dadosEntrada').invalid &&
-        casoDeTesteFormGroup.get('dadosEntrada').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("dadosEntrada").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("dadosEntrada").invalid &&
+          casoDeTesteFormGroup.get("dadosEntrada").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("dadosEntrada").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-1/2 pl-1">
@@ -334,15 +360,17 @@
           formControlName="resultadoEsperado"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 h-32 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
         ></textarea>
-        @if (casoDeTesteFormGroup.get('resultadoEsperado').invalid &&
-        casoDeTesteFormGroup.get('resultadoEsperado').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            casoDeTesteFormGroup.get("resultadoEsperado").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          casoDeTesteFormGroup.get("resultadoEsperado").invalid &&
+          casoDeTesteFormGroup.get("resultadoEsperado").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              casoDeTesteFormGroup.get("resultadoEsperado").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
     </div>
@@ -359,16 +387,19 @@
         (onClick)="isEdit ? updateTestCase() : createTestCase()"
         [disabled]="!isFormValid"
       >
-        @if (isEdit) { Editar Caso de Teste } @else {
-        <app-plus-icon></app-plus-icon>
-        Adicionar Caso de Teste }
+        @if (isEdit) {
+          Editar Caso de Teste
+        } @else {
+          <app-plus-icon></app-plus-icon>
+          Adicionar Caso de Teste
+        }
       </app-button>
     </div>
   </form>
 
   <!-- Ações Automatizadas Section -->
   @if (idCaso) {
-  <app-acoes-automatizadas [casoDeTesteId]="idCaso"></app-acoes-automatizadas>
+    <app-acoes-automatizadas [casoDeTesteId]="idCaso"></app-acoes-automatizadas>
   }
 
   <!-- Test Execution Modal -->

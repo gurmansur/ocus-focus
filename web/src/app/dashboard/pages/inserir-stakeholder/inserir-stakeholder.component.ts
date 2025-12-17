@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Projeto } from '../../models/projeto';
 import { StakeholderSignup } from '../../models/stakeholderSignup';
@@ -9,7 +14,7 @@ import { StakeholderService } from '../../services/stakeholder.service';
 @Component({
   selector: 'app-inserir-stakeholder',
   templateUrl: './inserir-stakeholder.component.html',
-  styleUrls: ['./inserir-stakeholder.component.css']
+  styleUrls: ['./inserir-stakeholder.component.css'],
 })
 export class InserirStakeholderComponent {
   projetoId!: number;
@@ -22,17 +27,17 @@ export class InserirStakeholderComponent {
     private projetoService: ProjetoService,
     private router: Router,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
   }
 
-  passwordsMatchValidator(formGroup: FormGroup){
+  passwordsMatchValidator(formGroup: FormGroup) {
     const senha = formGroup.get('senha')?.value;
     const confirmarSenha = formGroup.get('confirmarSenha')?.value;
 
-    if (senha !== confirmarSenha){
+    if (senha !== confirmarSenha) {
       formGroup.get('confirmarSenha')?.setErrors({ passwordMismatch: true });
     } else {
       formGroup.get('confirmarSenha')?.setErrors(null);
@@ -40,38 +45,41 @@ export class InserirStakeholderComponent {
   }
 
   ngOnInit(): void {
-    this.stakeholderFormGroup = this.formBuilder.group({
-      nome: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(100),
-      ]),
+    this.stakeholderFormGroup = this.formBuilder.group(
+      {
+        nome: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ]),
 
-      email: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(255),
-        Validators.email,
-      ]),
+        email: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(255),
+          Validators.email,
+        ]),
 
-      cargo: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(50),
-      ]),
+        cargo: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(50),
+        ]),
 
-      senha: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(100),
-      ]),
+        senha: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ]),
 
-      confirmarSenha: new FormControl('', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(100),
-      ]),
-    }, {validators: this.passwordsMatchValidator.bind(this)});
+        confirmarSenha: new FormControl('', [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ]),
+      },
+      { validators: this.passwordsMatchValidator.bind(this) },
+    );
 
     this.buscarProjeto(this.projetoId, this.userId);
   }
@@ -83,7 +91,11 @@ export class InserirStakeholderComponent {
   }
 
   backToPrioreasy(): void {
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'painel-prioreasy']);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'painel-prioreasy',
+    ]);
   }
 
   get nome() {
@@ -109,7 +121,7 @@ export class InserirStakeholderComponent {
       this.cargo!.value,
       this.senha!.value,
       this.confirmarSenha!.value,
-      this.projetoId
+      this.projetoId,
     );
   }
 
@@ -123,7 +135,11 @@ export class InserirStakeholderComponent {
       this.stakeholderService.create(signupStakeholder).subscribe({
         next: (response) => {
           console.log(response);
-          this.router.navigate(['/dashboard/projeto/', this.projetoId, 'stakeholders']);
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projetoId,
+            'stakeholders',
+          ]);
         },
 
         error: (err) => {

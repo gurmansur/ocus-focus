@@ -76,7 +76,7 @@ export class ArcatestCasosFormComponent {
     private readonly projetoService: ProjetoService,
     private readonly execService: ExecucaoDeTesteService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {
     this.projectId = this.route.parent?.snapshot.params['id'];
     this.idCaso = this.route.snapshot.params['idCaso'];
@@ -142,38 +142,38 @@ export class ArcatestCasosFormComponent {
       nome: new FormControl(this.casoDeTeste?.nome || '', Validators.required),
       descricao: new FormControl(
         this.casoDeTeste?.descricao || '',
-        Validators.required
+        Validators.required,
       ),
       preCondicao: new FormControl(this.casoDeTeste?.preCondicao || ''),
       posCondicao: new FormControl(this.casoDeTeste?.posCondicao || ''),
       prioridade: new FormControl(
         this.casoDeTeste?.prioridade || EPrioridade.BAIXA,
-        Validators.required
+        Validators.required,
       ),
       complexidade: new FormControl(
         this.casoDeTeste?.complexidade || EComplexidade.SIMPLES,
-        Validators.required
+        Validators.required,
       ),
       tecnica: new FormControl(
         this.casoDeTeste?.tecnica || ETecnica.FUNCIONAL,
-        Validators.required
+        Validators.required,
       ),
       metodo: new FormControl(
         this.casoDeTeste?.metodo || ECategoria.MANUAL,
-        Validators.required
+        Validators.required,
       ),
       suiteDeTesteId: this.route.snapshot.queryParams['suiteId'] || '',
       testadorDesignadoId: new FormControl(
-        this.casoDeTeste?.testadorDesignado?.id || ''
+        this.casoDeTeste?.testadorDesignado?.id || '',
       ),
       observacoes: new FormControl(this.casoDeTeste?.observacoes || ''),
       resultadoEsperado: new FormControl(
         this.casoDeTeste?.resultadoEsperado || '',
-        Validators.required
+        Validators.required,
       ),
       dadosEntrada: new FormControl(
         this.casoDeTeste?.dadosEntrada || '',
-        Validators.required
+        Validators.required,
       ),
       casoDeUsoId: new FormControl(this.casoDeTeste?.casoDeUso?.id || ''),
     });

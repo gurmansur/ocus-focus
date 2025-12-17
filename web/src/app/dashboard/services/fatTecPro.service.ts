@@ -3,24 +3,27 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { fatTecPro } from '../models/fatTecPro';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class FatTecProService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
-  list(idPro: number, page: number, pageSize: number): Observable<GetResponseFatores[]> {
+  list(
+    idPro: number,
+    page: number,
+    pageSize: number,
+  ): Observable<GetResponseFatores[]> {
     return this.httpClient.get<GetResponseFatores[]>(
       `${this.servicesRootUrl}/fatores-tecnicos?projeto=${idPro}&page=${page}&size=${pageSize}`,
       {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
   create(fatTec: fatTecPro, projeto: number): Observable<any> {
@@ -31,7 +34,7 @@ export class FatTecProService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -42,7 +45,7 @@ export class FatTecProService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -53,7 +56,7 @@ export class FatTecProService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 
@@ -65,7 +68,7 @@ export class FatTecProService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

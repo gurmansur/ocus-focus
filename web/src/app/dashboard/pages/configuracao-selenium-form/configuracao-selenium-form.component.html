@@ -19,7 +19,11 @@
     </div>
     <div class="flex items-center justify-between w-full my-4">
       <h2 class="text-xl text-center flex-1">
-        @if (isEdit) { Editar } @else { Inserir }
+        @if (isEdit) {
+          Editar
+        } @else {
+          Inserir
+        }
         <span class="font-medium text-violet-700">Configuração Selenium</span>
       </h2>
     </div>
@@ -36,7 +40,7 @@
           placeholder="Ex: Configuração Padrão"
         />
         @if (nome?.invalid && nome?.touched) {
-        <p class="text-red-500 text-xs italic">Campo obrigatório</p>
+          <p class="text-red-500 text-xs italic">Campo obrigatório</p>
         }
       </div>
 
@@ -51,11 +55,11 @@
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         >
           @for (nav of navegadores; track nav.value) {
-          <option [value]="nav.value">{{ nav.label }}</option>
+            <option [value]="nav.value">{{ nav.label }}</option>
           }
         </select>
         @if (navegador?.invalid && navegador?.touched) {
-        <p class="text-red-500 text-xs italic">Campo obrigatório</p>
+          <p class="text-red-500 text-xs italic">Campo obrigatório</p>
         }
       </div>
 
@@ -74,7 +78,7 @@
         />
         <datalist id="resolucao-list">
           @for (res of resolucoes; track res.value) {
-          <option [value]="res.value">{{ res.label }}</option>
+            <option [value]="res.value">{{ res.label }}</option>
           }
         </datalist>
       </div>
@@ -93,7 +97,7 @@
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
         @if (timeoutPadrao?.invalid && timeoutPadrao?.touched) {
-        <p class="text-red-500 text-xs italic">Informe um valor válido</p>
+          <p class="text-red-500 text-xs italic">Informe um valor válido</p>
         }
       </div>
 
@@ -111,7 +115,7 @@
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
         @if (timeoutImplicito?.invalid && timeoutImplicito?.touched) {
-        <p class="text-red-500 text-xs italic">Informe um valor válido</p>
+          <p class="text-red-500 text-xs italic">Informe um valor válido</p>
         }
       </div>
 
@@ -130,9 +134,11 @@
           formControlName="timeoutCarregamentoPagina"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        @if ( timeoutCarregamentoPagina?.invalid &&
-        timeoutCarregamentoPagina?.touched ) {
-        <p class="text-red-500 text-xs italic">Informe um valor válido</p>
+        @if (
+          timeoutCarregamentoPagina?.invalid &&
+          timeoutCarregamentoPagina?.touched
+        ) {
+          <p class="text-red-500 text-xs italic">Informe um valor válido</p>
         }
       </div>
 
@@ -216,9 +222,12 @@
       </app-button>
 
       <app-button (onClick)="submit()" [disabled]="!isFormValid">
-        @if (isEdit) { Salvar Alterações } @else {
-        <app-plus-icon></app-plus-icon>
-        Criar Configuração }
+        @if (isEdit) {
+          Salvar Alterações
+        } @else {
+          <app-plus-icon></app-plus-icon>
+          Criar Configuração
+        }
       </app-button>
     </div>
   </form>

@@ -41,7 +41,7 @@ export class PriorizarRequisitosComponent {
     private priorizacaoService: PriorizacaoService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -77,20 +77,20 @@ export class PriorizarRequisitosComponent {
 
   atualizarForm() {
     this.priorizacaoFormGroup.controls['nome'].setValue(
-      this.requisitoAtual.nome
+      this.requisitoAtual.nome,
     );
     this.priorizacaoFormGroup.controls['especificacao'].setValue(
-      this.requisitoAtual.especificacao
+      this.requisitoAtual.especificacao,
     );
     this.priorizacaoFormGroup.controls['numeroIdentificador'].setValue(
-      this.requisitoAtual.numeroIdentificador
+      this.requisitoAtual.numeroIdentificador,
     );
 
     this.priorizacaoFormGroup.controls['respostaPositiva'].setValue(
-      this.requisitoAtual.respostaPositiva
+      this.requisitoAtual.respostaPositiva,
     );
     this.priorizacaoFormGroup.controls['respostaNegativa'].reset(
-      this.requisitoAtual.respostaNegativa
+      this.requisitoAtual.respostaNegativa,
     );
   }
 
@@ -122,7 +122,7 @@ export class PriorizarRequisitosComponent {
     } else {
       this.classificacaoFinalAtual = calcularResultadoFinal(
         this.respostaPositiva!.value,
-        this.respostaNegativa!.value
+        this.respostaNegativa!.value,
       );
       this.requisitoAtual = this.newPriorizacaoRequisito();
       this.requisitoList[this.indiceAtual] = this.requisitoAtual;
@@ -165,7 +165,7 @@ export class PriorizarRequisitosComponent {
       this.respostaPositiva!.value,
       this.respostaNegativa!.value,
       this.classificacaoFinalAtual!,
-      this.requisitoAtual.id
+      this.requisitoAtual.id,
     );
   }
 
@@ -185,7 +185,7 @@ export class PriorizarRequisitosComponent {
   confirmarPriorizacao() {
     this.classificacaoFinalAtual = calcularResultadoFinal(
       this.respostaPositiva!.value,
-      this.respostaNegativa!.value
+      this.respostaNegativa!.value,
     );
     this.requisitoAtual = this.newPriorizacaoRequisito();
     this.requisitoList[this.indiceAtual] = this.requisitoAtual;
@@ -199,7 +199,7 @@ export class PriorizarRequisitosComponent {
             respostaNegativa: requisito.respostaNegativa,
             classificacaoRequisito: requisito.classificacaoRequisito,
           },
-          this.userId
+          this.userId,
         )
         .subscribe((response) => {
           this.priorizacaoService

@@ -38,7 +38,10 @@ export class PainelArcatestComponent {
   projectId!: number;
   selectedTab: 'execucoes' | 'arvore' | 'configuracao' = 'execucoes';
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {
     this.projectId = this.route.snapshot.params['id'];
     if (this.router.url.includes('arvore')) {
       this.selectedTab = 'arvore';

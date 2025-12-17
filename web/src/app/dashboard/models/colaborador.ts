@@ -4,6 +4,6 @@ export class Colaborador {
     public email: string,
     public empresa: string,
     public cargo: string,
-    public id?: number
-  ){}
+    public id?: number,
+  ) {}
 }

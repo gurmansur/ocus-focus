@@ -34,10 +34,23 @@
           name="name"
           class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        <div *ngIf="signupFormGroup.get('nome')?.invalid && (signupFormGroup.get('nome')?.dirty || signupFormGroup.get('nome')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="signupFormGroup.get('nome')?.errors?.['required']">Campo obrigatório.</div>
-          <div *ngIf="signupFormGroup.get('nome')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-          <div *ngIf="signupFormGroup.get('nome')?.errors?.['maxlength']">Máximo de 100 caracteres.</div>
+        <div
+          *ngIf="
+            signupFormGroup.get('nome')?.invalid &&
+            (signupFormGroup.get('nome')?.dirty ||
+              signupFormGroup.get('nome')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div *ngIf="signupFormGroup.get('nome')?.errors?.['required']">
+            Campo obrigatório.
+          </div>
+          <div *ngIf="signupFormGroup.get('nome')?.errors?.['minlength']">
+            Mínimo de 5 caracteres.
+          </div>
+          <div *ngIf="signupFormGroup.get('nome')?.errors?.['maxlength']">
+            Máximo de 100 caracteres.
+          </div>
         </div>
       </div>
       <div class="relative mb-4 w-full">
@@ -51,11 +64,26 @@
           name="email"
           class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        <div *ngIf="signupFormGroup.get('email')?.invalid && (signupFormGroup.get('email')?.dirty || signupFormGroup.get('email')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="signupFormGroup.get('email')?.errors?.['required']">Campo obrigatório.</div>
-          <div *ngIf="signupFormGroup.get('email')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-          <div *ngIf="signupFormGroup.get('email')?.errors?.['maxlength']">Máximo de 255 caracteres.</div>
-          <div *ngIf="signupFormGroup.get('email')?.errors?.['email']">Formato inválido.</div>
+        <div
+          *ngIf="
+            signupFormGroup.get('email')?.invalid &&
+            (signupFormGroup.get('email')?.dirty ||
+              signupFormGroup.get('email')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div *ngIf="signupFormGroup.get('email')?.errors?.['required']">
+            Campo obrigatório.
+          </div>
+          <div *ngIf="signupFormGroup.get('email')?.errors?.['minlength']">
+            Mínimo de 5 caracteres.
+          </div>
+          <div *ngIf="signupFormGroup.get('email')?.errors?.['maxlength']">
+            Máximo de 255 caracteres.
+          </div>
+          <div *ngIf="signupFormGroup.get('email')?.errors?.['email']">
+            Formato inválido.
+          </div>
         </div>
       </div>
       <div class="relative mb-4 w-full">
@@ -69,10 +97,23 @@
           name="company"
           class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        <div *ngIf="signupFormGroup.get('empresa')?.invalid && (signupFormGroup.get('empresa')?.dirty || signupFormGroup.get('empresa')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="signupFormGroup.get('empresa')?.errors?.['required']">Campo obrigatório.</div>
-          <div *ngIf="signupFormGroup.get('empresa')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-          <div *ngIf="signupFormGroup.get('empresa')?.errors?.['maxlength']">Máximo de 30 caracteres.</div>
+        <div
+          *ngIf="
+            signupFormGroup.get('empresa')?.invalid &&
+            (signupFormGroup.get('empresa')?.dirty ||
+              signupFormGroup.get('empresa')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div *ngIf="signupFormGroup.get('empresa')?.errors?.['required']">
+            Campo obrigatório.
+          </div>
+          <div *ngIf="signupFormGroup.get('empresa')?.errors?.['minlength']">
+            Mínimo de 5 caracteres.
+          </div>
+          <div *ngIf="signupFormGroup.get('empresa')?.errors?.['maxlength']">
+            Máximo de 30 caracteres.
+          </div>
         </div>
       </div>
       <div class="relative mb-4 w-full">
@@ -89,8 +130,17 @@
           <option value="Product Owner">Product Owner</option>
           <option value="Scrum Master">Scrum Master</option>
         </select>
-        <div *ngIf="signupFormGroup.get('cargo')?.invalid && (signupFormGroup.get('cargo')?.dirty || signupFormGroup.get('cargo')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="signupFormGroup.get('cargo')?.errors?.['required']">Campo obrigatório.</div>
+        <div
+          *ngIf="
+            signupFormGroup.get('cargo')?.invalid &&
+            (signupFormGroup.get('cargo')?.dirty ||
+              signupFormGroup.get('cargo')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div *ngIf="signupFormGroup.get('cargo')?.errors?.['required']">
+            Campo obrigatório.
+          </div>
         </div>
       </div>
       <div class="flex gap-2 w-full">
@@ -105,10 +155,23 @@
             name="password"
             class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
-          <div *ngIf="signupFormGroup.get('senha')?.invalid && (signupFormGroup.get('senha')?.dirty || signupFormGroup.get('senha')?.touched)" class="text-red-600 text-xs mt-1">
-            <div *ngIf="signupFormGroup.get('senha')?.errors?.['required']">Campo obrigatório.</div>
-            <div *ngIf="signupFormGroup.get('senha')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-            <div *ngIf="signupFormGroup.get('senha')?.errors?.['maxlength']">Máximo de 30 caracteres.</div>
+          <div
+            *ngIf="
+              signupFormGroup.get('senha')?.invalid &&
+              (signupFormGroup.get('senha')?.dirty ||
+                signupFormGroup.get('senha')?.touched)
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            <div *ngIf="signupFormGroup.get('senha')?.errors?.['required']">
+              Campo obrigatório.
+            </div>
+            <div *ngIf="signupFormGroup.get('senha')?.errors?.['minlength']">
+              Mínimo de 5 caracteres.
+            </div>
+            <div *ngIf="signupFormGroup.get('senha')?.errors?.['maxlength']">
+              Máximo de 30 caracteres.
+            </div>
           </div>
         </div>
         <div class="relative mb-4 w-full">
@@ -122,11 +185,44 @@
             name="confirm_password"
             class="w-full bg-gray-50 rounded border border-gray-300 focus:border-violet-700 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
-          <div *ngIf="signupFormGroup.get('confirmarSenha')?.invalid && (signupFormGroup.get('confirmarSenha')?.dirty || signupFormGroup.get('confirmarSenha')?.touched)" class="text-red-600 text-xs mt-1">
-            <div *ngIf="signupFormGroup.get('confirmarSenha')?.errors?.['required']">Campo obrigatório.</div>
-            <div *ngIf="signupFormGroup.get('confirmarSenha')?.errors?.['minlength']">Mínimo de 5 caracteres.</div>
-            <div *ngIf="signupFormGroup.get('confirmarSenha')?.errors?.['maxlength']">Máximo de 30 caracteres.</div>
-            <div *ngIf="signupFormGroup.get('confirmarSenha')?.errors?.['passwordMismatch']">As senhas não coincidem.</div>
+          <div
+            *ngIf="
+              signupFormGroup.get('confirmarSenha')?.invalid &&
+              (signupFormGroup.get('confirmarSenha')?.dirty ||
+                signupFormGroup.get('confirmarSenha')?.touched)
+            "
+            class="text-red-600 text-xs mt-1"
+          >
+            <div
+              *ngIf="
+                signupFormGroup.get('confirmarSenha')?.errors?.['required']
+              "
+            >
+              Campo obrigatório.
+            </div>
+            <div
+              *ngIf="
+                signupFormGroup.get('confirmarSenha')?.errors?.['minlength']
+              "
+            >
+              Mínimo de 5 caracteres.
+            </div>
+            <div
+              *ngIf="
+                signupFormGroup.get('confirmarSenha')?.errors?.['maxlength']
+              "
+            >
+              Máximo de 30 caracteres.
+            </div>
+            <div
+              *ngIf="
+                signupFormGroup.get('confirmarSenha')?.errors?.[
+                  'passwordMismatch'
+                ]
+              "
+            >
+              As senhas não coincidem.
+            </div>
           </div>
         </div>
       </div>

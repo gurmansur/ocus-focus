@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './sprint-icon.component.html',
-  styleUrl: './sprint-icon.component.css'
+  styleUrl: './sprint-icon.component.css',
 })
-export class SprintIconComponent {
-
-}
+export class SprintIconComponent {}

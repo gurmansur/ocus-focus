@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Projeto } from '../../models/projeto';
 import { fatAmbPro } from '../../models/fatAmbPro';
 import { ProjetoService } from '../../services/projeto.service';
@@ -9,10 +14,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-inserir-fator-ambiental',
   templateUrl: './inserir-fator-ambiental.component.html',
-  styleUrls: ['./inserir-fator-ambiental.component.css']
+  styleUrls: ['./inserir-fator-ambiental.component.css'],
 })
 export class InserirFatorAmbientalComponent {
-
   FatorFormGroup!: FormGroup;
   projeto!: Projeto;
   projetoId!: number;
@@ -25,7 +29,7 @@ export class InserirFatorAmbientalComponent {
     private fatorService: FatAmbProService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -33,10 +37,7 @@ export class InserirFatorAmbientalComponent {
 
   ngOnInit(): void {
     this.FatorFormGroup = this.formBuilder.group({
-
-      fatorAmb: new FormControl('', [
-        Validators.required,
-      ]),
+      fatorAmb: new FormControl('', [Validators.required]),
 
       valor: new FormControl('', [
         Validators.required,
@@ -48,8 +49,12 @@ export class InserirFatorAmbientalComponent {
     this.buscarProjeto(this.projetoId, this.userId);
   }
 
-  backToFatorHome(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'fatores-ambientais']);
+  backToFatorHome() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'fatores-ambientais',
+    ]);
   }
 
   buscarProjeto(id: number, user: number) {
@@ -67,11 +72,9 @@ export class InserirFatorAmbientalComponent {
 
   createFator(): fatAmbPro {
     return new fatAmbPro(
-
       this.valor?.value,
       this.fatorAmb?.value,
-      this.projetoId
-
+      this.projetoId,
     );
   }
 
@@ -85,7 +88,11 @@ export class InserirFatorAmbientalComponent {
 
       this.fatorService.create(this.fatAmb, this.projetoId).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard/projeto/', this.projetoId, 'fatores-ambientais']);
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projetoId,
+            'fatores-ambientais',
+          ]);
         },
 
         error: (err) => {

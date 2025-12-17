@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './gear-icon.component.html',
-  styleUrl: './gear-icon.component.css'
+  styleUrl: './gear-icon.component.css',
 })
-export class GearIconComponent {
-
-}
+export class GearIconComponent {}

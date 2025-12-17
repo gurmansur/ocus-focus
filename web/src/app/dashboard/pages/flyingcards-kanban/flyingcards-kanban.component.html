@@ -24,53 +24,53 @@
 
   <div class="flex flex-grow overflow-x-auto" cdkDropListGroup>
     @if (board.swimlanes.length > 0) {
-    <div
-      [style.--minha-cor]="swimlane.cor"
-      class="flex flex-col flex-grow min-w-fit min-h-fit my-10 mx-2 p-5 bg-[var(--minha-cor)] border-r-4 rounded-sm"
-      *ngFor="let swimlane of board.swimlanes"
-    >
-      <div class="flex text-lg font-bold uppercase mb-5 justify-between">
-        <span class="text-white">{{ swimlane.nome }}</span>
-
-        <app-button
-          class="bg-gray-400 p-1 rounded-sm text-white"
-          (click)="navigateToEditSwimlane(swimlane.id!)"
-        >
-          <app-gear-icon></app-gear-icon>
-        </app-button>
-      </div>
-
       <div
-        class="tasks-container h-full w-full"
-        cdkDropList
-        [cdkDropListData]="swimlane.userStories"
-        (cdkDropListDropped)="drop($event)"
+        [style.--minha-cor]="swimlane.cor"
+        class="flex flex-col flex-grow min-w-fit min-h-fit my-10 mx-2 p-5 bg-[var(--minha-cor)] border-r-4 rounded-sm"
+        *ngFor="let swimlane of board.swimlanes"
       >
+        <div class="flex text-lg font-bold uppercase mb-5 justify-between">
+          <span class="text-white">{{ swimlane.nome }}</span>
+
+          <app-button
+            class="bg-gray-400 p-1 rounded-sm text-white"
+            (click)="navigateToEditSwimlane(swimlane.id!)"
+          >
+            <app-gear-icon></app-gear-icon>
+          </app-button>
+        </div>
+
         <div
-          class="bg-white flex flex-col p-4 border-b-2 border-b-violet-400 gap-4 cursor-pointer"
-          *ngFor="let item of swimlane.userStories"
-          (click)="navigateToEditUserStory(item.id)"
-          cdkDrag
+          class="tasks-container h-full w-full"
+          cdkDropList
+          [cdkDropListData]="swimlane.userStories"
+          (cdkDropListDropped)="drop($event)"
         >
-          <h2 class="font-bold">{{ item.titulo }}</h2>
+          <div
+            class="bg-white flex flex-col p-4 border-b-2 border-b-violet-400 gap-4 cursor-pointer"
+            *ngFor="let item of swimlane.userStories"
+            (click)="navigateToEditUserStory(item.id)"
+            cdkDrag
+          >
+            <h2 class="font-bold">{{ item.titulo }}</h2>
 
-          <br />
+            <br />
 
-          <span>{{ item.descricao }}</span>
+            <span>{{ item.descricao }}</span>
 
-          <div class="flex gap-2">
-            <span class="text-sm bg-green-200 rounded-sm p-1"
-              >Est. Tempo: {{ item.estimativa_tempo }}h</span
-            >
-            <span class="text-sm bg-green-200 rounded-sm p-1"
-              >Responsável: {{ item.responsavel }}</span
-            >
+            <div class="flex gap-2">
+              <span class="text-sm bg-green-200 rounded-sm p-1"
+                >Est. Tempo: {{ item.estimativa_tempo }}h</span
+              >
+              <span class="text-sm bg-green-200 rounded-sm p-1"
+                >Responsável: {{ item.responsavel }}</span
+              >
+            </div>
           </div>
         </div>
       </div>
-    </div>
     } @else {
-    <h2>Não existem swimlanes nesse Kanban.</h2>
+      <h2>Não existem swimlanes nesse Kanban.</h2>
     }
   </div>
 </div>

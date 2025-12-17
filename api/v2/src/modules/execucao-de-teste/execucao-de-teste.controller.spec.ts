@@ -48,7 +48,9 @@ describe('ExecucaoDeTesteController', () => {
       ],
     }).compile();
 
-    controller = module.get<ExecucaoDeTesteController>(ExecucaoDeTesteController);
+    controller = module.get<ExecucaoDeTesteController>(
+      ExecucaoDeTesteController,
+    );
   });
 
   it('should be defined', () => {

@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { casoUso } from '../../models/casoUso';
 import { CasoUsoService } from '../../services/casoUso.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,10 +14,9 @@ import { ProjetoService } from '../../services/projeto.service';
 @Component({
   selector: 'app-editar-caso',
   templateUrl: './editar-caso.component.html',
-  styleUrls: ['./editar-caso.component.css']
+  styleUrls: ['./editar-caso.component.css'],
 })
 export class EditarCasoComponent {
-
   casoFormGroup!: FormGroup;
   projeto!: Projeto;
   projetoId!: number;
@@ -27,7 +31,7 @@ export class EditarCasoComponent {
     private casoUsoService: CasoUsoService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['idPro'];
     this.RequisitoId = this.route.snapshot.params['id'];
@@ -49,23 +53,27 @@ export class EditarCasoComponent {
         Validators.maxLength(255),
       ]),
 
-      complexidade: new FormControl('', [
-        Validators.required,
-      ]),
+      complexidade: new FormControl('', [Validators.required]),
     });
 
     this.buscarProjeto(this.projetoId, this.userId);
     this.inicializarForm();
   }
 
-  inicializarForm(){
+  inicializarForm() {
     this.casoUsoService.getById(this.casoUsoId).subscribe((caso) => {
       this.casoFormGroup.patchValue(caso);
-    })
+    });
   }
 
-  backToAtorHome(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'requisitos', this.RequisitoId, 'caso-de-uso']);
+  backToAtorHome() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'requisitos',
+      this.RequisitoId,
+      'caso-de-uso',
+    ]);
   }
 
   buscarProjeto(id: number, user: number) {
@@ -89,7 +97,7 @@ export class EditarCasoComponent {
       this.nome?.value,
       this.complexidade?.value,
       this.descricao?.value,
-      this.casoUsoId
+      this.casoUsoId,
     );
   }
 
@@ -102,7 +110,13 @@ export class EditarCasoComponent {
 
       this.casoUsoService.update(this.casoUso, this.RequisitoId).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard/projeto/', this.projetoId, 'requisitos', this.RequisitoId, 'caso-de-uso']);
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projetoId,
+            'requisitos',
+            this.RequisitoId,
+            'caso-de-uso',
+          ]);
         },
 
         error: (err) => {

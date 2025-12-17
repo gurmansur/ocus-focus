@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './flyingcards-userstory.component.html',
-  styleUrl: './flyingcards-userstory.component.css'
+  styleUrl: './flyingcards-userstory.component.css',
 })
-export class FlyingcardsUserstoryComponent {
-
-}
+export class FlyingcardsUserstoryComponent {}

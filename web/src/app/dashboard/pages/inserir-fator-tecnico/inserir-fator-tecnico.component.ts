@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Projeto } from '../../models/projeto';
 import { fatTecPro } from '../../models/fatTecPro';
 import { ProjetoService } from '../../services/projeto.service';
@@ -9,10 +14,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-inserir-fator-tecnico',
   templateUrl: './inserir-fator-tecnico.component.html',
-  styleUrls: ['./inserir-fator-tecnico.component.css']
+  styleUrls: ['./inserir-fator-tecnico.component.css'],
 })
 export class InserirFatorTecnicoComponent {
-
   FatorFormGroup!: FormGroup;
   projeto!: Projeto;
   projetoId!: number;
@@ -25,7 +29,7 @@ export class InserirFatorTecnicoComponent {
     private fatorService: FatTecProService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.projetoId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
@@ -33,10 +37,7 @@ export class InserirFatorTecnicoComponent {
 
   ngOnInit(): void {
     this.FatorFormGroup = this.formBuilder.group({
-
-      fatorTec: new FormControl('', [
-        Validators.required,
-      ]),
+      fatorTec: new FormControl('', [Validators.required]),
 
       valor: new FormControl('', [
         Validators.required,
@@ -48,8 +49,12 @@ export class InserirFatorTecnicoComponent {
     this.buscarProjeto(this.projetoId, this.userId);
   }
 
-  backToFatorHome(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'fatores-tecnicos']);
+  backToFatorHome() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'fatores-tecnicos',
+    ]);
   }
 
   buscarProjeto(id: number, user: number) {
@@ -67,11 +72,9 @@ export class InserirFatorTecnicoComponent {
 
   createFator(): fatTecPro {
     return new fatTecPro(
-
       this.valor?.value,
       this.fatorTec?.value,
-      this.projetoId
-
+      this.projetoId,
     );
   }
 
@@ -85,7 +88,11 @@ export class InserirFatorTecnicoComponent {
 
       this.fatorService.create(this.fatTec, this.projetoId).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard/projeto/', this.projetoId, 'fatores-tecnicos']);
+          this.router.navigate([
+            '/dashboard/projeto/',
+            this.projetoId,
+            'fatores-tecnicos',
+          ]);
         },
 
         error: (err) => {

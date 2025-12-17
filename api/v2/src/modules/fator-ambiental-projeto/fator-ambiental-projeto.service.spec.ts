@@ -43,7 +43,9 @@ describe('FatorAmbientalProjetoService', () => {
       ],
     }).compile();
 
-    service = module.get<FatorAmbientalProjetoService>(FatorAmbientalProjetoService);
+    service = module.get<FatorAmbientalProjetoService>(
+      FatorAmbientalProjetoService,
+    );
   });
 
   it('should be defined', () => {

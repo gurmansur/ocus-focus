@@ -86,7 +86,7 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
     private acaoService: AcaoDeTesteService,
     private execService: ExecucaoDeTesteService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit() {
@@ -281,7 +281,7 @@ export class AcoesAutomatizadasComponent implements OnInit, OnChanges {
 
   private showSnackbar(
     message: string,
-    type: 'success' | 'error' | 'info' = 'info'
+    type: 'success' | 'error' | 'info' = 'info',
   ) {
     this.snackbarMessage = message;
     this.snackbarType = type;

@@ -18,7 +18,11 @@
       </svg>
     </div>
     <h2 class="my-4 text-xl text-center">
-      @if (isEdit) { Editar } @else { Inserir }
+      @if (isEdit) {
+        Editar
+      } @else {
+        Inserir
+      }
       <span class="font-medium text-violet-700">Execução de Teste</span>
     </h2>
     <div class="mb-4 flex flex-wrap" style="gap: 1rem 0">
@@ -33,15 +37,17 @@
           formControlName="nome"
           class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
-        @if (execucaoFormGroup.get('nome').invalid &&
-        execucaoFormGroup.get('nome').touched) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            execucaoFormGroup.get("nome").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          execucaoFormGroup.get("nome").invalid &&
+          execucaoFormGroup.get("nome").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              execucaoFormGroup.get("nome").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-full mr-1">
@@ -56,18 +62,20 @@
         >
           <option value="" disabled selected>Selecione o Caso de Teste</option>
           @for (caso of casosDeTeste; track $index) {
-          <option value="{{ caso.id }}">{{ caso.nome }}</option>
+            <option value="{{ caso.id }}">{{ caso.nome }}</option>
           }
         </select>
-        @if (execucaoFormGroup.get('casoDeTeste').invalid &&
-        execucaoFormGroup.get('casoDeTeste').touched ) {
-        <p class="text-red-500 text-xs italic">
-          {{
-            execucaoFormGroup.get("caso").errors.required
-              ? "Campo obrigatório"
-              : ""
-          }}
-        </p>
+        @if (
+          execucaoFormGroup.get("casoDeTeste").invalid &&
+          execucaoFormGroup.get("casoDeTeste").touched
+        ) {
+          <p class="text-red-500 text-xs italic">
+            {{
+              execucaoFormGroup.get("caso").errors.required
+                ? "Campo obrigatório"
+                : ""
+            }}
+          </p>
         }
       </div>
       <div class="relative w-full flex">
@@ -82,11 +90,13 @@
             formControlName="data"
             class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-5 transition-colors duration-200 ease-in-out"
           />
-          @if (execucaoFormGroup.get('data').invalid &&
-          execucaoFormGroup.get('data').touched) {
-          <p class="text-red-500 text-xs italic">
-            {{ data.errors.required ? "Campo obrigatório" : "" }}
-          </p>
+          @if (
+            execucaoFormGroup.get("data").invalid &&
+            execucaoFormGroup.get("data").touched
+          ) {
+            <p class="text-red-500 text-xs italic">
+              {{ data.errors.required ? "Campo obrigatório" : "" }}
+            </p>
           }
         </div>
         <div class="relative w-1/2 mx-1">
@@ -100,15 +110,17 @@
             formControlName="hora"
             class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-5 transition-colors duration-200 ease-in-out"
           />
-          @if (execucaoFormGroup.get('hora').invalid &&
-          execucaoFormGroup.get('hora').touched) {
-          <p class="text-red-500 text-xs italic">
-            {{
-              execucaoFormGroup.get("hora").errors.required
-                ? "Campo obrigatório"
-                : ""
-            }}
-          </p>
+          @if (
+            execucaoFormGroup.get("hora").invalid &&
+            execucaoFormGroup.get("hora").touched
+          ) {
+            <p class="text-red-500 text-xs italic">
+              {{
+                execucaoFormGroup.get("hora").errors.required
+                  ? "Campo obrigatório"
+                  : ""
+              }}
+            </p>
           }
         </div>
       </div>
@@ -126,9 +138,12 @@
         (onClick)="isEdit ? updateTestExecution() : createTestExecution()"
         [disabled]="!isFormValid"
       >
-        @if (isEdit) { Editar Caso de Teste } @else {
-        <app-plus-icon></app-plus-icon>
-        Adicionar Caso de Teste }
+        @if (isEdit) {
+          Editar Caso de Teste
+        } @else {
+          <app-plus-icon></app-plus-icon>
+          Adicionar Caso de Teste
+        }
       </app-button>
     </div>
   </form>

@@ -18,7 +18,7 @@ export class SeleniumPageComponent {
 
   constructor(
     private execService: ExecucaoDeTesteService,
-    private acaoService: AcaoDeTesteService
+    private acaoService: AcaoDeTesteService,
   ) {}
 
   addNode() {
@@ -63,7 +63,7 @@ export class SeleniumPageComponent {
         } else if (event.type === 'complete') {
           this.resultado = event;
           this.log.push(
-            `✓ Execução concluída: ${event.sucesso ? 'SUCESSO' : 'FALHA'}`
+            `✓ Execução concluída: ${event.sucesso ? 'SUCESSO' : 'FALHA'}`,
           );
           this.executando = false;
         } else if (event.type === 'error') {

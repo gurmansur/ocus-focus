@@ -9,7 +9,9 @@
       >
         {{ projeto.nome[0] }}
       </div>
-      <h3 class="text-xl ms-3 font-medium">Painel do Stakeholder: {{ projeto.nome }}</h3>
+      <h3 class="text-xl ms-3 font-medium">
+        Painel do Stakeholder: {{ projeto.nome }}
+      </h3>
     </div>
   </div>
   <h1 class="text-3xl font-medium my-5">Resumo da Priorização</h1>
@@ -74,7 +76,11 @@
       [entityAttributes]="camposEntidade"
       [hasEdit]="false"
       [hasDelete]="false"
-      [customEmptyMessage]="!this.filterValue ? 'Priorize os requisitos para visualizar o resumo das suas respostas!' : 'Nenhum resultado encontrado para a busca.'"
+      [customEmptyMessage]="
+        !this.filterValue
+          ? 'Priorize os requisitos para visualizar o resumo das suas respostas!'
+          : 'Nenhum resultado encontrado para a busca.'
+      "
     ></app-tabela>
   </div>
 

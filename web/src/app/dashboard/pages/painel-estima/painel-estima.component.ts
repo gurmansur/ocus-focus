@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-painel-estima',
   templateUrl: './painel-estima.component.html',
-  styleUrls: ['./painel-estima.component.css']
+  styleUrls: ['./painel-estima.component.css'],
 })
 export class PainelEstimaComponent {
   userId!: number;
@@ -14,19 +14,20 @@ export class PainelEstimaComponent {
   projeto!: Projeto;
 
   showModal: boolean = false;
-  tituloDialogo: string = "Deseja realmente excluir este projeto?";
-  mensagemDialogo: string = "Essa ação é irreversível. Todos os dados do projeto em questão serão excluídos do sistema.";
+  tituloDialogo: string = 'Deseja realmente excluir este projeto?';
+  mensagemDialogo: string =
+    'Essa ação é irreversível. Todos os dados do projeto em questão serão excluídos do sistema.';
 
   constructor(
     private projetoService: ProjetoService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.projectId = this.route.snapshot.params['id'];
     this.userId = Number(localStorage.getItem('usu_id'));
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projectId, this.userId);
   }
 
@@ -35,7 +36,7 @@ export class PainelEstimaComponent {
       this.projeto = projeto;
     });
   }
-  openProjectHome(){
+  openProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projectId]);
   }
   openAtores() {
@@ -46,10 +47,18 @@ export class PainelEstimaComponent {
     this.router.navigate(['/dashboard/projeto/', this.projectId, 'requisitos']);
   }
   openFatorAmbiental() {
-    this.router.navigate(['/dashboard/projeto/', this.projectId, 'fatores-ambientais']);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'fatores-ambientais',
+    ]);
   }
   openFatorTecnico() {
-    this.router.navigate(['/dashboard/projeto/', this.projectId, 'fatores-tecnicos']);
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projectId,
+      'fatores-tecnicos',
+    ]);
   }
   openEstimativa() {
     this.router.navigate(['/dashboard/projeto/', this.projectId, 'estimativa']);

@@ -14,7 +14,7 @@
       'Status',
       'Testador Designado',
       'Data de Execução',
-      'Hora'
+      'Hora',
     ]"
     [data]="execucoes"
     customEmptyMessage="'Nenhum caso de teste encontrado'"
@@ -30,7 +30,7 @@
       'resultado',
       'casoDeTeste:testadorDesignado:nome',
       'data',
-      'hora'
+      'hora',
     ]"
   ></app-table>
 
@@ -56,42 +56,42 @@
   >
     <ngx-charts-pie-chart
       [results]="[
-      {
-        name: 'Passou',
-        value: 5,
-        extra: {
-          percentage: '50%',
+        {
+          name: 'Passou',
+          value: 5,
+          extra: {
+            percentage: '50%',
+          },
         },
-      },
-      {
-        name: 'Falhou',
-        value: 3,
-        extra: {
-          percentage: '30%',
+        {
+          name: 'Falhou',
+          value: 3,
+          extra: {
+            percentage: '30%',
+          },
         },
-      },
-      {
-        name: 'Executando',
-        value: 2,
-        extra: {
-          percentage: '20%',
+        {
+          name: 'Executando',
+          value: 2,
+          extra: {
+            percentage: '20%',
+          },
         },
-      },
-    ]"
+      ]"
       [customColors]="[
-      {
-        name: 'Passou',
-        value: '#6B46C1',
-      },
-      {
-        name: 'Falhou',
-        value: '#A786DB',
-      },
-      {
-        name: 'Executando',
-        value: '#C2B3E5',
-      },
-    ]"
+        {
+          name: 'Passou',
+          value: '#6B46C1',
+        },
+        {
+          name: 'Falhou',
+          value: '#A786DB',
+        },
+        {
+          name: 'Executando',
+          value: '#C2B3E5',
+        },
+      ]"
       [labels]="true"
       [legend]="true"
       [legendPosition]="legendPosition"

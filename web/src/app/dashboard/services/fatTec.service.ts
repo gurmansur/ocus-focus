@@ -9,14 +9,14 @@ import { fatTec } from '../shared/models/fatTec';
 export class FatTecService {
   constructor(
     private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string
+    @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
   findByDescricao(
     id: number,
     descricao: string,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Observable<GetResponseFatores[]> {
     return this.httpClient.get<GetResponseFatores[]>(
       `${this.servicesRootUrl}/fatores-tecnicos/findByDescricao?fator=${id}&descricao=${descricao}&page=${page}&pageSize=${pageSize}`,
@@ -24,7 +24,7 @@ export class FatTecService {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
-      }
+      },
     );
   }
 }

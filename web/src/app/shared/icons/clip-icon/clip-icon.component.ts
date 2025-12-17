@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './clip-icon.component.html',
-  styleUrl: './clip-icon.component.css'
+  styleUrl: './clip-icon.component.css',
 })
-export class ClipIconComponent {
-
-}
+export class ClipIconComponent {}

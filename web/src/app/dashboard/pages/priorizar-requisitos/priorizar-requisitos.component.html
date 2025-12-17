@@ -16,18 +16,18 @@
         (click)="backToProjectHome()"
         class="bg-violet-700 text-white p-2 rounded-md hover:bg-violet-800 font-medium flex items-center shadow-md mr-2"
       >
-      <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      class="w-5 h-5 me-2"
-    >
-      <path
-        fill-rule="evenodd"
-        d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H15a6.75 6.75 0 010 13.5h-3a.75.75 0 010-1.5h3a5.25 5.25 0 100-10.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z"
-        clip-rule="evenodd"
-      />
-      </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-5 h-5 me-2"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H15a6.75 6.75 0 010 13.5h-3a.75.75 0 010-1.5h3a5.25 5.25 0 100-10.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z"
+            clip-rule="evenodd"
+          />
+        </svg>
         Retornar ao Início
       </button>
     </div>
@@ -81,12 +81,18 @@
           class="text-red-600 text-xs mt-1"
         >
           <div
-            *ngIf="priorizacaoFormGroup.get('numeroIdentificador')?.errors?.['required']"
+            *ngIf="
+              priorizacaoFormGroup.get('numeroIdentificador')?.errors?.[
+                'required'
+              ]
+            "
           >
             Campo obrigatório.
           </div>
           <div
-            *ngIf="priorizacaoFormGroup.get('numeroIdentificador')?.errors?.['min']"
+            *ngIf="
+              priorizacaoFormGroup.get('numeroIdentificador')?.errors?.['min']
+            "
           >
             O número inserido deve ser maior que 0.
           </div>
@@ -138,7 +144,9 @@
       </div>
 
       <div class="relative mb-4 w-full">
-        <label for="respostaPositiva" class="leading-7 text-sm text-gray-600">Como me sinto com o cumprimento do requisito?</label>
+        <label for="respostaPositiva" class="leading-7 text-sm text-gray-600"
+          >Como me sinto com o cumprimento do requisito?</label
+        >
         <select
           formControlName="respostaPositiva"
           id="respostaPositiva"
@@ -151,13 +159,28 @@
           <option value="CONVIVO COM ISSO">CONVIVO COM ISSO</option>
           <option value="NAO GOSTARIA">NAO GOSTARIA</option>
         </select>
-        <div *ngIf="priorizacaoFormGroup.get('respostaPositiva')?.invalid && (priorizacaoFormGroup.get('respostaPositiva')?.dirty || priorizacaoFormGroup.get('respostaPositiva')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="priorizacaoFormGroup.get('respostaPositiva')?.errors?.['required']">Campo obrigatório.</div>
+        <div
+          *ngIf="
+            priorizacaoFormGroup.get('respostaPositiva')?.invalid &&
+            (priorizacaoFormGroup.get('respostaPositiva')?.dirty ||
+              priorizacaoFormGroup.get('respostaPositiva')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div
+            *ngIf="
+              priorizacaoFormGroup.get('respostaPositiva')?.errors?.['required']
+            "
+          >
+            Campo obrigatório.
+          </div>
         </div>
       </div>
 
       <div class="relative mb-4 w-full">
-        <label for="respostaNegativa" class="leading-7 text-sm text-gray-600">Como me sinto com o não cumprimento do requisito?</label>
+        <label for="respostaNegativa" class="leading-7 text-sm text-gray-600"
+          >Como me sinto com o não cumprimento do requisito?</label
+        >
         <select
           formControlName="respostaNegativa"
           id="respostaNegativa"
@@ -170,25 +193,50 @@
           <option value="CONVIVO COM ISSO">CONVIVO COM ISSO</option>
           <option value="NAO GOSTARIA">NAO GOSTARIA</option>
         </select>
-        <div *ngIf="priorizacaoFormGroup.get('respostaNegativa')?.invalid && (priorizacaoFormGroup.get('respostaNegativa')?.dirty || priorizacaoFormGroup.get('respostaNegativa')?.touched)" class="text-red-600 text-xs mt-1">
-          <div *ngIf="priorizacaoFormGroup.get('respostaNegativa')?.errors?.['required']">Campo obrigatório.</div>
+        <div
+          *ngIf="
+            priorizacaoFormGroup.get('respostaNegativa')?.invalid &&
+            (priorizacaoFormGroup.get('respostaNegativa')?.dirty ||
+              priorizacaoFormGroup.get('respostaNegativa')?.touched)
+          "
+          class="text-red-600 text-xs mt-1"
+        >
+          <div
+            *ngIf="
+              priorizacaoFormGroup.get('respostaNegativa')?.errors?.['required']
+            "
+          >
+            Campo obrigatório.
+          </div>
         </div>
       </div>
 
       <div class="flex w-full justify-center align-center">
-        <button [disabled]="indiceAtual === 0" (click)="backToPrevious()"
-        class="inline-flex items-center font-medium disabled:bg-violet-400 bg-violet-600 border-0 rounded p-3 w-1/3 justify-center focus:outline-none hover:bg-violet-800 text-white mt-4 mr-4"
+        <button
+          [disabled]="indiceAtual === 0"
+          (click)="backToPrevious()"
+          class="inline-flex items-center font-medium disabled:bg-violet-400 bg-violet-600 border-0 rounded p-3 w-1/3 justify-center focus:outline-none hover:bg-violet-800 text-white mt-4 mr-4"
         >
           Voltar
         </button>
 
-        <button *ngIf="requisitoList !== undefined && indiceAtual !== requisitoList.length - 1" (click)="goToNext()"
+        <button
+          *ngIf="
+            requisitoList !== undefined &&
+            indiceAtual !== requisitoList.length - 1
+          "
+          (click)="goToNext()"
           class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 w-1/3 justify-center focus:outline-none hover:bg-violet-800 text-white mt-4"
         >
           Próximo
         </button>
 
-        <button *ngIf="requisitoList !== undefined && indiceAtual === requisitoList.length - 1" (click)="onSubmit()"
+        <button
+          *ngIf="
+            requisitoList !== undefined &&
+            indiceAtual === requisitoList.length - 1
+          "
+          (click)="onSubmit()"
           class="inline-flex items-center font-medium bg-violet-600 border-0 rounded p-3 w-1/3 justify-center focus:outline-none hover:bg-violet-800 text-white mt-4"
         >
           Encerrar
@@ -198,10 +246,10 @@
   </div>
 
   <app-dialogo-confirmacao
-  [titulo]="tituloDialogo"
-  [mensagem]="mensagemDialogo"
-  [isActive]="showModal"
-  [onCancel]="cancelarPriorizacao.bind(this)"
-  [onConfirm]="confirmarPriorizacao.bind(this)"
-></app-dialogo-confirmacao>
+    [titulo]="tituloDialogo"
+    [mensagem]="mensagemDialogo"
+    [isActive]="showModal"
+    [onCancel]="cancelarPriorizacao.bind(this)"
+    [onConfirm]="confirmarPriorizacao.bind(this)"
+  ></app-dialogo-confirmacao>
 </section>

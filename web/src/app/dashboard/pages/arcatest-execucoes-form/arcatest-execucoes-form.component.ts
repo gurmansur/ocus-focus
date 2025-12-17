@@ -47,7 +47,7 @@ export class ArcatestExecucoesFormComponent {
     private router: Router,
     private route: ActivatedRoute,
     private execucaoDeTesteService: ExecucaoDeTesteService,
-    private casoDeTesteService: CasoDeTesteService
+    private casoDeTesteService: CasoDeTesteService,
   ) {
     this.projectId = this.route.parent?.snapshot.params['id'];
     this.idExec = this.route.snapshot.params['idExec'];
@@ -62,21 +62,21 @@ export class ArcatestExecucoesFormComponent {
     this.execucaoFormGroup = this.formBuilder.group({
       nome: new FormControl(
         this.execucaoDeTeste?.nome || '',
-        Validators.required
+        Validators.required,
       ),
       data: new FormControl(
         this.execucaoDeTeste?.dataExecucao.split('T')[0] ||
           new Date().toISOString().split('T')[0],
-        Validators.required
+        Validators.required,
       ),
       hora: new FormControl(
         this.execucaoDeTeste?.dataExecucao.split('T')[1].split('.')[0] ||
           new Date().toISOString().split('T')[1].split('.')[0],
-        Validators.required
+        Validators.required,
       ),
       casoDeTeste: new FormControl(
         this.execucaoDeTeste?.casoDeTeste.id || '',
-        Validators.required
+        Validators.required,
       ),
     });
   }
@@ -102,7 +102,7 @@ export class ArcatestExecucoesFormComponent {
     this.execucaoFormGroup = this.formBuilder.group({
       nome: new FormControl(
         this.execucaoDeTeste?.nome || '',
-        Validators.required
+        Validators.required,
       ),
       data: new FormControl(
         this.execucaoDeTeste?.dataExecucao
@@ -110,20 +110,20 @@ export class ArcatestExecucoesFormComponent {
               .toISOString()
               .split('T')[0]
           : new Date().toISOString().split('T')[0],
-        Validators.required
+        Validators.required,
       ),
       hora: new FormControl(
         this.execucaoDeTeste?.dataExecucao
           ? new Date(this.execucaoDeTeste.dataExecucao).toLocaleTimeString(
               'pt-BR',
-              { hour12: false }
+              { hour12: false },
             )
           : new Date().toLocaleTimeString('pt-BR', { hour12: false }),
-        Validators.required
+        Validators.required,
       ),
       casoDeTeste: new FormControl(
         this.execucaoDeTeste?.casoDeTeste.id || '',
-        Validators.required
+        Validators.required,
       ),
     });
   }

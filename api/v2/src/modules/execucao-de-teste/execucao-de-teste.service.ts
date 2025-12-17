@@ -321,12 +321,13 @@ export class ExecucaoDeTesteService {
           }
 
           // Execute test using helper (which will handle actions and config retrieval)
-          const { sucesso, execucaoId, resultado } = await this.executeSingleTestCase(
-            caso,
-            projeto,
-            observer,
-            'Execução Automatizada',
-          );
+          const { sucesso, execucaoId, resultado } =
+            await this.executeSingleTestCase(
+              caso,
+              projeto,
+              observer,
+              'Execução Automatizada',
+            );
 
           // If no result, test had no actions (already logged by helper)
           if (!resultado) {

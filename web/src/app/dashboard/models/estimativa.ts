@@ -1,7 +1,5 @@
 export class Estimativa {
-
   constructor(
-
     public DataEstimativa: Date,
     public Efactor: number,
     public Tfactor: number,
@@ -10,8 +8,6 @@ export class Estimativa {
     public PesoPontos: number,
     public ResHoras: number,
     public ResPontos: number,
-    public id?: number
-
-    ) {}
-
+    public id?: number,
+  ) {}
 }

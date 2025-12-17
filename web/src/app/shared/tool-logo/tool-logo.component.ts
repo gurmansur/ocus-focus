@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './tool-logo.component.html',
-  styleUrl: './tool-logo.component.css'
+  styleUrl: './tool-logo.component.css',
 })
-export class ToolLogoComponent {
-
-}
+export class ToolLogoComponent {}

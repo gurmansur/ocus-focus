@@ -7,6 +7,6 @@ export class Projeto {
     public dataInicio: Date,
     public previsaoFim: Date,
     public admin: boolean,
-    public id?: number
-  ){}
+    public id?: number,
+  ) {}
 }
