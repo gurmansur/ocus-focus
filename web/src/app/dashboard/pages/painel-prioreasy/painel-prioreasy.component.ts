@@ -10,12 +10,12 @@ import { StakeholderService } from '../../services/stakeholder.service';
 @Component({
   selector: 'app-painel-prioreasy',
   templateUrl: './painel-prioreasy.component.html',
-  styleUrls: ['./painel-prioreasy.component.css']
+  styleUrls: ['./painel-prioreasy.component.css'],
 })
 export class PainelPrioreasyComponent {
   userId!: number;
   projetoId!: number;
-  projeto!: Projeto;
+  projeto?: Projeto;
 
   constructor(
     private projetoService: ProjetoService,
@@ -33,20 +33,12 @@ export class PainelPrioreasyComponent {
   requisitos: ResultadoRequisito[] = [];
 
   // tabela
-  colunasTabela: string[] = [
-    'RF#',
-    'Nome',
-    'Resultado Final',
-  ];
+  colunasTabela: string[] = ['RF#', 'Nome', 'Resultado Final'];
 
-  camposEntidade: string[] = [
-    'numeroIdentificador',
-    'nome',
-    'resultadoFinal',
-  ];
+  camposEntidade: string[] = ['numeroIdentificador', 'nome', 'resultadoFinal'];
 
   // formulario de busca
-  filterValue: string = "";
+  filterValue: string = '';
 
   // paginação
   paginaAtual: number = 0;
@@ -55,16 +47,19 @@ export class PainelPrioreasyComponent {
   totalPaginas: number = 0;
 
   // modal confirmação
-  tituloConfirmacao = "Deseja realmente efetuar a geração dos resultados do projeto?";
-  mensagemConfirmacao = "Ao confirmar, os resultados serão gerados e não poderão ser alterados.";
+  tituloConfirmacao =
+    'Deseja realmente efetuar a geração dos resultados do projeto?';
+  mensagemConfirmacao =
+    'Ao confirmar, os resultados serão gerados e não poderão ser alterados.';
   showModalConfirmacao: boolean = false;
 
   // modal mensagem
-  tituloMensagem = "Erro!";
-  mensagemMensagem = "Nem todos os stakeholders participaram da priorização. Aguarde a participação de todos para gerar os resultados.";
+  tituloMensagem = 'Erro!';
+  mensagemMensagem =
+    'Nem todos os stakeholders participaram da priorização. Aguarde a participação de todos para gerar os resultados.';
   showModalMensagem: boolean = false;
 
-  ngOnInit(){
+  ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
     this.executarBusca();
   }
@@ -81,10 +76,19 @@ export class PainelPrioreasyComponent {
   }
 
   private executarBusca(): void {
-    if(!this.filterValue){
-      this.requisitoService.listResultado(this.projetoId, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+    if (!this.filterValue) {
+      this.requisitoService
+        .listResultado(this.projetoId, this.paginaAtual, this.tamanhoPagina)
+        .subscribe(this.processarResultado());
     } else {
-      this.requisitoService.listResultadoByName(this.projetoId, this.filterValue, this.paginaAtual, this.tamanhoPagina).subscribe(this.processarResultado());
+      this.requisitoService
+        .listResultadoByName(
+          this.projetoId,
+          this.filterValue,
+          this.paginaAtual,
+          this.tamanhoPagina
+        )
+        .subscribe(this.processarResultado());
     }
   }
 
@@ -98,29 +102,32 @@ export class PainelPrioreasyComponent {
     };
   }
 
-  openProjectHome(){
+  openProjectHome() {
     this.router.navigate(['/dashboard/projeto/', this.projetoId]);
   }
 
-  openStakeholders(){
-    this.router.navigate(['/dashboard/projeto/', this.projetoId, 'stakeholders']);
+  openStakeholders() {
+    this.router.navigate([
+      '/dashboard/projeto/',
+      this.projetoId,
+      'stakeholders',
+    ]);
   }
 
   openPriorizacao() {
     this.showModalConfirmacao = true;
   }
 
-  cancelarPriorizacao(){
+  cancelarPriorizacao() {
     this.showModalConfirmacao = false;
   }
 
-  fecharMensagem(){
+  fecharMensagem() {
     this.showModalMensagem = false;
   }
 
-  confirmarPriorizacao(){
+  confirmarPriorizacao() {
     this.stakeholderService.verifyParticipation(this.projetoId).subscribe({
-
       next: () => {
         this.requisitoService.findAllByProjeto(this.projetoId).subscribe((todosRequisitos) => {
           todosRequisitos.forEach((requisito: any) => {
@@ -132,15 +139,13 @@ export class PainelPrioreasyComponent {
                 this.showModalConfirmacao = false;
               });
             });
-          });
         });
       },
 
       error: (err) => {
         this.showModalConfirmacao = false;
         this.showModalMensagem = true;
-      }
-
+      },
     });
   }
 

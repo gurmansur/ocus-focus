@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { TypeOrmConfigService } from './config/typeorm.config';
+import { AcaoDeTesteModule } from './modules/acao-de-teste/acao-de-teste.module';
 import { AtorModule } from './modules/ator/ator.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CasoDeTesteModule } from './modules/caso-de-teste/caso-de-teste.module';
@@ -12,8 +13,10 @@ import { CasoUsoModule } from './modules/caso-uso/caso-uso.module';
 import { CenariosModule } from './modules/cenarios/cenarios.module';
 import { ColaboradorProjetoModule } from './modules/colaborador-projeto/colaborador-projeto.module';
 import { ColaboradorModule } from './modules/colaborador/colaborador.module';
+import { ConfiguracaoSeleniumModule } from './modules/configuracao-selenium/configuracao-selenium.module';
 import { EstimativaModule } from './modules/estimativa/estimativa.module';
 import { ExecucaoDeTesteModule } from './modules/execucao-de-teste/execucao-de-teste.module';
+import { ExecutorSeleniumModule } from './modules/executor-selenium/executor-selenium.module';
 import { FatorAmbientalProjetoModule } from './modules/fator-ambiental-projeto/fator-ambiental-projeto.module';
 import { FatorTecnicoProjetoModule } from './modules/fator-tecnico-projeto/fator-tecnico-projeto.module';
 import { FatoresAmbientaisModule } from './modules/fatores-ambientais/fatores-ambientais.module';
@@ -67,6 +70,9 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     ExecucaoDeTesteModule,
     CasoDeTesteModule,
     SuiteDeTesteModule,
+    AcaoDeTesteModule,
+    ConfiguracaoSeleniumModule,
+    ExecutorSeleniumModule,
     KanbanModule,
   ],
   providers: [

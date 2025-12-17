@@ -1,0 +1,225 @@
+<div class="container px-5 py-24 mx-auto">
+  <form
+    [formGroup]="form"
+    class="border-l-4 border-violet-700 rounded-lg md:w-1/2 mx-auto flex flex-col items-center shadow-lg p-10"
+  >
+    <div class="rounded-full bg-violet-700 p-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="ws-10 h-10 text-white font-black"
+      >
+        <path
+          fillRule="evenodd"
+          d="M14.447 3.027a.75.75 0 01.527.92l-4.5 16.5a.75.75 0 01-1.448-.394l4.5-16.5a.75.75 0 01.921-.526zM16.72 6.22a.75.75 0 011.06 0l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06L21.44 12l-4.72-4.72a.75.75 0 010-1.06zm-9.44 0a.75.75 0 010 1.06L2.56 12l4.72 4.72a.75.75 0 11-1.06 1.06L.97 12.53a.75.75 0 010-1.06l5.25-5.25a.75.75 0 011.06 0z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="flex items-center justify-between w-full my-4">
+      <h2 class="text-xl text-center flex-1">
+        @if (isEdit) { Editar } @else { Inserir }
+        <span class="font-medium text-violet-700">Configuração Selenium</span>
+      </h2>
+    </div>
+
+    <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+      <div class="col-span-2">
+        <label for="nome" class="leading-7 text-sm text-gray-600">Nome *</label>
+        <input
+          id="nome"
+          name="nome"
+          type="text"
+          formControlName="nome"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          placeholder="Ex: Configuração Padrão"
+        />
+        @if (nome?.invalid && nome?.touched) {
+        <p class="text-red-500 text-xs italic">Campo obrigatório</p>
+        }
+      </div>
+
+      <div>
+        <label for="navegador" class="leading-7 text-sm text-gray-600"
+          >Navegador *</label
+        >
+        <select
+          id="navegador"
+          name="navegador"
+          formControlName="navegador"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        >
+          @for (nav of navegadores; track nav.value) {
+          <option [value]="nav.value">{{ nav.label }}</option>
+          }
+        </select>
+        @if (navegador?.invalid && navegador?.touched) {
+        <p class="text-red-500 text-xs italic">Campo obrigatório</p>
+        }
+      </div>
+
+      <div>
+        <label for="resolucao" class="leading-7 text-sm text-gray-600"
+          >Resolução</label
+        >
+        <input
+          id="resolucao"
+          name="resolucao"
+          type="text"
+          formControlName="resolucao"
+          list="resolucao-list"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          placeholder="1920x1080"
+        />
+        <datalist id="resolucao-list">
+          @for (res of resolucoes; track res.value) {
+          <option [value]="res.value">{{ res.label }}</option>
+          }
+        </datalist>
+      </div>
+
+      <div>
+        <label for="timeoutPadrao" class="leading-7 text-sm text-gray-600"
+          >Timeout Padrão (ms)</label
+        >
+        <input
+          id="timeoutPadrao"
+          name="timeoutPadrao"
+          type="number"
+          min="0"
+          step="1000"
+          formControlName="timeoutPadrao"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+        @if (timeoutPadrao?.invalid && timeoutPadrao?.touched) {
+        <p class="text-red-500 text-xs italic">Informe um valor válido</p>
+        }
+      </div>
+
+      <div>
+        <label for="timeoutImplicito" class="leading-7 text-sm text-gray-600"
+          >Timeout Implícito (ms)</label
+        >
+        <input
+          id="timeoutImplicito"
+          name="timeoutImplicito"
+          type="number"
+          min="0"
+          step="1000"
+          formControlName="timeoutImplicito"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+        @if (timeoutImplicito?.invalid && timeoutImplicito?.touched) {
+        <p class="text-red-500 text-xs italic">Informe um valor válido</p>
+        }
+      </div>
+
+      <div class="col-span-2">
+        <label
+          for="timeoutCarregamentoPagina"
+          class="leading-7 text-sm text-gray-600"
+          >Timeout Carregamento Página (ms)</label
+        >
+        <input
+          id="timeoutCarregamentoPagina"
+          name="timeoutCarregamentoPagina"
+          type="number"
+          min="0"
+          step="1000"
+          formControlName="timeoutCarregamentoPagina"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+        @if ( timeoutCarregamentoPagina?.invalid &&
+        timeoutCarregamentoPagina?.touched ) {
+        <p class="text-red-500 text-xs italic">Informe um valor válido</p>
+        }
+      </div>
+
+      <div class="col-span-2">
+        <label for="urlSeleniumGrid" class="leading-7 text-sm text-gray-600"
+          >URL Selenium Grid</label
+        >
+        <input
+          id="urlSeleniumGrid"
+          name="urlSeleniumGrid"
+          type="text"
+          formControlName="urlSeleniumGrid"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          placeholder="http://localhost:4444/wd/hub"
+        />
+        <p class="text-gray-500 text-xs mt-1">
+          Deixe em branco para executar localmente
+        </p>
+      </div>
+
+      <div class="col-span-2">
+        <label for="userAgent" class="leading-7 text-sm text-gray-600"
+          >User Agent Customizado</label
+        >
+        <input
+          id="userAgent"
+          name="userAgent"
+          type="text"
+          formControlName="userAgent"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          placeholder="Opcional"
+        />
+      </div>
+
+      <div class="col-span-2">
+        <label for="proxy" class="leading-7 text-sm text-gray-600">Proxy</label>
+        <input
+          id="proxy"
+          name="proxy"
+          type="text"
+          formControlName="proxy"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          placeholder="http://proxy.example.com:8080"
+        />
+      </div>
+
+      <div class="col-span-2 border-t pt-4">
+        <h3 class="font-semibold mb-3">Opções</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" formControlName="headless" />
+            Modo Headless
+          </label>
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" formControlName="maximizarJanela" />
+            Maximizar Janela
+          </label>
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" formControlName="aceitarCertificadosSSL" />
+            Aceitar Certificados SSL
+          </label>
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" formControlName="capturarScreenshots" />
+            Capturar Screenshots
+          </label>
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" formControlName="capturarLogs" />
+            Capturar Logs
+          </label>
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" formControlName="ativa" />
+            Ativa
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex w-full justify-end gap-2">
+      <app-button (onClick)="navigateToList()" class="mb-4" color="secondary">
+        Cancelar
+      </app-button>
+
+      <app-button (onClick)="submit()" [disabled]="!isFormValid">
+        @if (isEdit) { Salvar Alterações } @else {
+        <app-plus-icon></app-plus-icon>
+        Criar Configuração }
+      </app-button>
+    </div>
+  </form>
+</div>

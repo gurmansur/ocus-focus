@@ -13,12 +13,8 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.context-menu-delete {
-  a {
-    span {
-      color: rgb(230, 40, 40);
-    }
-  }
+.context-menu-delete a span {
+  color: rgb(230, 40, 40);
 }
 
 .root-node {

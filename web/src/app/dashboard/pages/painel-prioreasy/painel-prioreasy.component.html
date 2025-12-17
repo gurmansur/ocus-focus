@@ -82,7 +82,9 @@
           </svg>
         </div>
       </div>
-      <button (click)="openPriorizacao()" [disabled]="!projeto.admin"
+      <button
+        (click)="openPriorizacao()"
+        [disabled]="!projeto?.admin"
         class="disabled:bg-violet-400 bg-violet-700 text-white p-3 hover:bg-violet-800 font-medium rounded-md flex items-center shadow-md"
       >
         <svg

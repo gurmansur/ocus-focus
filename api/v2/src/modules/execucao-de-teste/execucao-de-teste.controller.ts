@@ -3,19 +3,23 @@ import {
   Controller,
   Delete,
   Get,
+  MessageEvent,
   Param,
   Patch,
   Post,
   Query,
+  Sse,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
@@ -155,5 +159,67 @@ export class ExecucaoDeTesteController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.execucaoDeTesteService.remove(+id);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Teste executado automaticamente',
+  })
+  @Post('executar/:casoDeTesteId')
+  @ApiParam({
+    name: 'casoDeTesteId',
+    type: Number,
+    description: 'ID do caso de teste a ser executado',
+    example: 1,
+  })
+  async executarTesteAutomatizado(
+    @Param('casoDeTesteId') casoDeTesteId: string,
+    @ProjetoAtual() projeto: Projeto,
+  ) {
+    return this.execucaoDeTesteService.executarTesteAutomatizado(
+      +casoDeTesteId,
+      projeto,
+    );
+  }
+
+  @Sse('executar/:casoDeTesteId/stream')
+  @ApiParam({
+    name: 'casoDeTesteId',
+    type: Number,
+    description: 'ID do caso de teste a ser executado',
+    example: 1,
+  })
+  streamExecution(
+    @Param('casoDeTesteId') casoDeTesteId: string,
+    @ProjetoAtual() projeto: Projeto,
+  ): Observable<MessageEvent> {
+    return this.execucaoDeTesteService.streamExecution(+casoDeTesteId, projeto);
+  }
+
+  @Sse('executar-projeto/stream')
+  @ApiOperation({
+    summary: 'Executa todos os testes automatizados do projeto em lote',
+  })
+  streamProjectExecution(
+    @ProjetoAtual() projeto: Projeto,
+  ): Observable<MessageEvent> {
+    return this.execucaoDeTesteService.streamProjectExecution(projeto);
+  }
+
+  @Sse('executar-suite/:suiteId/stream')
+  @ApiParam({
+    name: 'suiteId',
+    type: Number,
+    description: 'ID da suite de teste a ser executada',
+    example: 1,
+  })
+  @ApiOperation({
+    summary: 'Executa todos os testes automatizados de uma suite em lote',
+  })
+  streamSuiteExecution(
+    @Param('suiteId') suiteId: string,
+    @ProjetoAtual() projeto: Projeto,
+  ): Observable<MessageEvent> {
+    return this.execucaoDeTesteService.streamSuiteExecution(+suiteId, projeto);
   }
 }

@@ -258,16 +258,8 @@ export class ProjetoService {
     return this.projetoRepository.update(id, updateProjetoDto);
   }
 
-  async remove(id: number) {
-    const projeto = await this.projetoRepository.findOneBy({ id });
-
-    if (!projeto){
-      throw new NotFoundException(`Projeto com ID ${id} não encontrado`);
-    }
-
-    projeto.status = 'CANCELADO';
-
-    return this.projetoRepository.save(projeto);
+  remove(id: number) {
+    return this.projetoRepository.softDelete(id);
   }
 
   async findColaboradores(id: number, page?: number, pageSize?: number) {

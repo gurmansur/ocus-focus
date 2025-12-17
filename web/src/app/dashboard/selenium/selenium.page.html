@@ -1,0 +1,32 @@
+<div class="wrapper">
+  <div class="toolbar">
+    <label>
+      Caso de Teste ID
+      <input type="number" [(ngModel)]="casoDeTesteId" />
+    </label>
+    <button (click)="addNode()">Adicionar ação</button>
+    <button [disabled]="executando || !casoDeTesteId" (click)="executar()">
+      Executar
+    </button>
+  </div>
+
+  <div class="layout">
+    <app-node-canvas
+      [nodes]="nodes"
+      (selectNode)="selected=$event"
+      (addNode)="addNode()"
+    ></app-node-canvas>
+
+    <app-property-panel
+      [node]="selected"
+      (save)="salvarNode($event)"
+    ></app-property-panel>
+  </div>
+
+  <app-execution-modal
+    [open]="executando || log.length>0"
+    [logs]="log"
+    [loading]="executando"
+    (close)="log=[];executando=false"
+  ></app-execution-modal>
+</div>

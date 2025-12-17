@@ -1,5 +1,5 @@
 {
-  "conventionalCommits.scopes": ["ArcaTest", "Geral", "FlyingCards"],
+  "conventionalCommits.scopes": ["ArcaTest", "Geral", "FlyingCards", "tests"],
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "always"

@@ -1,10 +1,8 @@
-import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from '../../config/typeorm.config';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { Projeto } from '../projeto/entities/projeto.entity';
+import { SuiteDeTesteService } from '../suite-de-teste/suite-de-teste.service';
 import { CasoDeTesteController } from './caso-de-teste.controller';
-import { CasoDeTesteModule } from './caso-de-teste.module';
 import { CasoDeTesteService } from './caso-de-teste.service';
 import { CasoDeTesteDto } from './dto/caso-de-teste.dto';
 import { CreateCasoDeTesteDto } from './dto/create-caso-de-teste.dto';
@@ -16,18 +14,33 @@ describe('CasoDeTesteController', () => {
   let service: CasoDeTesteService;
   jest.setTimeout(60000);
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    const mockRepository = {
+      findAndCount: jest.fn(),
+      findOne: jest.fn(),
+      find: jest.fn(),
+      create: jest.fn(),
+      save: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+    };
+
+    const mockSuiteDeTesteService = {
+      findOne: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CasoDeTesteModule,
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: `.env.${process.env.NODE_ENV}`,
-        }),
-        TypeOrmModule.forRootAsync({
-          useClass: TypeOrmConfigService,
-        }),
-        TypeOrmModule.forFeature([CasoDeTeste]),
+      controllers: [CasoDeTesteController],
+      providers: [
+        CasoDeTesteService,
+        {
+          provide: getRepositoryToken(CasoDeTeste),
+          useValue: mockRepository,
+        },
+        {
+          provide: SuiteDeTesteService,
+          useValue: mockSuiteDeTesteService,
+        },
       ],
     }).compile();
 
@@ -74,19 +87,48 @@ describe('CasoDeTesteController', () => {
         stakeholders: [],
         suitesDeTeste: [],
         userStories: [],
+        configuracoesSelenium: [],
       };
 
-      jest.spyOn(service, 'create').mockResolvedValueOnce({} as CasoDeTesteDto);
+      const mockResult: CasoDeTesteDto = {
+        id: 1,
+        nome: createDto.nome,
+        descricao: createDto.descricao,
+        preCondicao: createDto.preCondicao,
+        posCondicao: createDto.posCondicao,
+        resultadoEsperado: createDto.resultadoEsperado,
+        prioridade: createDto.prioridade,
+        complexidade: createDto.complexidade,
+        dadosEntrada: createDto.dadosEntrada,
+        observacoes: createDto.observacoes,
+        status: createDto.status,
+        metodo: createDto.metodo,
+        tecnica: createDto.tecnica,
+        casoDeUso: undefined,
+        projeto,
+      };
+      jest.spyOn(service, 'create').mockResolvedValueOnce(mockResult);
 
       const result = await controller.create(createDto, projeto);
 
       expect(service.create).toHaveBeenCalledWith(createDto, projeto);
-      expect(result).toEqual({
-        ...createDto,
-        projeto,
-        casoDeUso: undefined,
-        id: expect.any(Number),
-      } as CasoDeTesteDto);
+      expect(result).toMatchObject({
+        id: mockResult.id,
+        nome: mockResult.nome,
+        descricao: mockResult.descricao,
+        preCondicao: mockResult.preCondicao,
+        posCondicao: mockResult.posCondicao,
+        resultadoEsperado: mockResult.resultadoEsperado,
+        prioridade: mockResult.prioridade,
+        complexidade: mockResult.complexidade,
+        dadosEntrada: mockResult.dadosEntrada,
+        observacoes: mockResult.observacoes,
+        status: mockResult.status,
+        metodo: mockResult.metodo,
+        tecnica: mockResult.tecnica,
+        casoDeUso: mockResult.casoDeUso,
+        projeto: mockResult.projeto,
+      });
     });
   });
 
@@ -113,6 +155,7 @@ describe('CasoDeTesteController', () => {
         stakeholders: [],
         suitesDeTeste: [],
         userStories: [],
+        configuracoesSelenium: [],
       };
 
       const casoDeTesteDtoArray: CasoDeTesteDto[] = [
@@ -269,12 +312,13 @@ describe('CasoDeTesteController', () => {
         casoDeUsoId: null,
       };
 
-      jest.spyOn(service, 'update').mockResolvedValueOnce({} as any);
+      const mockResult = {} as any;
+      jest.spyOn(service, 'update').mockResolvedValueOnce(mockResult);
 
       const result = await controller.update(id, updateDto);
 
       expect(service.update).toHaveBeenCalledWith(+id, updateDto);
-      expect(result).toEqual(updateDto);
+      expect(result).toEqual(mockResult);
     });
   });
 

@@ -1,0 +1,40 @@
+<div class="px-8 py-5">
+  <div class="flex justify-between items-center">
+    <div>
+      <h2 class="text-3xl font-medium mb-1">Configurações do Selenium</h2>
+      <p class="text-gray-600">Gerencie as configurações de execução</p>
+    </div>
+    <div class="flex gap-3">
+      <app-button color="secondary" (onClick)="voltar()"> Voltar </app-button>
+      <app-button (onClick)="navigateToCreate()">
+        <app-plus-icon class="mr-2"></app-plus-icon>
+        Nova Configuração
+      </app-button>
+    </div>
+  </div>
+
+  <div class="mt-6 bg-white rounded shadow-sm p-4">
+    <app-table
+      [columns]="columns"
+      [data]="tableData"
+      [entityAttributes]="entityAttributes"
+      [customEmptyMessage]="'Nenhuma configuração cadastrada'"
+      [hasEdit]="true"
+      [hasDelete]="true"
+      [hasExecute]="false"
+      [hasView]="false"
+      (editClick)="onEdit($event)"
+      (deleteClick)="onDelete($event)"
+    ></app-table>
+  </div>
+</div>
+
+<app-modal
+  [title]="'Excluir Configuração'"
+  [message]="'Deseja excluir a configuração ' + configuracao.nome + '?'"
+  [open]="openDeleteModal"
+  confirmText="Excluir"
+  cancelText="Cancelar"
+  (confirm)="confirmDelete()"
+  (close)="closeDeleteModal()"
+></app-modal>
