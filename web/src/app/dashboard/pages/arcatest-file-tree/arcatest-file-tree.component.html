@@ -2,6 +2,27 @@
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-medium mb-5">Árvores de Testes</h2>
     <div class="flex gap-4">
+      <button
+        (click)="executarTodosProjeto()"
+        [disabled]="executando"
+        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium flex items-center gap-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-5 h-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+          />
+        </svg>
+        {{ executando ? "Executando..." : "Executar Todos" }}
+      </button>
       <app-button (click)="openCoverageModal()">
         Cobertura de Testes
       </app-button>
@@ -169,6 +190,14 @@
       [pending]="pending"
     ></app-pie-chart>
   </app-content-modal>
+
+  <!-- Test Execution Modal -->
+  <app-test-execution-modal
+    [showModal]="showModal"
+    [executando]="executando"
+    [log]="log"
+    (close)="closeExecuteModal()"
+  ></app-test-execution-modal>
 </div>
 
 <script src="./node_modules/preline/dist/preline.js"></script>

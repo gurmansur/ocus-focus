@@ -172,7 +172,11 @@
           />
         </svg>
       </app-sidebar-item> -->
-      <app-sidebar-item [isExpanded]="isExpanded" title="Ajuda/Manuais">
+      <app-sidebar-item
+        [isExpanded]="isExpanded"
+        title="Ajuda/Manuais"
+        (click)="navigateToHelp()"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

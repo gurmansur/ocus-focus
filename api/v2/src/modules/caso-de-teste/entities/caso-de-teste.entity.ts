@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { AcaoDeTeste } from '../../acao-de-teste/entities/acao-de-teste.entity';
 import { CasoUso } from '../../caso-uso/entities/caso-uso.entity';
 import { Colaborador } from '../../colaborador/entities/colaborador.entity';
 import { ExecucaoDeTeste } from '../../execucao-de-teste/entities/execucao-de-teste.entity';
@@ -114,6 +115,9 @@ export class CasoDeTeste {
     (execucaoDeTeste) => execucaoDeTeste.casoDeTeste,
   )
   execucoesDeTeste: ExecucaoDeTeste[];
+
+  @OneToMany(() => AcaoDeTeste, (acaoDeTeste) => acaoDeTeste.casoDeTeste)
+  acoesDeTeste: AcaoDeTeste[];
 
   @ManyToOne(() => Projeto, (projeto) => projeto.casosDeTeste)
   @JoinColumn({ name: 'FK_PROJETO_PRO_ID' })

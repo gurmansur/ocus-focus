@@ -1,0 +1,15 @@
+<div class="canvas">
+  <button (click)="addNode.emit()">Adicionar ação</button>
+  <div class="nodes">
+    <div
+      class="node"
+      *ngFor="let n of nodes"
+      (click)="onSelect(n)"
+      [style.left.px]="n.posicao.x"
+      [style.top.px]="n.posicao.y"
+    >
+      <div class="title">{{ n.tipo }}</div>
+      <div class="desc">{{ n.dados?.descricao || "—" }}</div>
+    </div>
+  </div>
+</div>

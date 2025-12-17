@@ -1,4 +1,11 @@
-import { Component, HostListener, Inject, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  NgZone,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { MenuItem, TreeDragDropService, TreeNode } from 'primeng/api';
@@ -10,19 +17,22 @@ import { ContentModalComponent } from '../../../shared/content-modal/content-mod
 import { PlusIconComponent } from '../../../shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProjectHeaderComponent } from '../../../shared/project-header/project-header.component';
+import { ExecucaoDeTesteService } from '../../../shared/services/execucao-de-teste.service';
 import { CasoDeTeste } from '../../models/casoDeTeste';
 import { FileTree } from '../../models/fileTree';
 import { SuiteDeTeste } from '../../models/suiteDeTeste';
 import { CasoDeTesteService } from '../../services/casoDeTeste.service';
-import { ExecucaoDeTesteService } from '../../services/execucoesDeTeste.service';
+import { ExecucaoDeTesteService as ExecucaoService } from '../../services/execucoesDeTeste.service';
 import { SuiteDeTesteService } from '../../services/suiteDeTeste.service';
 import { TestSuiteIconComponent } from '../painel-arcatest/components/test-suite-icon/test-suite-icon.component';
+import { TestExecutionModalComponent } from '../shared/test-execution-modal/test-execution-modal.component';
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 
 @Component({
   selector: 'app-arcatest-file-tree',
   standalone: true,
   imports: [
+    CommonModule,
     ProjectHeaderComponent,
     NgxChartsModule,
     ContentModalComponent,
@@ -34,6 +44,7 @@ import { PieChartComponent } from './components/pie-chart/pie-chart.component';
     ContextMenuModule,
     SidebarModule,
     PieChartComponent,
+    TestExecutionModalComponent,
   ],
   providers: [TreeDragDropService, NodeIterator],
   templateUrl: './arcatest-file-tree.component.html',
@@ -45,6 +56,7 @@ export class ArcatestFileTreeComponent {
   legendPosition: LegendPosition = LegendPosition.Below;
   openDelete: boolean = false;
   openCoverage: boolean = false;
+  showModal: boolean = false;
   fileTreeNodes: TreeNode[] = [];
   @ViewChild('contextMenu') contextMenu!: ContextMenu;
   passed?: number = 0;
@@ -54,6 +66,9 @@ export class ArcatestFileTreeComponent {
   deleteTitle!: string;
   deleteMessage!: string;
   displaySidebar: boolean = false;
+  executando = false;
+  log: { type: 'text' | 'image'; content: string }[] = [];
+  resultado?: any;
   contextMenuItems: MenuItem[] = [
     {
       label: 'Adicionar Caso de Teste',
@@ -87,9 +102,12 @@ export class ArcatestFileTreeComponent {
     @Inject(SuiteDeTesteService)
     private suiteDeTesteService: SuiteDeTesteService,
     private casoDeTesteService: CasoDeTesteService,
-    private execucaoDeTesteService: ExecucaoDeTesteService,
+    private execucaoDeTesteService: ExecucaoService,
+    private execService: ExecucaoDeTesteService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit() {
@@ -119,9 +137,21 @@ export class ArcatestFileTreeComponent {
     this.displaySidebar = false;
   }
 
-  @HostListener('document:auxclick', ['$event'])
-  clickout(event: Event) {
-    if ((event.target as HTMLElement).closest('.p-treenode')) {
+  getFileTree() {
+    this.suiteDeTesteService.getFileTree().subscribe((response) => {
+      this.fileTree = response;
+      this.fileTreeNodes = this.fileTreeToNodes(this.fileTree);
+    });
+  }
+
+  onContextMenuSelect(event: any) {
+    this.selectedNode = event.node;
+
+    // Update context menu items based on node type
+    if (
+      this.selectedNode?.type === 'suite' ||
+      this.selectedNode?.type === 'case'
+    ) {
       this.contextMenuItems = [
         {
           label: 'Detalhes',
@@ -155,6 +185,28 @@ export class ArcatestFileTreeComponent {
             }
           },
         },
+        ...(this.selectedNode?.type === 'case'
+          ? [
+              {
+                label: 'Executar Teste',
+                icon: 'hero-icon hero-play',
+                command: (event: any) => {
+                  this.executeTest();
+                },
+              },
+            ]
+          : []),
+        ...(this.selectedNode?.type === 'suite'
+          ? [
+              {
+                label: 'Executar Suite',
+                icon: 'hero-icon hero-play',
+                command: (event: any) => {
+                  this.executarSuite();
+                },
+              },
+            ]
+          : []),
         {
           separator: true,
           style: {
@@ -176,8 +228,12 @@ export class ArcatestFileTreeComponent {
                 'criar',
               ],
               {
-                queryParams: { suiteId: this.selectedNode?.data.id },
-                queryParamsHandling: 'merge',
+                queryParams: {
+                  suiteId:
+                    this.selectedNode?.type === 'suite'
+                      ? this.selectedNode?.data.id
+                      : undefined,
+                },
               }
             );
           },
@@ -186,24 +242,13 @@ export class ArcatestFileTreeComponent {
           label: 'Adicionar Suite de Teste',
           icon: 'hero-icon hero-folder-plus',
           command: (event: any) => {
-            this.router.navigate(
-              [
-                '/dashboard/projeto/',
-                this.projectId,
-                'painel-arcatest',
-                'suites-teste',
-                'criar',
-              ],
-              {
-                queryParams: {
-                  suiteId:
-                    this.selectedNode?.type === 'suite'
-                      ? this.selectedNode?.data.id
-                      : this.selectedNode?.data.suiteDeTesteId,
-                },
-                queryParamsHandling: 'merge',
-              }
-            );
+            this.router.navigate([
+              '/dashboard/projeto/',
+              this.projectId,
+              'painel-arcatest',
+              'suites-teste',
+              'criar',
+            ]);
           },
         },
         {
@@ -246,17 +291,6 @@ export class ArcatestFileTreeComponent {
         },
       ];
     }
-  }
-
-  getFileTree() {
-    this.suiteDeTesteService.getFileTree().subscribe((response) => {
-      this.fileTree = response;
-      this.fileTreeNodes = this.fileTreeToNodes(this.fileTree);
-    });
-  }
-
-  onContextMenuSelect(event: any) {
-    this.selectedNode = event.node;
   }
 
   private fileTreeToNodes(fileTree: FileTree): TreeNode[] {
@@ -375,5 +409,184 @@ export class ArcatestFileTreeComponent {
 
   closeCoverageModal() {
     this.openCoverage = false;
+  }
+
+  executeTest() {
+    if (!this.selectedNode?.data?.id) return;
+
+    this.executando = true;
+    this.showModal = true;
+    this.log = [];
+    this.resultado = null;
+
+    this.execService.executarComStream(this.selectedNode.data.id).subscribe({
+      next: (event) => {
+        this.ngZone.run(() => {
+          if (event.type === 'log' || event.type === 'start') {
+            this.log = [...this.log, { type: 'text', content: event.message }];
+          } else if (event.type === 'image') {
+            this.log = [...this.log, { type: 'image', content: event.src }];
+          } else if (event.type === 'complete') {
+            this.resultado = event;
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✓ Execução concluída: ${
+                  event.sucesso ? 'SUCESSO' : 'FALHA'
+                }`,
+              },
+            ];
+            this.executando = false;
+          } else if (event.type === 'error') {
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✗ Erro: ${event.message}`,
+              },
+            ];
+            this.executando = false;
+          }
+          this.cdr.markForCheck();
+        });
+      },
+      error: (err) => {
+        this.ngZone.run(() => {
+          this.log = [
+            ...this.log,
+            {
+              type: 'text',
+              content: `✗ Erro de conexão: ${
+                err.message || 'Erro desconhecido'
+              }`,
+            },
+          ];
+          this.executando = false;
+          this.cdr.markForCheck();
+        });
+      },
+    });
+  }
+
+  closeExecuteModal() {
+    this.showModal = false;
+    this.log = [];
+    this.executando = false;
+  }
+
+  executarTodosProjeto() {
+    this.executando = true;
+    this.showModal = true;
+    this.log = [];
+    this.resultado = null;
+
+    this.execService.executarProjetoComStream().subscribe({
+      next: (event) => {
+        this.ngZone.run(() => {
+          if (event.type === 'log' || event.type === 'start') {
+            this.log = [...this.log, { type: 'text', content: event.message }];
+          } else if (event.type === 'image') {
+            this.log = [...this.log, { type: 'image', content: event.src }];
+          } else if (event.type === 'complete') {
+            this.resultado = event;
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✓ ${event.message}`,
+              },
+            ];
+            this.executando = false;
+          } else if (event.type === 'error') {
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✗ Erro: ${event.message}`,
+              },
+            ];
+            this.executando = false;
+          }
+          this.cdr.markForCheck();
+        });
+      },
+      error: (err) => {
+        this.ngZone.run(() => {
+          this.log = [
+            ...this.log,
+            {
+              type: 'text',
+              content: `✗ Erro de conexão: ${
+                err.message || 'Erro desconhecido'
+              }`,
+            },
+          ];
+          this.executando = false;
+          this.cdr.markForCheck();
+        });
+      },
+    });
+  }
+
+  executarSuite() {
+    if (!this.selectedNode?.data?.id) return;
+
+    this.executando = true;
+    this.showModal = true;
+    this.log = [];
+    this.resultado = null;
+
+    this.execService
+      .executarSuiteComStream(this.selectedNode.data.id)
+      .subscribe({
+        next: (event) => {
+          this.ngZone.run(() => {
+            if (event.type === 'log' || event.type === 'start') {
+              this.log = [
+                ...this.log,
+                { type: 'text', content: event.message },
+              ];
+            } else if (event.type === 'image') {
+              this.log = [...this.log, { type: 'image', content: event.src }];
+            } else if (event.type === 'complete') {
+              this.resultado = event;
+              this.log = [
+                ...this.log,
+                {
+                  type: 'text',
+                  content: `✓ ${event.message}`,
+                },
+              ];
+              this.executando = false;
+            } else if (event.type === 'error') {
+              this.log = [
+                ...this.log,
+                {
+                  type: 'text',
+                  content: `✗ Erro: ${event.message}`,
+                },
+              ];
+              this.executando = false;
+            }
+            this.cdr.markForCheck();
+          });
+        },
+        error: (err) => {
+          this.ngZone.run(() => {
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✗ Erro de conexão: ${
+                  err.message || 'Erro desconhecido'
+                }`,
+              },
+            ];
+            this.executando = false;
+            this.cdr.markForCheck();
+          });
+        },
+      });
   }
 }

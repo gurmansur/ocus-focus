@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { resultTypes } from '../execucao-de-teste.constants';
+import { RESULT_TYPES } from '../execucao-de-teste.constants';
 
 export class GetExecucaoDeTesteGraficoDto {
   @ApiProperty({
@@ -7,19 +7,19 @@ export class GetExecucaoDeTesteGraficoDto {
     description: 'Quantidade de execuções de teste com sucesso',
     example: 1,
   })
-  [resultTypes.SUCCESS]: number;
+  [RESULT_TYPES.SUCCESS]: number;
 
   @ApiProperty({
     type: Number,
     description: 'Quantidade de execuções de teste com falha',
     example: 1,
   })
-  [resultTypes.FAILURE]: number;
+  [RESULT_TYPES.FAILURE]: number;
 
   @ApiProperty({
     type: Number,
     description: 'Quantidade de execuções de teste pendentes',
     example: 1,
   })
-  [resultTypes.PENDING]: number;
+  [RESULT_TYPES.PENDING]: number;
 }

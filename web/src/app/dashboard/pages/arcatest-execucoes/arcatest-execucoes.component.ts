@@ -60,11 +60,18 @@ export class ArcatestExecucoesComponent {
 
   fetchExecucoes() {
     this.execucaoDeTesteService.getAll().subscribe((execucoes) => {
-      this.execucoes = execucoes.map((execucao) => ({
-        ...execucao,
-        data: new Date(execucao.dataExecucao).toLocaleDateString(),
-        hora: new Date(execucao.dataExecucao).toLocaleTimeString(),
-      }));
+      this.execucoes = execucoes
+        .map((execucao) => ({
+          ...execucao,
+          data: new Date(execucao.dataExecucao).toLocaleDateString(),
+          hora: new Date(execucao.dataExecucao).toLocaleTimeString(),
+        }))
+        .sort((a, b) => {
+          // Sort by most recent date and time first
+          const dateA = new Date(a.dataExecucao).getTime();
+          const dateB = new Date(b.dataExecucao).getTime();
+          return dateB - dateA; // Descending order (most recent first)
+        });
 
       if (this.casoId !== undefined) {
         this.filterTestCasesByCaso();
