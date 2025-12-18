@@ -1,63 +1,176 @@
 <app-content-modal
   (close)="onCancel()"
   [open]="open"
-  [title]="'Configuração Geral das Sprints'"
+  [title]="
+    mode === 'list'
+      ? 'Gerenciar Sprints'
+      : mode === 'create'
+        ? 'Criar Nova Sprint'
+        : 'Editar Sprint'
+  "
+  [showConfirm]="mode !== 'list'"
   (confirm)="onConfirm()"
   confirmText="Confirmar"
   [showCancel]="true"
 >
   <div class="flex flex-col">
-    <form [formGroup]="configureFormGroup" class="flex flex-col mt-10">
-      <div class="gap-2 flex items-center">
-        <label for="tempo" class="w-1/2">Prazo das Sprints:</label>
-        <select
-          name="tempo"
-          id="tempo"
-          formControlName="tempo"
-          class="bg-slate-200 p-2 rounded-sm w-1/4 focus:ring-violet-400 focus:ring-2"
+    <!-- List Mode: Show all sprints -->
+    @if (mode === "list") {
+      <div class="flex flex-col gap-4 mt-4">
+        <button
+          (click)="onCreateNew()"
+          class="w-full py-2 px-4 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition"
         >
-          <option value="1">1 semana</option>
-          <option value="2">2 semanas</option>
-          <option value="3">3 semanas</option>
-          <option value="4">4 semanas</option>
-        </select>
-        @if (
-          configureFormGroup.get("tempo").invalid &&
-          configureFormGroup.get("tempo").touched
-        ) {
-          <p class="text-red-500 text-xs font-semibold">
-            {{
-              configureFormGroup.get("tempo").errors.required
-                ? "Campo obrigatório"
-                : ""
-            }}
-          </p>
-        }
-      </div>
+          + Nova Sprint
+        </button>
 
-      <div class="gap-2 flex items-center mt-2">
-        <label for="maximo" class="w-1/2"
-          >Valor máximo de horas por Sprint:</label
-        >
-        <input
-          id="maximo"
-          name="maximo"
-          type="text"
-          class="bg-slate-200 p-2 rounded-sm w-1/4"
-        />
-        @if (
-          configureFormGroup.get("maximo").invalid &&
-          configureFormGroup.get("maximo").touched
-        ) {
-          <p class="text-red-500 text-xs font-semibold">
-            {{
-              configureFormGroup.get("maximo").errors.required
-                ? "Campo obrigatório"
-                : ""
-            }}
-          </p>
-        }
+        <div class="border-t pt-4">
+          @if (sprints.length === 0) {
+            <p class="text-gray-500 text-center py-4">
+              Nenhuma sprint criada ainda
+            </p>
+          } @else {
+            <div class="space-y-3">
+              @for (sprint of sprints; track sprint.id) {
+                <div
+                  class="flex items-center justify-between p-3 bg-slate-100 rounded-lg hover:bg-slate-200 transition"
+                >
+                  <div
+                    class="flex-1 cursor-pointer"
+                    (click)="onSelectSprint(sprint)"
+                  >
+                    <p class="font-semibold">{{ sprint.nome }}</p>
+                    <p class="text-xs text-gray-600">
+                      {{ sprint.descricao }}
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      {{ sprint.horas_previstas }} horas
+                    </p>
+                  </div>
+                  <div class="flex gap-2">
+                    <button
+                      (click)="onEditSprint(sprint)"
+                      class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      (click)="onDeleteSprint(sprint.id)"
+                      class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition"
+                    >
+                      Deletar
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
       </div>
-    </form>
+    }
+
+    <!-- Create/Edit Mode: Show form -->
+    @if (mode === "create" || mode === "edit") {
+      <form [formGroup]="configureFormGroup" class="flex flex-col mt-4 gap-4">
+        <!-- Sprint Name -->
+        <div class="flex flex-col gap-2">
+          <label for="nome" class="font-semibold text-sm">
+            Nome da Sprint <span class="text-red-500">*</span>
+          </label>
+          <input
+            id="nome"
+            type="text"
+            formControlName="nome"
+            placeholder="ex: Sprint 1"
+            class="bg-slate-200 p-2 rounded-sm focus:ring-violet-400 focus:ring-2 focus:outline-none"
+          />
+          @if (
+            configureFormGroup.get("nome")?.invalid &&
+            configureFormGroup.get("nome")?.touched
+          ) {
+            <p class="text-red-500 text-xs font-semibold">
+              {{
+                configureFormGroup.get("nome")?.errors?.["required"]
+                  ? "Campo obrigatório"
+                  : "Mínimo 3 caracteres"
+              }}
+            </p>
+          }
+        </div>
+
+        <!-- Description -->
+        <div class="flex flex-col gap-2">
+          <label for="descricao" class="font-semibold text-sm">
+            Descrição <span class="text-red-500">*</span>
+          </label>
+          <textarea
+            id="descricao"
+            formControlName="descricao"
+            placeholder="Descreva os objetivos da sprint"
+            rows="3"
+            class="bg-slate-200 p-2 rounded-sm focus:ring-violet-400 focus:ring-2 focus:outline-none resize-none"
+          ></textarea>
+          @if (
+            configureFormGroup.get("descricao")?.invalid &&
+            configureFormGroup.get("descricao")?.touched
+          ) {
+            <p class="text-red-500 text-xs font-semibold">Campo obrigatório</p>
+          }
+        </div>
+
+        <!-- Hours -->
+        <div class="flex flex-col gap-2">
+          <label for="horas_previstas" class="font-semibold text-sm">
+            Horas Previstas <span class="text-red-500">*</span>
+          </label>
+          <input
+            id="horas_previstas"
+            type="number"
+            formControlName="horas_previstas"
+            placeholder="ex: 40"
+            min="1"
+            class="bg-slate-200 p-2 rounded-sm focus:ring-violet-400 focus:ring-2 focus:outline-none"
+          />
+          @if (
+            configureFormGroup.get("horas_previstas")?.invalid &&
+            configureFormGroup.get("horas_previstas")?.touched
+          ) {
+            <p class="text-red-500 text-xs font-semibold">
+              {{
+                configureFormGroup.get("horas_previstas")?.errors?.["required"]
+                  ? "Campo obrigatório"
+                  : "Mínimo 1 hora"
+              }}
+            </p>
+          }
+        </div>
+
+        <!-- Start Date -->
+        <div class="flex flex-col gap-2">
+          <label for="data_inicio" class="font-semibold text-sm">
+            Data de Início
+          </label>
+          <input
+            id="data_inicio"
+            type="date"
+            formControlName="data_inicio"
+            class="bg-slate-200 p-2 rounded-sm focus:ring-violet-400 focus:ring-2 focus:outline-none"
+          />
+        </div>
+
+        <!-- End Date -->
+        <div class="flex flex-col gap-2">
+          <label for="data_fim" class="font-semibold text-sm">
+            Data de Término
+          </label>
+          <input
+            id="data_fim"
+            type="date"
+            formControlName="data_fim"
+            class="bg-slate-200 p-2 rounded-sm focus:ring-violet-400 focus:ring-2 focus:outline-none"
+          />
+        </div>
+      </form>
+    }
   </div>
 </app-content-modal>

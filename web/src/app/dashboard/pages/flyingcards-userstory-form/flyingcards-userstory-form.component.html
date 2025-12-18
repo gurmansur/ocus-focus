@@ -3,12 +3,12 @@
   voltar="Voltar ao Flying Cards"
 ></app-project-header>
 
-<div class="container px-5 py-24 mx-auto">
+<div class="container px-5 py-16 md:py-24 mx-auto">
   <form
     [formGroup]="userStoryFormGroup"
-    class="border-l-4 border-violet-700 rounded-lg md:w-1/2 mx-auto flex flex-col items-center shadow-lg p-10"
+    class="border-l-4 border-violet-700 rounded-lg md:w-2/3 lg:w-1/2 mx-auto flex flex-col shadow-lg p-8 md:p-10 bg-white"
   >
-    <div class="rounded-full bg-violet-700 p-2">
+    <div class="rounded-full bg-violet-700 p-2 mx-auto">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -22,7 +22,7 @@
         />
       </svg>
     </div>
-    <h2 class="my-4 text-xl text-center">
+    <h2 class="my-4 text-xl text-center w-full">
       @if (isEdit) {
         Editar
       } @else {
@@ -30,17 +30,27 @@
       }
       <span class="font-medium text-violet-700">User Story</span>
     </h2>
-    <div class="mb-4 flex flex-wrap" style="gap: 1rem 0">
-      <div class="relative w-full">
-        <label for="titulo" class="leading-7 text-sm text-gray-600"
-          >Título</label
+    <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+      <div class="relative w-full md:col-span-2">
+        <label for="titulo" class="leading-7 text-sm text-gray-700 font-medium"
+          >Título <span class="text-red-500">*</span></label
         >
         <input
           type="text"
           id="titulo"
           name="titulo"
           formControlName="titulo"
-          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          [attr.aria-invalid]="
+            userStoryFormGroup.get('titulo')?.invalid &&
+            userStoryFormGroup.get('titulo')?.touched
+          "
+          [ngClass]="{
+            'border-red-500 focus:border-red-500 focus:ring-red-500':
+              userStoryFormGroup.get('titulo')?.invalid &&
+              userStoryFormGroup.get('titulo')?.touched,
+          }"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-6 transition-colors duration-200 ease-in-out"
+          placeholder="Ex.: Como usuário, quero ..."
         />
         @if (
           userStoryFormGroup.get("titulo").invalid &&
@@ -56,29 +66,53 @@
         }
       </div>
 
-      <div class="relative w-full">
-        <label for="descricao" class="leading-7 text-sm text-gray-600"
-          >Descrição</label
+      <div class="relative w-full md:col-span-2">
+        <label
+          for="descricao"
+          class="leading-7 text-sm text-gray-700 font-medium"
+          >Descrição <span class="text-red-500">*</span></label
         >
         <textarea
           type="text"
           id="descricao"
           name="descricao"
           formControlName="descricao"
-          class="w-full h-20 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          [attr.aria-invalid]="
+            userStoryFormGroup.get('descricao')?.invalid &&
+            userStoryFormGroup.get('descricao')?.touched
+          "
+          [ngClass]="{
+            'border-red-500 focus:border-red-500 focus:ring-red-500':
+              userStoryFormGroup.get('descricao')?.invalid &&
+              userStoryFormGroup.get('descricao')?.touched,
+          }"
+          class="w-full h-28 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-6 transition-colors duration-200 ease-in-out"
+          placeholder="Detalhe o valor, critérios de aceitação, etc."
         ></textarea>
       </div>
 
-      <div class="relative w-2/4 mr-1">
-        <label for="responsavel" class="leading-7 text-sm text-gray-600"
-          >Responsável</label
+      <div class="relative w-full">
+        <label
+          for="responsavel"
+          class="leading-7 text-sm text-gray-700 font-medium"
+          >Responsável <span class="text-red-500">*</span></label
         >
         <select
           id="responsavel"
           name="responsavel"
           formControlName="responsavel"
-          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          [attr.aria-invalid]="
+            userStoryFormGroup.get('responsavel')?.invalid &&
+            userStoryFormGroup.get('responsavel')?.touched
+          "
+          [ngClass]="{
+            'border-red-500 focus:border-red-500 focus:ring-red-500':
+              userStoryFormGroup.get('responsavel')?.invalid &&
+              userStoryFormGroup.get('responsavel')?.touched,
+          }"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-6 transition-colors duration-200 ease-in-out"
         >
+          <option value="" disabled selected>Selecione um responsável</option>
           <option *ngFor="let usuario of usuarios" value="{{ usuario.id }}">
             {{ usuario.nome }}
           </option>
@@ -97,16 +131,30 @@
         }
       </div>
 
-      <div class="relative w-1/4 mx-1">
-        <label for="estimativa_tempo" class="leading-7 text-sm text-gray-600"
-          >Estimativa de tempo</label
+      <div class="relative w-full">
+        <label
+          for="estimativa_tempo"
+          class="leading-7 text-sm text-gray-700 font-medium"
+          >Estimativa de tempo <span class="text-red-500">*</span></label
         >
         <input
           type="text"
           id="estimativa_tempo"
           name="estimativa_tempo"
           formControlName="estimativa_tempo"
-          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-5 transition-colors duration-200 ease-in-out"
+          inputmode="decimal"
+          pattern="[0-9]*"
+          placeholder="Horas"
+          [attr.aria-invalid]="
+            userStoryFormGroup.get('estimativa_tempo')?.invalid &&
+            userStoryFormGroup.get('estimativa_tempo')?.touched
+          "
+          [ngClass]="{
+            'border-red-500 focus:border-red-500 focus:ring-red-500':
+              userStoryFormGroup.get('estimativa_tempo')?.invalid &&
+              userStoryFormGroup.get('estimativa_tempo')?.touched,
+          }"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-6 transition-colors duration-200 ease-in-out"
         />
         @if (
           userStoryFormGroup.get("estimativa_tempo").invalid &&
@@ -122,29 +170,141 @@
         }
       </div>
 
-      <div class="relative w-2/4">
-        <label for="swimlane" class="leading-7 text-sm text-gray-600"
-          >Swimlane</label
+      <div class="relative w-full md:col-span-2">
+        <label
+          for="swimlane"
+          class="leading-7 text-sm text-gray-700 font-medium"
+          >Swimlane <span class="text-red-500">*</span></label
         >
         <select
           name="swimlane"
           id="swimlane"
           formControlName="swimlane"
-          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          [attr.aria-invalid]="
+            userStoryFormGroup.get('swimlane')?.invalid &&
+            userStoryFormGroup.get('swimlane')?.touched
+          "
+          [ngClass]="{
+            'border-red-500 focus:border-red-500 focus:ring-red-500':
+              userStoryFormGroup.get('swimlane')?.invalid &&
+              userStoryFormGroup.get('swimlane')?.touched,
+          }"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-6 transition-colors duration-200 ease-in-out"
         >
+          <option value="" disabled selected>Selecione a swimlane</option>
           <option *ngFor="let swimlane of swimlanes" value="{{ swimlane.id }}">
             {{ swimlane.nome }}
           </option>
         </select>
       </div>
+
+      <div class="relative w-full md:col-span-2">
+        <div class="flex items-center justify-between mb-2">
+          <label class="leading-7 text-sm text-gray-700 font-medium">
+            Casos de uso
+          </label>
+          <span class="text-xs text-gray-500" *ngIf="loadingCasos">
+            Carregando...
+          </span>
+        </div>
+
+        <ng-container *ngIf="isEdit; else createCasosHint">
+          <ng-container *ngIf="linkedCasos.length > 0; else noCasos">
+            <div class="space-y-2 max-h-48 overflow-auto pr-1 mb-3">
+              <div
+                *ngFor="let caso of linkedCasos"
+                class="p-3 bg-purple-50 border-l-4 border-purple-400 rounded flex items-start justify-between gap-3"
+              >
+                <div>
+                  <p class="font-semibold text-purple-900">{{ caso.nome }}</p>
+                  <p class="text-sm text-gray-700 mt-1">{{ caso.descricao }}</p>
+                  <p class="text-xs text-gray-600 mt-1">ID: {{ caso.id }}</p>
+                </div>
+                <button
+                  type="button"
+                  class="text-xs px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200"
+                  (click)="removeCasoUso(caso.id)"
+                  [disabled]="linking"
+                >
+                  Remover
+                </button>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noCasos>
+            <div class="p-3 bg-gray-100 rounded text-gray-600 mb-3">
+              Nenhum caso de uso vinculado.
+            </div>
+          </ng-template>
+
+          <div class="flex flex-col gap-2">
+            <label class="leading-7 text-sm text-gray-700 font-medium">
+              Vincular um caso de uso
+            </label>
+            <div class="flex flex-col md:flex-row gap-2">
+              <div class="flex-1 relative">
+                <input
+                  type="text"
+                  class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-6 transition-colors duration-200 ease-in-out caso-uso-input"
+                  placeholder="Digite para buscar"
+                  [formControl]="casoSearchControl"
+                  [disabled]="loadingCasos || !availableCasos.length"
+                  (focus)="openCasoDropdown()"
+                  (input)="openCasoDropdown()"
+                  (blur)="closeCasoDropdown()"
+                  autocomplete="off"
+                />
+
+                <div
+                  class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded shadow-lg max-h-48 overflow-auto z-10"
+                  *ngIf="showCasoOptions"
+                >
+                  <button
+                    type="button"
+                    class="w-full text-left px-3 py-2 text-sm hover:bg-violet-50 flex justify-between items-center"
+                    *ngFor="let caso of filteredCasos$ | async"
+                    (mousedown)="selectCasoUso(caso)"
+                  >
+                    <span class="text-gray-800">{{ caso.nome }}</span>
+                    <span class="text-[11px] text-gray-500"
+                      >ID: {{ caso.id }}</span
+                    >
+                  </button>
+                  <div
+                    class="px-3 py-2 text-sm text-gray-500"
+                    *ngIf="(filteredCasos$ | async)?.length === 0"
+                  >
+                    Nenhum caso encontrado
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="px-4 py-2 text-sm rounded bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-50"
+                (click)="addCasoUso()"
+                [disabled]="!selectedCasoId || linking || loadingCasos"
+              >
+                Vincular
+              </button>
+            </div>
+            <p
+              class="text-xs text-gray-500"
+              *ngIf="!availableCasos.length && !loadingCasos"
+            >
+              Nenhum caso de uso disponível para vincular.
+            </p>
+          </div>
+        </ng-container>
+
+        <ng-template #createCasosHint>
+          <div class="p-3 bg-gray-100 rounded text-gray-600">
+            Vincule casos de uso após salvar a User Story.
+          </div>
+        </ng-template>
+      </div>
     </div>
     <div class="flex w-full justify-between">
-      @if (isEdit) {
-        <app-button color="danger" (onClick)="deletarUserStory()">
-          Deletar
-        </app-button>
-      }
-
       <div class="flex w-full justify-end gap-2">
         <app-button
           (onClick)="navigateToKanban()"

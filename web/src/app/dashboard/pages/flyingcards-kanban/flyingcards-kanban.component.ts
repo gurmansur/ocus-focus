@@ -8,17 +8,22 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
+import { ContentModalComponent } from 'src/app/shared/content-modal/content-modal.component';
 import { PlusIconComponent } from 'src/app/shared/icons/plus-icon/plus-icon.component';
 import { ModalComponent } from 'src/app/shared/modal/modal.component';
 import { ProjectHeaderComponent } from 'src/app/shared/project-header/project-header.component';
 import { GearIconComponent } from '../../../shared/icons/gear-icon/gear-icon.component';
 import { Board } from '../../models/board';
 import { Projeto } from '../../models/projeto';
+import { Sprint } from '../../models/sprint';
 import { UserStory } from '../../models/userStory';
 import { KanbanService } from '../../services/kanban.service';
 import { ProjetoService } from '../../services/projeto.service';
+import { SprintService } from '../../services/sprint.service';
+import { FlyingcardsUserstoryComponent } from '../flyingcards-userstory/flyingcards-userstory.component';
 import { FlyingcardsTaskModalComponent } from '../painel-flyingcards/flyingcards-task-modal/flyingcards-task-modal.component';
 
 @Component({
@@ -33,28 +38,39 @@ import { FlyingcardsTaskModalComponent } from '../painel-flyingcards/flyingcards
     PlusIconComponent,
     ButtonComponent,
     ModalComponent,
+    ContentModalComponent,
     GearIconComponent,
     FlyingcardsTaskModalComponent,
     CommonModule,
+    FlyingcardsUserstoryComponent,
+    FormsModule,
   ],
   templateUrl: './flyingcards-kanban.component.html',
   styleUrl: './flyingcards-kanban.component.css',
 })
 export class FlyingcardsKanbanComponent implements OnInit {
-  private projectId!: number;
+  projectId!: number;
   project!: Projeto;
   userStories: UserStory[] = [];
+  sprints: Sprint[] = [];
+  activeSprint: Sprint | null = null;
 
   paginaAtual: number = 0;
   tamanhoPagina: number = 5;
   quantidadeElementos: number = 0;
   totalPaginas: number = 0;
 
+  // Detail modal state
+  showDetailModal = false;
+  selectedUserStory: UserStory | null = null;
+  selectedUserStoryRequirements: any[] = [];
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private projectService: ProjetoService,
     private kanbanService: KanbanService,
+    private sprintService: SprintService,
   ) {
     this.projectId = this.route.snapshot.params['id'];
   }
@@ -103,9 +119,33 @@ export class FlyingcardsKanbanComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadSprints();
+  }
+
+  private loadSprints(): void {
+    this.sprintService.findByProject(this.projectId).subscribe({
+      next: (sprints: Sprint[]) => {
+        this.sprints = sprints;
+        if (sprints.length > 0 && !this.activeSprint) {
+          this.activeSprint = sprints[0];
+          this.loadBoard();
+        } else if (this.sprints.length === 0) {
+          // No sprints, load board without sprint filter
+          this.loadBoard();
+        }
+      },
+    });
+  }
+
+  private loadBoard(): void {
     this.kanbanService
-      .getBoardFromProject(this.projectId.toString())
+      .getBoardFromProject(this.projectId.toString(), this.activeSprint?.id)
       .subscribe(this.processarBoard());
+  }
+
+  onSelectSprint(sprint: Sprint): void {
+    this.activeSprint = sprint;
+    this.loadBoard();
   }
 
   async drop(event: CdkDragDrop<UserStory[]>) {
@@ -149,6 +189,38 @@ export class FlyingcardsKanbanComponent implements OnInit {
     return (data: any) => {
       this.board = data;
     };
+  }
+
+  openUserStoryDetails(userStory: UserStory) {
+    this.selectedUserStory = userStory;
+    // Extract requirements from the user story if they exist
+    this.selectedUserStoryRequirements = userStory['requisitos'] || [];
+    this.showDetailModal = true;
+  }
+
+  closeDetailModal() {
+    this.showDetailModal = false;
+    this.selectedUserStory = null;
+    this.selectedUserStoryRequirements = [];
+  }
+
+  onEditUserStory() {
+    if (this.selectedUserStory && this.selectedUserStory.id != null) {
+      this.navigateToEditUserStory(this.selectedUserStory.id);
+    }
+  }
+
+  onDeleteUserStory() {
+    if (!this.selectedUserStory || this.selectedUserStory.id == null) return;
+
+    const id = this.selectedUserStory.id;
+    this.kanbanService.deletarUserStory(id).subscribe({
+      next: () => {
+        // Refresh board after deletion and close modal
+        this.loadBoard();
+        this.closeDetailModal();
+      },
+    });
   }
 
   navigateToSprints() {

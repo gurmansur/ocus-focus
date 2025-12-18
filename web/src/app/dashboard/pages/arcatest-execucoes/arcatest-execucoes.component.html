@@ -24,7 +24,7 @@
     [hasExecute]="true"
     (editClick)="navigateToEditExecution($event)"
     (deleteClick)="openDeleteModal($event)"
-    (executeClick)="openExecutionModal($event)"
+    (executeClick)="startAutomatedExecution($event)"
     [entityAttributes]="[
       'nome',
       'resultado',
@@ -112,4 +112,11 @@
     (valueChange)="onModalValueChange($event)"
     (confirm)="changeExecutionStatus($event)"
   ></app-arcatest-execucoes-modal>
+
+  <app-test-execution-modal
+    [showModal]="showAutomationModal"
+    [executando]="executando"
+    [log]="log"
+    (close)="closeAutomationModal()"
+  ></app-test-execution-modal>
 </div>

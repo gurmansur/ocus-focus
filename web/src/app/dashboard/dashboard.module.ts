@@ -35,6 +35,7 @@ import { PriorizarRequisitosComponent } from './pages/priorizar-requisitos/prior
 import { ProjetoComponent } from './pages/projeto/projeto.component';
 import { ProjetosComponent } from './pages/projetos/projetos.component';
 import { RequisitosProjetoComponent } from './pages/requisitos-projeto/requisitos-projeto.component';
+import { TestExecutionModalComponent } from './pages/shared/test-execution-modal/test-execution-modal.component';
 import { StakeholdersProjetoComponent } from './pages/stakeholders-projeto/stakeholders-projeto.component';
 import { DialogoConfirmacaoComponent } from './shared/dialogo-confirmacao/dialogo-confirmacao.component';
 import { DialogoMensagemComponent } from './shared/dialogo-mensagem/dialogo-mensagem.component';
@@ -93,6 +94,7 @@ import { TabelaComponent } from './shared/tabela/tabela.component';
     ArcatestFileTreeComponent,
     ConfiguracaoSeleniumComponent,
     ConfiguracaoSeleniumFormComponent,
+    TestExecutionModalComponent,
   ],
 })
 export class DashboardModule {}

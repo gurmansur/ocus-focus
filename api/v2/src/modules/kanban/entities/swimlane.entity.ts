@@ -30,7 +30,7 @@ export class Swimlane {
   @CreateDateColumn({ name: 'SWI_ATUALIZADO_EM' })
   atualizadoEm: Date;
 
-  @ManyToOne(() => Kanban, (kanban) => kanban.swinlanes)
+  @ManyToOne(() => Kanban, (kanban) => kanban.swimlanes)
   @JoinColumn({ name: 'FK_KAN_ID' })
   kanban: Kanban;
 

@@ -39,7 +39,7 @@ export class CasoUsoService {
       where: {
         requisitoFuncional: {
           id: requisitoId ? requisitoId : undefined,
-          projeto: projeto,
+          projeto: { id: projeto.id },
         },
       },
       relations: ['requisitoFuncional', 'requisitoFuncional.projeto'],

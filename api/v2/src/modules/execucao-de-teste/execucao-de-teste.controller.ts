@@ -222,4 +222,24 @@ export class ExecucaoDeTesteController {
   ): Observable<MessageEvent> {
     return this.execucaoDeTesteService.streamSuiteExecution(+suiteId, projeto);
   }
+
+  @Sse('executar-caso-uso/:casoUsoId/stream')
+  @ApiParam({
+    name: 'casoUsoId',
+    type: Number,
+    description: 'ID do caso de uso a ser executado',
+    example: 1,
+  })
+  @ApiOperation({
+    summary: 'Executa todos os testes automatizados de um caso de uso em lote',
+  })
+  streamCasoUsoExecution(
+    @Param('casoUsoId') casoUsoId: string,
+    @ProjetoAtual() projeto: Projeto,
+  ): Observable<MessageEvent> {
+    return this.execucaoDeTesteService.streamCasoUsoExecution(
+      +casoUsoId,
+      projeto,
+    );
+  }
 }

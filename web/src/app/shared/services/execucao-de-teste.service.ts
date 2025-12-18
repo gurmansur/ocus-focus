@@ -88,6 +88,11 @@ export class ExecucaoDeTesteService {
     return this.createSseStream(url);
   }
 
+  executarCasoUsoComStream(casoUsoId: number): Observable<any> {
+    const url = `${environment.apiBaseUrl}/execucao-de-teste/executar-caso-uso/${casoUsoId}/stream`;
+    return this.createSseStream(url);
+  }
+
   mudarStatus(
     id: number,
     status: 'SUCESSO' | 'FALHA' | 'PENDENTE',

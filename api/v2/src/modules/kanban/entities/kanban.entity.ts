@@ -15,7 +15,7 @@ export class Kanban {
   id: number;
 
   @OneToMany(() => Swimlane, (swimlane) => swimlane.id)
-  swinlanes: Swimlane[];
+  swimlanes: Swimlane[];
 
   @OneToMany(() => UserStory, (userStory) => userStory.id)
   userStories: UserStory[];

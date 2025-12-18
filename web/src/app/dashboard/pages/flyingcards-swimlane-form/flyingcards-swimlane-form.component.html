@@ -3,10 +3,10 @@
   voltar="Voltar ao Flying Cards"
 ></app-project-header>
 
-<div class="container px-5 py-24 mx-auto">
+<div class="container px-5 py-16 md:py-24 mx-auto">
   <form
     [formGroup]="swimlaneFormGroup"
-    class="border-l-4 border-violet-700 rounded-lg md:w-1/2 mx-auto flex flex-col items-center shadow-lg p-10"
+    class="border-l-4 border-violet-700 rounded-lg md:w-1/2 mx-auto flex flex-col items-center shadow-lg p-8 md:p-10 bg-white"
   >
     <div class="rounded-full bg-violet-700 p-2">
       <svg
@@ -30,17 +30,27 @@
       }
       <span class="font-medium text-violet-700">Swimlane</span>
     </h2>
-    <div class="mb-4 flex flex-wrap" style="gap: 1rem 0">
+    <div class="mb-4 grid grid-cols-1 gap-4 w-full">
       <div class="relative w-full">
-        <label for="nome" class="leading-7 text-sm text-gray-600"
-          >Nome da Swimlane</label
+        <label for="nome" class="leading-7 text-sm text-gray-700 font-medium"
+          >Nome da Swimlane <span class="text-red-500">*</span></label
         >
         <input
           type="text"
           id="nome"
           name="nome"
           formControlName="nome"
-          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          [attr.aria-invalid]="
+            swimlaneFormGroup.get('nome')?.invalid &&
+            swimlaneFormGroup.get('nome')?.touched
+          "
+          [ngClass]="{
+            'border-red-500 focus:border-red-500 focus:ring-red-500':
+              swimlaneFormGroup.get('nome')?.invalid &&
+              swimlaneFormGroup.get('nome')?.touched,
+          }"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-6 transition-colors duration-200 ease-in-out"
+          placeholder="Ex.: Em progresso"
         />
         @if (
           swimlaneFormGroup.get("nome").invalid &&
@@ -57,14 +67,16 @@
       </div>
 
       <div class="relative w-full">
-        <label for="cor" class="leading-7 text-sm text-gray-600">Cor</label>
+        <label for="cor" class="leading-7 text-sm text-gray-700 font-medium"
+          >Cor</label
+        >
         <input
           type="color"
           id="cor"
           name="cor"
           value="#6d28d9"
           formControlName="cor"
-          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-violet-700 focus:bg-white focus:ring-2 focus:ring-violet-700 text-base outline-none text-gray-700 py-2 px-3 leading-6 transition-colors duration-200 ease-in-out"
         />
       </div>
     </div>

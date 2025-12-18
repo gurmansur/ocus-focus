@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -10,6 +11,7 @@ import { CasoUso } from '../../caso-uso/entities/caso-uso.entity';
 import { Priorizacao } from '../../priorizacao/entities/priorizacao.entity';
 import { Projeto } from '../../projeto/entities/projeto.entity';
 import { ResultadoRequisito } from '../../resultado-requisito/entities/resultado-requisito.entity';
+import { UserStory } from '../../user-story/entities/user-story.entity';
 
 @Entity('REQUISITOS_FUNCIONAIS')
 export class RequisitoFuncional {
@@ -40,4 +42,7 @@ export class RequisitoFuncional {
 
   @OneToMany(() => Priorizacao, (priorizacao) => priorizacao.requisitoFuncional)
   priorizacoes: Priorizacao[];
+
+  @ManyToMany(() => UserStory, (userStory) => userStory.requisitos)
+  userStories: UserStory[];
 }

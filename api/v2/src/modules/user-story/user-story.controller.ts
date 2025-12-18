@@ -27,6 +27,11 @@ export class UserStoryController {
     return this.userStoryService.findAll(projetoId);
   }
 
+  @Get('projeto/:projectId')
+  findByProject(@Param('projectId') projectId: string) {
+    return this.userStoryService.findByProject(+projectId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userStoryService.findOne(+id);
@@ -43,6 +48,34 @@ export class UserStoryController {
     @Body() updateUserStoryDto: UpdateUserStoryDto,
   ) {
     return this.userStoryService.update(+id, updateUserStoryDto);
+  }
+
+  @Patch(':id/assign-sprint')
+  assignToSprint(@Param('id') id: string, @Body() body: { sprintId: number }) {
+    return this.userStoryService.assignToSprint(+id, body.sprintId);
+  }
+
+  @Patch(':id/remove-sprint')
+  removeFromSprint(
+    @Param('id') id: string,
+    @Body() body: { sprintId: number },
+  ) {
+    return this.userStoryService.removeFromSprint(+id, body.sprintId);
+  }
+
+  @Patch(':id/link-caso-uso')
+  linkCasoUso(@Param('id') id: string, @Body() body: { casoUsoId: number }) {
+    return this.userStoryService.linkCasoUso(+id, body.casoUsoId);
+  }
+
+  @Patch(':id/unlink-caso-uso')
+  unlinkCasoUso(@Param('id') id: string, @Body() body: { casoUsoId: number }) {
+    return this.userStoryService.unlinkCasoUso(+id, body.casoUsoId);
+  }
+
+  @Get(':id/casos-uso')
+  getCasosUso(@Param('id') id: string) {
+    return this.userStoryService.getCasosUso(+id);
   }
 
   @Delete(':id')

@@ -17,5 +17,11 @@ export class UserStory {
     public swimlane: number = -1,
 
     public id?: number,
+
+    public requisitos?: any[],
+
+    public sprints?: any[],
+
+    public casosDeUso?: any[],
   ) {}
 }

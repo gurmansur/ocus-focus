@@ -30,6 +30,11 @@ export class SprintController {
     return this.sprintService.findAll();
   }
 
+  @Get('projeto/:projectId')
+  findByProject(@Param('projectId') projectId: string) {
+    return this.sprintService.findByProject(+projectId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.sprintService.findOne(+id);

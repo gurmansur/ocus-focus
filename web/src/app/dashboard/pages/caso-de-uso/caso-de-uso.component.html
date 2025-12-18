@@ -211,6 +211,26 @@
           </td>
           <td>
             <button
+              (click)="startCasoUsoExecution(item.id!)"
+              title="Executar testes automatizados deste caso de uso"
+              class="bg-green-600 text-white p-2 rounded-full hover:bg-green-700 font-medium items-center shadow-md mr-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                />
+              </svg>
+            </button>
+            <button
               (click)="editarItem(item)"
               class="bg-violet-700 text-white p-2 rounded-full hover:bg-violet-800 font-medium items-center shadow-md mr-2"
             >
@@ -274,4 +294,11 @@
       Avançar
     </button>
   </div>
+
+  <app-test-execution-modal
+    [showModal]="showAutomationModal"
+    [executando]="executando"
+    [log]="log"
+    (close)="closeAutomationModal()"
+  ></app-test-execution-modal>
 </div>

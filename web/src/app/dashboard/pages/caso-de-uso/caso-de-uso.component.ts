@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
-import { CasoUsoService } from '../../services/casoUso.service';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ExecucaoDeTesteService } from '../../../shared/services/execucao-de-teste.service';
 import { casoUso } from '../../models/casoUso';
-import { ProjetoService } from '../../services/projeto.service';
 import { Projeto } from '../../models/projeto';
+import { CasoUsoService } from '../../services/casoUso.service';
+import { ProjetoService } from '../../services/projeto.service';
+import { LogEntry } from '../shared/test-execution-modal/test-execution-modal.component';
 
 @Component({
   selector: 'app-caso-de-uso',
@@ -21,6 +24,9 @@ export class CasoDeUsoComponent {
     private casoUsoService: CasoUsoService,
     private router: Router,
     private route: ActivatedRoute,
+    private automationService: ExecucaoDeTesteService,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
   ) {
     this.projetoId = this.route.snapshot.params['idPro'];
     this.requisitoId = this.route.snapshot.params['id'];
@@ -57,6 +63,12 @@ export class CasoDeUsoComponent {
   tituloDialogo: string = 'Deseja realmente excluir este caso de uso?';
   mensagemDialogo: string =
     'Essa ação é irreversível. Todos os dados do caso de uso em questão serão excluídos do sistema.';
+
+  // Automated execution state
+  showAutomationModal = false;
+  executando = false;
+  log: LogEntry[] = [];
+  private executionSub?: Subscription;
 
   ngOnInit() {
     this.buscarProjeto(this.projetoId, this.userId);
@@ -196,5 +208,76 @@ export class CasoDeUsoComponent {
       this.paginaAtual++;
       this.executarBusca();
     }
+  }
+
+  startCasoUsoExecution(casoUsoId: number) {
+    // Reset state and open modal
+    this.log = [];
+    this.executando = true;
+    this.showAutomationModal = true;
+
+    // Ensure previous stream is cleaned up
+    if (this.executionSub) {
+      this.executionSub.unsubscribe?.();
+    }
+
+    this.executionSub = this.automationService
+      .executarCasoUsoComStream(casoUsoId)
+      .subscribe({
+        next: (event) => {
+          this.ngZone.run(() => {
+            if (event.type === 'log' || event.type === 'start') {
+              this.log = [
+                ...this.log,
+                { type: 'text', content: event.message },
+              ];
+            } else if (event.type === 'image') {
+              this.log = [...this.log, { type: 'image', content: event.src }];
+            } else if (event.type === 'complete') {
+              this.log = [
+                ...this.log,
+                {
+                  type: 'text',
+                  content: `✓ Execução concluída: ${event.sucessos} sucesso(s), ${event.falhas} falha(s)`,
+                },
+              ];
+              this.executando = false;
+            } else if (event.type === 'error') {
+              this.log = [
+                ...this.log,
+                {
+                  type: 'text',
+                  content: `✗ Erro: ${event.message}`,
+                },
+              ];
+              this.executando = false;
+            }
+            this.cdr.markForCheck();
+          });
+        },
+        error: (err) => {
+          console.error('Stream error:', err);
+          this.ngZone.run(() => {
+            this.log = [
+              ...this.log,
+              {
+                type: 'text',
+                content: `✗ Erro de conexão: ${err?.message || 'Erro desconhecido'}`,
+              },
+            ];
+            this.executando = false;
+            this.cdr.markForCheck();
+          });
+        },
+      });
+  }
+
+  closeAutomationModal() {
+    if (this.executionSub) {
+      this.executionSub.unsubscribe?.();
+    }
+    this.showAutomationModal = false;
+    this.executando = false;
+    this.log = [];
   }
 }

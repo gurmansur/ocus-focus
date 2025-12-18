@@ -1,0 +1,9 @@
+/* Searchable casos de uso input/dropdown */
+.caso-uso-input {
+  min-height: 40px;
+}
+
+.caso-uso-input:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}

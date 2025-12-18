@@ -7,7 +7,18 @@
 <div class="px-8 py-5">
   <div class="flex justify-between items-center">
     <h2 class="text-3xl font-medium mb-5">Kanban</h2>
-    <div class="flex gap-2">
+    <div class="flex gap-2 items-center">
+      @if (sprints.length > 0) {
+        <select
+          [(ngModel)]="activeSprint"
+          (change)="onSelectSprint(activeSprint!)"
+          class="px-3 py-2 bg-slate-200 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
+        >
+          @for (sprint of sprints; track sprint.id) {
+            <option [ngValue]="sprint">{{ sprint.nome }}</option>
+          }
+        </select>
+      }
       <app-button (click)="navigateToSprints()">
         <app-gear-icon></app-gear-icon>
       </app-button>
@@ -22,55 +33,108 @@
     </div>
   </div>
 
-  <div class="flex flex-grow overflow-x-auto" cdkDropListGroup>
+  <div class="flex flex-grow overflow-x-auto gap-4 pb-8" cdkDropListGroup>
     @if (board.swimlanes.length > 0) {
       <div
         [style.--minha-cor]="swimlane.cor"
-        class="flex flex-col flex-grow min-w-fit min-h-fit my-10 mx-2 p-5 bg-[var(--minha-cor)] border-r-4 rounded-sm"
+        class="flex flex-col flex-grow min-w-[280px] max-w-sm md:max-w-md min-h-[70vh] my-6 mx-1 p-4 md:p-5 bg-[var(--minha-cor)] border-r-4 rounded-lg shadow-sm"
         *ngFor="let swimlane of board.swimlanes"
       >
-        <div class="flex text-lg font-bold uppercase mb-5 justify-between">
-          <span class="text-white">{{ swimlane.nome }}</span>
+        <div
+          class="flex items-center gap-2 text-base md:text-lg font-bold uppercase mb-4 justify-between"
+        >
+          <div class="flex items-baseline gap-2">
+            <span class="text-white">{{ swimlane.nome }}</span>
+            <span class="text-white/80 text-xs font-normal"
+              >{{ swimlane.userStories.length || 0 }} itens</span
+            >
+          </div>
 
           <app-button
-            class="bg-gray-400 p-1 rounded-sm text-white"
+            class="bg-white/30 hover:bg-white/40 p-1 rounded-md text-white"
             (click)="navigateToEditSwimlane(swimlane.id!)"
+            [attr.aria-label]="'Editar swimlane ' + swimlane.nome"
           >
             <app-gear-icon></app-gear-icon>
           </app-button>
         </div>
 
         <div
-          class="tasks-container h-full w-full"
+          class="tasks-container h-full w-full rounded-md bg-white/5 backdrop-blur-[1px] outline outline-1 outline-white/10"
           cdkDropList
           [cdkDropListData]="swimlane.userStories"
           (cdkDropListDropped)="drop($event)"
+          role="list"
+          [attr.aria-label]="'Lista de cards da swimlane ' + swimlane.nome"
         >
-          <div
-            class="bg-white flex flex-col p-4 border-b-2 border-b-violet-400 gap-4 cursor-pointer"
-            *ngFor="let item of swimlane.userStories"
-            (click)="navigateToEditUserStory(item.id)"
-            cdkDrag
-          >
-            <h2 class="font-bold">{{ item.titulo }}</h2>
+          @for (item of swimlane.userStories; track item.id) {
+            <div
+              class="task bg-white flex flex-col p-4 border-l-4 border-l-violet-400 gap-3 cursor-pointer hover:shadow-md focus:shadow-md transition-shadow rounded-md m-2"
+              (click)="openUserStoryDetails(item)"
+              (keydown.enter)="openUserStoryDetails(item)"
+              (keydown.space)="
+                $event.preventDefault(); openUserStoryDetails(item)
+              "
+              tabindex="0"
+              role="listitem"
+              [attr.aria-label]="'Abrir detalhes da user story ' + item.titulo"
+              cdkDrag
+            >
+              <h3 class="font-semibold text-gray-900 leading-snug">
+                {{ item.titulo }}
+              </h3>
 
-            <br />
+              <p class="text-sm text-gray-700 leading-normal">
+                {{ item.descricao }}
+              </p>
 
-            <span>{{ item.descricao }}</span>
+              <div class="flex flex-wrap gap-2 pt-1">
+                <span
+                  class="text-xs bg-emerald-100 text-emerald-800 rounded px-2 py-1"
+                  >{{ item.estimativa_tempo }}h</span
+                >
+                <span
+                  class="text-xs bg-sky-100 text-sky-800 rounded px-2 py-1"
+                  >{{ item.responsavel }}</span
+                >
+              </div>
 
-            <div class="flex gap-2">
-              <span class="text-sm bg-green-200 rounded-sm p-1"
-                >Est. Tempo: {{ item.estimativa_tempo }}h</span
-              >
-              <span class="text-sm bg-green-200 rounded-sm p-1"
-                >Responsável: {{ item.responsavel }}</span
-              >
+              @if (item["requisitos"] && item["requisitos"].length > 0) {
+                <div class="mt-3 pt-2 border-t border-gray-200">
+                  <p class="text-xs font-semibold text-gray-600 mb-1">
+                    Requisitos vinculados:
+                  </p>
+                  <div class="flex flex-wrap gap-1">
+                    @for (req of item["requisitos"]; track req.id) {
+                      <span
+                        class="text-xs bg-blue-100 text-blue-700 rounded px-2 py-1"
+                      >
+                        {{ req.nome || req.id }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
             </div>
-          </div>
+          }
         </div>
       </div>
     } @else {
-      <h2>Não existem swimlanes nesse Kanban.</h2>
+      <div class="w-full text-center text-gray-600 py-12">
+        <h3 class="text-lg font-medium">Não existem swimlanes nesse Kanban.</h3>
+        <p class="text-sm mt-1">Crie sua primeira swimlane para começar.</p>
+      </div>
     }
   </div>
 </div>
+
+<app-flyingcards-userstory
+  [open]="showDetailModal"
+  [userStory]="selectedUserStory"
+  [requirements]="selectedUserStoryRequirements"
+  [projectId]="projectId"
+  (close)="closeDetailModal()"
+  (confirm)="closeDetailModal()"
+  (editClick)="onEditUserStory()"
+  (deleteClick)="onDeleteUserStory()"
+></app-flyingcards-userstory>

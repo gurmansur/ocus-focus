@@ -8,8 +8,8 @@ import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
 import { ConfiguracaoSeleniumService } from '../configuracao-selenium/configuracao-selenium.service';
 import { ExecutorSeleniumService } from '../executor-selenium/executor-selenium.service';
 import { Projeto } from '../projeto/entities/projeto.entity';
-import { SuiteDeTeste } from '../suite-de-teste/entities/suite-de-teste.entity';
 import { SuiteDeTesteDto } from '../suite-de-teste/dto/suite-de-teste.dto';
+import { SuiteDeTeste } from '../suite-de-teste/entities/suite-de-teste.entity';
 import { SuiteDeTesteService } from '../suite-de-teste/suite-de-teste.service';
 import { ChangeStatusExecucaoDeTesteBo } from './bo/change-status-execucao-de-teste.bo';
 import { CreateExecucaoDeTesteBo } from './bo/create-execucao-de-teste.bo';
@@ -628,5 +628,122 @@ export class ExecucaoDeTesteService {
     }
 
     return casos;
+  }
+
+  streamCasoUsoExecution(
+    casoUsoId: number,
+    projeto: Projeto,
+  ): Observable<MessageEvent> {
+    return new Observable((observer) => {
+      (async () => {
+        try {
+          observer.next({
+            data: JSON.stringify({
+              type: 'start',
+              message: 'Iniciando execução em lote do caso de uso...',
+            }),
+          } as MessageEvent);
+
+          // Buscar todos os casos de teste do caso de uso
+          const casos = await this.casoDeTesteService.findByCasoUsoId(
+            casoUsoId,
+            projeto,
+          );
+          const casosAutomatizados = casos.filter(
+            (caso) => caso.metodo === 'AUTOMATIZADO',
+          );
+
+          if (casosAutomatizados.length === 0) {
+            observer.next({
+              data: JSON.stringify({
+                type: 'error',
+                message: 'Nenhum teste automatizado encontrado no caso de uso',
+              }),
+            } as MessageEvent);
+            observer.complete();
+            return;
+          }
+
+          observer.next({
+            data: JSON.stringify({
+              type: 'log',
+              message: `Encontrados ${casosAutomatizados.length} testes automatizados`,
+            }),
+          } as MessageEvent);
+
+          let sucessos = 0;
+          let falhas = 0;
+
+          // Executar cada teste
+          for (let i = 0; i < casosAutomatizados.length; i++) {
+            const caso = casosAutomatizados[i];
+            observer.next({
+              data: JSON.stringify({
+                type: 'log',
+                message: `\n[${i + 1}/${casosAutomatizados.length}] Executando: ${caso.nome}`,
+              }),
+            } as MessageEvent);
+
+            try {
+              const { sucesso, resultado } = await this.executeSingleTestCase(
+                caso,
+                projeto,
+                observer,
+                'Execução Automatizada - Caso de Uso',
+                '  ',
+              );
+
+              if (!resultado) {
+                // Test had no actions, already logged by helper
+                continue;
+              }
+
+              if (sucesso) {
+                sucessos++;
+                observer.next({
+                  data: JSON.stringify({
+                    type: 'log',
+                    message: `✓ "${caso.nome}" - SUCESSO`,
+                  }),
+                } as MessageEvent);
+              } else {
+                falhas++;
+                observer.next({
+                  data: JSON.stringify({
+                    type: 'log',
+                    message: `✗ "${caso.nome}" - FALHA: ${resultado.mensagem}`,
+                  }),
+                } as MessageEvent);
+              }
+            } catch (error) {
+              falhas++;
+              observer.next({
+                data: JSON.stringify({
+                  type: 'log',
+                  message: `✗ "${caso.nome}" - ERRO: ${error.message}`,
+                }),
+              } as MessageEvent);
+            }
+          }
+
+          observer.next({
+            data: JSON.stringify({
+              type: 'complete',
+              message: `Execução em lote concluída: ${sucessos} sucesso(s), ${falhas} falha(s)`,
+              sucessos,
+              falhas,
+              total: casosAutomatizados.length,
+            }),
+          } as MessageEvent);
+
+          observer.complete();
+        } catch (error) {
+          observer.next({
+            data: JSON.stringify({ type: 'error', message: error.message }),
+          } as MessageEvent);
+          observer.complete();
+        }
+      })();
+    });
   }
 }

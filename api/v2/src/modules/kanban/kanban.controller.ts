@@ -10,7 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { SwimlaneDto } from './dto/swimlane.dto';
 import { UpdateSwimlaneUsDto } from './dto/update-swimlane-us.dto';
 import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';
@@ -23,8 +25,11 @@ export class KanbanController {
   constructor(private readonly kanbanService: KanbanService) {}
 
   @Get()
-  findBoard(@Query('projeto') projeto: number) {
-    return this.kanbanService.findBoard(projeto);
+  findBoard(
+    @Query('projeto') projeto: number,
+    @Query('sprint') sprint?: number,
+  ) {
+    return this.kanbanService.findBoard(projeto, sprint);
   }
 
   @Get('swimlanes')
@@ -61,7 +66,7 @@ export class KanbanController {
   }
 
   @Get('id')
-  findIdFromProject(@Query('projeto') projeto: number) {
+  findIdFromProject(@ProjetoAtual() projeto: Projeto) {
     return this.kanbanService.findIdFromProject(projeto);
   }
 }

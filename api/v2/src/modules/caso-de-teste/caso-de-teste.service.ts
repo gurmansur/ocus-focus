@@ -109,4 +109,20 @@ export class CasoDeTesteService {
   remove(id: number) {
     return this.casoDeTesteRepository.softDelete(id);
   }
+
+  async findByCasoUsoId(casoUsoId: number, projeto: Projeto) {
+    return (
+      await this.casoDeTesteRepository.find({
+        relations: [
+          'testadorDesignado',
+          'suiteDeTeste',
+          'casoDeUso',
+          'projeto',
+        ],
+        where: { casoDeUso: { id: casoUsoId }, projeto: { id: projeto.id } },
+      })
+    ).map((casoDeTeste) =>
+      CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),
+    );
+  }
 }

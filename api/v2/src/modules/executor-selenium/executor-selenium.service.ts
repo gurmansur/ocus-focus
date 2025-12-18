@@ -233,6 +233,11 @@ export class ExecutorSeleniumService {
         }
         chromeOptions.addArguments('--no-sandbox');
         chromeOptions.addArguments('--disable-dev-shm-usage');
+        chromeOptions.addArguments(
+          '--disable-blink-features=AutomationControlled',
+        );
+        chromeOptions.addArguments('--disable-web-resources');
+        chromeOptions.excludeSwitches('enable-automation');
 
         if (configuracao.opcoesAdicionais) {
           Object.entries(configuracao.opcoesAdicionais).forEach(

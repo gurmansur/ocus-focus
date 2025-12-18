@@ -14,15 +14,16 @@ export class KanbanService {
     @Inject('servicesRootUrl') private servicesRootUrl: string,
   ) {}
 
-  getBoardFromProject(idProjeto: string): Observable<Board> {
-    return this.httpClient.get<Board>(
-      `${this.servicesRootUrl}/kanban?projeto=${idProjeto}`,
-      {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
+  getBoardFromProject(idProjeto: string, sprintId?: number): Observable<Board> {
+    let url = `${this.servicesRootUrl}/kanban?projeto=${idProjeto}`;
+    if (sprintId) {
+      url += `&sprint=${sprintId}`;
+    }
+    return this.httpClient.get<Board>(url, {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
-    );
+    });
   }
 
   getSwimlaneFromProject(projeto: number): Observable<ISelectSwimlane[]> {

@@ -10,10 +10,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Arquivo } from '../../arquivo/entities/arquivo.entity';
+import { CasoUso } from '../../caso-uso/entities/caso-uso.entity';
 import { Colaborador } from '../../colaborador/entities/colaborador.entity';
 import { Kanban } from '../../kanban/entities/kanban.entity';
 import { Swimlane } from '../../kanban/entities/swimlane.entity';
 import { Projeto } from '../../projeto/entities/projeto.entity';
+import { RequisitoFuncional } from '../../requisito/entities/requisito-funcional.entity';
 import { Sprint } from '../../sprint/entities/sprint.entity';
 import { Subtarefa } from '../../subtarefa/entities/subtarefa.entity';
 import { Tag } from '../../tag/entities/tag.entity';
@@ -50,6 +52,18 @@ export class UserStory {
     name: 'USER_STORY_ARQUIVOS',
   })
   arquivos: Arquivo[] | null;
+
+  @ManyToMany(() => RequisitoFuncional, (requisito) => requisito.userStories)
+  @JoinTable({
+    name: 'USER_STORIES_REQUISITOS',
+  })
+  requisitos: RequisitoFuncional[] | null;
+
+  @ManyToMany(() => CasoUso)
+  @JoinTable({
+    name: 'USER_STORIES_CASOS_USO',
+  })
+  casosDeUso: CasoUso[] | null;
 
   @ManyToOne(() => Colaborador, (colaborador) => colaborador.criadorUS)
   @JoinColumn({ name: 'FK_COLABORADOR_COL_CRI_ID' })
