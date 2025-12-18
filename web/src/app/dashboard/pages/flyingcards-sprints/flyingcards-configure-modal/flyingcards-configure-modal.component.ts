@@ -60,8 +60,8 @@ export class FlyingcardsConfigureModalComponent implements OnInit {
         Validators.required,
         Validators.min(1),
       ]),
-      data_inicio: new FormControl(''),
-      data_fim: new FormControl(''),
+      data_inicio: new FormControl('', Validators.required),
+      data_fim: new FormControl('', Validators.required),
     });
   }
 

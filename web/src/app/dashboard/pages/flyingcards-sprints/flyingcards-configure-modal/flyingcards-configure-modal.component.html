@@ -148,7 +148,7 @@
         <!-- Start Date -->
         <div class="flex flex-col gap-2">
           <label for="data_inicio" class="font-semibold text-sm">
-            Data de Início
+            Data de Início <span class="text-red-500">*</span>
           </label>
           <input
             id="data_inicio"
@@ -156,12 +156,18 @@
             formControlName="data_inicio"
             class="bg-slate-200 p-2 rounded-sm focus:ring-violet-400 focus:ring-2 focus:outline-none"
           />
+          @if (
+            configureFormGroup.get("data_inicio")?.invalid &&
+            configureFormGroup.get("data_inicio")?.touched
+          ) {
+            <p class="text-red-500 text-xs font-semibold">Campo obrigatório</p>
+          }
         </div>
 
         <!-- End Date -->
         <div class="flex flex-col gap-2">
           <label for="data_fim" class="font-semibold text-sm">
-            Data de Término
+            Data de Término <span class="text-red-500">*</span>
           </label>
           <input
             id="data_fim"
@@ -169,6 +175,12 @@
             formControlName="data_fim"
             class="bg-slate-200 p-2 rounded-sm focus:ring-violet-400 focus:ring-2 focus:outline-none"
           />
+          @if (
+            configureFormGroup.get("data_fim")?.invalid &&
+            configureFormGroup.get("data_fim")?.touched
+          ) {
+            <p class="text-red-500 text-xs font-semibold">Campo obrigatório</p>
+          }
         </div>
       </form>
     }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSprintDto } from './dto/create-sprint.dto';
 import { UpdateSprintDto } from './dto/update-sprint.dto';
 import { Sprint } from './entities/sprint.entity';
@@ -11,25 +12,31 @@ export class SprintService {
   constructor(
     @InjectRepository(Sprint)
     private readonly sprintRepository: Repository<Sprint>,
+    @InjectRepository(Projeto)
+    private readonly projetoRepository: Repository<Projeto>,
   ) {}
 
-  async create(createSprintDto: CreateSprintDto) {
-    const sprint = this.sprintRepository.create(createSprintDto);
+  async create(createSprintDto: CreateSprintDto, projeto: Projeto) {
+    const sprint = this.sprintRepository.create({
+      ...createSprintDto,
+      projeto,
+    });
     const savedSprint = await this.sprintRepository.save(sprint);
     return SprintMapper.entityToBo(savedSprint);
   }
 
-  async findAll() {
+  async findAll(projeto: Projeto) {
     const sprints = await this.sprintRepository.find({
+      where: { projeto: { id: projeto.id } },
       relations: ['userStories'],
     });
     return sprints.map((sprint) => SprintMapper.entityToBo(sprint));
   }
 
-  async findByProject(projectId: number) {
+  async findByProject(projeto: Projeto) {
     const sprints = await this.sprintRepository.find({
-      where: { projeto: { id: projectId } },
-      relations: ['userStories', 'projeto'],
+      where: { projeto: { id: projeto.id } },
+      relations: ['userStories'],
     });
     return sprints.map((sprint) => SprintMapper.entityToBo(sprint));
   }

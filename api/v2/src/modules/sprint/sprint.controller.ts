@@ -9,7 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSprintDto } from './dto/create-sprint.dto';
 import { UpdateSprintDto } from './dto/update-sprint.dto';
 import { SprintService } from './sprint.service';
@@ -21,18 +23,21 @@ export class SprintController {
   constructor(private readonly sprintService: SprintService) {}
 
   @Post()
-  create(@Body() createSprintDto: CreateSprintDto) {
-    return this.sprintService.create(createSprintDto);
+  create(
+    @Body() createSprintDto: CreateSprintDto,
+    @ProjetoAtual() projeto: Projeto,
+  ) {
+    return this.sprintService.create(createSprintDto, projeto);
   }
 
   @Get()
-  findAll() {
-    return this.sprintService.findAll();
+  findAll(@ProjetoAtual() projeto: Projeto) {
+    return this.sprintService.findAll(projeto);
   }
 
   @Get('projeto/:projectId')
-  findByProject(@Param('projectId') projectId: string) {
-    return this.sprintService.findByProject(+projectId);
+  findByProject(@ProjetoAtual() projeto: Projeto) {
+    return this.sprintService.findByProject(projeto);
   }
 
   @Get(':id')
