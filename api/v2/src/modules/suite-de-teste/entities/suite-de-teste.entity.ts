@@ -17,10 +17,10 @@ import { Projeto } from '../../projeto/entities/projeto.entity';
 
 @Entity('SUITES_DE_TESTE')
 @Tree('closure-table', {
-  closureTableName: 'SUITES_DE_TESTE_RELATION',
+  closureTableName: 'SUITES_DE_TESTE_RELATION_closure',
 })
 export class SuiteDeTeste {
-  @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
   @Column('varchar', { name: 'SDT_NOME', length: 50 })

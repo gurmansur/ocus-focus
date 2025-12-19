@@ -3,13 +3,13 @@ import { UserStory } from '../../user-story/entities/user-story.entity';
 
 @Entity('TAGS')
 export class Tag {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'tag_id' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'TAG_ID' })
   id: number;
 
-  @Column({ type: 'varchar', name: 'tag_nome', length: 20 })
+  @Column({ type: 'varchar', name: 'TAG_NOME', length: 20 })
   nome: string;
 
-  @Column({ type: 'varchar', name: 'tag_cor', length: 6 })
+  @Column({ type: 'varchar', name: 'TAG_COR', length: 6 })
   cor: string;
 
   @ManyToMany(() => UserStory)

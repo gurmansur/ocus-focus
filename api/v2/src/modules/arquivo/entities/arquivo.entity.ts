@@ -3,10 +3,10 @@ import { UserStory } from '../../user-story/entities/user-story.entity';
 
 @Entity('ARQUIVOS')
 export class Arquivo {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'arq_id' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'ARQ_ID' })
   id: number;
 
-  @Column({ type: 'mediumblob', name: 'arq_arquivo' })
+  @Column({ type: 'mediumblob', name: 'ARQ_ARQUIVO' })
   arquivo: string;
 
   @ManyToMany(() => UserStory, (userStory) => userStory.arquivos)

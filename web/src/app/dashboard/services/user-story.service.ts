@@ -86,4 +86,24 @@ export class UserStoryService {
       `${this.servicesRootUrl}/user-story/${userStoryId}/casos-uso`,
     );
   }
+
+  getMentionables(
+    projectId: number,
+  ): Observable<
+    {
+      usuarioId: number;
+      nome: string;
+      tipo: 'colaborador' | 'stakeholder';
+      id: number;
+    }[]
+  > {
+    return this.httpClient.get<
+      {
+        usuarioId: number;
+        nome: string;
+        tipo: 'colaborador' | 'stakeholder';
+        id: number;
+      }[]
+    >(`${this.servicesRootUrl}/user-story/mentionables?projeto=${projectId}`);
+  }
 }

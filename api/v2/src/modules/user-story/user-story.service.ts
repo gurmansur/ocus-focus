@@ -1,14 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
+import { ColaboradorProjeto } from '../colaborador-projeto/entities/colaborador-projeto.entity';
 import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Kanban } from '../kanban/entities/kanban.entity';
 import { Swimlane } from '../kanban/entities/swimlane.entity';
+import { NotificacaoService } from '../notificacao/notificacao.service';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { Sprint } from '../sprint/entities/sprint.entity';
+import { Stakeholder } from '../stakeholder/entities/stakeholder.entity';
+import { Usuario } from '../usuario/entities/usuario.entity';
+import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { CreateUserStoryDto } from './dto/create-user-story.dto';
 import { UpdateUserStoryDto } from './dto/update-user-story.dto';
+import { Comentario } from './entities/comentario.entity';
 import { UserStory } from './entities/user-story.entity';
 
 @Injectable()
@@ -28,6 +34,15 @@ export class UserStoryService {
     private readonly swimlaneRepository: Repository<Swimlane>,
     @InjectRepository(Sprint)
     private readonly sprintRepository: Repository<Sprint>,
+    @InjectRepository(Comentario)
+    private readonly comentarioRepository: Repository<Comentario>,
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(Stakeholder)
+    private readonly stakeholderRepository: Repository<Stakeholder>,
+    @InjectRepository(ColaboradorProjeto)
+    private readonly colaboradorProjetoRepository: Repository<ColaboradorProjeto>,
+    private readonly notificacaoService: NotificacaoService,
   ) {}
 
   async findAll(projetoId: Projeto) {
@@ -316,5 +331,203 @@ export class UserStoryService {
     });
 
     return userStory?.casosDeUso || [];
+  }
+
+  async getComentarios(userStoryId: number) {
+    const comentarios = await this.comentarioRepository.find({
+      where: { userStory: { id: userStoryId } },
+      relations: ['usuario'],
+      order: { criado_em: 'DESC' },
+    });
+
+    const usuarioIds = comentarios
+      .map((c) => c.usuario?.id)
+      .filter((id): id is number => typeof id === 'number');
+
+    const nomePorUsuario = new Map<number, string>();
+
+    if (usuarioIds.length > 0) {
+      const colaboradores = await this.colaboradorRepository.find({
+        where: { usuario: { id: In(usuarioIds) } },
+        relations: ['usuario'],
+      });
+      for (const col of colaboradores) {
+        if (col.usuario?.id) nomePorUsuario.set(col.usuario.id, col.nome);
+      }
+
+      const stakeholders = await this.stakeholderRepository.find({
+        where: { usuario: { id: In(usuarioIds) } },
+        relations: ['usuario'],
+      });
+      for (const stk of stakeholders) {
+        if (stk.usuario?.id && !nomePorUsuario.has(stk.usuario.id)) {
+          nomePorUsuario.set(stk.usuario.id, stk.nome);
+        }
+      }
+    }
+
+    return comentarios.map((c) => {
+      const uid = c.usuario?.id;
+      const nome =
+        (uid ? nomePorUsuario.get(uid) : undefined) ||
+        (uid ? `Usuário ${uid}` : 'Usuário');
+      return {
+        id: c.id,
+        comentario: c.comentario,
+        criado_em: c.criado_em,
+        modificado_em: c.modificado_em,
+        usuario: {
+          id: uid,
+          nome,
+        },
+      };
+    });
+  }
+
+  async createComentario(
+    userStoryId: number,
+    createComentarioDto: CreateComentarioDto,
+  ) {
+    const userStory = await this.userStoryRepository.findOne({
+      where: { id: userStoryId },
+    });
+
+    if (!userStory) {
+      throw new HttpException('User Story not found', HttpStatus.NOT_FOUND);
+    }
+
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id: createComentarioDto.usuarioId },
+    });
+
+    if (!usuario) {
+      throw new HttpException('Usuario not found', HttpStatus.NOT_FOUND);
+    }
+
+    const comentario = this.comentarioRepository.create({
+      comentario: createComentarioDto.comentario,
+      usuario,
+      userStory,
+      criado_em: new Date(),
+      modificado_em: new Date(),
+    });
+
+    const saved = await this.comentarioRepository.save(comentario);
+
+    // Resolve display name for the usuario (prefer Colaborador, fallback to Stakeholder)
+    let nome = '';
+    const col = await this.colaboradorRepository.findOne({
+      where: { usuario: { id: usuario.id } },
+      relations: ['usuario'],
+    });
+    if (col) {
+      nome = col.nome;
+    } else {
+      const stk = await this.stakeholderRepository.findOne({
+        where: { usuario: { id: usuario.id } },
+        relations: ['usuario'],
+      });
+      nome = stk?.nome || `Usuário ${usuario.id}`;
+    }
+
+    const response = {
+      id: saved.id,
+      comentario: saved.comentario,
+      criado_em: saved.criado_em,
+      modificado_em: saved.modificado_em,
+      usuario: {
+        id: usuario.id,
+        nome,
+      },
+    };
+
+    // Create notifications for mentions if provided
+    try {
+      await this.notificacaoService.createForMentions(
+        createComentarioDto.mentionUsuarioIds,
+        {
+          remetenteUsuarioId: usuario.id,
+          userStoryId: userStoryId,
+          comentarioId: saved.id,
+          mensagem: `${nome} mencionou você em "${userStory.titulo}"`,
+        },
+      );
+    } catch (e) {
+      // swallow notification errors
+    }
+
+    return response;
+  }
+
+  async getMentionablesByProject(projectId: number) {
+    if (!projectId) {
+      throw new HttpException('Projeto é obrigatório', HttpStatus.BAD_REQUEST);
+    }
+
+    // Fetch colaboradores for the project via the join table
+    const colProjetos = await this.colaboradorProjetoRepository.find({
+      where: { projeto: { id: projectId } },
+      relations: ['colaborador', 'colaborador.usuario', 'projeto'],
+    });
+
+    // Fetch stakeholders linked directly to the project
+    const stakeholders = await this.stakeholderRepository.find({
+      where: { projeto: { id: projectId } },
+      relations: ['usuario', 'projeto'],
+    });
+
+    // Normalize and deduplicate by usuarioId (a usuario could exist in both roles)
+    const mentionablesMap = new Map<
+      number,
+      {
+        usuarioId: number;
+        nome: string;
+        tipo: 'colaborador' | 'stakeholder';
+        id: number;
+      }
+    >();
+
+    colProjetos.forEach((cp) => {
+      const usuarioId = cp.colaborador?.usuario?.id;
+      if (!usuarioId) return;
+      if (!mentionablesMap.has(usuarioId)) {
+        mentionablesMap.set(usuarioId, {
+          usuarioId,
+          nome: cp.colaborador.nome,
+          tipo: 'colaborador',
+          id: cp.colaborador.id,
+        });
+      }
+    });
+
+    stakeholders.forEach((s) => {
+      const usuarioId = s.usuario?.id;
+      if (!usuarioId) return;
+      if (!mentionablesMap.has(usuarioId)) {
+        mentionablesMap.set(usuarioId, {
+          usuarioId,
+          nome: s.nome,
+          tipo: 'stakeholder',
+          id: s.id,
+        });
+      }
+    });
+
+    return Array.from(mentionablesMap.values()).sort((a, b) =>
+      a.nome.localeCompare(b.nome),
+    );
+  }
+
+  async deleteComentario(comentarioId: number) {
+    const comentario = await this.comentarioRepository.findOne({
+      where: { id: comentarioId },
+    });
+
+    if (!comentario) {
+      throw new HttpException('Comentario not found', HttpStatus.NOT_FOUND);
+    }
+
+    await this.comentarioRepository.delete(comentarioId);
+    return { success: true };
   }
 }

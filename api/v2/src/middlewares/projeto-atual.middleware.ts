@@ -21,7 +21,7 @@ declare global {
 
 @Injectable()
 export class ProjetoAtualMiddleware implements NestMiddleware {
-  constructor(@Inject() private projetoService: ProjetoService) {}
+  constructor(@Inject(ProjetoService) private projetoService: ProjetoService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const projetoId = req.headers.projeto;

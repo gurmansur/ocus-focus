@@ -63,7 +63,7 @@ export class CasoDeTesteService {
     return (
       await this.casoDeTesteRepository.find({
         relations: ['testadorDesignado', 'suiteDeTeste', 'casoDeUso'],
-        where: { suiteDeTeste: IsNull(), projeto },
+        where: { suiteDeTeste: IsNull(), projeto: { id: projeto.id } },
       })
     ).map((casoDeTeste) =>
       CasoDeTesteMapper.entityToCasoDeTesteBo(casoDeTeste),

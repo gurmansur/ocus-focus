@@ -98,6 +98,93 @@
           </div>
         </ng-template>
       </div>
+
+      <div class="space-y-2">
+        <h3 class="font-semibold text-gray-900">Comentários</h3>
+
+        <!-- Comment list -->
+        <ng-container
+          *ngIf="comentarios && comentarios.length > 0; else noComments"
+        >
+          <div
+            class="space-y-3 max-h-96 overflow-auto pr-1 bg-gray-50 rounded p-3 border border-gray-200"
+          >
+            <div
+              *ngFor="let comentario of comentarios"
+              class="p-3 bg-white border border-gray-200 rounded shadow-sm"
+            >
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900 text-sm">
+                    {{ comentario.usuario?.nome || "Usuário" }}
+                  </p>
+                  <p class="text-xs text-gray-500 mt-0.5">
+                    {{ comentario.criado_em | date: "short" }}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  (click)="deleteComentario(comentario.id)"
+                  class="text-red-600 hover:text-red-800 text-xs font-medium"
+                >
+                  Excluir
+                </button>
+              </div>
+              <p class="text-sm text-gray-700 mt-2 whitespace-pre-wrap">
+                {{ comentario.comentario }}
+              </p>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noComments>
+          <div class="p-3 bg-gray-100 rounded text-gray-600 text-sm">
+            Nenhum comentário ainda
+          </div>
+        </ng-template>
+
+        <!-- Comment input form -->
+        <div class="space-y-2 relative">
+          <form (ngSubmit)="addComentario()" #commentForm="ngForm">
+            <textarea
+              [(ngModel)]="novoComentario"
+              name="novoComentario"
+              placeholder="Adicionar um comentário... Use @ para mencionar alguém"
+              class="w-full p-2 border border-gray-300 rounded text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400"
+              rows="3"
+              (keyup)="onCommentKeyup($event, commentTextarea)"
+              #commentTextarea
+            ></textarea>
+
+            <!-- Mention dropdown -->
+            <div
+              *ngIf="showMentionList"
+              class="absolute z-20 bg-white border border-gray-200 rounded shadow-md max-h-56 overflow-auto w-full mt-1"
+            >
+              <div
+                *ngFor="let m of filteredMentionables"
+                (click)="selectMention(m, commentTextarea)"
+                class="px-3 py-2 cursor-pointer hover:bg-violet-50 text-sm text-gray-800"
+              >
+                &commat;{{ m.nome }}
+              </div>
+              <div
+                *ngIf="filteredMentionables.length === 0"
+                class="px-3 py-2 text-sm text-gray-500"
+              >
+                Nenhum resultado
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              [disabled]="!novoComentario.trim() || loadingComentarios"
+              class="mt-2 px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded hover:bg-violet-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {{ loadingComentarios ? "Enviando..." : "Adicionar Comentário" }}
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   </ng-container>
   <ng-template #empty>

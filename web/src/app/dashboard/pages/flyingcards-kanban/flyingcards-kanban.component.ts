@@ -73,9 +73,18 @@ export class FlyingcardsKanbanComponent implements OnInit {
     private sprintService: SprintService,
   ) {
     this.projectId = this.route.snapshot.params['id'];
+
+    this.route.queryParamMap.subscribe((params) => {
+      const usParam = params.get('usId');
+      const parsed = usParam ? Number(usParam) : NaN;
+      this.pendingUserStoryId =
+        Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+      this.tryOpenPendingUserStory();
+    });
   }
 
   board: Board = new Board();
+  private pendingUserStoryId: number | null = null;
 
   buscarProjeto(id: number, user: number) {
     this.projectService.findById(id, user).subscribe((project) => {
@@ -188,7 +197,23 @@ export class FlyingcardsKanbanComponent implements OnInit {
   private processarBoard() {
     return (data: any) => {
       this.board = data;
+      this.tryOpenPendingUserStory();
     };
+  }
+
+  private tryOpenPendingUserStory() {
+    if (!this.pendingUserStoryId || !this.board.swimlanes) return;
+
+    const targetId = this.pendingUserStoryId;
+    for (const swimlane of this.board.swimlanes) {
+      for (const us of swimlane.userStories || []) {
+        if (us.id === targetId) {
+          this.openUserStoryDetails(us);
+          this.pendingUserStoryId = null;
+          return;
+        }
+      }
+    }
   }
 
   openUserStoryDetails(userStory: UserStory) {

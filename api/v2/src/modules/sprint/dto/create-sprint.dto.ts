@@ -1,4 +1,4 @@
-import { IsDateString, IsNumber, IsString } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateSprintDto {
   @IsString()
@@ -10,9 +10,11 @@ export class CreateSprintDto {
   @IsNumber()
   horas_previstas: number;
 
+  @IsOptional()
   @IsDateString()
-  data_inicio: string;
+  data_inicio?: string;
 
+  @IsOptional()
   @IsDateString()
-  data_fim: string;
+  data_fim?: string;
 }

@@ -40,8 +40,11 @@
       />
     </svg>
   </div>
-  <div class="ml-auto flex items-center divide-x-2">
-    <button class="rounded-full hover:bg-gray-100 p-2 me-2">
+  <div class="ml-auto flex items-center divide-x-2 relative">
+    <button
+      class="rounded-full hover:bg-gray-100 p-2 me-2 relative"
+      (click)="toggleNotifications()"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -56,7 +59,41 @@
           d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
         />
       </svg>
+      <span
+        *ngIf="unreadCount > 0"
+        class="absolute -top-0.5 -right-0.5 bg-red-600 text-white text-[10px] leading-none px-1.5 py-0.5 rounded-full"
+        >{{ unreadCount }}</span
+      >
     </button>
+    <!-- Notifications dropdown -->
+    <div
+      *ngIf="showNotif"
+      class="absolute right-12 top-10 w-80 bg-white border border-gray-200 rounded shadow-lg z-30"
+    >
+      <div class="px-3 py-2 border-b font-medium text-gray-700">
+        Notificações
+      </div>
+      <div class="max-h-80 overflow-auto">
+        <div
+          *ngIf="notifications.length === 0"
+          class="p-3 text-sm text-gray-500"
+        >
+          Sem notificações
+        </div>
+        <div
+          *ngFor="let n of notifications"
+          class="p-3 border-b last:border-b-0 cursor-pointer hover:bg-gray-50"
+          (click)="onNotificationClick(n)"
+        >
+          <p class="text-sm" [class.font-semibold]="!n.lido">
+            {{ n.mensagem }}
+          </p>
+          <p class="text-xs text-gray-500 mt-1">
+            {{ n.criado_em | date: "short" }}
+          </p>
+        </div>
+      </div>
+    </div>
     <div class="ps-4 flex items-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
