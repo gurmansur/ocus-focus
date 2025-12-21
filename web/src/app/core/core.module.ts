@@ -11,7 +11,6 @@ import { TokenService } from './services/token.service';
 import { UserContextService } from './services/user-context.service';
 
 // Interceptors
-import { CachingInterceptor } from './interceptors/caching.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 
@@ -63,11 +62,11 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
       useClass: TokenInterceptor,
       multi: true,
     },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: CachingInterceptor,
-      multi: true,
-    },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: CachingInterceptor,
+    //   multi: true,
+    // },
   ],
 })
 export class CoreModule {}

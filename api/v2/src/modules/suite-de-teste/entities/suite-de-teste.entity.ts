@@ -17,7 +17,7 @@ import { Projeto } from '../../projeto/entities/projeto.entity';
 
 @Entity('SUITES_DE_TESTE')
 @Tree('closure-table', {
-  closureTableName: 'SUITES_DE_TESTE_RELATION_closure',
+  closureTableName: 'SUITES_DE_TESTE_RELATION',
 })
 export class SuiteDeTeste {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
