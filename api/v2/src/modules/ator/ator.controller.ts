@@ -6,10 +6,9 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { AtorService } from './ator.service';
 import { AtoresMetricsQueryDto } from './dto/atores-metrics-query.dto';
 import { AtoresMetricsDto } from './dto/atores-metrics.dto';
@@ -24,13 +23,14 @@ import { FindAtoresDto } from './dto/find-atores.dto';
 import { UpdateAtorQueryDto } from './dto/update-ator-query.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
 
-@UseGuards(AuthGuard)
 @ApiTags('Ator')
 @ApiResponse({ status: 401, description: 'Não autorizado' })
 @ApiBearerAuth()
 @Controller('atores')
-export class AtorController {
-  constructor(private readonly atorService: AtorService) {}
+export class AtorController extends BaseController {
+  constructor(private readonly atorService: AtorService) {
+    super();
+  }
 
   @ApiResponse({
     status: 200,

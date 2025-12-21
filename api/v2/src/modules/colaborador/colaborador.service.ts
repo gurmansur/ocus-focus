@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Like, Not, Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
@@ -11,15 +12,18 @@ export class ColaboradorService {
   constructor(
     @InjectRepository(Colaborador)
     private colaboradorRepository: Repository<Colaborador>,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   create(createColaboradorDto: CreateColaboradorDto, usuario?: Usuario) {
+    this.logger.log(`Creating colaborador: ${createColaboradorDto.email}`);
     const colaborador = this.colaboradorRepository.create(createColaboradorDto);
     colaborador.usuario = usuario;
     return this.colaboradorRepository.save(colaborador);
   }
 
   async findAllFromProject(projetoId: number) {
+    this.logger.debug(`Finding collaborators for projeto ${projetoId}`);
     return await this.colaboradorRepository.find({
       where: {
         projetos: { id: projetoId },
@@ -53,10 +57,12 @@ export class ColaboradorService {
   }
 
   update(id: number, updateColaboradorDto: UpdateColaboradorDto) {
+    this.logger.log(`Updating colaborador ${id}`);
     return `This action updates a #${id} colaborador`;
   }
 
   remove(id: number) {
+    this.logger.warn(`Removing colaborador ${id}`);
     return `This action removes a #${id} colaborador`;
   }
 }

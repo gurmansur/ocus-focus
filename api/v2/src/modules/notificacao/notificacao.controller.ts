@@ -5,23 +5,23 @@ import {
   ParseIntPipe,
   Patch,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { NotificacaoService } from './notificacao.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Notificacoes')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
 @Controller('notificacoes')
-export class NotificacaoController {
-  constructor(private readonly notificacaoService: NotificacaoService) {}
+export class NotificacaoController extends BaseController {
+  constructor(private readonly notificacaoService: NotificacaoService) {
+    super();
+  }
 
   @Get()
   findByUsuario(@Query('usuarioId') usuarioId: number) {

@@ -1,58 +1,117 @@
-import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { AuthResponse } from '../../core/models/auth-response';
+import { HttpClientService } from '../../core/services/http-client.service';
+import { TokenService } from '../../core/services/token.service';
+import { UserContextService } from '../../core/services/user-context.service';
 import { Colaborador } from '../models/colaborador';
 import { ColaboradorSignin } from '../models/colaborador-signin';
 import { StakeholderSignin } from '../models/stakeholder-signin';
 
+/**
+ * Authentication service
+ * Handles user authentication and user context management
+ * Follows Single Responsibility Principle (only handles auth concerns)
+ * Depends on core services for HTTP, token, and user context management
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   constructor(
-    private httpClient: HttpClient,
-    @Inject('servicesRootUrl') private servicesRootUrl: string,
+    private httpClientService: HttpClientService,
+    private tokenService: TokenService,
+    private userContextService: UserContextService,
   ) {}
 
-  signinColaborador(colaboradorSignin: ColaboradorSignin): Observable<{
-    accessToken: string;
-    usu_email: string;
-    usu_name: string;
-    usu_id: number;
-    usu_role: string;
-    message: string;
-  }> {
-    return this.httpClient.post<{
-      accessToken: string;
-      usu_email: string;
-      usu_name: string;
-      usu_id: number;
-      usu_role: string;
-      message: string;
-    }>(this.servicesRootUrl + '/signin-colaborador', colaboradorSignin, {
-      responseType: 'json',
-    });
+  /**
+   * Sign in as a collaborator (team member)
+   * @param colaboradorSignin Login credentials
+   * @returns Observable of auth response
+   */
+  signinColaborador(
+    colaboradorSignin: ColaboradorSignin,
+  ): Observable<AuthResponse> {
+    return this.httpClientService
+      .post<AuthResponse>('/signin-colaborador', colaboradorSignin)
+      .pipe(
+        tap((response) => {
+          this.saveAuthContext(response);
+        }),
+      );
   }
 
-  signinStakeholder(stakeholderSignin: StakeholderSignin): Observable<any> {
-    return this.httpClient.post<StakeholderSignin>(
-      this.servicesRootUrl + '/signin-stakeholder',
-      stakeholderSignin,
-    );
+  /**
+   * Sign in as a stakeholder (external user)
+   * @param stakeholderSignin Login credentials
+   * @returns Observable of auth response
+   */
+  signinStakeholder(
+    stakeholderSignin: StakeholderSignin,
+  ): Observable<AuthResponse> {
+    return this.httpClientService
+      .post<AuthResponse>('/signin-stakeholder', stakeholderSignin)
+      .pipe(
+        tap((response) => {
+          this.saveAuthContext(response);
+        }),
+      );
   }
 
-  signup(colaborador: Colaborador): Observable<any> {
-    return this.httpClient.post<Colaborador>(
-      this.servicesRootUrl + '/signup',
-      colaborador,
-    );
+  /**
+   * Sign up a new collaborator
+   * @param colaborador New user data
+   * @returns Observable of auth response
+   */
+  signup(colaborador: Colaborador): Observable<AuthResponse> {
+    return this.httpClientService
+      .post<AuthResponse>('/signup', colaborador)
+      .pipe(
+        tap((response) => {
+          this.saveAuthContext(response);
+        }),
+      );
   }
 
+  /**
+   * Verify if current login is still valid
+   * @returns Observable of verification result
+   */
   verifyLogin(): Observable<any> {
-    return this.httpClient.get(this.servicesRootUrl + '/verify', {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    });
+    return this.httpClientService.get('/verify');
+  }
+
+  /**
+   * Log out the current user
+   * Clears all authentication and user context data
+   */
+  logout(): void {
+    this.tokenService.removeToken();
+    this.userContextService.clearUserContext();
+  }
+
+  /**
+   * Check if user is currently authenticated
+   * @returns True if user is authenticated
+   */
+  isAuthenticated(): boolean {
+    return (
+      this.tokenService.hasToken() && this.userContextService.isAuthenticated()
+    );
+  }
+
+  /**
+   * Save authentication context after successful login
+   * @param response Authentication response from server
+   */
+  private saveAuthContext(response: AuthResponse): void {
+    this.tokenService.setToken(response.accessToken);
+    this.userContextService.setUserContext(
+      response.usu_id,
+      response.usu_email,
+      response.usu_name,
+      response.usu_role,
+    );
   }
 }

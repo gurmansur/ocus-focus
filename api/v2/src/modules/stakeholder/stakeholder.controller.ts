@@ -8,18 +8,18 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { CreateStakeholderDto } from './dto/create-stakeholder.dto';
 import { StakeholderService } from './stakeholder.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Stakeholder')
 @Controller()
-export class StakeholderController {
-  constructor(private readonly stakeholderService: StakeholderService) {}
+export class StakeholderController extends BaseController {
+  constructor(private readonly stakeholderService: StakeholderService) {
+    super();
+  }
 
   @Post('create-stakeholder')
   create(@Body() createStakeholderDto: CreateStakeholderDto) {

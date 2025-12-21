@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { SuiteDeTesteService } from '../suite-de-teste/suite-de-teste.service';
 import { CreateCasoDeTesteBo } from './bo/create-caso-de-teste.bo';
@@ -20,9 +21,11 @@ export class CasoDeTesteService {
     private casoDeTesteRepository: Repository<CasoDeTeste>,
     @Inject(forwardRef(() => SuiteDeTesteService))
     private suiteDeTesteService: SuiteDeTesteService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async create(createCasoDeTesteBo: CreateCasoDeTesteBo, projeto: Projeto) {
+    this.logger.log(`Creating test case for projeto ${projeto.id}`);
     const entity =
       CasoDeTesteMapper.createCasoDeTesteBoToEntity(createCasoDeTesteBo);
 

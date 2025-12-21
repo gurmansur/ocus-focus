@@ -1,6 +1,7 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { UserStory } from '../user-story/entities/user-story.entity';
 import { UserStoryService } from '../user-story/user-story.service';
@@ -22,6 +23,7 @@ export class KanbanService {
     @Inject() private readonly userStoryService: UserStoryService,
     @InjectRepository(UserStory)
     private readonly userStoryRepository: Repository<UserStory>,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async findBoard(projetoId: number, sprintId?: number) {

@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { Ator } from '../ator/entities/ator.entity';
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
 import { FatorAmbientalProjeto } from '../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
@@ -21,6 +22,7 @@ export class EstimativaService {
     private readonly fatorAmbientalRepository: Repository<FatorAmbientalProjeto>,
     @InjectRepository(FatorTecnicoProjeto)
     private readonly fatorTecnicoRepository: Repository<FatorTecnicoProjeto>,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async findAll(projetoId: number, page = 0, pageSize = 10) {

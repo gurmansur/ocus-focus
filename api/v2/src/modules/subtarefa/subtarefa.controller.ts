@@ -6,19 +6,19 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { CreateSubtarefaDto } from './dto/create-subtarefa.dto';
 import { UpdateSubtarefaDto } from './dto/update-subtarefa.dto';
 import { SubtarefaService } from './subtarefa.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Subtarefa')
 @Controller('subtarefa')
-export class SubtarefaController {
-  constructor(private readonly subtarefaService: SubtarefaService) {}
+export class SubtarefaController extends BaseController {
+  constructor(private readonly subtarefaService: SubtarefaService) {
+    super();
+  }
 
   @Post()
   create(@Body() createSubtarefaDto: CreateSubtarefaDto) {

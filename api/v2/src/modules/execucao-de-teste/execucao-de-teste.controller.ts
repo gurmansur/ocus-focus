@@ -9,7 +9,6 @@ import {
   Post,
   Query,
   Sse,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,8 +19,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { ChangeStatusExecucaoDeTesteDto } from './dto/change-status-execucao-de-teste.dto';
 import { CreateExecucaoDeTesteDto } from './dto/create-execucao-de-teste.dto';
@@ -34,13 +33,12 @@ import { ExecucaoDeTesteService } from './execucao-de-teste.service';
 
 @ApiTags('Execução de Teste')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
 @Controller('execucao-de-teste')
-export class ExecucaoDeTesteController {
-  constructor(
-    private readonly execucaoDeTesteService: ExecucaoDeTesteService,
-  ) {}
+export class ExecucaoDeTesteController extends BaseController {
+  constructor(private readonly execucaoDeTesteService: ExecucaoDeTesteService) {
+    super();
+  }
 
   @ApiResponse({
     status: 201,

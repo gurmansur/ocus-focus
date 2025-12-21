@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { ProjetoService } from '../projeto/projeto.service';
 import { CreateAtorDto } from './dto/create-ator.dto';
 import { UpdateAtorDto } from './dto/update-ator.dto';
@@ -11,6 +12,7 @@ export class AtorService {
   constructor(
     @InjectRepository(Ator) private readonly atorRepository: Repository<Ator>,
     @Inject() private readonly projetoService: ProjetoService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async create(createAtorDto: CreateAtorDto, projectId: number) {

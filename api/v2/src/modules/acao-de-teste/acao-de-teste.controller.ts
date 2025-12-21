@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -17,7 +16,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { AcaoDeTesteMapper } from './acao-de-teste.mapper';
 import { AcaoDeTesteService } from './acao-de-teste.service';
 import { AcaoDeTesteDto } from './dto/acao-de-teste.dto';
@@ -26,11 +25,12 @@ import { UpdateAcaoDeTesteDto } from './dto/update-acao-de-teste.dto';
 
 @ApiTags('Ação de Teste')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
 @Controller('acao-de-teste')
-export class AcaoDeTesteController {
-  constructor(private readonly acaoDeTesteService: AcaoDeTesteService) {}
+export class AcaoDeTesteController extends BaseController {
+  constructor(private readonly acaoDeTesteService: AcaoDeTesteService) {
+    super();
+  }
 
   @ApiResponse({
     status: 201,

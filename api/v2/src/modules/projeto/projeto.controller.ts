@@ -7,27 +7,27 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { BaseController } from '../../common/base/base.controller';
 import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
 import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { ProjetoService } from './projeto.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Projeto')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
 @Controller('projetos')
-export class ProjetoController {
-  constructor(private readonly projetoService: ProjetoService) {}
+export class ProjetoController extends BaseController {
+  constructor(private readonly projetoService: ProjetoService) {
+    super();
+  }
 
   @Post('new')
   create(

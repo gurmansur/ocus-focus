@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { RequisitoService } from '../requisito/requisito-funcional.service';
 import { ResultadoRequisitoService } from '../resultado-requisito/resultado-requisito.service';
 import { StakeholderService } from '../stakeholder/stakeholder.service';
@@ -18,6 +19,7 @@ export class PriorizacaoService {
     @Inject()
     private readonly statusPriorizacaoService: StatusPriorizacaoService,
     @Inject() private readonly requisitoService: RequisitoService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async createPriorizacao(

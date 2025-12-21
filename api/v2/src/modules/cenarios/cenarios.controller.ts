@@ -6,19 +6,19 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { CenariosService } from './cenarios.service';
 import { CreateCenarioDto } from './dto/create-cenario.dto';
 import { UpdateCenarioDto } from './dto/update-cenario.dto';
 
-@UseGuards(AuthGuard)
 @ApiTags('Cenário')
 @Controller('cenarios')
-export class CenariosController {
-  constructor(private readonly cenariosService: CenariosService) {}
+export class CenariosController extends BaseController {
+  constructor(private readonly cenariosService: CenariosService) {
+    super();
+  }
 
   @Get()
   findAll(

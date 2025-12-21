@@ -6,21 +6,21 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { CreateResultadoRequisitoDto } from './dto/create-resultado-requisito.dto';
 import { UpdateResultadoRequisitoDto } from './dto/update-resultado-requisito.dto';
 import { ResultadoRequisitoService } from './resultado-requisito.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Resultado-Requisito')
 @Controller('resultado-requisito')
-export class ResultadoRequisitoController {
+export class ResultadoRequisitoController extends BaseController {
   constructor(
     private readonly resultadoRequisitoService: ResultadoRequisitoService,
-  ) {}
+  ) {
+    super();
+  }
 
   @Post()
   create(@Body() createResultadoRequisitoDto: CreateResultadoRequisitoDto) {}

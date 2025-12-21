@@ -7,21 +7,21 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { BaseController } from '../../common/base/base.controller';
 import { Serialize } from '../../decorators/serialize.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
 import { ColaboradorService } from './colaborador.service';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 
 @Serialize()
-@UseGuards(AuthGuard)
 @ApiTags('Colaborador')
 @Controller('colaboradores')
-export class ColaboradorController {
-  constructor(private readonly colaboradorService: ColaboradorService) {}
+export class ColaboradorController extends BaseController {
+  constructor(private readonly colaboradorService: ColaboradorService) {
+    super();
+  }
 
   @Post()
   create(@Body() createColaboradorDto: CreateColaboradorDto) {

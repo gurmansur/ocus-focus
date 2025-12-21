@@ -7,19 +7,19 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { UsuarioService } from './usuario.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Usuário')
 @Controller('usuario')
-export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+export class UsuarioController extends BaseController {
+  constructor(private readonly usuarioService: UsuarioService) {
+    super();
+  }
 
   @Post()
   create(@Body() createUsuarioDto: CreateUsuarioDto) {

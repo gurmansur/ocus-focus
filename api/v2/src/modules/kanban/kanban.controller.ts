@@ -7,22 +7,22 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { SwimlaneDto } from './dto/swimlane.dto';
 import { UpdateSwimlaneUsDto } from './dto/update-swimlane-us.dto';
 import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';
 import { KanbanService } from './kanban.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Kanban')
 @Controller('kanban')
-export class KanbanController {
-  constructor(private readonly kanbanService: KanbanService) {}
+export class KanbanController extends BaseController {
+  constructor(private readonly kanbanService: KanbanService) {
+    super();
+  }
 
   @Get()
   findBoard(

@@ -5,22 +5,55 @@ import { BrowserModule } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthModule } from './auth/auth.module';
-import { InterceptorModule } from './dashboard/interceptors/interceptor.module';
 
+// Core module (singleton services, interceptors, guards)
+import { CoreModule } from './core/core.module';
+
+// Feature modules
+import { AuthModule } from './auth/auth.module';
+
+// Shared module (reusable components and common exports)
+import { SharedModule } from './shared/shared.module';
+
+/**
+ * App Module
+ * Root module of the application
+ *
+ * Module organization:
+ * - CoreModule: Imported once for singleton services and interceptors
+ * - SharedModule: Provides common Angular modules and reusable components
+ * - AuthModule: Feature module for authentication
+ * - DashboardModule: Lazy loaded as a feature module
+ *
+ * Follows Angular best practices:
+ * - Keeps app module lean
+ * - Uses CoreModule for singletons
+ * - Uses lazy loading for feature modules
+ * - Centralized HTTP client configuration
+ */
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
-    AuthModule,
     DragDropModule,
-    InterceptorModule,
+    AppRoutingModule,
+
+    // Core module (must be imported only once in root)
+    CoreModule,
+
+    // Shared module (can be imported in multiple places)
+    SharedModule,
+
+    // Feature modules
+    AuthModule,
+    // DashboardModule is lazy loaded via routing
   ],
   providers: [
-    { provide: 'servicesRootUrl', useValue: 'http://localhost:3333' },
     provideAnimationsAsync(),
+    // Temporary provider for backward compatibility with existing services
+    // TODO: Migrate all services to use HttpClientService
+    { provide: 'servicesRootUrl', useValue: 'http://localhost:3333' },
   ],
   bootstrap: [AppComponent],
 })

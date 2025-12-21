@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { Comentario } from '../user-story/entities/comentario.entity';
 import { UserStory } from '../user-story/entities/user-story.entity';
 import { Usuario } from '../usuario/entities/usuario.entity';
@@ -17,6 +18,7 @@ export class NotificacaoService {
     private readonly userStoryRepository: Repository<UserStory>,
     @InjectRepository(Comentario)
     private readonly comentarioRepository: Repository<Comentario>,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async createForMentions(

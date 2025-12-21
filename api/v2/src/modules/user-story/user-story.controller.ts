@@ -6,22 +6,22 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { CreateUserStoryDto } from './dto/create-user-story.dto';
 import { UpdateUserStoryDto } from './dto/update-user-story.dto';
 import { UserStoryService } from './user-story.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('User Story')
 @Controller('user-story')
-export class UserStoryController {
-  constructor(private readonly userStoryService: UserStoryService) {}
+export class UserStoryController extends BaseController {
+  constructor(private readonly userStoryService: UserStoryService) {
+    super();
+  }
 
   @Get('all')
   findAll(@ProjetoAtual() projetoId: Projeto) {

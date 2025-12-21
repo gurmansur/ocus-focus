@@ -4,6 +4,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
+import { CommonModule } from './common/common.module';
 import { TypeOrmConfigService } from './config/typeorm.config';
 import { AcaoDeTesteModule } from './modules/acao-de-teste/acao-de-teste.module';
 import { AtorModule } from './modules/ator/ator.module';
@@ -36,6 +37,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
 
 @Module({
   imports: [
+    CommonModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,

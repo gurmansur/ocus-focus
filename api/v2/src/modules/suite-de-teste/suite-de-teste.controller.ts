@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -17,9 +16,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
 import { Serialize } from '../../decorators/serialize.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSuiteDeTesteDto } from './dto/create-suite-de-teste.dto';
 import { SuiteDeTesteDto } from './dto/suite-de-teste.dto';
@@ -29,12 +28,13 @@ import { SuiteDeTesteService } from './suite-de-teste.service';
 
 @ApiTags('Suite de Teste')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @Serialize()
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
 @Controller('suite-de-teste')
-export class SuiteDeTesteController {
-  constructor(private readonly suiteDeTesteService: SuiteDeTesteService) {}
+export class SuiteDeTesteController extends BaseController {
+  constructor(private readonly suiteDeTesteService: SuiteDeTesteService) {
+    super();
+  }
 
   @Post()
   @ApiResponse({

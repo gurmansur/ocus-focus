@@ -6,21 +6,21 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { CreateFatorAmbientalProjetoDto } from './dto/create-fator-ambiental-projeto.dto';
 import { UpdateFatorAmbientalProjetoDto } from './dto/update-fator-ambiental-projeto.dto';
 import { FatorAmbientalProjetoService } from './fator-ambiental-projeto.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Fatores Ambientais')
 @Controller('fatores-ambientais')
-export class FatorAmbientalProjetoController {
+export class FatorAmbientalProjetoController extends BaseController {
   constructor(
     private readonly fatorAmbientalProjetoService: FatorAmbientalProjetoService,
-  ) {}
+  ) {
+    super();
+  }
 
   @Get()
   findAll(

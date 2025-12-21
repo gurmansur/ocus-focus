@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { UpdateResultadoRequisitoDto } from './dto/update-resultado-requisito.dto';
 import { ResultadoRequisito } from './entities/resultado-requisito.entity';
 
@@ -9,6 +10,7 @@ export class ResultadoRequisitoService {
   constructor(
     @InjectRepository(ResultadoRequisito)
     private resultadoRequisitoRepository: Repository<ResultadoRequisito>,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   create(

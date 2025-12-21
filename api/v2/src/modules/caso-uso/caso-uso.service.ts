@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { RequisitoService } from '../requisito/requisito-funcional.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';
@@ -13,6 +14,7 @@ export class CasoUsoService {
     @InjectRepository(CasoUso)
     private readonly casoUsoRepository: Repository<CasoUso>,
     @Inject() private readonly requisitosService: RequisitoService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async create(createCasoUsoDto: CreateCasoUsoDto, requisitoId: number) {

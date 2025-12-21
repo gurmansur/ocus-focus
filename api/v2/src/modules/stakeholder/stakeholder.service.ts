@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { Like, Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { ProjetoService } from '../projeto/projeto.service';
 import { StatusPriorizacaoService } from '../status-priorizacao/status-priorizacao.service';
 import { UsuarioService } from '../usuario/usuario.service';
@@ -19,9 +20,11 @@ export class StakeholderService {
     @Inject() private readonly projetoService: ProjetoService,
     @Inject()
     private readonly statusPriorizacaoService: StatusPriorizacaoService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async create(createStakeholderDto: CreateStakeholderDto) {
+    this.logger.log('Creating new stakeholder');
     const chave = randomBytes(20).toString('hex');
 
     const usuarioPorChave = await this.stakeholderRepository.findOne({
@@ -29,6 +32,7 @@ export class StakeholderService {
     });
 
     if (usuarioPorChave) {
+      this.logger.warn('Failed to create stakeholder - key already exists');
       throw new Error('Chave já cadastrada!');
     }
 

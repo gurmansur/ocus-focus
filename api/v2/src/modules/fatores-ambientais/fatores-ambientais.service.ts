@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { CreateFatoresAmbientaiDto } from './dto/create-fatores-ambientai.dto';
 import { UpdateFatoresAmbientaiDto } from './dto/update-fatores-ambientai.dto';
 
 @Injectable()
 export class FatoresAmbientaisService {
+  constructor(@Inject('ILogger') private logger: ILogger) {}
   create(createFatoresAmbientaiDto: CreateFatoresAmbientaiDto) {
     return 'This action adds a new fatoresAmbientai';
   }

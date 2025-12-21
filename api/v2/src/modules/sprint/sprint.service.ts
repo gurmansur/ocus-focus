@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSprintDto } from './dto/create-sprint.dto';
 import { UpdateSprintDto } from './dto/update-sprint.dto';
@@ -14,9 +15,11 @@ export class SprintService {
     private readonly sprintRepository: Repository<Sprint>,
     @InjectRepository(Projeto)
     private readonly projetoRepository: Repository<Projeto>,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async create(createSprintDto: CreateSprintDto, projeto: Projeto) {
+    this.logger.log(`Creating sprint for projeto ${projeto.id}`);
     const sprint = this.sprintRepository.create({
       ...createSprintDto,
       projeto,
@@ -50,11 +53,13 @@ export class SprintService {
   }
 
   async update(id: number, updateSprintDto: UpdateSprintDto) {
+    this.logger.log(`Updating sprint ${id}`);
     await this.sprintRepository.update(id, updateSprintDto);
     return this.findOne(id);
   }
 
   async remove(id: number) {
+    this.logger.warn(`Deleting sprint ${id}`);
     const sprint = await this.findOne(id);
     await this.sprintRepository.delete(id);
     return sprint;

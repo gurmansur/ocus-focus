@@ -6,19 +6,19 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { ArquivoService } from './arquivo.service';
 import { CreateArquivoDto } from './dto/create-arquivo.dto';
 import { UpdateArquivoDto } from './dto/update-arquivo.dto';
 
-@UseGuards(AuthGuard)
 @ApiTags('Arquivo')
 @Controller('arquivo')
-export class ArquivoController {
-  constructor(private readonly arquivoService: ArquivoService) {}
+export class ArquivoController extends BaseController {
+  constructor(private readonly arquivoService: ArquivoService) {
+    super();
+  }
 
   @Post()
   create(@Body() createArquivoDto: CreateArquivoDto) {

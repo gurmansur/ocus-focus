@@ -1,7 +1,13 @@
-import { BadRequestException, Injectable, MessageEvent } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  MessageEvent,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observable, Observer } from 'rxjs';
 import { In, Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { AcaoDeTesteService } from '../acao-de-teste/acao-de-teste.service';
 import { CasoDeTesteBo } from '../caso-de-teste/bo/caso-de-teste.bo';
 import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
@@ -29,6 +35,7 @@ export class ExecucaoDeTesteService {
     private acaoDeTesteService: AcaoDeTesteService,
     private configuracaoSeleniumService: ConfiguracaoSeleniumService,
     private executorSeleniumService: ExecutorSeleniumService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async create(createExecucaoDeTesteBo: CreateExecucaoDeTesteBo) {

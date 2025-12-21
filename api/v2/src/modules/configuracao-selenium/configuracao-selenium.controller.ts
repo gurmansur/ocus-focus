@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,8 +14,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { ConfiguracaoSeleniumMapper } from './configuracao-selenium.mapper';
 import { ConfiguracaoSeleniumService } from './configuracao-selenium.service';
@@ -26,13 +25,14 @@ import { UpdateConfiguracaoSeleniumDto } from './dto/update-configuracao-seleniu
 
 @ApiTags('Configuração Selenium')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
 @Controller('configuracao-selenium')
-export class ConfiguracaoSeleniumController {
+export class ConfiguracaoSeleniumController extends BaseController {
   constructor(
     private readonly configuracaoSeleniumService: ConfiguracaoSeleniumService,
-  ) {}
+  ) {
+    super();
+  }
 
   @ApiResponse({
     status: 201,

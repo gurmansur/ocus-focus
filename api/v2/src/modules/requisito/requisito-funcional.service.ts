@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { CreateRequisitoDto } from './dto/create-requisito.dto';
 import { UpdateRequisitoDto } from './dto/update-requisito.dto';
 import { RequisitoFuncional } from './entities/requisito-funcional.entity';
@@ -10,6 +11,7 @@ export class RequisitoService {
   constructor(
     @InjectRepository(RequisitoFuncional)
     private readonly requisitoRepository: Repository<RequisitoFuncional>,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async list(projetoId: number, page: number, pageSize: number) {

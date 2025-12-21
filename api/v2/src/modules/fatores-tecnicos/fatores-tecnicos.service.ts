@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { CreateFatoresTecnicoDto } from './dto/create-fatores-tecnico.dto';
 import { UpdateFatoresTecnicoDto } from './dto/update-fatores-tecnico.dto';
 
 @Injectable()
 export class FatoresTecnicosService {
+  constructor(@Inject('ILogger') private logger: ILogger) {}
   create(createFatoresTecnicoDto: CreateFatoresTecnicoDto) {
     return 'This action adds a new FatorTecnico';
   }

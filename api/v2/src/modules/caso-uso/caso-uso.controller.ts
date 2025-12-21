@@ -6,23 +6,23 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
-import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CasoUsoService } from './caso-uso.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';
 import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
 
-@UseGuards(AuthGuard)
 @ApiTags('Caso de Uso')
 @ApiResponse({ status: 401, description: 'Não autorizado' })
 @ApiBearerAuth()
 @Controller('caso-de-uso')
-export class CasoUsoController {
-  constructor(private readonly casoUsoService: CasoUsoService) {}
+export class CasoUsoController extends BaseController {
+  constructor(private readonly casoUsoService: CasoUsoService) {
+    super();
+  }
 
   @ApiResponse({
     status: 200,

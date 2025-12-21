@@ -6,21 +6,21 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { CreateFatorTecnicoProjetoDto } from './dto/create-fator-tecnico-projeto.dto';
 import { UpdateFatorTecnicoProjetoDto } from './dto/update-fator-tecnico-projeto.dto';
 import { FatorTecnicoProjetoService } from './fator-tecnico-projeto.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Fatores Técnicos')
 @Controller('fatores-tecnicos')
-export class FatorTecnicoProjetoController {
+export class FatorTecnicoProjetoController extends BaseController {
   constructor(
     private readonly fatorTecnicoProjetoService: FatorTecnicoProjetoService,
-  ) {}
+  ) {
+    super();
+  }
 
   @Get()
   findAll(

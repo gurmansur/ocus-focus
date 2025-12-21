@@ -1,6 +1,7 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThanOrEqual, Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { ColaboradorProjetoService } from '../colaborador-projeto/colaborador-projeto.service';
 import { ColaboradorService } from '../colaborador/colaborador.service';
 import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
@@ -20,9 +21,11 @@ export class ProjetoService {
     private colaboradorService: ColaboradorService,
     @Inject()
     private kanbanService: KanbanService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async create(createProjetoDto: CreateProjetoDto, user: number) {
+    this.logger.log('Creating new projeto');
     const projeto = await this.projetoRepository.save(createProjetoDto);
 
     const colaborador = await this.colaboradorService.findOne(user);

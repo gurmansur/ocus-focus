@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 // import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProjectContextService } from '../../../core/services/project-context.service';
 import { Projeto } from '../../models/projeto';
 import { ProjetoService } from '../../services/projeto.service';
 
@@ -13,6 +14,7 @@ export class ProjetosComponent {
   constructor(
     private projetoService: ProjetoService,
     private router: Router,
+    private projectContextService: ProjectContextService,
   ) {}
 
   userId: number = +localStorage.getItem('usu_id')!;
@@ -117,7 +119,7 @@ export class ProjetosComponent {
   }
 
   visualizarItem(item: any) {
-    localStorage.setItem('projeto_id', item.id);
+    this.projectContextService.setProjectId(item.id);
     this.router.navigate(['/dashboard/projeto/', item.id]);
   }
 

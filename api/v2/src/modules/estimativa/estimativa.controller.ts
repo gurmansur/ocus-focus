@@ -1,13 +1,14 @@
-import { Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { EstimativaService } from './estimativa.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Estimativa')
 @Controller('estimativa')
-export class EstimativaController {
-  constructor(private readonly estimativaService: EstimativaService) {}
+export class EstimativaController extends BaseController {
+  constructor(private readonly estimativaService: EstimativaService) {
+    super();
+  }
 
   @Get()
   findAll(

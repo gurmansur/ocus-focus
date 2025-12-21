@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { CasoUsoService } from '../caso-uso/caso-uso.service';
 import { CreateCenarioDto } from './dto/create-cenario.dto';
 import { UpdateCenarioDto } from './dto/update-cenario.dto';
@@ -12,6 +13,7 @@ export class CenariosService {
     @InjectRepository(Cenario)
     private readonly cenarioRepository: Repository<Cenario>,
     @Inject() private readonly casosUsoService: CasoUsoService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async findAll(casoId: number, page = 0, pageSize = 10) {

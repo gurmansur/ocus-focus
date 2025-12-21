@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { Browser, Builder } from 'selenium-webdriver';
 import { TreeRepository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSuiteDeTesteBo } from './bo/create-suite-de-teste.bo';
@@ -19,6 +20,7 @@ export class SuiteDeTesteService {
     private suiteDeTesteRepository: TreeRepository<SuiteDeTeste>,
     @Inject(forwardRef(() => CasoDeTesteService))
     private casoDeTesteService: CasoDeTesteService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async create(

@@ -1,6 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
+import { ILogger } from '../../common/interfaces/logger.interface';
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
 import { ColaboradorProjeto } from '../colaborador-projeto/entities/colaborador-projeto.entity';
 import { Colaborador } from '../colaborador/entities/colaborador.entity';
@@ -43,6 +44,7 @@ export class UserStoryService {
     @InjectRepository(ColaboradorProjeto)
     private readonly colaboradorProjetoRepository: Repository<ColaboradorProjeto>,
     private readonly notificacaoService: NotificacaoService,
+    @Inject('ILogger') private logger: ILogger,
   ) {}
 
   async findAll(projetoId: Projeto) {
@@ -108,6 +110,7 @@ export class UserStoryService {
   }
 
   async create(createUserStoryDto: CreateUserStoryDto) {
+    this.logger.log(`Creating new user story: ${createUserStoryDto.titulo}`);
     const criador = await this.colaboradorRepository.findOne({
       where: {
         id: createUserStoryDto.criador,

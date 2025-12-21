@@ -1,24 +1,17 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { UpdateStatusPriorizacaoDto } from './dto/update-status-priorizacao.dto';
 import { StatusPriorizacaoService } from './status-priorizacao.service';
 
-@UseGuards(AuthGuard)
 @ApiTags('Status-priorização')
 @Controller('status-priorizacao')
-export class StatusPriorizacaoController {
+export class StatusPriorizacaoController extends BaseController {
   constructor(
     private readonly statusPriorizacaoService: StatusPriorizacaoService,
-  ) {}
+  ) {
+    super();
+  }
 
   // @Post()
   // create(@Body() createStatusPriorizacaoDto: CreateStatusPriorizacaoDto) {

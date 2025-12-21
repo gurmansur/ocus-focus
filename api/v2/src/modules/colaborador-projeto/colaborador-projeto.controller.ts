@@ -6,21 +6,21 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '../../guards/auth.guard';
+import { BaseController } from '../../common/base/base.controller';
 import { ColaboradorProjetoService } from './colaborador-projeto.service';
 import { CreateColaboradorProjetoDto } from './dto/create-colaborador-projeto.dto';
 import { UpdateColaboradorProjetoDto } from './dto/update-colaborador-projeto.dto';
 
-@UseGuards(AuthGuard)
 @ApiTags('Colaborador-Projeto')
 @Controller('colaborador-projeto')
-export class ColaboradorProjetoController {
+export class ColaboradorProjetoController extends BaseController {
   constructor(
     private readonly colaboradorProjetoService: ColaboradorProjetoService,
-  ) {}
+  ) {
+    super();
+  }
 
   @Post()
   create(@Body() createColaboradorProjetoDto: CreateColaboradorProjetoDto) {
