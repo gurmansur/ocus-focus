@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,14 +8,19 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
 import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
+import { BillingService } from '../billing/billing.service';
+import { ColaboradorService } from '../colaborador/colaborador.service';
 import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
@@ -23,17 +29,46 @@ import { ProjetoService } from './projeto.service';
 @ApiTags('Projeto')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
+@UseGuards(AuthGuard)
 @Controller('projetos')
 export class ProjetoController extends BaseController {
-  constructor(private readonly projetoService: ProjetoService) {
+  constructor(
+    private readonly projetoService: ProjetoService,
+    private readonly billingService: BillingService,
+    private readonly colaboradorService: ColaboradorService,
+  ) {
     super();
   }
 
+  @ApiOperation({ summary: 'Criar novo projeto' })
   @Post('new')
-  create(
+  async create(
     @Body() createProjetoDto: CreateProjetoDto,
     @Query('user') user: number,
+    @ColaboradorAtual() colaborador: ColaboradorDto,
   ) {
+    // Load full colaborador to access usuario relationship
+    const colaboradorFull = await this.colaboradorService.findOne(
+      colaborador.id,
+    );
+
+    // Validate project limit
+    const limites = await this.billingService.verificarLimitesAssinatura(
+      colaboradorFull.usuario,
+    );
+
+    if (limites.limiteProjetos !== null) {
+      const projetoCount = await this.projetoService.countUserProjects(
+        colaboradorFull.usuario.id,
+      );
+
+      if (projetoCount >= limites.limiteProjetos) {
+        throw new BadRequestException(
+          `Limite de ${limites.limiteProjetos} projeto(s) atingido. Faça upgrade de plano para criar mais projetos.`,
+        );
+      }
+    }
+
     return this.projetoService.create(createProjetoDto, user);
   }
 

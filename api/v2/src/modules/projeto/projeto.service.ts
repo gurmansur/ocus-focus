@@ -368,4 +368,13 @@ export class ProjetoService {
       colaboradorId,
     );
   }
+
+  async countUserProjects(usuarioId: number): Promise<number> {
+    return this.projetoRepository
+      .createQueryBuilder('projeto')
+      .leftJoinAndSelect('projeto.colaboradores', 'colaborador')
+      .leftJoinAndSelect('colaborador.usuario', 'usuario')
+      .where('usuario.USU_ID = :usuarioId', { usuarioId })
+      .getCount();
+  }
 }

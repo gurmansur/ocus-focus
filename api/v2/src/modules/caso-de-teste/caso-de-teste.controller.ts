@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -19,7 +20,10 @@ import {
 } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { RequiredTool } from '../../decorators/required-tool.decorator';
 import { Serialize } from '../../decorators/serialize.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
+import { SubscriptionToolsGuard } from '../../guards/subscription-tools.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CasoDeTesteMapper } from './caso-de-teste.mapper';
 import { CasoDeTesteService } from './caso-de-teste.service';
@@ -30,6 +34,8 @@ import { UpdateCasoDeTesteDto } from './dto/update-caso-de-teste.dto';
 @ApiTags('Caso de Teste')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ status: 401, description: 'Não autorizado' })
+@UseGuards(AuthGuard, SubscriptionToolsGuard)
+@RequiredTool('arcatest')
 @Serialize()
 @Controller('caso-de-teste')
 export class CasoDeTesteController extends BaseController {

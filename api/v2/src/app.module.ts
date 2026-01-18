@@ -9,6 +9,7 @@ import { TypeOrmConfigService } from './config/typeorm.config';
 import { AcaoDeTesteModule } from './modules/acao-de-teste/acao-de-teste.module';
 import { AtorModule } from './modules/ator/ator.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { BillingModule } from './modules/billing/billing.module';
 import { CasoDeTesteModule } from './modules/caso-de-teste/caso-de-teste.module';
 import { CasoUsoModule } from './modules/caso-uso/caso-uso.module';
 import { CenariosModule } from './modules/cenarios/cenarios.module';
@@ -54,6 +55,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     }),
     AtorModule,
     AuthModule,
+    BillingModule,
     CasoUsoModule,
     CenariosModule,
     ColaboradorModule,

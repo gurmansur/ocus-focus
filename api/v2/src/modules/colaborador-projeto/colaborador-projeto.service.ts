@@ -84,4 +84,12 @@ export class ColaboradorProjetoService {
       return colaborador;
     });
   }
+
+  async countUsersOnProject(projetoId: number): Promise<number> {
+    return this.colaboradorProjetoRepository.count({
+      where: {
+        projeto: { id: projetoId },
+      },
+    });
+  }
 }

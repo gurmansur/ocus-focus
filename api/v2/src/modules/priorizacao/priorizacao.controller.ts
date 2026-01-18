@@ -1,13 +1,24 @@
-import { Body, Controller, Get, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
+import { RequiredTool } from '../../decorators/required-tool.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
+import { SubscriptionToolsGuard } from '../../guards/subscription-tools.guard';
 import { CreatePriorizacaoDto } from './dto/create-priorizacao.dto';
 import { PriorizacaoService } from './priorizacao.service';
 
 @ApiTags('Priorização')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, SubscriptionToolsGuard)
+@RequiredTool('prioreasy')
 @Controller('priorizacao-stakeholders')
 export class PriorizacaoController extends BaseController {
   constructor(private readonly priorizacaoService: PriorizacaoService) {

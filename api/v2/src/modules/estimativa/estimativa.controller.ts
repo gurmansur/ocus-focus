@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -19,7 +20,10 @@ import {
 import { BaseController } from '../../common/base/base.controller';
 import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { RequiredTool } from '../../decorators/required-tool.decorator';
 import { Serialize } from '../../decorators/serialize.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
+import { SubscriptionToolsGuard } from '../../guards/subscription-tools.guard';
 import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateEstimativaSessionDto } from './dto/create-estimativa-session.dto';
@@ -30,6 +34,8 @@ import { EstimativaService } from './estimativa.service';
 @ApiTags('Estimativa')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Não autorizado' })
+@UseGuards(AuthGuard, SubscriptionToolsGuard)
+@RequiredTool('estima')
 @Serialize()
 @Controller('estimativa')
 export class EstimativaController extends BaseController {

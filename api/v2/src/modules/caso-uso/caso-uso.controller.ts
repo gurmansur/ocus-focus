@@ -6,10 +6,12 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CasoUsoService } from './caso-uso.service';
 import { CreateCasoUsoDto } from './dto/create-caso-uso.dto';
@@ -18,6 +20,7 @@ import { UpdateCasoUsoDto } from './dto/update-caso-uso.dto';
 @ApiTags('Caso de Uso')
 @ApiResponse({ status: 401, description: 'Não autorizado' })
 @ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('caso-de-uso')
 export class CasoUsoController extends BaseController {
   constructor(private readonly casoUsoService: CasoUsoService) {
@@ -100,8 +103,21 @@ export class CasoUsoController extends BaseController {
     description: 'Cria um novo caso de uso',
     type: CreateCasoUsoDto,
   })
-  @Post('new')
+  @Post()
   create(
+    @Body() createCasoUsoDto: CreateCasoUsoDto,
+    @Query('requisito') requisitoId: number,
+  ) {
+    return this.casoUsoService.create(createCasoUsoDto, requisitoId);
+  }
+
+  @ApiResponse({
+    status: 201,
+    description: 'Cria um novo caso de uso',
+    type: CreateCasoUsoDto,
+  })
+  @Post('new')
+  createNew(
     @Body() createCasoUsoDto: CreateCasoUsoDto,
     @Query('requisito') requisitoId: number,
   ) {

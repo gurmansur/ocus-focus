@@ -1,4 +1,4 @@
-import { IsNumber, IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateRequisitoDto {
   @IsString()
@@ -27,4 +27,3 @@ export class CreateRequisitoDto {
   @IsOptional()
   tags?: string[];
 }
-

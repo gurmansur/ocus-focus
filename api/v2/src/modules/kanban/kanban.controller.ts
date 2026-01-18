@@ -13,7 +13,9 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { RequiredTool } from '../../decorators/required-tool.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
+import { SubscriptionToolsGuard } from '../../guards/subscription-tools.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { SwimlaneDto } from './dto/swimlane.dto';
 import { UpdateSwimlaneOrderDto } from './dto/update-swimlane-order.dto';
@@ -22,6 +24,9 @@ import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';
 import { KanbanService } from './kanban.service';
 
 @ApiTags('Kanban')
+@ApiBearerAuth()
+@UseGuards(AuthGuard, SubscriptionToolsGuard)
+@RequiredTool('flying-cards')
 @Controller('kanban')
 export class KanbanController extends BaseController {
   constructor(private readonly kanbanService: KanbanService) {
