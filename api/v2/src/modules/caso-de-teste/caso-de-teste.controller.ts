@@ -101,18 +101,19 @@ export class CasoDeTesteController extends BaseController {
     example: 1,
   })
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string, @ProjetoAtual() projeto: Projeto) {
     return CasoDeTesteMapper.casoDeTesteBoToDto(
-      await this.casoDeTesteService.findOne(+id),
+      await this.casoDeTesteService.findOne(+id, projeto),
     );
   }
 
   @Patch(':id/change-suite')
-  changeSuite(
+  async changeSuite(
     @Param('id') id: string,
-    @Body() { suiteId }: { suiteId: number },
+    @Body() { suiteId }: { suiteId: number | null },
+    @ProjetoAtual() projeto: Projeto,
   ) {
-    return this.casoDeTesteService.changeSuite(+id, suiteId);
+    return this.casoDeTesteService.changeSuite(+id, suiteId, projeto);
   }
 
   @ApiResponse({
@@ -127,13 +128,15 @@ export class CasoDeTesteController extends BaseController {
     example: 1,
   })
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateCasoDeTesteDto: UpdateCasoDeTesteDto,
+    @ProjetoAtual() projeto: Projeto,
   ) {
     return this.casoDeTesteService.update(
       +id,
       CasoDeTesteMapper.updateCasoDeTesteDtoToBo(updateCasoDeTesteDto),
+      projeto,
     );
   }
 
@@ -149,7 +152,7 @@ export class CasoDeTesteController extends BaseController {
     example: 1,
   })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.casoDeTesteService.remove(+id);
+  async remove(@Param('id') id: string, @ProjetoAtual() projeto: Projeto) {
+    return this.casoDeTesteService.remove(+id, projeto);
   }
 }

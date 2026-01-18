@@ -1,6 +1,7 @@
 export class UpdateAcaoDeTesteBo {
   ordem?: number;
   tipo?: string;
+  execucaoTipo?: 'MANUAL' | 'AUTOMATIZADO';
   seletor?: string;
   tipoSeletor?: string;
   valor?: string;
@@ -8,4 +9,6 @@ export class UpdateAcaoDeTesteBo {
   descricao?: string;
   obrigatorio?: boolean;
   mensagemErro?: string;
+  instrucaoManual?: string;
+  resultadoManual?: string;
 }

@@ -3,6 +3,14 @@ import { ColaboradorBo } from '../../colaborador/bo/colaborador.bo';
 import { ProjetoBo } from '../../projeto/bo/projeto.bo';
 import { SuiteDeTesteBo } from '../../suite-de-teste/bo/suite-de-teste.bo';
 
+export class UltimaExecucaoBo {
+  id: number;
+  resultado: 'SUCESSO' | 'FALHA' | 'PENDENTE';
+  dataExecucao: string;
+  observacao?: string;
+  tempoExecucao?: number;
+}
+
 export class CasoDeTesteBo {
   id: number;
 
@@ -37,4 +45,6 @@ export class CasoDeTesteBo {
   testadorDesignado?: ColaboradorBo;
 
   projeto: ProjetoBo;
+
+  ultimaExecucao?: UltimaExecucaoBo;
 }

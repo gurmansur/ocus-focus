@@ -4,9 +4,25 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    // Disable body parser size limit for SSE
+    bodyParser: true,
+  });
+
+  // Disable response buffering for better streaming performance
+  app.getHttpAdapter().getInstance().set('x-powered-by', false);
+
   app.enableCors({
-    origin: 'http://127.0.0.1:4200',
+    origin: [
+      'http://localhost:8080',
+      'http://localhost:8081',
+      'http://127.0.0.1:8080',
+      'http://127.0.0.1:8081',
+      'http://localhost:4200',
+      'http://localhost:4201',
+      'http://127.0.0.1:4200',
+      'http://127.0.0.1:4201',
+    ],
     credentials: true,
   });
 

@@ -111,8 +111,10 @@ export class ExecucaoDeTesteService {
     projeto: Projeto,
   ): Promise<any> {
     // Buscar as ações do caso de teste
-    const acoes =
-      await this.acaoDeTesteService.findByCasoDeTesteId(casoDeTesteId);
+    const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(
+      casoDeTesteId,
+      EXECUTION_TYPES.AUTOMATED,
+    );
 
     if (!acoes || acoes.length === 0) {
       throw new BadRequestException(
@@ -246,13 +248,19 @@ export class ExecucaoDeTesteService {
     logPrefix = '',
   ): Promise<{ sucesso: boolean; execucaoId?: number; resultado: any }> {
     // Buscar as ações do caso de teste
-    const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(caso.id);
+    const acoes = await this.acaoDeTesteService.findByCasoDeTesteId(
+      caso.id,
+      EXECUTION_TYPES.AUTOMATED,
+    );
 
     if (!acoes || acoes.length === 0) {
       observer.next({
         data: JSON.stringify({
           type: 'log',
-          message: `${logPrefix}⚠ Teste "${caso.nome}" não possui ações configuradas`,
+          data: {
+            message: `${logPrefix}⚠ Teste "${caso.nome}" não possui ações configuradas`,
+            logType: 'warning',
+          },
         }),
       } as MessageEvent);
       return { sucesso: false, resultado: null };
@@ -279,12 +287,21 @@ export class ExecucaoDeTesteService {
         observer.next({
           data: JSON.stringify({
             type: 'log',
-            message: `${logPrefix}${log}`,
+            data: {
+              message: `${logPrefix}${log}`,
+              logType: 'info',
+            },
           }),
         } as MessageEvent),
       (screenshot) =>
         observer.next({
-          data: JSON.stringify({ type: 'image', src: screenshot }),
+          data: JSON.stringify({
+            type: 'screenshot',
+            data: {
+              screenshotUrl: screenshot,
+              message: 'Screenshot capturado',
+            },
+          }),
         } as MessageEvent),
     );
 
@@ -310,7 +327,9 @@ export class ExecucaoDeTesteService {
           observer.next({
             data: JSON.stringify({
               type: 'start',
-              message: 'Iniciando execução...',
+              data: {
+                message: 'Iniciando execução...',
+              },
             }),
           } as MessageEvent);
 
@@ -320,7 +339,9 @@ export class ExecucaoDeTesteService {
             observer.next({
               data: JSON.stringify({
                 type: 'error',
-                message: 'Caso de teste não encontrado',
+                data: {
+                  message: 'Caso de teste não encontrado',
+                },
               }),
             } as MessageEvent);
             observer.complete();
@@ -341,7 +362,9 @@ export class ExecucaoDeTesteService {
             observer.next({
               data: JSON.stringify({
                 type: 'error',
-                message: 'Caso de teste não possui ações configuradas',
+                data: {
+                  message: 'Caso de teste não possui ações configuradas',
+                },
               }),
             } as MessageEvent);
             observer.complete();
@@ -351,17 +374,22 @@ export class ExecucaoDeTesteService {
           observer.next({
             data: JSON.stringify({
               type: 'complete',
-              execucaoId,
-              sucesso,
-              mensagem: resultado.mensagem,
-              screenshots: resultado.screenshots,
+              data: {
+                execucaoId,
+                sucesso,
+                mensagem: resultado.mensagem,
+                screenshots: resultado.screenshots,
+              },
             }),
           } as MessageEvent);
 
           observer.complete();
         } catch (error) {
           observer.next({
-            data: JSON.stringify({ type: 'error', message: error.message }),
+            data: JSON.stringify({
+              type: 'error',
+              data: { message: error.message },
+            }),
           } as MessageEvent);
           observer.complete();
         }
@@ -376,7 +404,9 @@ export class ExecucaoDeTesteService {
           observer.next({
             data: JSON.stringify({
               type: 'start',
-              message: 'Iniciando execução em lote do projeto...',
+              data: {
+                message: 'Iniciando execução em lote do projeto...',
+              },
             }),
           } as MessageEvent);
 
@@ -390,7 +420,9 @@ export class ExecucaoDeTesteService {
             observer.next({
               data: JSON.stringify({
                 type: 'error',
-                message: 'Nenhum teste automatizado encontrado no projeto',
+                data: {
+                  message: 'Nenhum teste automatizado encontrado no projeto',
+                },
               }),
             } as MessageEvent);
             observer.complete();
@@ -400,7 +432,10 @@ export class ExecucaoDeTesteService {
           observer.next({
             data: JSON.stringify({
               type: 'log',
-              message: `Encontrados ${casosAutomatizados.length} testes automatizados`,
+              data: {
+                message: `Encontrados ${casosAutomatizados.length} testes automatizados`,
+                logType: 'info',
+              },
             }),
           } as MessageEvent);
 
@@ -413,7 +448,10 @@ export class ExecucaoDeTesteService {
             observer.next({
               data: JSON.stringify({
                 type: 'log',
-                message: `\n[${i + 1}/${casosAutomatizados.length}] Executando: ${caso.nome}`,
+                data: {
+                  message: `\n[${i + 1}/${casosAutomatizados.length}] Executando: ${caso.nome}`,
+                  logType: 'info',
+                },
               }),
             } as MessageEvent);
 
@@ -490,7 +528,9 @@ export class ExecucaoDeTesteService {
           observer.next({
             data: JSON.stringify({
               type: 'start',
-              message: 'Iniciando execução em lote da suite...',
+              data: {
+                message: 'Iniciando execução...',
+              },
             }),
           } as MessageEvent);
 

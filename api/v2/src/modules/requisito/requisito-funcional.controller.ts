@@ -7,14 +7,18 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
+import { AuthGuard } from '../../guards/auth.guard';
 import { CreateRequisitoDto } from './dto/create-requisito.dto';
 import { UpdateRequisitoDto } from './dto/update-requisito.dto';
 import { RequisitoService } from './requisito-funcional.service';
 
 @ApiTags('Requisito')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('requisitos')
 export class RequisitoController extends BaseController {
   constructor(private readonly requisitoService: RequisitoService) {

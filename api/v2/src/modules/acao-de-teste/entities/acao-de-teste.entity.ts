@@ -42,6 +42,7 @@ export class AcaoDeTeste {
       'ACEITAR_ALERTA',
       'REJEITAR_ALERTA',
       'OBTER_TEXTO_ALERTA',
+      'PASSO_MANUAL',
     ],
   })
   tipo:
@@ -65,7 +66,15 @@ export class AcaoDeTeste {
     | 'TROCAR_FRAME'
     | 'ACEITAR_ALERTA'
     | 'REJEITAR_ALERTA'
-    | 'OBTER_TEXTO_ALERTA';
+    | 'OBTER_TEXTO_ALERTA'
+    | 'PASSO_MANUAL';
+
+  @Column('enum', {
+    name: 'ACT_EXECUCAO_TIPO',
+    enum: ['MANUAL', 'AUTOMATIZADO'],
+    default: 'AUTOMATIZADO',
+  })
+  execucaoTipo: 'MANUAL' | 'AUTOMATIZADO';
 
   @Column('varchar', { name: 'ACT_SELETOR', length: 255, nullable: true })
   seletor: string;
@@ -95,6 +104,12 @@ export class AcaoDeTeste {
     nullable: true,
   })
   mensagemErro: string;
+
+  @Column('text', { name: 'ACT_INSTRUCAO_MANUAL', nullable: true })
+  instrucaoManual: string;
+
+  @Column('text', { name: 'ACT_RESULTADO_MANUAL', nullable: true })
+  resultadoManual: string;
 
   @CreateDateColumn({ name: 'ACT_DATA_CRIACAO' })
   dataCriacao: Date;

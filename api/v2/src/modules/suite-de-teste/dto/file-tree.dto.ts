@@ -10,7 +10,7 @@ export class FileTreeDto {
   suites: SuiteDeTesteDto[];
 
   @ApiProperty({
-    type: CasoDeTesteDto,
+    type: [CasoDeTesteDto],
     description: 'Casos de teste sem suite',
   })
   casos: CasoDeTesteDto[];

@@ -3,11 +3,11 @@ export class ProjetoBo {
 
   descricao: string;
 
-  empresa: string;
+  empresa?: string;
 
-  dataInicio: Date;
+  dataInicio?: Date;
 
-  previsaoFim: Date;
+  previsaoFim?: Date;
 
-  status: 'EM ANDAMENTO' | 'FINALIZADO' | 'CANCELADO';
+  status?: 'EM ANDAMENTO' | 'FINALIZADO' | 'CANCELADO';
 }

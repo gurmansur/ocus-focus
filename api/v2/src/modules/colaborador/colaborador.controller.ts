@@ -10,7 +10,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
+import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
 import { Serialize } from '../../decorators/serialize.decorator';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { ColaboradorService } from './colaborador.service';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
@@ -29,8 +31,8 @@ export class ColaboradorController extends BaseController {
   }
 
   @Get('projeto')
-  findAllFromProject(@Query('projeto') projeto: number) {
-    return this.colaboradorService.findAllFromProject(+projeto);
+  findAllFromProject(@ProjetoAtual() projeto: Projeto) {
+    return this.colaboradorService.findAllFromProject(+projeto.id);
   }
 
   @Get()

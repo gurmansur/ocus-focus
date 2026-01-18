@@ -1,4 +1,4 @@
-import { IsDateString, IsEnum, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateProjetoDto {
   @IsString()
@@ -8,14 +8,18 @@ export class CreateProjetoDto {
   descricao: string;
 
   @IsString()
-  empresa: string;
+  @IsOptional()
+  empresa?: string;
 
   @IsDateString()
-  dataInicio: Date;
+  @IsOptional()
+  dataInicio?: Date;
 
   @IsDateString()
-  previsaoFim: Date;
+  @IsOptional()
+  previsaoFim?: Date;
 
   @IsEnum(['EM ANDAMENTO', 'FINALIZADO', 'CANCELADO'])
-  status: 'EM ANDAMENTO' | 'FINALIZADO' | 'CANCELADO';
+  @IsOptional()
+  status?: 'EM ANDAMENTO' | 'FINALIZADO' | 'CANCELADO';
 }

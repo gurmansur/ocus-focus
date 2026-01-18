@@ -2,8 +2,8 @@ export class CreateColaboradorDto {
   nome: string;
   email: string;
   senha: string;
-  empresa: string;
-  cargo:
+  empresa?: string;
+  cargo?:
     | 'Gerente de Projeto'
     | 'Analista de Sistemas'
     | 'Desenvolvedor'

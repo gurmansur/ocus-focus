@@ -64,9 +64,18 @@ export class AcaoDeTesteService {
     return this.acaoDeTesteRepository.softDelete(id);
   }
 
-  async findByCasoDeTesteId(casoDeTesteId: number) {
+  async findByCasoDeTesteId(
+    casoDeTesteId: number,
+    execucaoTipo?: 'MANUAL' | 'AUTOMATIZADO',
+  ) {
+    const where: any = { casoDeTeste: { id: casoDeTesteId } };
+
+    if (execucaoTipo) {
+      where.execucaoTipo = execucaoTipo;
+    }
+
     const entities = await this.acaoDeTesteRepository.find({
-      where: { casoDeTeste: { id: casoDeTesteId } },
+      where,
       order: { ordem: 'ASC' },
     });
 

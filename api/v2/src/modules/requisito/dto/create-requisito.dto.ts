@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, IsOptional, IsEnum } from 'class-validator';
 
 export class CreateRequisitoDto {
   @IsString()
@@ -8,5 +8,23 @@ export class CreateRequisitoDto {
   especificacao: string;
 
   @IsNumber()
-  numeroIdentificador: number;
+  @IsOptional()
+  numeroIdentificador?: number;
+
+  // New fields for Prioreasy integration
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @IsEnum(['draft', 'active', 'completed', 'archived'])
+  @IsOptional()
+  status?: 'draft' | 'active' | 'completed' | 'archived';
+
+  @IsOptional()
+  tags?: string[];
 }
+

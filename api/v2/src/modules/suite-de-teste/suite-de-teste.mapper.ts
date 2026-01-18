@@ -15,9 +15,9 @@ export class SuiteDeTesteMapper {
   ): CreateSuiteDeTesteBo {
     const bo = new CreateSuiteDeTesteBo();
     bo.nome = dto.nome;
-    bo.status = dto.status;
-    bo.descricao = dto.descricao;
-    bo.observacoes = dto.observacoes;
+    bo.status = dto.status || 'ATIVO';
+    bo.descricao = dto.descricao || '';
+    bo.observacoes = dto.observacoes || '';
     bo.suitePaiId = dto.suitePaiId ? +dto.suitePaiId : null;
     return bo;
   }

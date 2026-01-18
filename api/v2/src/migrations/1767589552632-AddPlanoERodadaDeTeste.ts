@@ -1,0 +1,32 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class AddPlanoERodadaDeTeste1767589552632 implements MigrationInterface {
+    name = 'AddPlanoERodadaDeTeste1767589552632'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE \`RODADAS_DE_TESTE\` (\`RTD_ID\` int NOT NULL AUTO_INCREMENT, \`RTD_NOME\` varchar(120) NOT NULL, \`RTD_STATUS\` enum ('NAO_INICIADO', 'EM_ANDAMENTO', 'CONCLUIDO', 'ABORTADO') NOT NULL DEFAULT 'NAO_INICIADO', \`RTD_CASOS\` text NOT NULL, \`RTD_RESULTADOS\` json NULL, \`RTD_AMBIENTE\` varchar(100) NULL, \`RTD_RESPONSAVEL\` varchar(100) NULL, \`RTD_DATA_INICIO\` datetime NULL, \`RTD_DATA_FIM\` datetime NULL, \`RTD_DATA_CRIACAO\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`RTD_DATA_ATUALIZACAO\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`RTD_DATA_EXCLUSAO\` datetime(6) NULL, \`projetoId\` int NOT NULL, PRIMARY KEY (\`RTD_ID\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`PLANOS_DE_TESTE\` (\`PLT_ID\` int NOT NULL AUTO_INCREMENT, \`PLT_NOME\` varchar(100) NOT NULL, \`PLT_DESCRICAO\` varchar(500) NOT NULL, \`PLT_STATUS\` enum ('RASCUNHO', 'ATIVO', 'CONCLUIDO', 'ARQUIVADO') NOT NULL DEFAULT 'RASCUNHO', \`PLT_DATA_ALVO\` datetime NULL, \`PLT_DATA_INICIO\` datetime NULL, \`PLT_AMBIENTE\` varchar(100) NULL, \`PLT_RESPONSAVEIS\` text NULL, \`PLT_DATA_CRIACAO\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`PLT_DATA_ATUALIZACAO\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`PLT_DATA_EXCLUSAO\` datetime(6) NULL, \`projetoId\` int NOT NULL, PRIMARY KEY (\`PLT_ID\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`PLANOS_DE_TESTE_SUITES\` (\`FK_PLANO_DE_TESTE_PLT_ID\` int NOT NULL, \`FK_SUITE_DE_TESTE_SDT_ID\` int NOT NULL, INDEX \`IDX_9db817c8b4569b5e3898eabaad\` (\`FK_PLANO_DE_TESTE_PLT_ID\`), INDEX \`IDX_da5e41103521a2041fa5250089\` (\`FK_SUITE_DE_TESTE_SDT_ID\`), PRIMARY KEY (\`FK_PLANO_DE_TESTE_PLT_ID\`, \`FK_SUITE_DE_TESTE_SDT_ID\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`ALTER TABLE \`SWIMLANES\` CHANGE \`SWI_VERTICAL\` \`SWI_VERTICAL\` tinyint(1) NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE \`SUBTAREFAS\` CHANGE \`SBT_COMPLETADA\` \`SBT_COMPLETADA\` tinyint(1) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`RODADAS_DE_TESTE\` ADD CONSTRAINT \`FK_079755e8e67ab9315bef2ffc64c\` FOREIGN KEY (\`projetoId\`) REFERENCES \`PROJETOS\`(\`PRO_ID\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`PLANOS_DE_TESTE\` ADD CONSTRAINT \`FK_d1b7188bc42d5514d69ced0e571\` FOREIGN KEY (\`projetoId\`) REFERENCES \`PROJETOS\`(\`PRO_ID\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`PLANOS_DE_TESTE_SUITES\` ADD CONSTRAINT \`FK_9db817c8b4569b5e3898eabaad2\` FOREIGN KEY (\`FK_PLANO_DE_TESTE_PLT_ID\`) REFERENCES \`PLANOS_DE_TESTE\`(\`PLT_ID\`) ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE \`PLANOS_DE_TESTE_SUITES\` ADD CONSTRAINT \`FK_da5e41103521a2041fa5250089d\` FOREIGN KEY (\`FK_SUITE_DE_TESTE_SDT_ID\`) REFERENCES \`SUITES_DE_TESTE\`(\`id\`) ON DELETE CASCADE ON UPDATE CASCADE`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`PLANOS_DE_TESTE_SUITES\` DROP FOREIGN KEY \`FK_da5e41103521a2041fa5250089d\``);
+        await queryRunner.query(`ALTER TABLE \`PLANOS_DE_TESTE_SUITES\` DROP FOREIGN KEY \`FK_9db817c8b4569b5e3898eabaad2\``);
+        await queryRunner.query(`ALTER TABLE \`PLANOS_DE_TESTE\` DROP FOREIGN KEY \`FK_d1b7188bc42d5514d69ced0e571\``);
+        await queryRunner.query(`ALTER TABLE \`RODADAS_DE_TESTE\` DROP FOREIGN KEY \`FK_079755e8e67ab9315bef2ffc64c\``);
+        await queryRunner.query(`ALTER TABLE \`SUBTAREFAS\` CHANGE \`SBT_COMPLETADA\` \`SBT_COMPLETADA\` tinyint NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`SWIMLANES\` CHANGE \`SWI_VERTICAL\` \`SWI_VERTICAL\` tinyint NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`DROP INDEX \`IDX_da5e41103521a2041fa5250089\` ON \`PLANOS_DE_TESTE_SUITES\``);
+        await queryRunner.query(`DROP INDEX \`IDX_9db817c8b4569b5e3898eabaad\` ON \`PLANOS_DE_TESTE_SUITES\``);
+        await queryRunner.query(`DROP TABLE \`PLANOS_DE_TESTE_SUITES\``);
+        await queryRunner.query(`DROP TABLE \`PLANOS_DE_TESTE\``);
+        await queryRunner.query(`DROP TABLE \`RODADAS_DE_TESTE\``);
+    }
+
+}

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 
 export class ColaboradorDto {
@@ -26,14 +26,14 @@ export class ColaboradorDto {
   @Exclude()
   senha: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: 'string',
     description: 'Empresa do colaborador',
     example: 'Empresa 1',
   })
-  empresa: string;
+  empresa?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: 'enum',
     enum: [
       'Gerente de Projeto',
@@ -45,7 +45,7 @@ export class ColaboradorDto {
     description: 'Cargo do colaborador',
     example: 'Gerente de Projeto',
   })
-  cargo:
+  cargo?:
     | 'Gerente de Projeto'
     | 'Analista de Sistemas'
     | 'Desenvolvedor'

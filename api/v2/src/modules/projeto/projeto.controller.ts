@@ -38,8 +38,8 @@ export class ProjetoController extends BaseController {
   }
 
   @Get()
-  findAll() {
-    return this.projetoService.findAll();
+  findAll(@ColaboradorAtual() user: ColaboradorDto) {
+    return this.projetoService.findAll(user.id);
   }
 
   @Get('findByNome')

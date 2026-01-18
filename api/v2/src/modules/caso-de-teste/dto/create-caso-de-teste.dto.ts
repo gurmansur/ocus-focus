@@ -93,15 +93,19 @@ export class CreateCasoDeTesteDto {
     example: 'FUNCIONAL',
     type: 'enum',
     enum: ['FUNCIONAL', 'ESTRUTURAL'],
+    required: false,
   })
   @IsEnum(['FUNCIONAL', 'ESTRUTURAL'])
+  @IsOptional()
   tecnica: 'FUNCIONAL' | 'ESTRUTURAL';
 
   @ApiProperty({
     description: 'Dados de entrada do caso de teste',
     example: 'Dados de entrada do caso de teste 1',
+    required: false,
   })
   @IsString()
+  @IsOptional()
   dadosEntrada: string;
 
   @ApiProperty({

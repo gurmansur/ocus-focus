@@ -9,7 +9,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
+import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { CreateUserStoryDto } from './dto/create-user-story.dto';
@@ -44,16 +46,16 @@ export class UserStoryController extends BaseController {
   }
 
   @Post('new')
-  create(@Body() createUserStoryDto: CreateUserStoryDto) {
-    return this.userStoryService.create(createUserStoryDto);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateUserStoryDto: UpdateUserStoryDto,
+  create(
+    @Body() createUserStoryDto: CreateUserStoryDto,
+    @ColaboradorAtual() colaborador: Colaborador,
+    @ProjetoAtual() projeto: Projeto,
   ) {
-    return this.userStoryService.update(+id, updateUserStoryDto);
+    return this.userStoryService.create(
+      createUserStoryDto,
+      colaborador,
+      projeto,
+    );
   }
 
   @Patch(':id/assign-sprint')
@@ -77,6 +79,14 @@ export class UserStoryController extends BaseController {
   @Patch(':id/unlink-caso-uso')
   unlinkCasoUso(@Param('id') id: string, @Body() body: { casoUsoId: number }) {
     return this.userStoryService.unlinkCasoUso(+id, body.casoUsoId);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateUserStoryDto: UpdateUserStoryDto,
+  ) {
+    return this.userStoryService.update(+id, updateUserStoryDto);
   }
 
   @Get(':id/casos-uso')

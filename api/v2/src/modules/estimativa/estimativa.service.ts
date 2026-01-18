@@ -1,13 +1,113 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ILogger } from '../../common/interfaces/logger.interface';
 import { Ator } from '../ator/entities/ator.entity';
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
+import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { FatorAmbientalProjeto } from '../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 import { FatorTecnicoProjeto } from '../fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { ProjetoService } from '../projeto/projeto.service';
+import { CreateEstimativaSessionDto } from './dto/create-estimativa-session.dto';
+import {
+  ActorWeightDto,
+  EnvironmentalFactorDto,
+  EstimativaSessionDto,
+  SessionStatus,
+  TechnicalFactorDto,
+  UseCaseWeightDto,
+} from './dto/estimativa-session.dto';
+import { UpdateEstimativaSessionDto } from './dto/update-estimativa-session.dto';
 import { Estimativa } from './entities/estimativa.entity';
+
+// UCP calculation constants and helpers
+const TECHNICAL_FACTOR_WEIGHTS: Record<string, number> = {
+  T1: 2,
+  T2: 1,
+  T3: 1,
+  T4: 1,
+  T5: 1,
+  T6: 0.5,
+  T7: 0.5,
+  T8: 2,
+  T9: 1,
+  T10: 1,
+  T11: 1,
+  T12: 1,
+  T13: 1,
+};
+
+const ENVIRONMENTAL_FACTOR_WEIGHTS: Record<string, number> = {
+  E1: 1.5,
+  E2: 0.5,
+  E3: 1,
+  E4: 0.5,
+  E5: 1,
+  E6: 2,
+  E7: -1,
+  E8: -1,
+};
+
+function createDefaultTechnicalFactors(): TechnicalFactorDto[] {
+  return Object.keys(TECHNICAL_FACTOR_WEIGHTS).map((id) => ({
+    id,
+    rating: 0,
+  }));
+}
+
+function createDefaultEnvironmentalFactors(): EnvironmentalFactorDto[] {
+  return Object.keys(ENVIRONMENTAL_FACTOR_WEIGHTS).map((id) => ({
+    id,
+    rating: 0,
+  }));
+}
+
+function calculateTFactor(factors: TechnicalFactorDto[]): number {
+  const sum = factors.reduce(
+    (total, f) => total + f.rating * TECHNICAL_FACTOR_WEIGHTS[f.id],
+    0,
+  );
+  return sum;
+}
+
+function calculateTCF(tfactor: number): number {
+  return 0.6 + tfactor / 100;
+}
+
+function calculateEFactor(factors: EnvironmentalFactorDto[]): number {
+  const sum = factors.reduce(
+    (total, f) => total + f.rating * ENVIRONMENTAL_FACTOR_WEIGHTS[f.id],
+    0,
+  );
+  return sum;
+}
+
+function calculateEF(efactor: number): number {
+  return 1.4 + efactor * -0.03;
+}
+
+function calculateUCP(uucp: number, tcf: number, ef: number): number {
+  return uucp * tcf * ef;
+}
+
+function safeJsonParse<T>(json: string | null | undefined, defaultValue: T): T {
+  if (!json || typeof json !== 'string' || json.trim() === '') {
+    return defaultValue;
+  }
+  try {
+    return JSON.parse(json);
+  } catch (error) {
+    console.warn('Failed to parse JSON:', json, error);
+    return defaultValue;
+  }
+}
 
 @Injectable()
 export class EstimativaService {
@@ -30,12 +130,14 @@ export class EstimativaService {
     const skip = page ? page * take : 0;
     const [items, count] = await this.estimativaRepository.findAndCount({
       where: { projeto: { id: projetoId } },
+      relations: ['createdBy', 'projeto'],
       take,
       skip,
+      order: { updatedAt: 'DESC' },
     });
 
     return {
-      items,
+      items: items.map((item) => this.mapToDto(item)),
       page: {
         size: take,
         totalElements: count,
@@ -45,6 +147,205 @@ export class EstimativaService {
     };
   }
 
+  async findOne(id: number, projetoId: number): Promise<EstimativaSessionDto> {
+    const estimativa = await this.estimativaRepository.findOne({
+      where: { id, projeto: { id: projetoId } },
+      relations: ['createdBy', 'projeto'],
+    });
+
+    if (!estimativa) {
+      throw new NotFoundException(`Estimation session with ID ${id} not found`);
+    }
+
+    return this.mapToDto(estimativa);
+  }
+
+  async createSession(
+    dto: CreateEstimativaSessionDto,
+    projeto: Projeto,
+    colaborador: Colaborador,
+  ): Promise<EstimativaSessionDto> {
+    const estimativa = this.estimativaRepository.create({
+      name: dto.name,
+      description: dto.description,
+      projeto,
+      createdBy: colaborador,
+      useCaseWeights: JSON.stringify([]),
+      actorWeights: JSON.stringify([]),
+      technicalFactors: JSON.stringify(createDefaultTechnicalFactors()),
+      environmentalFactors: JSON.stringify(createDefaultEnvironmentalFactors()),
+      uucw: 0,
+      uaw: 0,
+      uucp: 0,
+      tfactor: 0,
+      tcf: 0.6,
+      efactor: 0,
+      ef: 1.4,
+      ucp: 0,
+      hoursPerUCP: 20,
+      estimatedHours: 0,
+      estimatedDays: 0,
+      status: SessionStatus.DRAFT,
+    });
+
+    const saved = await this.estimativaRepository.save(estimativa);
+    return this.mapToDto(saved);
+  }
+
+  async updateSession(
+    id: number,
+    dto: UpdateEstimativaSessionDto,
+    projetoId: number,
+  ): Promise<EstimativaSessionDto> {
+    const estimativa = await this.estimativaRepository.findOne({
+      where: { id, projeto: { id: projetoId } },
+      relations: ['createdBy', 'projeto'],
+    });
+
+    if (!estimativa) {
+      throw new NotFoundException(`Estimation session with ID ${id} not found`);
+    }
+
+    // Update basic fields
+    if (dto.name !== undefined) estimativa.name = dto.name;
+    if (dto.description !== undefined) estimativa.description = dto.description;
+    if (dto.status !== undefined) estimativa.status = dto.status;
+    if (dto.hoursPerUCP !== undefined) estimativa.hoursPerUCP = dto.hoursPerUCP;
+
+    // Update complex fields
+    if (dto.useCaseWeights !== undefined) {
+      estimativa.useCaseWeights = JSON.stringify(dto.useCaseWeights);
+    }
+    if (dto.actorWeights !== undefined) {
+      estimativa.actorWeights = JSON.stringify(dto.actorWeights);
+    }
+    if (dto.technicalFactors !== undefined) {
+      estimativa.technicalFactors = JSON.stringify(dto.technicalFactors);
+    }
+    if (dto.environmentalFactors !== undefined) {
+      estimativa.environmentalFactors = JSON.stringify(
+        dto.environmentalFactors,
+      );
+    }
+
+    // Recalculate UCP values
+    this.recalculateSession(estimativa);
+
+    const saved = await this.estimativaRepository.save(estimativa);
+    return this.mapToDto(saved);
+  }
+
+  async removeSession(id: number, projetoId: number): Promise<void> {
+    const estimativa = await this.estimativaRepository.findOne({
+      where: { id, projeto: { id: projetoId } },
+    });
+
+    if (!estimativa) {
+      throw new NotFoundException(`Estimation session with ID ${id} not found`);
+    }
+
+    await this.estimativaRepository.remove(estimativa);
+  }
+
+  private recalculateSession(estimativa: Estimativa): void {
+    const useCaseWeights: UseCaseWeightDto[] = safeJsonParse(
+      estimativa.useCaseWeights,
+      [],
+    );
+    const actorWeights: ActorWeightDto[] = safeJsonParse(
+      estimativa.actorWeights,
+      [],
+    );
+    const technicalFactors: TechnicalFactorDto[] = safeJsonParse(
+      estimativa.technicalFactors,
+      createDefaultTechnicalFactors(),
+    );
+    const environmentalFactors: EnvironmentalFactorDto[] = safeJsonParse(
+      estimativa.environmentalFactors,
+      createDefaultEnvironmentalFactors(),
+    );
+
+    // Calculate UUCW (Unadjusted Use Case Weight)
+    const uucw = useCaseWeights.reduce((sum, uc) => sum + uc.weight, 0);
+
+    // Calculate UAW (Unadjusted Actor Weight)
+    const uaw = actorWeights.reduce((sum, a) => sum + a.weight, 0);
+
+    // Calculate UUCP (Unadjusted Use Case Points)
+    const uucp = uucw + uaw;
+
+    // Calculate TCF (Technical Complexity Factor)
+    const tfactor = calculateTFactor(technicalFactors);
+    const tcf = calculateTCF(tfactor);
+
+    // Calculate EF (Environmental Factor)
+    const efactor = calculateEFactor(environmentalFactors);
+    const ef = calculateEF(efactor);
+
+    // Calculate UCP (Use Case Points)
+    const ucp = calculateUCP(uucp, tcf, ef);
+
+    // Calculate estimated hours and days
+    const estimatedHours = ucp * estimativa.hoursPerUCP;
+    const estimatedDays = estimatedHours / 8;
+
+    // Update estimativa
+    estimativa.uucw = uucw;
+    estimativa.uaw = uaw;
+    estimativa.uucp = uucp;
+    estimativa.tfactor = tfactor;
+    estimativa.tcf = tcf;
+    estimativa.efactor = efactor;
+    estimativa.ef = ef;
+    estimativa.ucp = ucp;
+    estimativa.estimatedHours = estimatedHours;
+    estimativa.estimatedDays = estimatedDays;
+
+    // Update legacy fields for backward compatibility
+    estimativa.resultadoHoras = estimatedHours;
+    estimativa.pesoPontosCasosUso = uucp;
+    estimativa.resultadoPontosCasosUso = ucp;
+    estimativa.pesoAtores = uaw;
+    estimativa.pesoCasosUso = uucw;
+    estimativa.tFactor = tfactor;
+    estimativa.eFactor = efactor;
+  }
+
+  private mapToDto(estimativa: Estimativa): EstimativaSessionDto {
+    return {
+      id: estimativa.id,
+      name: estimativa.name || 'Unnamed Session',
+      description: estimativa.description || '',
+      projectId: estimativa.projeto.id,
+      useCaseWeights: safeJsonParse(estimativa.useCaseWeights, []),
+      actorWeights: safeJsonParse(estimativa.actorWeights, []),
+      technicalFactors: safeJsonParse(
+        estimativa.technicalFactors,
+        createDefaultTechnicalFactors(),
+      ),
+      environmentalFactors: safeJsonParse(
+        estimativa.environmentalFactors,
+        createDefaultEnvironmentalFactors(),
+      ),
+      uucw: estimativa.uucw || 0,
+      uaw: estimativa.uaw || 0,
+      uucp: estimativa.uucp || 0,
+      tfactor: estimativa.tfactor || 0,
+      tcf: estimativa.tcf || 0.6,
+      efactor: estimativa.efactor || 0,
+      ef: estimativa.ef || 1.4,
+      ucp: estimativa.ucp || 0,
+      hoursPerUCP: estimativa.hoursPerUCP || 20,
+      estimatedHours: estimativa.estimatedHours || 0,
+      estimatedDays: estimativa.estimatedDays || 0,
+      status: (estimativa.status as SessionStatus) || SessionStatus.DRAFT,
+      createdAt: estimativa.createdAt || new Date(),
+      updatedAt: estimativa.updatedAt || new Date(),
+      createdBy: estimativa.createdBy?.id || 0,
+    };
+  }
+
+  // Legacy method for backward compatibility
   async create(projetoId: number) {
     try {
       const Tfactor = await this.calcularTFactor(projetoId);

@@ -10,6 +10,13 @@ export class AcaoDeTesteDto {
   @ApiProperty({ description: 'Tipo da ação', example: 'CLICAR' })
   tipo: string;
 
+  @ApiProperty({
+    description: 'Tipo de execução do passo',
+    example: 'AUTOMATIZADO',
+    enum: ['MANUAL', 'AUTOMATIZADO'],
+  })
+  execucaoTipo: 'MANUAL' | 'AUTOMATIZADO';
+
   @ApiProperty({ description: 'Seletor do elemento', required: false })
   seletor?: string;
 
@@ -30,6 +37,18 @@ export class AcaoDeTesteDto {
 
   @ApiProperty({ description: 'Mensagem de erro', required: false })
   mensagemErro?: string;
+
+  @ApiProperty({
+    description: 'Instrução detalhada para passo manual',
+    required: false,
+  })
+  instrucaoManual?: string;
+
+  @ApiProperty({
+    description: 'Resultado esperado para passo manual',
+    required: false,
+  })
+  resultadoManual?: string;
 
   @ApiProperty({ description: 'ID do caso de teste', example: 1 })
   casoDeTesteId: number;

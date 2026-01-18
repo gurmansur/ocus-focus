@@ -24,10 +24,12 @@ import { FatoresAmbientaisModule } from './modules/fatores-ambientais/fatores-am
 import { FatoresTecnicosModule } from './modules/fatores-tecnicos/fatores-tecnicos.module';
 import { KanbanModule } from './modules/kanban/kanban.module';
 import { NotificacaoModule } from './modules/notificacao/notificacao.module';
+import { PlanoDeTesteModule } from './modules/plano-de-teste/plano-de-teste.module';
 import { PriorizacaoModule } from './modules/priorizacao/priorizacao.module';
 import { ProjetoModule } from './modules/projeto/projeto.module';
 import { RequisitoModule } from './modules/requisito/requisito-funcional.module';
 import { ResultadoRequisitoModule } from './modules/resultado-requisito/resultado-requisito.module';
+import { RodadaDeTesteModule } from './modules/rodada-de-teste/rodada-de-teste.module';
 import { SprintModule } from './modules/sprint/sprint.module';
 import { StakeholderModule } from './modules/stakeholder/stakeholder.module';
 import { StatusPriorizacaoModule } from './modules/status-priorizacao/status-priorizacao.module';
@@ -78,6 +80,8 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     ExecutorSeleniumModule,
     KanbanModule,
     NotificacaoModule,
+    PlanoDeTesteModule,
+    RodadaDeTesteModule,
   ],
   providers: [
     AppService,

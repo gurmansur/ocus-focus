@@ -7,5 +7,6 @@ export class Swimlane {
     public cor: string = '',
     public userStories: UserStory[] = [],
     public id?: number,
+    public icone?: string,
   ) {}
 }

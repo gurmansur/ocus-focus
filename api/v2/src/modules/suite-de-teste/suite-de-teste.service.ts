@@ -2,7 +2,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { Browser, Builder } from 'selenium-webdriver';
-import { TreeRepository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, TreeRepository } from 'typeorm';
 import { ILogger } from '../../common/interfaces/logger.interface';
 import { CasoDeTesteService } from '../caso-de-teste/caso-de-teste.service';
 import { Projeto } from '../projeto/entities/projeto.entity';
@@ -30,6 +30,19 @@ export class SuiteDeTesteService {
     const entity =
       SuiteDeTesteMapper.createSuiteDeTesteBoToEntity(createSuiteDeTesteBo);
 
+    if (createSuiteDeTesteBo.suitePaiId) {
+      const parentSuite = await this.findOne(
+        createSuiteDeTesteBo.suitePaiId,
+        projeto,
+      );
+
+      if (!parentSuite) {
+        throw new Error('Suite de teste pai não encontrada');
+      }
+
+      entity.suitePai = parentSuite;
+    }
+
     entity.projeto = projeto;
 
     return SuiteDeTesteMapper.entityToBo(
@@ -37,14 +50,44 @@ export class SuiteDeTesteService {
     );
   }
 
-  async findAll() {
-    const entities = await this.suiteDeTesteRepository.find();
+  async findAll(projeto?: Projeto) {
+    const findOptions: FindManyOptions<SuiteDeTeste> = {
+      relations: ['suitePai', 'casosDeTeste', 'projeto'],
+      loadEagerRelations: true,
+    };
+
+    if (projeto) {
+      findOptions.where = { projeto: { id: projeto.id } };
+    }
+
+    const entities = await this.suiteDeTesteRepository.find(findOptions);
 
     return entities.map((entity) => SuiteDeTesteMapper.entityToBo(entity));
   }
 
-  findOne(id: number) {
-    return this.suiteDeTesteRepository.findOne({ where: { id } });
+  async findOne(id: number, projeto?: Projeto) {
+    const findOptions: FindOneOptions<SuiteDeTeste> = {
+      where: { id },
+      relations: ['suitePai', 'casosDeTeste', 'projeto'],
+      loadEagerRelations: true,
+    };
+
+    if (projeto) {
+      findOptions.where = { id, projeto: { id: projeto.id } };
+    }
+
+    const entity = await this.suiteDeTesteRepository.findOne(findOptions);
+
+    if (!entity) {
+      return null;
+    }
+
+    // Verify project ownership if projeto is provided
+    if (projeto && entity.projeto?.id !== projeto.id) {
+      return null;
+    }
+
+    return entity;
   }
 
   async getFileTree(projeto: Projeto, suiteId?: number) {
@@ -52,7 +95,8 @@ export class SuiteDeTesteService {
 
     if (suiteId) {
       const suiteEntity = await this.suiteDeTesteRepository.findOne({
-        where: { id: suiteId },
+        where: { id: suiteId, projeto: { id: projeto.id } },
+        relations: ['projeto'],
       });
 
       if (!suiteEntity) {
@@ -62,37 +106,54 @@ export class SuiteDeTesteService {
       const suite = await this.suiteDeTesteRepository.findDescendantsTree(
         suiteEntity,
         {
-          relations: ['casosDeTeste', 'projeto'],
+          relations: ['casosDeTeste'],
         },
       );
       entities = [suite];
     } else {
-      entities = await this.suiteDeTesteRepository
-        .findTrees({
-          relations: ['casosDeTeste', 'projeto'],
-        })
-        .then((trees) =>
-          trees.filter((tree) => tree?.projeto?.id === projeto?.id),
-        );
+      const rootSuites = await this.suiteDeTesteRepository.find({
+        where: { projeto: { id: projeto.id }, suitePai: null },
+        relations: ['casosDeTeste'],
+        loadEagerRelations: true,
+      });
+
+      entities = await Promise.all(
+        rootSuites.map((suite) =>
+          this.suiteDeTesteRepository.findDescendantsTree(suite, {
+            relations: ['casosDeTeste'],
+          }),
+        ),
+      );
     }
 
     const casos = !suiteId
       ? await this.casoDeTesteService.findAllWithoutSuite(projeto)
       : [];
 
-    const fileTree = SuiteDeTesteAdapter.makeFileTreeBo(entities, casos);
-
-    return fileTree;
+    return SuiteDeTesteAdapter.makeFileTreeBo(entities, casos);
   }
 
   async update(
     id: number,
     updateSuiteDeTesteBo: UpdateSuiteDeTesteBo,
+    projeto?: Projeto,
   ): Promise<SuiteDeTesteBo> {
     const updateEntity =
       SuiteDeTesteMapper.updateSuiteDeTesteBoToEntity(updateSuiteDeTesteBo);
 
-    const entity = await this.suiteDeTesteRepository.findOne({ where: { id } });
+    const entity = await this.suiteDeTesteRepository.findOne({
+      where: { id },
+      relations: ['projeto', 'suitePai'],
+    });
+
+    if (!entity) {
+      throw new Error('Suite de teste não encontrada');
+    }
+
+    // Verify project ownership if provided
+    if (projeto && entity.projeto?.id !== projeto.id) {
+      throw new Error('Suite de teste não encontrada');
+    }
 
     updateEntity.suitePai = entity.suitePai;
 
@@ -104,17 +165,33 @@ export class SuiteDeTesteService {
     );
   }
 
-  async changeSuite(id: number, suiteId: number) {
+  async changeSuite(id: number, suiteId: number, projeto?: Projeto) {
     const suite = await this.suiteDeTesteRepository.findOne({
       where: { id },
+      relations: ['projeto'],
     });
+
+    // Verify project ownership if provided
+    if (projeto && suite?.projeto?.id !== projeto.id) {
+      throw new Error('Suite de teste não encontrada');
+    }
+
+    if (suiteId === id) {
+      throw new Error('Suite de teste pai inválida');
+    }
 
     let parentSuite: SuiteDeTeste;
 
     if (suiteId) {
       parentSuite = await this.suiteDeTesteRepository.findOne({
         where: { id: suiteId },
+        relations: ['projeto'],
       });
+
+      // Verify parent suite belongs to same project
+      if (projeto && parentSuite?.projeto?.id !== projeto.id) {
+        throw new Error('Suite de teste pai não encontrada');
+      }
     }
 
     if (!suite || (suiteId && !parentSuite)) {
@@ -123,10 +200,26 @@ export class SuiteDeTesteService {
 
     suite.suitePai = parentSuite || null;
 
-    return this.suiteDeTesteRepository.save(suite);
+    return SuiteDeTesteMapper.entityToBo(
+      await this.suiteDeTesteRepository.save(suite),
+    );
   }
 
-  remove(id: number) {
+  async remove(id: number, projeto?: Projeto) {
+    const entity = await this.suiteDeTesteRepository.findOne({
+      where: { id },
+      relations: ['projeto'],
+    });
+
+    if (!entity) {
+      throw new Error('Suite de teste não encontrada');
+    }
+
+    // Verify project ownership if provided
+    if (projeto && entity.projeto?.id !== projeto.id) {
+      throw new Error('Suite de teste não encontrada');
+    }
+
     return this.suiteDeTesteRepository.softDelete(id);
   }
 

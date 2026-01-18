@@ -8,8 +8,8 @@ export class AuthMapper {
 
     colaboradorDto.nome = signUpDto.nome;
     colaboradorDto.email = signUpDto.email;
-    colaboradorDto.empresa = signUpDto.empresa;
-    colaboradorDto.cargo = signUpDto.cargo;
+    colaboradorDto.empresa = signUpDto.empresa || 'N/A';
+    colaboradorDto.cargo = signUpDto.cargo || 'Desenvolvedor';
     colaboradorDto.senha = signUpDto.senha;
 
     return colaboradorDto;

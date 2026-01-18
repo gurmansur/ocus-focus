@@ -5,6 +5,46 @@ import { ColaboradorDto } from '../../colaborador/dto/colaborador.dto';
 import { ProjetoDto } from '../../projeto/dto/projeto.dto';
 import { SuiteDeTesteDto } from '../../suite-de-teste/dto/suite-de-teste.dto';
 
+export class UltimaExecucaoDto {
+  @ApiProperty({
+    type: 'number',
+    description: 'Id da última execução',
+    example: 1,
+  })
+  id: number;
+
+  @ApiProperty({
+    type: 'enum',
+    enum: ['SUCESSO', 'FALHA', 'PENDENTE'],
+    description: 'Resultado da última execução',
+    example: 'SUCESSO',
+  })
+  resultado: 'SUCESSO' | 'FALHA' | 'PENDENTE';
+
+  @ApiProperty({
+    type: 'string',
+    description: 'Data da última execução',
+    example: '2024-01-04T10:30:00Z',
+  })
+  dataExecucao: string;
+
+  @ApiProperty({
+    type: 'string',
+    description: 'Observações sobre a última execução',
+    required: false,
+    example: 'Teste executado com sucesso',
+  })
+  observacao?: string;
+
+  @ApiProperty({
+    type: 'number',
+    description: 'Tempo de execução em segundos',
+    required: false,
+    example: 5,
+  })
+  tempoExecucao?: number;
+}
+
 export class CasoDeTesteDto {
   @ApiProperty({
     type: 'number',
@@ -145,4 +185,12 @@ export class CasoDeTesteDto {
   })
   @Type(() => ProjetoDto)
   projeto: ProjetoDto;
+
+  @ApiProperty({
+    type: UltimaExecucaoDto,
+    description: 'Última execução do Caso de Teste',
+    required: false,
+  })
+  @Type(() => UltimaExecucaoDto)
+  ultimaExecucao?: UltimaExecucaoDto;
 }

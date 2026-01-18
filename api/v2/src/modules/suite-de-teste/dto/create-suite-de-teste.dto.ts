@@ -25,8 +25,10 @@ export class CreateSuiteDeTesteDto {
     type: 'string',
     description: 'Descrição da suite de teste',
     example: 'Descrição da suite de teste 1',
+    required: false,
   })
   @IsString()
+  @IsOptional()
   descricao: string;
 
   @ApiProperty({

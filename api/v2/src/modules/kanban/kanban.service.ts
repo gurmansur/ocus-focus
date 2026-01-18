@@ -1,11 +1,12 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ILogger } from '../../common/interfaces/logger.interface';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { UserStory } from '../user-story/entities/user-story.entity';
 import { UserStoryService } from '../user-story/user-story.service';
 import { SwimlaneDto } from './dto/swimlane.dto';
+import { UpdateSwimlaneOrderDto } from './dto/update-swimlane-order.dto';
 import { UpdateSwimlaneUsDto } from './dto/update-swimlane-us.dto';
 import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';
 import { Kanban } from './entities/kanban.entity';
@@ -52,6 +53,7 @@ export class KanbanService {
           nome: swimlane.nome,
           cor: swimlane.cor,
           vertical: swimlane.vertical,
+          icone: swimlane.icone,
           userStories: us,
         };
       }),
@@ -139,6 +141,56 @@ export class KanbanService {
     );
 
     if (userStories) return HttpStatus.OK;
+  }
+
+  async updateSwimlaneOrder(swimlaneOrderDto: UpdateSwimlaneOrderDto) {
+    // IDs should be validated by the controller, but we add defensive checks here
+    if (
+      !swimlaneOrderDto.swimlaneIds ||
+      swimlaneOrderDto.swimlaneIds.length === 0
+    ) {
+      throw new Error('No swimlane IDs provided');
+    }
+
+    // Verify all swimlanes exist before updating
+    const swimlaneIds = swimlaneOrderDto.swimlaneIds;
+    console.log('Swimlane IDs to update:', swimlaneIds);
+    const swimlanes = await this.swimlaneRepository.find({
+      where: { id: In(swimlaneIds) },
+    });
+
+    console.log('Found swimlanes:', swimlanes);
+
+    if (swimlanes.length !== swimlaneIds.length) {
+      const foundIds = swimlanes.map((s) => s.id);
+      const missingIds = swimlaneIds.filter((id) => !foundIds.includes(id));
+      throw new Error(`Swimlanes not found with IDs: ${missingIds.join(', ')}`);
+    }
+
+    // Update order for each swimlane
+    const updatePromises = swimlaneIds.map(async (swimlaneId, index) => {
+      // Ensure we have valid numeric IDs
+      if (
+        typeof swimlaneId !== 'number' ||
+        !Number.isInteger(swimlaneId) ||
+        swimlaneId <= 0
+      ) {
+        throw new Error(`Invalid swimlane ID: ${swimlaneId}`);
+      }
+
+      const result = await this.swimlaneRepository.update(
+        { id: swimlaneId },
+        { ordem: index },
+      );
+
+      if (!result.affected || result.affected === 0) {
+        throw new Error(`Failed to update swimlane with ID: ${swimlaneId}`);
+      }
+    });
+
+    await Promise.all(updatePromises);
+
+    return HttpStatus.OK;
   }
 
   async deleteSwimlane(id: number) {

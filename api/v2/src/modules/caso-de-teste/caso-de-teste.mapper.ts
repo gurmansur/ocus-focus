@@ -6,7 +6,7 @@ import { SuiteDeTesteMapper } from '../suite-de-teste/suite-de-teste.mapper';
 import { CasoDeTesteBo } from './bo/caso-de-teste.bo';
 import { CreateCasoDeTesteBo } from './bo/create-caso-de-teste.bo';
 import { UpdateCasoDeTesteBo } from './bo/update-caso-de-teste.bo';
-import { CasoDeTesteDto } from './dto/caso-de-teste.dto';
+import { CasoDeTesteDto, UltimaExecucaoDto } from './dto/caso-de-teste.dto';
 import { CreateCasoDeTesteDto } from './dto/create-caso-de-teste.dto';
 import { UpdateCasoDeTesteDto } from './dto/update-caso-de-teste.dto';
 import { CasoDeTeste } from './entities/caso-de-teste.entity';
@@ -19,16 +19,16 @@ export class CasoDeTesteMapper {
 
     bo.nome = dto.nome;
     bo.descricao = dto.descricao;
-    bo.observacoes = dto.observacoes;
+    bo.observacoes = dto.observacoes || '';
     bo.prioridade = dto.prioridade;
-    bo.preCondicao = dto.preCondicao;
-    bo.posCondicao = dto.posCondicao;
+    bo.preCondicao = dto.preCondicao || '';
+    bo.posCondicao = dto.posCondicao || '';
     bo.complexidade = dto.complexidade;
-    bo.status = dto.status;
+    bo.status = dto.status || 'ATIVO';
     bo.resultadoEsperado = dto.resultadoEsperado;
     bo.metodo = dto.metodo;
-    bo.tecnica = dto.tecnica;
-    bo.dadosEntrada = dto.dadosEntrada;
+    bo.tecnica = dto.tecnica || 'FUNCIONAL';
+    bo.dadosEntrada = dto.dadosEntrada || '';
     bo.casoDeUsoId = dto.casoDeUsoId;
     bo.suiteDeTesteId = dto.suiteDeTesteId;
     bo.testadorDesignadoId = dto.testadorDesignadoId;
@@ -129,6 +129,18 @@ export class CasoDeTesteMapper {
       : null;
     bo.projeto = entity.projeto;
 
+    // Add last execution information if available
+    if (entity.execucoesDeTeste && entity.execucoesDeTeste.length > 0) {
+      const lastExecution = entity.execucoesDeTeste[0];
+      bo.ultimaExecucao = {
+        id: lastExecution.id,
+        resultado: lastExecution.resultado,
+        dataExecucao: lastExecution.dataExecucao?.toISOString() || '',
+        observacao: lastExecution.observacao,
+        tempoExecucao: undefined, // Field doesn't exist in entity yet
+      };
+    }
+
     return bo;
   }
 
@@ -154,6 +166,17 @@ export class CasoDeTesteMapper {
       ? ColaboradorMapper.fromBoToDto(bo.testadorDesignado)
       : null;
     dto.projeto = bo.projeto;
+
+    // Add last execution information if available
+    if (bo.ultimaExecucao) {
+      const execucaoDto = new UltimaExecucaoDto();
+      execucaoDto.id = bo.ultimaExecucao.id;
+      execucaoDto.resultado = bo.ultimaExecucao.resultado;
+      execucaoDto.dataExecucao = bo.ultimaExecucao.dataExecucao;
+      execucaoDto.observacao = bo.ultimaExecucao.observacao;
+      execucaoDto.tempoExecucao = bo.ultimaExecucao.tempoExecucao;
+      dto.ultimaExecucao = execucaoDto;
+    }
 
     return dto;
   }

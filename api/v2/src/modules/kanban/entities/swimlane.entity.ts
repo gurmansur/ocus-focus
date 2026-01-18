@@ -24,6 +24,12 @@ export class Swimlane {
   @Column({ type: 'varchar', name: 'SWI_COR', length: 7, default: '#6d28d9' })
   cor: string;
 
+  @Column({ type: 'varchar', name: 'SWI_ICONE', length: 30, nullable: true })
+  icone: string;
+
+  @Column({ type: 'int', name: 'SWI_ORDEM', default: 0 })
+  ordem: number;
+
   @CreateDateColumn({ name: 'SWI_CRIADO_EM' })
   criadoEm: Date;
 

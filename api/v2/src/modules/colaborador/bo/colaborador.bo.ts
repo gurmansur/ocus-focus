@@ -10,9 +10,9 @@ export class ColaboradorBo {
   @Exclude()
   senha: string;
 
-  empresa: string;
+  empresa?: string;
 
-  cargo:
+  cargo?:
     | 'Gerente de Projeto'
     | 'Analista de Sistemas'
     | 'Desenvolvedor'

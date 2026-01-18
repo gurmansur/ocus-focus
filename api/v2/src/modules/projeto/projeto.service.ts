@@ -26,7 +26,19 @@ export class ProjetoService {
 
   async create(createProjetoDto: CreateProjetoDto, user: number) {
     this.logger.log('Creating new projeto');
-    const projeto = await this.projetoRepository.save(createProjetoDto);
+
+    // Provide default values for optional fields
+    const projetoData = {
+      ...createProjetoDto,
+      empresa: createProjetoDto.empresa || 'N/A',
+      dataInicio: createProjetoDto.dataInicio || new Date(),
+      previsaoFim:
+        createProjetoDto.previsaoFim ||
+        new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
+      status: createProjetoDto.status || 'EM ANDAMENTO',
+    };
+
+    const projeto = await this.projetoRepository.save(projetoData);
 
     const colaborador = await this.colaboradorService.findOne(user);
 
@@ -41,8 +53,20 @@ export class ProjetoService {
     });
   }
 
-  findAll() {
-    return `This action returns all projeto`;
+  findAll(colaboradorId?: number) {
+    return this.projetoRepository
+      .createQueryBuilder('projeto')
+      .leftJoinAndSelect('projeto.colaboradores', 'colaborador')
+      .where(
+        colaboradorId
+          ? 'colaborador.FK_COLABORADORES_COL_ID = :colaboradorId'
+          : '',
+        {
+          colaboradorId: colaboradorId,
+        },
+      )
+      .orderBy('projeto.nome', 'DESC')
+      .getMany();
   }
 
   findRecentes(colaboradorId?: number, limit?: number) {

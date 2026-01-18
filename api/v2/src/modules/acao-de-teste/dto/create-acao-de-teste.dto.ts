@@ -9,6 +9,7 @@ import {
   IsString,
   MaxLength,
   Min,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateAcaoDeTesteDto {
@@ -41,6 +42,7 @@ export class CreateAcaoDeTesteDto {
       'ACEITAR_ALERTA',
       'REJEITAR_ALERTA',
       'OBTER_TEXTO_ALERTA',
+      'PASSO_MANUAL',
     ],
     example: 'CLICAR',
   })
@@ -66,9 +68,20 @@ export class CreateAcaoDeTesteDto {
     'ACEITAR_ALERTA',
     'REJEITAR_ALERTA',
     'OBTER_TEXTO_ALERTA',
+    'PASSO_MANUAL',
   ])
   @IsNotEmpty()
   tipo: string;
+
+  @ApiProperty({
+    description: 'Tipo de execução do passo',
+    enum: ['MANUAL', 'AUTOMATIZADO'],
+    default: 'AUTOMATIZADO',
+    required: false,
+  })
+  @IsEnum(['MANUAL', 'AUTOMATIZADO'])
+  @IsOptional()
+  execucaoTipo?: 'MANUAL' | 'AUTOMATIZADO';
 
   @ApiProperty({
     description: 'Seletor do elemento',
@@ -99,6 +112,36 @@ export class CreateAcaoDeTesteDto {
   @MaxLength(500)
   @IsOptional()
   valor?: string;
+
+  @ApiProperty({
+    description: 'Instrução detalhada para passos manuais',
+    required: false,
+    example: 'Verificar visualmente se o texto "Bem-vindo" aparece na tela',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @ValidateIf(
+    (o) =>
+      (o.execucaoTipo ?? 'AUTOMATIZADO') === 'MANUAL' ||
+      o.tipo === 'PASSO_MANUAL',
+  )
+  @Transform(({ value }) => (value === undefined ? value : String(value)))
+  instrucaoManual?: string;
+
+  @ApiProperty({
+    description: 'Resultado esperado para passos manuais',
+    required: false,
+    example: 'Mensagem de boas-vindas exibida corretamente',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @ValidateIf(
+    (o) =>
+      (o.execucaoTipo ?? 'AUTOMATIZADO') === 'MANUAL' ||
+      o.tipo === 'PASSO_MANUAL',
+  )
+  @Transform(({ value }) => (value === undefined ? value : String(value)))
+  resultadoManual?: string;
 
   @ApiProperty({
     description: 'Timeout em milissegundos',

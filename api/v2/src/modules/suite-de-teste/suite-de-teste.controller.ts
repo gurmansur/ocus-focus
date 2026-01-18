@@ -60,8 +60,8 @@ export class SuiteDeTesteController extends BaseController {
     description: 'Lista de suites de teste',
     type: [SuiteDeTesteDto],
   })
-  async findAll() {
-    const response = await this.suiteDeTesteService.findAll();
+  async findAll(@ProjetoAtual() projeto: Projeto) {
+    const response = await this.suiteDeTesteService.findAll(projeto);
 
     return response.map((bo) => SuiteDeTesteMapper.boToDto(bo));
   }
@@ -88,8 +88,11 @@ export class SuiteDeTesteController extends BaseController {
     type: SuiteDeTesteDto,
   })
   @ApiParam({ name: 'id', description: 'Id da suite de teste' })
-  findOne(@Param('id') id: string) {
-    return this.suiteDeTesteService.findOne(+id);
+  async findOne(@Param('id') id: string, @ProjetoAtual() projeto: Projeto) {
+    const response = await this.suiteDeTesteService.findOne(+id, projeto);
+    return response
+      ? SuiteDeTesteMapper.boToDto(SuiteDeTesteMapper.entityToBo(response))
+      : null;
   }
 
   @Patch(':id/change-suite')
@@ -99,11 +102,17 @@ export class SuiteDeTesteController extends BaseController {
     type: SuiteDeTesteDto,
   })
   @ApiParam({ name: 'id', description: 'Id da suite de teste' })
-  changeSuite(
+  async changeSuite(
     @Param('id') id: string,
     @Body() { suiteId }: { suiteId: number },
+    @ProjetoAtual() projeto: Projeto,
   ) {
-    return this.suiteDeTesteService.changeSuite(+id, suiteId);
+    const response = await this.suiteDeTesteService.changeSuite(
+      +id,
+      suiteId,
+      projeto,
+    );
+    return SuiteDeTesteMapper.boToDto(response);
   }
 
   @Patch(':id')
@@ -116,11 +125,12 @@ export class SuiteDeTesteController extends BaseController {
   async update(
     @Param('id') id: string,
     @Body() updateSuiteDeTesteDto: UpdateSuiteDeTesteDto,
+    @ProjetoAtual() projeto: Projeto,
   ) {
     const bo = SuiteDeTesteMapper.updateSuiteDeTesteDtoToBo(
       updateSuiteDeTesteDto,
     );
-    const response = await this.suiteDeTesteService.update(+id, bo);
+    const response = await this.suiteDeTesteService.update(+id, bo, projeto);
 
     return SuiteDeTesteMapper.boToDto(response);
   }
@@ -131,8 +141,8 @@ export class SuiteDeTesteController extends BaseController {
     description: 'Suite de teste removida',
   })
   @ApiParam({ name: 'id', description: 'Id da suite de teste' })
-  remove(@Param('id') id: string) {
-    return this.suiteDeTesteService.remove(+id);
+  async remove(@Param('id') id: string, @ProjetoAtual() projeto: Projeto) {
+    return this.suiteDeTesteService.remove(+id, projeto);
   }
 
   @Get(':id/run')

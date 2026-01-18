@@ -6,16 +6,20 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
+import { AuthGuard } from '../../guards/auth.guard';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { CreateSprintDto } from './dto/create-sprint.dto';
 import { UpdateSprintDto } from './dto/update-sprint.dto';
 import { SprintService } from './sprint.service';
 
 @ApiTags('Sprint')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('sprint')
 export class SprintController extends BaseController {
   constructor(private readonly sprintService: SprintService) {

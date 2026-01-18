@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { UsuarioDto } from '../../usuario/dto/usuario.dto';
 
@@ -18,17 +18,17 @@ export class SignUpResponseDto {
   @Exclude()
   senha: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Empresa do colaborador',
     example: 'Empresa Teste',
   })
-  empresa: string;
+  empresa?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Cargo do colaborador',
     example: 'Desenvolvedor',
   })
-  cargo: string;
+  cargo?: string;
 
   @ApiProperty({
     description: 'Usuário',
