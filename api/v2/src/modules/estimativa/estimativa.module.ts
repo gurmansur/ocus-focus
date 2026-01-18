@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Ator } from '../ator/entities/ator.entity';
+import { BillingModule } from '../billing/billing.module';
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
 import { FatorAmbientalProjeto } from '../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 import { FatorTecnicoProjeto } from '../fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
@@ -21,6 +22,7 @@ import { EstimativaService } from './estimativa.service';
       FatorTecnicoProjeto,
     ]),
     ProjetoModule,
+    BillingModule,
   ],
 })
 export class EstimativaModule {}

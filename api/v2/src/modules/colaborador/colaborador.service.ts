@@ -53,7 +53,10 @@ export class ColaboradorService {
   }
 
   findOne(id: number) {
-    return this.colaboradorRepository.findOne({ where: { id } });
+    return this.colaboradorRepository.findOne({
+      where: { id },
+      relations: ['usuario'],
+    });
   }
 
   update(id: number, updateColaboradorDto: UpdateColaboradorDto) {

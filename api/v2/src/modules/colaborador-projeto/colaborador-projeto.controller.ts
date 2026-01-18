@@ -52,8 +52,7 @@ export class ColaboradorProjetoController extends BaseController {
     if (limites.limiteUsuarios !== null) {
       const userCountOnProject =
         await this.colaboradorProjetoService.countUsersOnProject(
-          createColaboradorProjetoDto.projeto?.id ||
-            createColaboradorProjetoDto.projetoId,
+          createColaboradorProjetoDto.projeto.id,
         );
 
       if (userCountOnProject >= limites.limiteUsuarios) {

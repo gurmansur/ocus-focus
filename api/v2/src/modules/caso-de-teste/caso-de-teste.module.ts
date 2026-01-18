@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BillingModule } from '../billing/billing.module';
 import { SuiteDeTesteModule } from '../suite-de-teste/suite-de-teste.module';
 import { CasoDeTesteController } from './caso-de-teste.controller';
 import { CasoDeTesteService } from './caso-de-teste.service';
@@ -11,6 +12,7 @@ import { CasoDeTeste } from './entities/caso-de-teste.entity';
   imports: [
     TypeOrmModule.forFeature([CasoDeTeste]),
     forwardRef(() => SuiteDeTesteModule),
+    BillingModule,
   ],
   exports: [CasoDeTesteService],
 })

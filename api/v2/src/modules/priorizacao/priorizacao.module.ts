@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BillingModule } from '../billing/billing.module';
 import { RequisitoModule } from '../requisito/requisito-funcional.module';
 import { ResultadoRequisitoModule } from '../resultado-requisito/resultado-requisito.module';
 import { StakeholderModule } from '../stakeholder/stakeholder.module';
@@ -17,6 +18,7 @@ import { PriorizacaoService } from './priorizacao.service';
     StakeholderModule,
     StatusPriorizacaoModule,
     RequisitoModule,
+    BillingModule,
   ],
 })
 export class PriorizacaoModule {}

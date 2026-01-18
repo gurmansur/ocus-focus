@@ -70,6 +70,9 @@ export class BillingService {
     createAssinaturaDto: CreateAssinaturaDto,
     usuario: Usuario,
   ): Promise<Assinatura> {
+    if (!usuario || !usuario.id) {
+      throw new BadRequestException('Usuário inválido');
+    }
     const plano = await this.findPlanoById(createAssinaturaDto.planoId);
 
     // Verificar se já existe assinatura ativa para o usuário
@@ -130,6 +133,9 @@ export class BillingService {
   }
 
   async findAssinaturaAtiva(usuario: Usuario): Promise<Assinatura | null> {
+    if (!usuario || !usuario.id) {
+      return null;
+    }
     return this.assinaturaRepository.findOne({
       where: {
         usuario: { id: usuario.id },
@@ -232,6 +238,14 @@ export class BillingService {
     limiteUsuarios: number | null;
     ferramentasDisponiveis: string[];
   }> {
+    if (!usuario) {
+      // Retorna limites do plano gratuito padrão se usuário não identificado
+      return {
+        limiteProjetos: 1,
+        limiteUsuarios: 1,
+        ferramentasDisponiveis: ['arcatest', 'prioreasy'],
+      };
+    }
     const assinatura = await this.findAssinaturaAtiva(usuario);
 
     if (!assinatura) {
@@ -248,5 +262,50 @@ export class BillingService {
       limiteUsuarios: assinatura.plano.limiteUsuarios,
       ferramentasDisponiveis: assinatura.plano.ferramentasDisponiveis,
     };
+  }
+
+  async createFreeSubscriptionForNewUser(
+    usuario: Usuario,
+  ): Promise<Assinatura> {
+    if (!usuario || !usuario.id) {
+      throw new BadRequestException('Usuário inválido');
+    }
+
+    // Check if user already has a subscription
+    const assinaturaExistente = await this.assinaturaRepository.findOne({
+      where: { usuario: { id: usuario.id } },
+    });
+
+    if (assinaturaExistente) {
+      return assinaturaExistente;
+    }
+
+    // Find the starter plan
+    const starterPlan = await this.planoRepository.findOne({
+      where: { nome: 'Starter', ativo: true },
+    });
+
+    if (!starterPlan) {
+      throw new NotFoundException(
+        'Plano Starter não encontrado. Execute as migrations.',
+      );
+    }
+
+    // Create free subscription
+    const dataInicio = new Date();
+    const assinatura = this.assinaturaRepository.create({
+      usuario,
+      plano: starterPlan,
+      status: StatusAssinatura.ATIVA,
+      tipoPeriodo: TipoPeriodo.MENSAL,
+      dataInicio,
+      proximoPagamento: dataInicio,
+      valorAtual: 0,
+      autoRenovacao: true,
+      trial: true,
+      dataFimTrial: new Date(dataInicio.getTime() + 30 * 24 * 60 * 60 * 1000), // 30 days
+    });
+
+    return this.assinaturaRepository.save(assinatura);
   }
 }

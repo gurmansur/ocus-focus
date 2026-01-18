@@ -2,6 +2,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ILogger } from '../../common/interfaces/logger.interface';
+import { BillingService } from '../billing/billing.service';
 import { ColaboradorService } from '../colaborador/colaborador.service';
 import { StakeholderService } from '../stakeholder/stakeholder.service';
 import { UsuarioService } from '../usuario/usuario.service';
@@ -19,6 +20,7 @@ export class AuthService {
     @Inject() private readonly usuarioService: UsuarioService,
     @Inject() private readonly colaboradorService: ColaboradorService,
     @Inject() private readonly stakeholderService: StakeholderService,
+    @Inject() private readonly billingService: BillingService,
     private readonly jwtService: JwtService,
     @Inject('ILogger') private logger: ILogger,
     private readonly colaboradorAuthStrategy: ColaboradorAuthStrategy,
@@ -51,6 +53,17 @@ export class AuthService {
       }),
       newUser,
     );
+
+    // Create free subscription for new user
+    try {
+      await this.billingService.createFreeSubscriptionForNewUser(newUser);
+      this.logger.log(`Free subscription created for user: ${signUpDto.email}`);
+    } catch (error) {
+      this.logger.warn(
+        `Failed to create free subscription for ${signUpDto.email}: ${error.message}`,
+      );
+      // Don't fail signup if billing fails, just log it
+    }
 
     this.logger.log(`SignUp successful for email: ${signUpDto.email}`);
     return AuthMapper.colaboradorEntityToSignUpResponseDto(entity);

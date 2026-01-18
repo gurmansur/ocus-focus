@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjetoAtualMiddleware } from '../../middlewares/projeto-atual.middleware';
+import { BillingModule } from '../billing/billing.module';
 import { ColaboradorProjetoModule } from '../colaborador-projeto/colaborador-projeto.module';
 import { ColaboradorModule } from '../colaborador/colaborador.module';
 import { KanbanModule } from '../kanban/kanban.module';
@@ -17,6 +18,7 @@ import { ProjetoService } from './projeto.service';
     ColaboradorModule,
     ColaboradorProjetoModule,
     KanbanModule,
+    BillingModule,
   ],
 })
 export class ProjetoModule {
