@@ -1,3 +1,6 @@
+/**
+ * @deprecated This module is deprecated. Please use the 'usuario' module instead.
+ */
 export class CreateColaboradorDto {
   nome: string;
   email: string;

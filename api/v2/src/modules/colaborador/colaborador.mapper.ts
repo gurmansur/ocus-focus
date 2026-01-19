@@ -1,3 +1,6 @@
+/**
+ * @deprecated This module is deprecated. Please use the 'usuario' module instead.
+ */
 import { ColaboradorBo } from './bo/colaborador.bo';
 import { ColaboradorDto } from './dto/colaborador.dto';
 import { Colaborador } from './entities/colaborador.entity';

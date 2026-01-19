@@ -1,3 +1,6 @@
+/**
+ * @deprecated This module is deprecated. Please use the 'usuario' module instead.
+ */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';

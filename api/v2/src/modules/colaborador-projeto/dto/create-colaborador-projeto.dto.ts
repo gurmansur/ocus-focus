@@ -1,3 +1,6 @@
+/**
+ * @deprecated This module is deprecated. Please use the 'usuario' module instead.
+ */
 import { IsBoolean, IsNumber } from 'class-validator';
 import { Colaborador } from '../../colaborador/entities/colaborador.entity';
 import { Projeto } from '../../projeto/entities/projeto.entity';

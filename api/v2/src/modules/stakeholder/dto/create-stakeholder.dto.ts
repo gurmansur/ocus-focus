@@ -1,3 +1,6 @@
+/**
+ * @deprecated This module is deprecated. Please use the 'usuario' module instead.
+ */
 import { IsNumberString, IsString } from 'class-validator';
 
 export class CreateStakeholderDto {

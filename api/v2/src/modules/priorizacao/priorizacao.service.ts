@@ -4,8 +4,8 @@ import { Repository } from 'typeorm';
 import { ILogger } from '../../common/interfaces/logger.interface';
 import { RequisitoService } from '../requisito/requisito-funcional.service';
 import { ResultadoRequisitoService } from '../resultado-requisito/resultado-requisito.service';
-import { StakeholderService } from '../stakeholder/stakeholder.service';
 import { StatusPriorizacaoService } from '../status-priorizacao/status-priorizacao.service';
+import { UsuarioService } from '../usuario/usuario.service';
 import { CreatePriorizacaoDto } from './dto/create-priorizacao.dto';
 import { Priorizacao } from './entities/priorizacao.entity';
 
@@ -15,7 +15,7 @@ export class PriorizacaoService {
     @InjectRepository(Priorizacao)
     private priorizacaoRepository: Repository<Priorizacao>,
     @Inject() private readonly resultadoService: ResultadoRequisitoService,
-    @Inject() private readonly stakeholderService: StakeholderService,
+    @Inject() private readonly usuarioService: UsuarioService,
     @Inject()
     private readonly statusPriorizacaoService: StatusPriorizacaoService,
     @Inject() private readonly requisitoService: RequisitoService,
@@ -24,13 +24,13 @@ export class PriorizacaoService {
 
   async createPriorizacao(
     createPriorizacaoDto: CreatePriorizacaoDto,
-    stakeholderId: number,
+    usuarioId: number,
   ) {
     const priorizacao = this.priorizacaoRepository.create(createPriorizacaoDto);
 
-    const stakeholder = await this.stakeholderService.findOne(stakeholderId);
+    const usuario = await this.usuarioService.findOne(usuarioId);
 
-    priorizacao.stakeholder = stakeholder;
+    priorizacao.usuario = usuario;
 
     const requisito = await this.requisitoService.getById(
       createPriorizacaoDto.requisito,

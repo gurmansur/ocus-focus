@@ -1,32 +1,29 @@
-import { CreateColaboradorDto } from '../colaborador/dto/create-colaborador.dto';
-import { Colaborador } from '../colaborador/entities/colaborador.entity';
+import { CreateUsuarioDto } from '../usuario/dto/create-usuario.dto';
+import { Usuario } from '../usuario/entities/usuario.entity';
 import { SignUpResponseDto } from './dto/sign-up-response.dto';
 
 export class AuthMapper {
-  static signUpDtoToCreateColaboradorDto(signUpDto) {
-    const colaboradorDto = new CreateColaboradorDto();
+  static signUpDtoToCreateUsuarioDto(signUpDto) {
+    const usuarioDto = new CreateUsuarioDto();
 
-    colaboradorDto.nome = signUpDto.nome;
-    colaboradorDto.email = signUpDto.email;
-    colaboradorDto.empresa = signUpDto.empresa || 'N/A';
-    colaboradorDto.cargo = signUpDto.cargo || 'Desenvolvedor';
-    colaboradorDto.senha = signUpDto.senha;
+    usuarioDto.nome = signUpDto.nome;
+    usuarioDto.email = signUpDto.email;
+    usuarioDto.empresa = signUpDto.empresa || 'N/A';
+    usuarioDto.cargo = signUpDto.cargo || 'Desenvolvedor';
+    usuarioDto.senha = signUpDto.senha;
 
-    return colaboradorDto;
+    return usuarioDto;
   }
 
-  static colaboradorEntityToSignUpResponseDto(
-    colaborador: Colaborador,
-  ): SignUpResponseDto {
+  static usuarioEntityToSignUpResponseDto(usuario: Usuario): SignUpResponseDto {
     const dto = new SignUpResponseDto();
 
-    dto.nome = colaborador.nome;
-    dto.email = colaborador.email;
-    dto.empresa = colaborador.empresa;
-    dto.cargo = colaborador.cargo;
-    dto.usuario = colaborador.usuario;
-    dto.id = colaborador.id;
-    dto.senha = colaborador.senha;
+    dto.nome = usuario.nome;
+    dto.email = usuario.email;
+    dto.empresa = usuario.empresa;
+    dto.cargo = usuario.cargo;
+    dto.id = usuario.id;
+    dto.senha = usuario.senha;
 
     return dto;
   }

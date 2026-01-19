@@ -1,3 +1,6 @@
+/**
+ * @deprecated This module is deprecated. Please use the 'usuario' module instead.
+ */
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { CreateStakeholderDto } from './dto/create-stakeholder.dto';

@@ -13,8 +13,6 @@ import { BillingModule } from './modules/billing/billing.module';
 import { CasoDeTesteModule } from './modules/caso-de-teste/caso-de-teste.module';
 import { CasoUsoModule } from './modules/caso-uso/caso-uso.module';
 import { CenariosModule } from './modules/cenarios/cenarios.module';
-import { ColaboradorProjetoModule } from './modules/colaborador-projeto/colaborador-projeto.module';
-import { ColaboradorModule } from './modules/colaborador/colaborador.module';
 import { ConfiguracaoSeleniumModule } from './modules/configuracao-selenium/configuracao-selenium.module';
 import { EstimativaModule } from './modules/estimativa/estimativa.module';
 import { ExecucaoDeTesteModule } from './modules/execucao-de-teste/execucao-de-teste.module';
@@ -32,7 +30,6 @@ import { RequisitoModule } from './modules/requisito/requisito-funcional.module'
 import { ResultadoRequisitoModule } from './modules/resultado-requisito/resultado-requisito.module';
 import { RodadaDeTesteModule } from './modules/rodada-de-teste/rodada-de-teste.module';
 import { SprintModule } from './modules/sprint/sprint.module';
-import { StakeholderModule } from './modules/stakeholder/stakeholder.module';
 import { StatusPriorizacaoModule } from './modules/status-priorizacao/status-priorizacao.module';
 import { SuiteDeTesteModule } from './modules/suite-de-teste/suite-de-teste.module';
 import { UserStoryModule } from './modules/user-story/user-story.module';
@@ -59,19 +56,16 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     BillingModule,
     CasoUsoModule,
     CenariosModule,
-    ColaboradorModule,
     EstimativaModule,
     FatoresAmbientaisModule,
     FatoresTecnicosModule,
     PriorizacaoModule,
     ProjetoModule,
     RequisitoModule,
-    StakeholderModule,
     UsuarioModule,
     UsuarioProjetoModule,
     FatorTecnicoProjetoModule,
     FatorAmbientalProjetoModule,
-    ColaboradorProjetoModule,
     StatusPriorizacaoModule,
     ResultadoRequisitoModule,
     SprintModule,

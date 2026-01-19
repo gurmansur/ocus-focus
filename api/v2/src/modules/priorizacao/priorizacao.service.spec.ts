@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { RequisitoService } from '../requisito/requisito-funcional.service';
 import { ResultadoRequisitoService } from '../resultado-requisito/resultado-requisito.service';
-import { StakeholderService } from '../stakeholder/stakeholder.service';
 import { StatusPriorizacaoService } from '../status-priorizacao/status-priorizacao.service';
-import { PriorizacaoService } from './priorizacao.service';
+import { UsuarioService } from '../usuario/usuario.service';
 import { Priorizacao } from './entities/priorizacao.entity';
+import { PriorizacaoService } from './priorizacao.service';
 
 describe('PriorizacaoService', () => {
   let service: PriorizacaoService;
@@ -26,7 +25,7 @@ describe('PriorizacaoService', () => {
       create: jest.fn(),
     };
 
-    const mockStakeholderService = {
+    const mockUsuarioService = {
       findOne: jest.fn(),
     };
 
@@ -50,8 +49,8 @@ describe('PriorizacaoService', () => {
           useValue: mockResultadoRequisitoService,
         },
         {
-          provide: StakeholderService,
-          useValue: mockStakeholderService,
+          provide: UsuarioService,
+          useValue: mockUsuarioService,
         },
         {
           provide: StatusPriorizacaoService,

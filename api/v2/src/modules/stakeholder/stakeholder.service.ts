@@ -1,3 +1,6 @@
+/**
+ * @deprecated This module is deprecated. Please use the 'usuario' module instead.
+ */
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
@@ -61,7 +64,7 @@ export class StakeholderService {
       projeto,
     );
 
-    this.statusPriorizacaoService.create(stakeholderEntity);
+    this.statusPriorizacaoService.create(usuario);
 
     return this.stakeholderRepository.save(stakeholderEntity);
   }
@@ -78,12 +81,28 @@ export class StakeholderService {
     return this.stakeholderRepository.findOne({ where: { chave } });
   }
 
-  updateAlert(id: number) {
-    return this.statusPriorizacaoService.update(id);
+  async updateAlert(id: number) {
+    const stakeholder = await this.stakeholderRepository.findOne({
+      where: { id },
+      relations: ['usuario'],
+    });
+    if (!stakeholder) {
+      throw new Error('Stakeholder não encontrado');
+    }
+    return this.statusPriorizacaoService.update(stakeholder.usuario.id);
   }
 
   async remove(id: number) {
-    await this.statusPriorizacaoService.deleteByStakeholder(id);
+    const stakeholder = await this.stakeholderRepository.findOne({
+      where: { id },
+      relations: ['usuario'],
+    });
+    if (!stakeholder) {
+      throw new Error('Stakeholder não encontrado');
+    }
+    await this.statusPriorizacaoService.deleteByStakeholder(
+      stakeholder.usuario.id,
+    );
 
     return this.stakeholderRepository.delete(id);
   }

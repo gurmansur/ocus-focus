@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Stakeholder } from '../stakeholder/entities/stakeholder.entity';
+import { Usuario } from '../usuario/entities/usuario.entity';
 import { StatusPriorizacao } from './entities/status-priorizacao.entity';
 
 @Injectable()
@@ -11,10 +11,9 @@ export class StatusPriorizacaoService {
     private readonly statusPriorizacaoRepository: Repository<StatusPriorizacao>,
   ) {}
 
-  create(stakeholder: Stakeholder) {
+  create(usuario: Usuario) {
     return this.statusPriorizacaoRepository.save({
-      stakeholder: stakeholder,
-      usuario: stakeholder.usuario,
+      usuario: usuario,
     });
   }
 
@@ -29,7 +28,7 @@ export class StatusPriorizacaoService {
   update(id: number) {
     return this.statusPriorizacaoRepository.update(
       {
-        stakeholder: { id: id },
+        usuario: { id: id },
       },
       {
         alertaEmitido: true,
@@ -41,15 +40,15 @@ export class StatusPriorizacaoService {
     return `This action removes a #${id} statusPriorizacao`;
   }
 
-  findByStakeholder(stakeholderId: number) {
+  findByStakeholder(usuarioId: number) {
     return this.statusPriorizacaoRepository.find({
-      where: { stakeholder: { id: stakeholderId } },
+      where: { usuario: { id: usuarioId } },
     });
   }
 
-  deleteByStakeholder(stakeholderId: number) {
+  deleteByStakeholder(usuarioId: number) {
     return this.statusPriorizacaoRepository.delete({
-      stakeholder: { id: stakeholderId },
+      usuario: { id: usuarioId },
     });
   }
 
@@ -63,10 +62,10 @@ export class StatusPriorizacaoService {
     });
   }
 
-  updateParticipation(stakeholderId: number) {
+  updateParticipation(usuarioId: number) {
     return this.statusPriorizacaoRepository.update(
       {
-        stakeholder: { id: stakeholderId },
+        usuario: { id: usuarioId },
       },
       {
         participacaoRealizada: true,

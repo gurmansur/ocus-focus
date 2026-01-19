@@ -1,3 +1,6 @@
+/**
+ * @deprecated This module is deprecated. Please use the 'usuario' module instead.
+ */
 import { Expose } from 'class-transformer';
 import { IsString } from 'class-validator';
 
