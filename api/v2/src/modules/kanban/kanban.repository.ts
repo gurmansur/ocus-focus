@@ -12,6 +12,8 @@ interface FindBoardRow {
   userStoryTitulo: string | null;
   userStoryDescricao: string | null;
   userStoryEstimativaTempo: number | null;
+  userStoryPrioridade: string | null;
+  userStoryDataVencimento: Date | null;
   responsavelId: number | null;
   responsavelNome: string | null;
   commentCount: number | null;
@@ -36,14 +38,16 @@ export class KanbanRepository {
         us.UST_TITULO         AS userStoryTitulo,
         us.UST_DESCRICAO      AS userStoryDescricao,
         us.UST_ESTIMATIVA_TEMPO AS userStoryEstimativaTempo,
-        col.COL_ID            AS responsavelId,
-        col.COL_NOME          AS responsavelNome,
+        us.UST_PRIORIDADE     AS userStoryPrioridade,
+        us.UST_DATA_VENCIMENTO AS userStoryDataVencimento,
+        u.USU_ID              AS responsavelId,
+        u.USU_NOME            AS responsavelNome,
         COALESCE(cmt.commentCount, 0) AS commentCount
       FROM PROJETOS p
       INNER JOIN KANBANS k ON k.FK_PRO_ID = p.PRO_ID
       INNER JOIN SWIMLANES s ON s.FK_KAN_ID = k.KAN_ID
-      LEFT JOIN USER_STORIES us ON us.FK_SWI_ID = s.SWI_ID
-      LEFT JOIN COLABORADORES col ON col.COL_ID = us.FK_COLABORADOR_COL_RES_ID
+      LEFT JOIN USER_STORIES us ON us.FK_SWI_ID = s.SWI_ID AND us.UST_DATA_EXCLUSAO IS NULL
+      LEFT JOIN USUARIOS u ON u.USU_ID = us.FK_USUARIO_USU_RES_ID
       LEFT JOIN (
         SELECT FK_USER_STORY, COUNT(*) AS commentCount
         FROM COMENTARIOS
@@ -88,6 +92,8 @@ export class KanbanRepository {
           titulo: row.userStoryTitulo,
           descricao: row.userStoryDescricao,
           estimativa_tempo: row.userStoryEstimativaTempo,
+          prioridade: row.userStoryPrioridade,
+          dataVencimento: row.userStoryDataVencimento,
           responsavel: row.responsavelId
             ? {
                 id: row.responsavelId,

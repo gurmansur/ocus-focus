@@ -14,6 +14,7 @@ import { CasoDeTesteModule } from './modules/caso-de-teste/caso-de-teste.module'
 import { CasoUsoModule } from './modules/caso-uso/caso-uso.module';
 import { CenariosModule } from './modules/cenarios/cenarios.module';
 import { ConfiguracaoSeleniumModule } from './modules/configuracao-selenium/configuracao-selenium.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { EstimativaModule } from './modules/estimativa/estimativa.module';
 import { ExecucaoDeTesteModule } from './modules/execucao-de-teste/execucao-de-teste.module';
 import { ExecutorSeleniumModule } from './modules/executor-selenium/executor-selenium.module';
@@ -56,6 +57,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     BillingModule,
     CasoUsoModule,
     CenariosModule,
+    DashboardModule,
     EstimativaModule,
     FatoresAmbientaisModule,
     FatoresTecnicosModule,

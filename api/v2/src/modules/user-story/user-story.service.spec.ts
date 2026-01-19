@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Kanban } from '../kanban/entities/kanban.entity';
-import { Projeto } from '../projeto/entities/projeto.entity';
 import { Swimlane } from '../kanban/entities/swimlane.entity';
-import { UserStoryService } from './user-story.service';
+import { Projeto } from '../projeto/entities/projeto.entity';
+import { UsuarioProjeto } from '../usuario-projeto/entities/usuario-projeto.entity';
 import { UserStory } from './entities/user-story.entity';
+import { UserStoryService } from './user-story.service';
 
 describe('UserStoryService', () => {
   let service: UserStoryService;
@@ -22,7 +21,7 @@ describe('UserStoryService', () => {
       delete: jest.fn(),
     };
 
-    const mockColaboradorRepository = {
+    const mockUsuarioProjetoRepository = {
       findAndCount: jest.fn(),
       findOne: jest.fn(),
       find: jest.fn(),
@@ -70,8 +69,8 @@ describe('UserStoryService', () => {
           useValue: mockUserStoryRepository,
         },
         {
-          provide: getRepositoryToken(Colaborador),
-          useValue: mockColaboradorRepository,
+          provide: getRepositoryToken(UsuarioProjeto),
+          useValue: mockUsuarioProjetoRepository,
         },
         {
           provide: getRepositoryToken(Projeto),

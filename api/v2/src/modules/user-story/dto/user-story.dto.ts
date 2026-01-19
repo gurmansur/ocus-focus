@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { Arquivo } from '../../arquivo/entities/arquivo.entity';
-import { Colaborador } from '../../colaborador/entities/colaborador.entity';
 import { KanbanDto } from '../../kanban/dto/kanban.dto';
 import { SwimlaneDto } from '../../kanban/dto/swimlane.dto';
 import { Kanban } from '../../kanban/entities/kanban.entity';
@@ -12,6 +11,7 @@ import { SprintDto } from '../../sprint/dto/sprint.dto';
 import { Sprint } from '../../sprint/entities/sprint.entity';
 import { Subtarefa } from '../../subtarefa/entities/subtarefa.entity';
 import { Tag } from '../../tag/entities/tag.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 import { Comentario } from '../entities/comentario.entity';
 
 export class UserStoryDto {
@@ -68,22 +68,22 @@ export class UserStoryDto {
   arquivos: Arquivo[];
 
   @ApiProperty({
-    type: [Colaborador],
+    type: [Usuario],
     description: 'Usuário criador da user story',
   })
-  criador: Colaborador;
+  criador: Usuario;
 
   @ApiProperty({
-    type: [Colaborador],
+    type: [Usuario],
     description: 'Usuário responsável pela realização da user story',
   })
-  responsavel: Colaborador;
+  responsavel: Usuario;
 
   @ApiProperty({
-    type: [Colaborador],
+    type: [Usuario],
     description: 'Participantes da User Story',
   })
-  participantes: Colaborador[];
+  participantes: Usuario[];
 
   @ApiProperty({
     type: [Kanban],

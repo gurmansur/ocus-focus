@@ -13,7 +13,6 @@ import {
 } from 'typeorm';
 import { Arquivo } from '../../arquivo/entities/arquivo.entity';
 import { CasoUso } from '../../caso-uso/entities/caso-uso.entity';
-import { Colaborador } from '../../colaborador/entities/colaborador.entity';
 import { Kanban } from '../../kanban/entities/kanban.entity';
 import { Swimlane } from '../../kanban/entities/swimlane.entity';
 import { Projeto } from '../../projeto/entities/projeto.entity';
@@ -21,6 +20,7 @@ import { RequisitoFuncional } from '../../requisito/entities/requisito-funcional
 import { Sprint } from '../../sprint/entities/sprint.entity';
 import { Subtarefa } from '../../subtarefa/entities/subtarefa.entity';
 import { Tag } from '../../tag/entities/tag.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 import { Comentario } from './comentario.entity';
 
 @Entity('USER_STORIES')
@@ -36,6 +36,17 @@ export class UserStory {
 
   @Column({ type: 'int', name: 'UST_ESTIMATIVA_TEMPO' })
   estimativa_tempo: number;
+
+  @Column({
+    type: 'varchar',
+    name: 'UST_PRIORIDADE',
+    length: 20,
+    nullable: true,
+  })
+  prioridade: string;
+
+  @Column({ type: 'datetime', name: 'UST_DATA_VENCIMENTO', nullable: true })
+  dataVencimento: Date;
 
   @OneToMany(() => Comentario, (comentario) => comentario.id)
   comentarios: Comentario[] | null;
@@ -67,19 +78,19 @@ export class UserStory {
   })
   casosDeUso: CasoUso[] | null;
 
-  @ManyToOne(() => Colaborador, (colaborador) => colaborador.criadorUS)
-  @JoinColumn({ name: 'FK_COLABORADOR_COL_CRI_ID' })
-  criador: Colaborador;
+  @ManyToOne(() => Usuario, (usuario) => usuario.criadorUS)
+  @JoinColumn({ name: 'FK_USUARIO_USU_CRI_ID' })
+  criador: Usuario;
 
-  @ManyToOne(() => Colaborador, (colaborador) => colaborador.responsavelUS)
-  @JoinColumn({ name: 'FK_COLABORADOR_COL_RES_ID' })
-  responsavel: Colaborador;
+  @ManyToOne(() => Usuario, (usuario) => usuario.responsavelUS)
+  @JoinColumn({ name: 'FK_USUARIO_USU_RES_ID' })
+  responsavel: Usuario;
 
-  @ManyToMany(() => Colaborador, (colaborador) => colaborador.participantesUS)
+  @ManyToMany(() => Usuario)
   @JoinTable({
-    name: 'USER_STORIES_COLABORADORES',
+    name: 'USER_STORIES_USUARIOS',
   })
-  participantes: Colaborador[] | null;
+  participantes: Usuario[] | null;
 
   @ManyToOne(() => Kanban, (kanban) => kanban.userStories)
   @JoinColumn({ name: 'FK_KANBAN_ID' })

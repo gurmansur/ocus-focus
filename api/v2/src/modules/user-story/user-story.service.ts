@@ -3,14 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ILogger } from '../../common/interfaces/logger.interface';
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
-import { ColaboradorProjeto } from '../colaborador-projeto/entities/colaborador-projeto.entity';
-import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Kanban } from '../kanban/entities/kanban.entity';
 import { Swimlane } from '../kanban/entities/swimlane.entity';
 import { NotificacaoService } from '../notificacao/notificacao.service';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { Sprint } from '../sprint/entities/sprint.entity';
 import { Stakeholder } from '../stakeholder/entities/stakeholder.entity';
+import { UsuarioProjeto } from '../usuario-projeto/entities/usuario-projeto.entity';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { CreateUserStoryDto } from './dto/create-user-story.dto';
@@ -25,8 +24,6 @@ export class UserStoryService {
     private readonly userStoryRepository: Repository<UserStory>,
     @InjectRepository(CasoUso)
     private readonly casoUsoRepository: Repository<CasoUso>,
-    @InjectRepository(Colaborador)
-    private readonly colaboradorRepository: Repository<Colaborador>,
     @InjectRepository(Projeto)
     private readonly projetoRepository: Repository<Projeto>,
     @InjectRepository(Kanban)
@@ -41,8 +38,8 @@ export class UserStoryService {
     private readonly usuarioRepository: Repository<Usuario>,
     @InjectRepository(Stakeholder)
     private readonly stakeholderRepository: Repository<Stakeholder>,
-    @InjectRepository(ColaboradorProjeto)
-    private readonly colaboradorProjetoRepository: Repository<ColaboradorProjeto>,
+    @InjectRepository(UsuarioProjeto)
+    private readonly usuarioProjetoRepository: Repository<UsuarioProjeto>,
     private readonly notificacaoService: NotificacaoService,
     @Inject('ILogger') private logger: ILogger,
   ) {}
@@ -113,7 +110,7 @@ export class UserStoryService {
 
   async create(
     createUserStoryDto: CreateUserStoryDto,
-    colaborador: Colaborador,
+    usuario: Usuario,
     projeto: Projeto,
   ) {
     this.logger.log(`Creating new user story: ${createUserStoryDto.titulo}`);
@@ -122,22 +119,58 @@ export class UserStoryService {
       titulo: createUserStoryDto.titulo,
       descricao: createUserStoryDto.descricao,
       estimativa_tempo: parseInt(createUserStoryDto.estimativa_tempo),
-      criador: { id: colaborador.id },
+      criador: { id: usuario.id },
       projeto: { id: projeto.id },
     };
 
     if (createUserStoryDto.responsavel !== undefined) {
       updateData.responsavel = { id: createUserStoryDto.responsavel };
     }
-    if (createUserStoryDto.swimlane !== undefined) {
-      updateData.swimlane = { id: parseInt(createUserStoryDto.swimlane) };
+
+    if (createUserStoryDto.prioridade !== undefined) {
+      updateData.prioridade = createUserStoryDto.prioridade;
     }
+
+    if (createUserStoryDto.dataVencimento !== undefined) {
+      updateData.dataVencimento = new Date(createUserStoryDto.dataVencimento);
+    }
+
+    // Handle swimlaneId (new field from frontend) or swimlane (legacy)
+    const swimlaneId =
+      createUserStoryDto.swimlaneId ||
+      (createUserStoryDto.swimlane
+        ? parseInt(createUserStoryDto.swimlane)
+        : undefined);
+
+    if (swimlaneId) {
+      updateData.swimlane = { id: swimlaneId };
+
+      // Get the kanban from the swimlane
+      const swimlane = await this.swimlaneRepository.findOne({
+        where: { id: swimlaneId },
+        relations: ['kanban'],
+      });
+
+      if (swimlane && swimlane.kanban) {
+        updateData.kanban = { id: swimlane.kanban.id };
+      }
+    }
+
+    // Allow explicit kanban override if provided
     if (createUserStoryDto.kanban !== undefined) {
       updateData.kanban = { id: createUserStoryDto.kanban };
     }
 
     const userStory = this.userStoryRepository.create(updateData);
-    return await this.userStoryRepository.save(userStory);
+    const savedUserStory = await this.userStoryRepository.save(userStory);
+
+    // Reload with relations to return full objects (especially responsavel with nome)
+    const completeUserStory = await this.userStoryRepository.findOne({
+      where: { id: (savedUserStory as any).id },
+      relations: ['responsavel', 'criador', 'swimlane', 'kanban'],
+    });
+
+    return completeUserStory;
   }
 
   async update(id: number, updateUserStoryDto: UpdateUserStoryDto) {
@@ -163,8 +196,22 @@ export class UserStoryService {
     if (updateUserStoryDto.kanban !== undefined) {
       updateData.kanban = { id: updateUserStoryDto.kanban };
     }
+    if (updateUserStoryDto.prioridade !== undefined) {
+      updateData.prioridade = updateUserStoryDto.prioridade;
+    }
+    if (updateUserStoryDto.dataVencimento !== undefined) {
+      updateData.dataVencimento = new Date(updateUserStoryDto.dataVencimento);
+    }
 
-    return await this.userStoryRepository.update(id, updateData);
+    await this.userStoryRepository.update(id, updateData);
+
+    // Reload with relations to return full objects (especially responsavel with nome)
+    const completeUserStory = await this.userStoryRepository.findOne({
+      where: { id },
+      relations: ['responsavel', 'criador', 'swimlane', 'kanban'],
+    });
+
+    return completeUserStory;
   }
 
   async remove(id: number) {
@@ -311,20 +358,20 @@ export class UserStoryService {
     const nomePorUsuario = new Map<number, string>();
 
     if (usuarioIds.length > 0) {
-      const colaboradores = await this.colaboradorRepository.find({
-        where: { usuario: { id: In(usuarioIds) } },
-        relations: ['usuario'],
+      const usuarios = await this.usuarioRepository.find({
+        where: { id: In(usuarioIds) },
       });
-      for (const col of colaboradores) {
-        if (col.usuario?.id) nomePorUsuario.set(col.usuario.id, col.nome);
+      for (const usuario of usuarios) {
+        nomePorUsuario.set(usuario.id, usuario.nome);
       }
 
+      // Override with stakeholder names if they exist
       const stakeholders = await this.stakeholderRepository.find({
         where: { usuario: { id: In(usuarioIds) } },
         relations: ['usuario'],
       });
       for (const stk of stakeholders) {
-        if (stk.usuario?.id && !nomePorUsuario.has(stk.usuario.id)) {
+        if (stk.usuario?.id) {
           nomePorUsuario.set(stk.usuario.id, stk.nome);
         }
       }
@@ -376,20 +423,14 @@ export class UserStoryService {
 
     const saved = await this.comentarioRepository.save(comentario);
 
-    // Resolve display name for the usuario (prefer Colaborador, fallback to Stakeholder)
-    let nome = '';
-    const col = await this.colaboradorRepository.findOne({
+    // Resolve display name for the usuario (prefer Stakeholder custom name, fallback to Usuario.nome)
+    let nome = usuario.nome;
+    const stk = await this.stakeholderRepository.findOne({
       where: { usuario: { id: usuario.id } },
       relations: ['usuario'],
     });
-    if (col) {
-      nome = col.nome;
-    } else {
-      const stk = await this.stakeholderRepository.findOne({
-        where: { usuario: { id: usuario.id } },
-        relations: ['usuario'],
-      });
-      nome = stk?.nome || `Usuário ${usuario.id}`;
+    if (stk) {
+      nome = stk.nome;
     }
 
     const response = {
@@ -426,10 +467,10 @@ export class UserStoryService {
       throw new HttpException('Projeto é obrigatório', HttpStatus.BAD_REQUEST);
     }
 
-    // Fetch colaboradores for the project via the join table
-    const colProjetos = await this.colaboradorProjetoRepository.find({
+    // Fetch users for the project via usuario-projeto
+    const usuarioProjetos = await this.usuarioProjetoRepository.find({
       where: { projeto: { id: projectId } },
-      relations: ['colaborador', 'colaborador.usuario', 'projeto'],
+      relations: ['usuario', 'projeto'],
     });
 
     // Fetch stakeholders linked directly to the project
@@ -438,7 +479,7 @@ export class UserStoryService {
       relations: ['usuario', 'projeto'],
     });
 
-    // Normalize and deduplicate by usuarioId (a usuario could exist in both roles)
+    // Normalize and deduplicate by usuarioId
     const mentionablesMap = new Map<
       number,
       {
@@ -449,15 +490,15 @@ export class UserStoryService {
       }
     >();
 
-    colProjetos.forEach((cp) => {
-      const usuarioId = cp.colaborador?.usuario?.id;
+    usuarioProjetos.forEach((up) => {
+      const usuarioId = up.usuario?.id;
       if (!usuarioId) return;
       if (!mentionablesMap.has(usuarioId)) {
         mentionablesMap.set(usuarioId, {
           usuarioId,
-          nome: cp.colaborador.nome,
+          nome: up.usuario.nome,
           tipo: 'colaborador',
-          id: cp.colaborador.id,
+          id: up.usuario.id,
         });
       }
     });

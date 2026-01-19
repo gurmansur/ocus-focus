@@ -19,6 +19,18 @@ export class CreateUserStoryDto {
   responsavel?: number;
 
   @IsOptional()
+  @IsNumber()
+  swimlaneId?: number;
+
+  @IsOptional()
   @IsString()
   swimlane?: string;
+
+  @IsOptional()
+  @IsString()
+  prioridade?: string;
+
+  @IsOptional()
+  @IsString()
+  dataVencimento?: string;
 }

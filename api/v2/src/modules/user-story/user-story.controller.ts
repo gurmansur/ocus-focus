@@ -9,10 +9,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
-import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
-import { Colaborador } from '../colaborador/entities/colaborador.entity';
+import { UsuarioAtual } from '../../decorators/usuario-atual.decorator';
 import { Projeto } from '../projeto/entities/projeto.entity';
+import { Usuario } from '../usuario/entities/usuario.entity';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { CreateUserStoryDto } from './dto/create-user-story.dto';
 import { UpdateUserStoryDto } from './dto/update-user-story.dto';
@@ -48,14 +48,10 @@ export class UserStoryController extends BaseController {
   @Post('new')
   create(
     @Body() createUserStoryDto: CreateUserStoryDto,
-    @ColaboradorAtual() colaborador: Colaborador,
+    @UsuarioAtual() usuario: Usuario,
     @ProjetoAtual() projeto: Projeto,
   ) {
-    return this.userStoryService.create(
-      createUserStoryDto,
-      colaborador,
-      projeto,
-    );
+    return this.userStoryService.create(createUserStoryDto, usuario, projeto);
   }
 
   @Patch(':id/assign-sprint')

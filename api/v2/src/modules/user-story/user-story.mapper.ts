@@ -1,7 +1,7 @@
-import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Kanban } from '../kanban/entities/kanban.entity';
 import { Swimlane } from '../kanban/entities/swimlane.entity';
 import { Projeto } from '../projeto/entities/projeto.entity';
+import { Usuario } from '../usuario/entities/usuario.entity';
 import { CreateUserStoryBo } from './bo/create-user-story.bo';
 import { UserStoryBo } from './bo/user-story.bo';
 import { UserStoryDto } from './dto/user-story.dto';
@@ -15,7 +15,7 @@ export class UserStoryMapper {
     entity.estimativa_tempo = bo.estimativa_tempo;
     entity.swimlane = bo.swimlane ? ({ id: bo.swimlane } as Swimlane) : null;
     entity.kanban = bo.kanban ? ({ id: bo.kanban } as Kanban) : null;
-    entity.criador = bo.usuario ? ({ id: bo.usuario } as Colaborador) : null;
+    entity.criador = bo.usuario ? ({ id: bo.usuario } as Usuario) : null;
     entity.projeto = bo.projeto ? ({ id: bo.projeto } as Projeto) : null;
 
     return entity;
