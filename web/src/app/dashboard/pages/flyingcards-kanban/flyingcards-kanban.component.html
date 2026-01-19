@@ -97,6 +97,12 @@
                   class="text-xs bg-sky-100 text-sky-800 rounded px-2 py-1"
                   >{{ item.responsavel }}</span
                 >
+                <span
+                  class="text-xs bg-gray-100 text-gray-700 rounded px-2 py-1 flex items-center gap-1"
+                >
+                  <span>Comentários:</span>
+                  <span>{{ item.commentCount || 0 }}</span>
+                </span>
               </div>
 
               @if (item["requisitos"] && item["requisitos"].length > 0) {

@@ -7,11 +7,12 @@ import { UserStoryModule } from '../user-story/user-story.module';
 import { Kanban } from './entities/kanban.entity';
 import { Swimlane } from './entities/swimlane.entity';
 import { KanbanController } from './kanban.controller';
+import { KanbanRepository } from './kanban.repository';
 import { KanbanService } from './kanban.service';
 
 @Module({
   controllers: [KanbanController],
-  providers: [KanbanService],
+  providers: [KanbanService, KanbanRepository],
   imports: [
     TypeOrmModule.forFeature([Kanban, Swimlane, Projeto, UserStory]),
     UserStoryModule,

@@ -41,4 +41,10 @@ export class SignUpResponseDto {
     example: 8,
   })
   id: number;
+
+  @ApiProperty({
+    description: 'Data de cadastro',
+    example: '2021-10-10T00:00:00.000Z',
+  })
+  dataCadastro: Date;
 }

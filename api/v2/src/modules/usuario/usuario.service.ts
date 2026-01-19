@@ -20,20 +20,36 @@ export class UsuarioService {
     return await this.usuarioRepository.save(usuario);
   }
 
-  async findAll(paginated = false, page = 1) {
-    if (paginated) {
-      const take = 10;
-      const skip = (page - 1) * take;
-      return await this.usuarioRepository.findAndCount({
-        take,
-        skip,
+  findAll({
+    email,
+    name,
+  }: {
+    email?: string;
+    name?: string;
+  }): Promise<Usuario[]> {
+    const queryBuilder = this.usuarioRepository.createQueryBuilder('usuario');
+
+    if (email) {
+      queryBuilder.andWhere('LOWER(usuario.email) LIKE LOWER(:email)', {
+        email: `%${email}%`,
       });
     }
-    return await this.usuarioRepository.findAndCount();
+
+    if (name) {
+      queryBuilder.andWhere('LOWER(usuario.nome) LIKE LOWER(:name)', {
+        name: `%${name}%`,
+      });
+    }
+
+    return queryBuilder.getMany();
   }
 
   async findOne(id: number): Promise<Usuario> {
     return await this.usuarioRepository.findOne({ where: { id } });
+  }
+
+  async findByEmail(email: string): Promise<Usuario | null> {
+    return await this.usuarioRepository.findOne({ where: { email } });
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {

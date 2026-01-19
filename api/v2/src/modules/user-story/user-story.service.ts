@@ -168,7 +168,7 @@ export class UserStoryService {
   }
 
   async remove(id: number) {
-    return await this.userStoryRepository.delete(id);
+    return await this.userStoryRepository.softRemove({ id } as UserStory);
   }
 
   async findByProject(projectId: number) {
@@ -301,7 +301,7 @@ export class UserStoryService {
     const comentarios = await this.comentarioRepository.find({
       where: { userStory: { id: userStoryId } },
       relations: ['usuario'],
-      order: { criado_em: 'DESC' },
+      order: { createdAt: 'DESC' },
     });
 
     const usuarioIds = comentarios
@@ -338,8 +338,8 @@ export class UserStoryService {
       return {
         id: c.id,
         comentario: c.comentario,
-        criado_em: c.criado_em,
-        modificado_em: c.modificado_em,
+        criado_em: c.createdAt,
+        modificado_em: c.updatedAt,
         usuario: {
           id: uid,
           nome,
@@ -372,8 +372,6 @@ export class UserStoryService {
       comentario: createComentarioDto.comentario,
       usuario,
       userStory,
-      criado_em: new Date(),
-      modificado_em: new Date(),
     });
 
     const saved = await this.comentarioRepository.save(comentario);
@@ -397,8 +395,8 @@ export class UserStoryService {
     const response = {
       id: saved.id,
       comentario: saved.comentario,
-      criado_em: saved.criado_em,
-      modificado_em: saved.modificado_em,
+      criado_em: saved.createdAt,
+      modificado_em: saved.updatedAt,
       usuario: {
         id: usuario.id,
         nome,
@@ -491,7 +489,7 @@ export class UserStoryService {
       throw new HttpException('Comentario not found', HttpStatus.NOT_FOUND);
     }
 
-    await this.comentarioRepository.delete(comentarioId);
+    await this.comentarioRepository.softRemove(comentario);
     return { success: true };
   }
 }

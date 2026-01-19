@@ -3,34 +3,24 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ILogger } from '../../common/interfaces/logger.interface';
 import { BillingService } from '../billing/billing.service';
-import { ColaboradorService } from '../colaborador/colaborador.service';
-import { StakeholderService } from '../stakeholder/stakeholder.service';
 import { UsuarioService } from '../usuario/usuario.service';
-import { AuthMapper } from './auth.mapper';
-import { SignInColaboradorDto } from './dto/sign-in-colaborador.dto';
-import { SignInStakeholderDto } from './dto/sign-in-stakeholder.dto';
+import { SignInDto } from './dto/sign-in.dto';
 import { SignUpResponseDto } from './dto/sign-up-response.dto';
 import { SignUpDto } from './dto/sign-up.dto';
-import { ColaboradorAuthStrategy } from './strategies/colaborador-auth.strategy';
-import { StakeholderAuthStrategy } from './strategies/stakeholder-auth.strategy';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject() private readonly usuarioService: UsuarioService,
-    @Inject() private readonly colaboradorService: ColaboradorService,
-    @Inject() private readonly stakeholderService: StakeholderService,
     @Inject() private readonly billingService: BillingService,
     private readonly jwtService: JwtService,
     @Inject('ILogger') private logger: ILogger,
-    private readonly colaboradorAuthStrategy: ColaboradorAuthStrategy,
-    private readonly stakeholderAuthStrategy: StakeholderAuthStrategy,
   ) {}
 
   async signUp(signUpDto: SignUpDto): Promise<SignUpResponseDto> {
     this.logger.log(`SignUp attempt for email: ${signUpDto.email}`);
-    const users = await this.colaboradorService.findByEmail(signUpDto.email);
-    if (users) {
+    const existingUser = await this.usuarioService.findByEmail(signUpDto.email);
+    if (existingUser) {
       this.logger.warn(
         `SignUp failed - email already exists: ${signUpDto.email}`,
       );
@@ -38,21 +28,12 @@ export class AuthService {
     }
 
     const { senha, ...payload } = signUpDto;
-
     const senhaHashed = await bcrypt.hash(signUpDto.senha, 10);
 
     const newUser = await this.usuarioService.create({
       ...payload,
       senha: senhaHashed,
     });
-
-    const entity = await this.colaboradorService.create(
-      AuthMapper.signUpDtoToCreateColaboradorDto({
-        ...payload,
-        senha: senhaHashed,
-      }),
-      newUser,
-    );
 
     // Create free subscription for new user
     try {
@@ -66,52 +47,57 @@ export class AuthService {
     }
 
     this.logger.log(`SignUp successful for email: ${signUpDto.email}`);
-    return AuthMapper.colaboradorEntityToSignUpResponseDto(entity);
-  }
-
-  async signInColaborador(signInDto: SignInColaboradorDto) {
-    const user = await this.colaboradorService.findByEmail(signInDto.email);
-    if (!user) {
-      throw new BadRequestException('Usuário não encontrado!');
-    }
-
-    const { accessToken, user: authenticatedUser } =
-      await this.colaboradorAuthStrategy.authenticate({
-        email: signInDto.email,
-        senha: signInDto.senha,
-        user,
-      });
-
-    this.logger.log(`Colaborador signed in: ${signInDto.email}`);
     return {
-      message: 'Colaborador logado com sucesso!',
-      usu_id: user.id,
-      usu_name: user.nome,
-      usu_email: user.email,
-      usu_role: 'colaborador',
-      accessToken,
+      id: newUser.id,
+      nome: newUser.nome,
+      email: newUser.email,
+      empresa: newUser.empresa,
+      cargo: newUser.cargo,
+      dataCadastro: newUser.dataCadastro,
+      senha: newUser.senha,
+      usuario: {
+        id: newUser.id,
+        nome: newUser.nome,
+        email: newUser.email,
+        empresa: newUser.empresa,
+        cargo: newUser.cargo,
+        dataCadastro: newUser.dataCadastro,
+      },
     };
   }
 
-  async signInStakeholder(signInDto: SignInStakeholderDto) {
-    const user = await this.stakeholderService.findByChave(signInDto.chave);
+  async signIn(signInDto: SignInDto) {
+    let user;
+    let identifier: string;
+
+    // Check if signing in with email or chave (legacy stakeholder login)
+    if (signInDto.email) {
+      user = await this.usuarioService.findByEmail(signInDto.email);
+      identifier = signInDto.email;
+    } else {
+      throw new BadRequestException('Email ou chave é obrigatório!');
+    }
+
     if (!user) {
       throw new BadRequestException('Usuário não encontrado!');
     }
 
-    const { accessToken, user: authenticatedUser } =
-      await this.stakeholderAuthStrategy.authenticate({
-        chave: signInDto.chave,
-        user,
-      });
+    // Verify password
+    const passwordMatch = await bcrypt.compare(signInDto.senha, user.senha);
+    if (!passwordMatch) {
+      throw new BadRequestException('Senha incorreta!');
+    }
 
-    this.logger.log(`Stakeholder signed in: ${signInDto.chave}`);
+    // Generate JWT token
+    const payload = { id: user.id, email: user.email, nome: user.nome };
+    const accessToken = await this.jwtService.signAsync(payload);
+
+    this.logger.log(`User signed in: ${identifier}`);
     return {
-      message: 'Stakeholder logado com sucesso!',
+      message: 'Login realizado com sucesso!',
       usu_id: user.id,
       usu_name: user.nome,
       usu_email: user.email,
-      usu_role: 'stakeholder',
       accessToken,
     };
   }

@@ -35,20 +35,20 @@ export class KanbanController extends BaseController {
 
   @Get()
   findBoard(
-    @Query('projeto') projeto: number,
+    @ProjetoAtual() projeto: Projeto,
     @Query('sprint') sprint?: number,
   ) {
-    return this.kanbanService.findBoard(projeto, sprint);
+    return this.kanbanService.findBoard(projeto.id, sprint);
   }
 
   @Get('swimlanes')
-  findSwimlaneFromProject(@Query('projeto') projeto: number) {
-    return this.kanbanService.findSwimlaneFromProject(projeto);
+  findSwimlaneFromProject(@ProjetoAtual() projeto: Projeto) {
+    return this.kanbanService.findSwimlaneFromProject(projeto.id);
   }
 
   @Get('swimlane')
-  findSwimlane(@Query('id') id: number) {
-    return this.kanbanService.findOneSwimlane(id);
+  findSwimlane(@Query('id') id: number, @ProjetoAtual() projeto: Projeto) {
+    return this.kanbanService.findOneSwimlane(id, projeto.id);
   }
 
   @Patch('swimlane/order')
@@ -84,23 +84,37 @@ export class KanbanController extends BaseController {
   updateSwimlane(
     @Param('id') id: string,
     @Body() updateSwimlaneDto: UpdateSwimlaneDto,
+    @ProjetoAtual() projeto: Projeto,
   ) {
-    return this.kanbanService.updateSwimlane(+id, updateSwimlaneDto);
+    return this.kanbanService.updateSwimlane(
+      +id,
+      updateSwimlaneDto,
+      projeto.id,
+    );
   }
 
   @Patch('user-story/update')
-  updateSwimlaneUserStories(@Body() swimlaneDto: UpdateSwimlaneUsDto) {
-    return this.kanbanService.updateSwimlaneUserStories(swimlaneDto);
+  updateSwimlaneUserStories(
+    @Body() swimlaneDto: UpdateSwimlaneUsDto,
+    @ProjetoAtual() projeto: Projeto,
+  ) {
+    return this.kanbanService.updateSwimlaneUserStories(
+      swimlaneDto,
+      projeto.id,
+    );
   }
 
   @Delete('swimlane/:id')
-  deleteSwimlane(@Param('id') id: number) {
-    return this.kanbanService.deleteSwimlane(id);
+  deleteSwimlane(@Param('id') id: number, @ProjetoAtual() projeto: Projeto) {
+    return this.kanbanService.deleteSwimlane(id, projeto.id);
   }
 
   @Post('swimlane')
-  createSwimlane(@Body() swimlane: SwimlaneDto) {
-    return this.kanbanService.createSwimlane(swimlane);
+  createSwimlane(
+    @Body() swimlane: SwimlaneDto,
+    @ProjetoAtual() projeto: Projeto,
+  ) {
+    return this.kanbanService.createSwimlane(swimlane, projeto.id);
   }
 
   @Get('id')

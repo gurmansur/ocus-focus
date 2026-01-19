@@ -17,11 +17,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
-import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
+import { UsuarioAtual } from '../../decorators/usuario-atual.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
 import { BillingService } from '../billing/billing.service';
-import { ColaboradorService } from '../colaborador/colaborador.service';
-import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
+import { Usuario } from '../usuario/entities/usuario.entity';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { ProjetoService } from './projeto.service';
@@ -35,7 +34,6 @@ export class ProjetoController extends BaseController {
   constructor(
     private readonly projetoService: ProjetoService,
     private readonly billingService: BillingService,
-    private readonly colaboradorService: ColaboradorService,
   ) {
     super();
   }
@@ -45,21 +43,15 @@ export class ProjetoController extends BaseController {
   async create(
     @Body() createProjetoDto: CreateProjetoDto,
     @Query('user') user: number,
-    @ColaboradorAtual() colaborador: ColaboradorDto,
+    @UsuarioAtual() usuario: Usuario,
   ) {
-    // Load full colaborador to access usuario relationship
-    const colaboradorFull = await this.colaboradorService.findOne(
-      colaborador.id,
-    );
-
     // Validate project limit
-    const limites = await this.billingService.verificarLimitesAssinatura(
-      colaboradorFull.usuario,
-    );
+    const limites =
+      await this.billingService.verificarLimitesAssinatura(usuario);
 
     if (limites.limiteProjetos !== null) {
       const projetoCount = await this.projetoService.countUserProjects(
-        colaboradorFull.usuario.id,
+        usuario.id,
       );
 
       if (projetoCount >= limites.limiteProjetos) {
@@ -69,24 +61,24 @@ export class ProjetoController extends BaseController {
       }
     }
 
-    return this.projetoService.create(createProjetoDto, user);
+    return this.projetoService.create(createProjetoDto, usuario.id);
   }
 
   @Get()
-  findAll(@ColaboradorAtual() user: ColaboradorDto) {
+  findAll(@UsuarioAtual() user: Usuario) {
     return this.projetoService.findAll(user.id);
   }
 
   @Get('findByNome')
   findByNome(
     @Query('nome') nome: string,
-    @Query('user') colaboradorId: number,
+    @UsuarioAtual() user: Usuario,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
     return this.projetoService.findByNome(
       nome,
-      colaboradorId,
+      user.id,
       !!pageSize,
       page,
       pageSize,
@@ -96,42 +88,37 @@ export class ProjetoController extends BaseController {
   @Get('findById')
   findById(
     @Query('projeto') id: number,
-    @Query('colaborador') colaboradorId: number,
+    @UsuarioAtual() user: Usuario,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
     return this.projetoService.findById(
       id,
-      colaboradorId,
+      user.id,
       !!pageSize,
       page,
       pageSize,
     );
   }
 
-  @Get('findByIdStakeholder')
-  findByIdStakeholder(@Query('stakeholder') stakeholderId: number) {
-    return this.projetoService.findByStakeholderId(stakeholderId);
-  }
-
   @Get('metrics/total')
-  findTotal(@Query('user') user: number) {
-    return this.projetoService.findTotal(user);
+  findTotal(@UsuarioAtual() user: Usuario) {
+    return this.projetoService.findTotal(user.id);
   }
 
   @Get('metrics/ongoing')
-  findOngoingCount(@Query('user') user: number) {
-    return this.projetoService.findOngoingCount(user);
+  findOngoingCount(@UsuarioAtual() user: Usuario) {
+    return this.projetoService.findOngoingCount(user.id);
   }
 
   @Get('metrics/finished')
-  findFinishedCount(@Query('user') user: number) {
-    return this.projetoService.findFinishedCount(user);
+  findFinishedCount(@UsuarioAtual() user: Usuario) {
+    return this.projetoService.findFinishedCount(user.id);
   }
 
   @Get('metrics/new')
-  findNewCount(@Query('user') user: number) {
-    return this.projetoService.findNewCount(user);
+  findNewCount(@UsuarioAtual() user: Usuario) {
+    return this.projetoService.findNewCount(user.id);
   }
 
   @Get('recentes')
@@ -161,7 +148,7 @@ export class ProjetoController extends BaseController {
     @Query('page') page?: number,
     @Query('pageSize') pageSize?: number,
   ) {
-    return this.projetoService.findColaboradores(projetoId, page, pageSize);
+    return this.projetoService.findUsuarios(projetoId, page, pageSize);
   }
 
   @Get('colaboradores/findByNome')
@@ -171,7 +158,7 @@ export class ProjetoController extends BaseController {
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
-    return this.projetoService.findColaboradoresByNome(
+    return this.projetoService.findUsuariosByNome(
       projetoId,
       nome,
       page,
@@ -182,21 +169,17 @@ export class ProjetoController extends BaseController {
   @Post('addColaborador')
   addColaborador(
     @Query('projeto') projetoId: number,
-    @Query('colaborador') colaboradorId: number,
+    @Query('colaborador') usuarioId: number,
   ) {
-    return this.projetoService.addColaborador(projetoId, colaboradorId);
+    return this.projetoService.addUsuario(projetoId, usuarioId);
   }
 
   @Delete('removeColaborador')
   removeColaborador(
     @Query('projeto') projetoId: number,
-    @Query('colaborador') colaboradorId: number,
-    @ColaboradorAtual() user: ColaboradorDto,
+    @Query('colaborador') usuarioId: number,
+    @UsuarioAtual() user: Usuario,
   ) {
-    return this.projetoService.removeColaborador(
-      projetoId,
-      colaboradorId,
-      user,
-    );
+    return this.projetoService.removeUsuario(projetoId, usuarioId, user.id);
   }
 }

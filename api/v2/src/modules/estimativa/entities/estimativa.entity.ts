@@ -23,16 +23,16 @@ export class Estimativa {
 
   // JSON columns to store complex data structures
   @Column('json', { name: 'EST_USE_CASE_WEIGHTS' })
-  useCaseWeights: string; // Stored as JSON string
+  useCaseWeights: string | any; // MySQL JSON columns auto-deserialize to objects
 
   @Column('json', { name: 'EST_ACTOR_WEIGHTS' })
-  actorWeights: string; // Stored as JSON string
+  actorWeights: string | any; // MySQL JSON columns auto-deserialize to objects
 
   @Column('json', { name: 'EST_TECHNICAL_FACTORS' })
-  technicalFactors: string; // Stored as JSON string
+  technicalFactors: string | any; // MySQL JSON columns auto-deserialize to objects
 
   @Column('json', { name: 'EST_ENVIRONMENTAL_FACTORS' })
-  environmentalFactors: string; // Stored as JSON string
+  environmentalFactors: string | any; // MySQL JSON columns auto-deserialize to objects
 
   // Calculated UCP values
   @Column('double', { name: 'EST_UUCW', precision: 8, scale: 2, default: 0 })

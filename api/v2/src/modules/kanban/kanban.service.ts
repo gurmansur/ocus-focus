@@ -1,16 +1,15 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { ILogger } from '../../common/interfaces/logger.interface';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { UserStory } from '../user-story/entities/user-story.entity';
-import { UserStoryService } from '../user-story/user-story.service';
 import { SwimlaneDto } from './dto/swimlane.dto';
 import { UpdateSwimlaneOrderDto } from './dto/update-swimlane-order.dto';
 import { UpdateSwimlaneUsDto } from './dto/update-swimlane-us.dto';
 import { UpdateSwimlaneDto } from './dto/update-swimlane.dto';
 import { Kanban } from './entities/kanban.entity';
 import { Swimlane } from './entities/swimlane.entity';
+import { KanbanRepository } from './kanban.repository';
 
 @Injectable()
 export class KanbanService {
@@ -21,48 +20,14 @@ export class KanbanService {
     private readonly projetoRepository: Repository<Projeto>,
     @InjectRepository(Swimlane)
     private readonly swimlaneRepository: Repository<Swimlane>,
-    @Inject() private readonly userStoryService: UserStoryService,
     @InjectRepository(UserStory)
     private readonly userStoryRepository: Repository<UserStory>,
-    @Inject('ILogger') private logger: ILogger,
+    @Inject()
+    private readonly kanbanRepositoryCustom: KanbanRepository,
   ) {}
 
   async findBoard(projetoId: number, sprintId?: number) {
-    const projeto = await this.projetoRepository.findOne({
-      where: { id: projetoId },
-    });
-    const kanban = await this.kanbanRepository.findOne({
-      where: { projeto: projeto },
-      relations: ['projeto'],
-    });
-
-    const swimlaneRepo = await this.swimlaneRepository.find({
-      where: { kanban: kanban },
-      relations: ['kanban'],
-    });
-
-    const swimlanes = await Promise.all(
-      swimlaneRepo.map(async (swimlane) => {
-        const us = await this.userStoryService.findFromSwimlane(
-          swimlane.id,
-          sprintId,
-        );
-
-        return {
-          id: swimlane.id,
-          nome: swimlane.nome,
-          cor: swimlane.cor,
-          vertical: swimlane.vertical,
-          icone: swimlane.icone,
-          userStories: us,
-        };
-      }),
-    );
-
-    return {
-      nome: projeto.nome,
-      swimlanes,
-    };
+    return this.kanbanRepositoryCustom.findBoard(projetoId, sprintId);
   }
 
   async findSwimlaneFromProject(projetoId: number) {
@@ -95,15 +60,34 @@ export class KanbanService {
     return kanban.id;
   }
 
-  async findOneSwimlane(id: number) {
-    return await this.swimlaneRepository.findOne({
-      where: {
-        id,
-      },
+  async findOneSwimlane(id: number, projetoId: number) {
+    const swimlane = await this.swimlaneRepository.findOne({
+      where: { id, kanban: { projeto: { id: projetoId } } },
+      relations: ['kanban', 'kanban.projeto'],
     });
+
+    if (!swimlane || swimlane.kanban.projeto.id !== projetoId) {
+      throw new Error('Swimlane not found or does not belong to this project');
+    }
+
+    return swimlane;
   }
 
-  async updateSwimlane(id: number, swimlaneDto: UpdateSwimlaneDto) {
+  async updateSwimlane(
+    id: number,
+    swimlaneDto: UpdateSwimlaneDto,
+    projetoId: number,
+  ) {
+    // Verify swimlane belongs to the project
+    const swimlane = await this.swimlaneRepository.findOne({
+      where: { id },
+      relations: ['kanban', 'kanban.projeto'],
+    });
+
+    if (!swimlane || swimlane.kanban.projeto.id !== projetoId) {
+      throw new Error('Swimlane not found or does not belong to this project');
+    }
+
     console.log(swimlaneDto);
     const kanban = await this.kanbanRepository.findOne({
       where: {
@@ -117,12 +101,18 @@ export class KanbanService {
     });
   }
 
-  async updateSwimlaneUserStories(swimlaneDto: UpdateSwimlaneUsDto) {
+  async updateSwimlaneUserStories(
+    swimlaneDto: UpdateSwimlaneUsDto,
+    projetoId: number,
+  ) {
     const swimlane = await this.swimlaneRepository.findOne({
-      where: {
-        id: swimlaneDto.id,
-      },
+      where: { id: swimlaneDto.id },
+      relations: ['kanban', 'kanban.projeto'],
     });
+
+    if (!swimlane || swimlane.kanban.projeto.id !== projetoId) {
+      throw new Error('Swimlane not found or does not belong to this project');
+    }
 
     const userStories = await Promise.all(
       swimlaneDto.userStories.map(async (userStory) => {
@@ -193,16 +183,30 @@ export class KanbanService {
     return HttpStatus.OK;
   }
 
-  async deleteSwimlane(id: number) {
+  async deleteSwimlane(id: number, projetoId: number) {
+    // Verify swimlane belongs to the project
+    const swimlane = await this.swimlaneRepository.findOne({
+      where: { id },
+      relations: ['kanban', 'kanban.projeto'],
+    });
+
+    if (!swimlane || swimlane.kanban.projeto.id !== projetoId) {
+      throw new Error('Swimlane not found or does not belong to this project');
+    }
+
     return await this.swimlaneRepository.delete(id);
   }
 
-  async createSwimlane(swimlane: SwimlaneDto) {
+  async createSwimlane(swimlane: SwimlaneDto, projetoId: number) {
+    // Verify kanban belongs to the project
     const kanban = await this.kanbanRepository.findOne({
-      where: {
-        id: swimlane.kanban,
-      },
+      where: { id: swimlane.kanban },
+      relations: ['projeto'],
     });
+
+    if (!kanban || kanban.projeto.id !== projetoId) {
+      throw new Error('Kanban not found or does not belong to this project');
+    }
 
     const swimlaneCreated = this.swimlaneRepository.create({
       ...swimlane,

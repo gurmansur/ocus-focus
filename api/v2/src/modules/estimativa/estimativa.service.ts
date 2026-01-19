@@ -97,10 +97,20 @@ function calculateUCP(uucp: number, tcf: number, ef: number): number {
   return uucp * tcf * ef;
 }
 
-function safeJsonParse<T>(json: string | null | undefined, defaultValue: T): T {
+function safeJsonParse<T>(
+  json: string | null | undefined | any,
+  defaultValue: T,
+): T {
+  // If it's already an object/array, return it directly (TypeORM auto-deserializes JSON columns)
+  if (json && typeof json === 'object') {
+    return json as T;
+  }
+
+  // If it's not a string or is empty, return default
   if (!json || typeof json !== 'string' || json.trim() === '') {
     return defaultValue;
   }
+
   try {
     return JSON.parse(json);
   } catch (error) {
@@ -170,10 +180,11 @@ export class EstimativaService {
       description: dto.description,
       projeto,
       createdBy: colaborador,
-      useCaseWeights: JSON.stringify([]),
-      actorWeights: JSON.stringify([]),
-      technicalFactors: JSON.stringify(createDefaultTechnicalFactors()),
-      environmentalFactors: JSON.stringify(createDefaultEnvironmentalFactors()),
+      // TypeORM auto-serializes JSON columns, pass objects directly
+      useCaseWeights: [] as any,
+      actorWeights: [] as any,
+      technicalFactors: createDefaultTechnicalFactors() as any,
+      environmentalFactors: createDefaultEnvironmentalFactors() as any,
       uucw: 0,
       uaw: 0,
       uucp: 0,
@@ -212,20 +223,18 @@ export class EstimativaService {
     if (dto.status !== undefined) estimativa.status = dto.status;
     if (dto.hoursPerUCP !== undefined) estimativa.hoursPerUCP = dto.hoursPerUCP;
 
-    // Update complex fields
+    // Update complex fields - TypeORM auto-serializes JSON columns, don't stringify
     if (dto.useCaseWeights !== undefined) {
-      estimativa.useCaseWeights = JSON.stringify(dto.useCaseWeights);
+      estimativa.useCaseWeights = dto.useCaseWeights as any;
     }
     if (dto.actorWeights !== undefined) {
-      estimativa.actorWeights = JSON.stringify(dto.actorWeights);
+      estimativa.actorWeights = dto.actorWeights as any;
     }
     if (dto.technicalFactors !== undefined) {
-      estimativa.technicalFactors = JSON.stringify(dto.technicalFactors);
+      estimativa.technicalFactors = dto.technicalFactors as any;
     }
     if (dto.environmentalFactors !== undefined) {
-      estimativa.environmentalFactors = JSON.stringify(
-        dto.environmentalFactors,
-      );
+      estimativa.environmentalFactors = dto.environmentalFactors as any;
     }
 
     // Recalculate UCP values
@@ -312,6 +321,15 @@ export class EstimativaService {
   }
 
   private mapToDto(estimativa: Estimativa): EstimativaSessionDto {
+    const technicalFactors = safeJsonParse(
+      estimativa.technicalFactors,
+      createDefaultTechnicalFactors(),
+    );
+    const environmentalFactors = safeJsonParse(
+      estimativa.environmentalFactors,
+      createDefaultEnvironmentalFactors(),
+    );
+
     return {
       id: estimativa.id,
       name: estimativa.name || 'Unnamed Session',
@@ -319,14 +337,8 @@ export class EstimativaService {
       projectId: estimativa.projeto.id,
       useCaseWeights: safeJsonParse(estimativa.useCaseWeights, []),
       actorWeights: safeJsonParse(estimativa.actorWeights, []),
-      technicalFactors: safeJsonParse(
-        estimativa.technicalFactors,
-        createDefaultTechnicalFactors(),
-      ),
-      environmentalFactors: safeJsonParse(
-        estimativa.environmentalFactors,
-        createDefaultEnvironmentalFactors(),
-      ),
+      technicalFactors,
+      environmentalFactors,
       uucw: estimativa.uucw || 0,
       uaw: estimativa.uaw || 0,
       uucp: estimativa.uucp || 0,

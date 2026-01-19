@@ -4,42 +4,77 @@ import {
   AfterLoad,
   AfterUpdate,
   BeforeRemove,
+  Column,
   CreateDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ColaboradorProjeto } from '../../colaborador-projeto/entities/colaborador-projeto.entity';
-import { Colaborador } from '../../colaborador/entities/colaborador.entity';
+import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
 import { Priorizacao } from '../../priorizacao/entities/priorizacao.entity';
-import { Stakeholder } from '../../stakeholder/entities/stakeholder.entity';
 import { StatusPriorizacao } from '../../status-priorizacao/entities/status-priorizacao.entity';
+import { Comentario } from '../../user-story/entities/comentario.entity';
+import { UserStory } from '../../user-story/entities/user-story.entity';
+import { UserRole } from '../enums/user-role.enum';
 
 @Entity('USUARIOS')
 export class Usuario {
   @PrimaryGeneratedColumn({ type: 'int', name: 'USU_ID' })
   id: number;
 
+  @Column('varchar', { name: 'USU_NOME', length: 100 })
+  nome: string;
+
+  @Column('varchar', { name: 'USU_EMAIL', length: 255, unique: true })
+  email: string;
+
+  @Column('varchar', { name: 'USU_SENHA', length: 100 })
+  senha: string;
+
+  @Column('varchar', { name: 'USU_EMPRESA', length: 100, nullable: true })
+  empresa: string;
+
+  @Column('varchar', { name: 'USU_CARGO', length: 100, nullable: true })
+  cargo: string;
+
+  @Column({
+    type: 'enum',
+    name: 'USU_TIPO',
+    enum: UserRole,
+    default: UserRole.COLABORADOR,
+  })
+  tipo: UserRole;
+
   @CreateDateColumn({ type: 'timestamp', name: 'USU_DATA_CADASTRO' })
   dataCadastro: Date;
 
-  @OneToMany(() => Colaborador, (colaborador) => colaborador.usuario)
-  colaboradores: Colaborador[];
-
-  @OneToMany(() => Stakeholder, (stakeholder) => stakeholder.usuario)
-  stakeholders: Stakeholder[];
-
+  // Relationships
   @OneToMany(() => Priorizacao, (priorizacao) => priorizacao.usuario)
   priorizacoes: Priorizacao[];
-
-  @OneToMany(() => ColaboradorProjeto, (projeto) => projeto.usuario)
-  projetos: ColaboradorProjeto[];
 
   @OneToMany(
     () => StatusPriorizacao,
     (statusPriorizacao) => statusPriorizacao.usuario,
   )
   statusPriorizacao: StatusPriorizacao[];
+
+  @OneToMany(
+    () => CasoDeTeste,
+    (casoDeTeste) => casoDeTeste.testadorDesignado,
+    {
+      nullable: true,
+    },
+  )
+  casosDeTeste: CasoDeTeste[];
+
+  @OneToMany(() => UserStory, (userStory) => userStory.responsavel)
+  responsavelUS: UserStory[];
+
+  @OneToMany(() => UserStory, (userStory) => userStory.criador)
+  criadorUS: UserStory[];
+
+  @OneToMany(() => Comentario, (comentario) => comentario.usuario)
+  comentarios: Comentario[];
 
   @AfterInsert()
   async afterInsert() {

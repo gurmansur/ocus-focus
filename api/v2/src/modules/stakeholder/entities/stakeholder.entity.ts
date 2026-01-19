@@ -31,11 +31,11 @@ export class Stakeholder {
   @Column('varchar', { name: 'STA_EMAIL', length: 255 })
   email: string;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.stakeholders)
+  @ManyToOne(() => Usuario)
   @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
   usuario: Usuario;
 
-  @ManyToOne(() => Projeto, (projeto) => projeto.stakeholders)
+  @ManyToOne(() => Projeto)
   @JoinColumn({ name: 'FK_PROJETOS_PRO_ID' })
   projeto: Projeto;
 

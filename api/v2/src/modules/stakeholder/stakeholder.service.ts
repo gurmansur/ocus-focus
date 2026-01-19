@@ -36,7 +36,13 @@ export class StakeholderService {
       throw new Error('Chave já cadastrada!');
     }
 
-    const usuario = await this.usuarioService.create({});
+    const usuario = await this.usuarioService.create({
+      nome: createStakeholderDto.nome,
+      email: createStakeholderDto.email,
+      senha: createStakeholderDto.senha,
+      cargo: createStakeholderDto.cargo,
+      chave: createStakeholderDto.chave,
+    });
 
     const projeto = await this.projetoService.findOne(
       createStakeholderDto.projeto_id,

@@ -142,7 +142,7 @@ export class CasoUsoController extends BaseController {
     status: 200,
     description: 'Remove um caso de uso',
   })
-  @Delete('delete')
+  @Delete()
   remove(@Query('id') id: string) {
     return this.casoUsoService.remove(+id);
   }

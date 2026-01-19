@@ -2,9 +2,9 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjetoAtualMiddleware } from '../../middlewares/projeto-atual.middleware';
 import { BillingModule } from '../billing/billing.module';
-import { ColaboradorProjetoModule } from '../colaborador-projeto/colaborador-projeto.module';
-import { ColaboradorModule } from '../colaborador/colaborador.module';
 import { KanbanModule } from '../kanban/kanban.module';
+import { UsuarioProjetoModule } from '../usuario-projeto/usuario-projeto.module';
+import { UsuarioModule } from '../usuario/usuario.module';
 import { Projeto } from './entities/projeto.entity';
 import { ProjetoController } from './projeto.controller';
 import { ProjetoService } from './projeto.service';
@@ -15,8 +15,8 @@ import { ProjetoService } from './projeto.service';
   exports: [ProjetoService],
   imports: [
     TypeOrmModule.forFeature([Projeto]),
-    ColaboradorModule,
-    ColaboradorProjetoModule,
+    UsuarioModule,
+    UsuarioProjetoModule,
     KanbanModule,
     BillingModule,
   ],

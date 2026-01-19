@@ -35,8 +35,15 @@ export class CasoUsoService {
     pageSize: number,
     projeto: Projeto,
   ) {
-    const take = pageSize ? pageSize : undefined;
-    const skip = page ? page * take : undefined;
+    const parsedPage =
+      Number.isFinite(Number(page)) && Number(page) > 0 ? Number(page) : 0;
+    const parsedPageSize =
+      Number.isFinite(Number(pageSize)) && Number(pageSize) > 0
+        ? Number(pageSize)
+        : undefined;
+
+    const take = parsedPageSize;
+    const skip = take ? parsedPage * take : 0;
     const [items, count] = await this.casoUsoRepository.findAndCount({
       where: {
         requisitoFuncional: {
@@ -45,17 +52,20 @@ export class CasoUsoService {
         },
       },
       relations: ['requisitoFuncional', 'requisitoFuncional.projeto'],
-      take: !!take ? take : undefined,
-      skip: !!skip ? skip : undefined,
+      take,
+      skip: take ? skip : undefined,
     });
+
+    const pageSizeResult = take ?? count;
+    const totalPages = take ? Math.ceil(count / take) : count > 0 ? 1 : 0;
 
     return {
       items,
       page: {
-        size: take,
+        size: pageSizeResult,
         totalElements: count,
-        totalPages: Math.ceil(count / take),
-        number: page ? page : 0,
+        totalPages,
+        number: parsedPage,
       },
     };
   }

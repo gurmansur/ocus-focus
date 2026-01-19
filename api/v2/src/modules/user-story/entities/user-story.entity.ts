@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -8,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Arquivo } from '../../arquivo/entities/arquivo.entity';
 import { CasoUso } from '../../caso-uso/entities/caso-uso.entity';
@@ -102,10 +104,15 @@ export class UserStory {
   @CreateDateColumn({
     name: 'UST_CRIADO_EM',
   })
-  criado_em: Date;
+  createdAt: Date;
 
-  @CreateDateColumn({
+  @UpdateDateColumn({
     name: 'UST_MODIFICADO_EM',
   })
-  modificado_em: Date;
+  updatedAt: Date;
+
+  @DeleteDateColumn({
+    name: 'UST_DATA_EXCLUSAO',
+  })
+  deletedAt: Date;
 }

@@ -9,16 +9,15 @@ import {
 } from 'typeorm';
 import { Ator } from '../../ator/entities/ator.entity';
 import { CasoDeTeste } from '../../caso-de-teste/entities/caso-de-teste.entity';
-import { ColaboradorProjeto } from '../../colaborador-projeto/entities/colaborador-projeto.entity';
 import { ConfiguracaoSelenium } from '../../configuracao-selenium/entities/configuracao-selenium.entity';
 import { Estimativa } from '../../estimativa/entities/estimativa.entity';
 import { FatorAmbientalProjeto } from '../../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 import { FatorTecnicoProjeto } from '../../fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
 import { RequisitoFuncional } from '../../requisito/entities/requisito-funcional.entity';
 import { Sprint } from '../../sprint/entities/sprint.entity';
-import { Stakeholder } from '../../stakeholder/entities/stakeholder.entity';
 import { SuiteDeTeste } from '../../suite-de-teste/entities/suite-de-teste.entity';
 import { UserStory } from '../../user-story/entities/user-story.entity';
+import { UsuarioProjeto } from '../../usuario-projeto/entities/usuario-projeto.entity';
 
 @Entity('PROJETOS')
 export class Projeto {
@@ -81,9 +80,6 @@ export class Projeto {
   @OneToMany(() => Estimativa, (estimativa) => estimativa.projeto)
   estimativas: Estimativa[];
 
-  @OneToMany(() => Stakeholder, (stakeholder) => stakeholder.projeto)
-  stakeholders: Stakeholder[];
-
   @OneToMany(
     () => FatorTecnicoProjeto,
     (fatorTecnicoProjeto) => fatorTecnicoProjeto.projeto,
@@ -96,8 +92,8 @@ export class Projeto {
   )
   fatoresAmbientais: FatorAmbientalProjeto[];
 
-  @OneToMany(() => ColaboradorProjeto, (colaborador) => colaborador.projeto)
-  colaboradores: ColaboradorProjeto[];
+  @OneToMany(() => UsuarioProjeto, (usuarioProjeto) => usuarioProjeto.projeto)
+  usuariosProjetos: UsuarioProjeto[];
 
   @OneToMany(() => SuiteDeTeste, (suiteDeTeste) => suiteDeTeste.projeto)
   suitesDeTeste: SuiteDeTeste[];

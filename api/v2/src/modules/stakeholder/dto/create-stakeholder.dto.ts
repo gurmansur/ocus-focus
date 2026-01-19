@@ -16,6 +16,9 @@ export class CreateStakeholderDto {
   @IsString()
   confirmarSenha: string;
 
+  @IsString()
+  chave: string;
+
   @IsNumberString()
   projeto_id: number;
 }

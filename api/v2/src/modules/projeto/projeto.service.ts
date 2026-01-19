@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { ILogger } from '../../common/interfaces/logger.interface';
-import { ColaboradorProjetoService } from '../colaborador-projeto/colaborador-projeto.service';
-import { ColaboradorService } from '../colaborador/colaborador.service';
-import { ColaboradorDto } from '../colaborador/dto/colaborador.dto';
 import { KanbanService } from '../kanban/kanban.service';
+import { UsuarioProjetoService } from '../usuario-projeto/usuario-projeto.service';
+import { UserRole } from '../usuario/enums/user-role.enum';
+import { UsuarioService } from '../usuario/usuario.service';
 import { CreateProjetoDto } from './dto/create-projeto.dto';
 import { UpdateProjetoDto } from './dto/update-projeto.dto';
 import { Projeto } from './entities/projeto.entity';
@@ -16,9 +16,9 @@ export class ProjetoService {
     @InjectRepository(Projeto)
     private readonly projetoRepository: Repository<Projeto>,
     @Inject()
-    private colaboradorProjetoService: ColaboradorProjetoService,
+    private usuarioProjetoService: UsuarioProjetoService,
     @Inject()
-    private colaboradorService: ColaboradorService,
+    private usuarioService: UsuarioService,
     @Inject()
     private kanbanService: KanbanService,
     @Inject('ILogger') private logger: ILogger,
@@ -40,47 +40,38 @@ export class ProjetoService {
 
     const projeto = await this.projetoRepository.save(projetoData);
 
-    const colaborador = await this.colaboradorService.findOne(user);
+    const usuario = await this.usuarioService.findOne(user);
 
     this.kanbanService.createKanban(projeto);
 
-    return this.colaboradorProjetoService.create({
-      colaborador: colaborador,
-      projeto: projeto,
+    return this.usuarioProjetoService.create({
+      usuarioId: usuario.id,
+      projetoId: projeto.id,
+      role: UserRole.COLABORADOR,
       administrador: true,
-      ativo: true,
-      usuario: colaborador.usuario,
     });
   }
 
-  findAll(colaboradorId?: number) {
+  findAll(usuarioId?: number) {
     return this.projetoRepository
       .createQueryBuilder('projeto')
-      .leftJoinAndSelect('projeto.colaboradores', 'colaborador')
-      .where(
-        colaboradorId
-          ? 'colaborador.FK_COLABORADORES_COL_ID = :colaboradorId'
-          : '',
-        {
-          colaboradorId: colaboradorId,
-        },
-      )
+      .leftJoinAndSelect('projeto.usuariosProjetos', 'usuarioProjeto')
+      .leftJoinAndSelect('usuarioProjeto.usuario', 'usuario')
+      .where(usuarioId ? 'usuario.id = :usuarioId' : '', {
+        usuarioId: usuarioId,
+      })
       .orderBy('projeto.nome', 'DESC')
       .getMany();
   }
 
-  findRecentes(colaboradorId?: number, limit?: number) {
+  findRecentes(usuarioId?: number, limit?: number) {
     return this.projetoRepository
       .createQueryBuilder('projeto')
-      .leftJoinAndSelect('projeto.colaboradores', 'colaborador')
-      .where(
-        colaboradorId
-          ? 'colaborador.FK_COLABORADORES_COL_ID = :colaboradorId'
-          : '',
-        {
-          colaboradorId: colaboradorId,
-        },
-      )
+      .leftJoinAndSelect('projeto.usuariosProjetos', 'usuarioProjeto')
+      .leftJoinAndSelect('usuarioProjeto.usuario', 'usuario')
+      .where(usuarioId ? 'usuario.id = :usuarioId' : '', {
+        usuarioId: usuarioId,
+      })
       .orderBy('projeto.dataInicio', 'DESC')
       .limit(limit ? limit : 3)
       .getMany();
@@ -88,7 +79,7 @@ export class ProjetoService {
 
   async findByNome(
     nome: string,
-    colaboradorId: number,
+    usuarioId: number,
     paginated?: boolean,
     page?: number,
     pageSize?: number,
@@ -99,10 +90,10 @@ export class ProjetoService {
       const items = await this.projetoRepository.findAndCount({
         where: {
           nome: Like(`%${nome}%`),
-          colaboradores: { colaborador: { id: colaboradorId } },
+          usuariosProjetos: { usuario: { id: usuarioId } },
         },
         order: { status: 'ASC' },
-        relations: ['colaboradores', 'colaboradores.colaborador'],
+        relations: ['usuariosProjetos', 'usuariosProjetos.usuario'],
         loadEagerRelations: true,
         take: take,
         skip: skip,
@@ -118,8 +109,8 @@ export class ProjetoService {
             dataInicio: new Date(item.dataInicio).toLocaleDateString('pt-BR'),
             previsaoFim: new Date(item.previsaoFim).toLocaleDateString('pt-BR'),
             status: item.status,
-            admin: item.colaboradores.find(
-              (colaborador) => colaborador.colaborador.id === colaboradorId,
+            admin: item.usuariosProjetos.find(
+              (up) => up.usuario.id === usuarioId,
             ).administrador,
           };
         }),
@@ -133,7 +124,7 @@ export class ProjetoService {
     }
     const items = await this.projetoRepository.find({
       where: { nome: Like(`%${nome}%`) },
-      relations: ['colaboradores', 'colaboradores.colaborador'],
+      relations: ['usuariosProjetos', 'usuariosProjetos.usuario'],
       loadEagerRelations: true,
     });
 
@@ -146,16 +137,15 @@ export class ProjetoService {
         dataInicio: new Date(item.dataInicio).toLocaleDateString('pt-BR'),
         previsaoFim: new Date(item.previsaoFim).toLocaleDateString('pt-BR'),
         status: item.status,
-        admin: item.colaboradores.find(
-          (colaborador) => colaborador.administrador,
-        ).administrador,
+        admin: item.usuariosProjetos.find((up) => up.administrador)
+          .administrador,
       };
     });
   }
 
   async findById(
     id: number,
-    colaboradorId: number,
+    usuarioId: number,
     paginated?: boolean,
     page?: number,
     pageSize?: number,
@@ -166,9 +156,9 @@ export class ProjetoService {
       const items = await this.projetoRepository.findAndCount({
         where: {
           id: id,
-          colaboradores: { colaborador: { id: colaboradorId } },
+          usuariosProjetos: { usuario: { id: usuarioId } },
         },
-        relations: ['colaboradores', 'colaboradores.colaborador'],
+        relations: ['usuariosProjetos', 'usuariosProjetos.usuario'],
         loadEagerRelations: true,
         take: take,
         skip: skip,
@@ -184,8 +174,8 @@ export class ProjetoService {
             dataInicio: new Date(item.dataInicio).toLocaleDateString('pt-BR'),
             previsaoFim: new Date(item.previsaoFim).toLocaleDateString('pt-BR'),
             status: item.status,
-            admin: item.colaboradores.find(
-              (colaborador) => colaborador.colaborador.id === colaboradorId,
+            admin: item.usuariosProjetos.find(
+              (up) => up.usuario.id === usuarioId,
             ).administrador
               ? 1
               : 0,
@@ -200,8 +190,8 @@ export class ProjetoService {
       };
     }
     const item = await this.projetoRepository.findOne({
-      where: { id, colaboradores: { colaborador: { id: colaboradorId } } },
-      relations: ['colaboradores', 'colaboradores.colaborador'],
+      where: { id, usuariosProjetos: { usuario: { id: usuarioId } } },
+      relations: ['usuariosProjetos', 'usuariosProjetos.usuario'],
     });
 
     if (!item) {
@@ -216,25 +206,18 @@ export class ProjetoService {
       dataInicio: new Date(item.dataInicio).toLocaleDateString('pt-BR'),
       previsaoFim: new Date(item.previsaoFim).toLocaleDateString('pt-BR'),
       status: item.status,
-      admin: item.colaboradores.find(
-        (colaborador) => colaborador.colaborador.id === colaboradorId,
-      ).administrador
+      admin: item.usuariosProjetos.find((up) => up.usuario.id === usuarioId)
+        .administrador
         ? 1
         : 0,
     };
   }
 
-  findByStakeholderId(stakeholderId: number) {
-    return this.projetoRepository.findOne({
-      where: { stakeholders: { id: stakeholderId } },
-    });
-  }
-
   async findTotal(user: number) {
     return {
       totalCount: await this.projetoRepository.count({
-        where: { colaboradores: { colaborador: { id: user } } },
-        relations: ['colaboradores'],
+        where: { usuariosProjetos: { usuario: { id: user } } },
+        relations: ['usuariosProjetos'],
       }),
     };
   }
@@ -244,9 +227,9 @@ export class ProjetoService {
       totalCount: await this.projetoRepository.count({
         where: {
           status: 'EM ANDAMENTO',
-          colaboradores: { colaborador: { id: user } },
+          usuariosProjetos: { usuario: { id: user } },
         },
-        relations: ['colaboradores'],
+        relations: ['usuariosProjetos'],
       }),
     };
   }
@@ -256,9 +239,9 @@ export class ProjetoService {
       totalCount: await this.projetoRepository.count({
         where: {
           status: 'FINALIZADO',
-          colaboradores: { colaborador: { id: user } },
+          usuariosProjetos: { usuario: { id: user } },
         },
-        relations: ['colaboradores'],
+        relations: ['usuariosProjetos'],
       }),
     };
   }
@@ -270,9 +253,9 @@ export class ProjetoService {
       totalCount: await this.projetoRepository.count({
         where: {
           dataInicio: MoreThanOrEqual(date),
-          colaboradores: { colaborador: { id: user } },
+          usuariosProjetos: { usuario: { id: user } },
         },
-        relations: ['colaboradores'],
+        relations: ['usuariosProjetos'],
       }),
     };
   }
@@ -289,13 +272,12 @@ export class ProjetoService {
     return this.projetoRepository.softDelete(id);
   }
 
-  async findColaboradores(id: number, page?: number, pageSize?: number) {
-    const items =
-      await this.colaboradorProjetoService.findColaboradoresByProjetoId(
-        id,
-        page ? page : undefined,
-        pageSize ? pageSize : undefined,
-      );
+  async findUsuarios(id: number, page?: number, pageSize?: number) {
+    const items = await this.usuarioProjetoService.findUsuariosByProjetoId(
+      id,
+      page ? page : undefined,
+      pageSize ? pageSize : undefined,
+    );
 
     return {
       items: items,
@@ -308,13 +290,13 @@ export class ProjetoService {
     };
   }
 
-  async findColaboradoresByNome(
+  async findUsuariosByNome(
     id: number,
     nome: string,
     page: number,
     pageSize: number,
   ) {
-    const items = await this.colaboradorProjetoService.findColaboradoresByNome(
+    const items = await this.usuarioProjetoService.findUsuariosByNome(
       id,
       nome,
       page,
@@ -332,7 +314,7 @@ export class ProjetoService {
     };
   }
 
-  async addColaborador(projetoId: number, colaboradorId: number) {
+  async addUsuario(projetoId: number, usuarioId: number) {
     const projeto = await this.projetoRepository.findOne({
       where: { id: projetoId },
     });
@@ -340,41 +322,36 @@ export class ProjetoService {
       throw new Error('Projeto não encontrado');
     }
 
-    const colaborador = await this.colaboradorService.findOne(colaboradorId);
-    if (!colaborador) {
-      throw new Error('Colaborador não encontrado');
+    const usuario = await this.usuarioService.findOne(usuarioId);
+    if (!usuario) {
+      throw new Error('Usuário não encontrado');
     }
 
-    return this.colaboradorProjetoService.create({
-      colaborador: colaborador,
-      usuario: colaborador.usuario,
-      projeto: projeto,
+    return this.usuarioProjetoService.create({
+      usuarioId: usuario.id,
+      projetoId: projeto.id,
+      role: UserRole.COLABORADOR,
       administrador: false,
-      ativo: true,
     });
   }
 
-  removeColaborador(
-    projetoId: number,
-    colaboradorId: number,
-    user: ColaboradorDto,
-  ) {
-    if (user.id === colaboradorId) {
+  removeUsuario(projetoId: number, usuarioId: number, currentUserId: number) {
+    if (currentUserId === usuarioId) {
       throw new Error('Você não pode remover a si mesmo');
     }
 
-    return this.colaboradorProjetoService.removeByProjetoAndColaborador(
+    return this.usuarioProjetoService.removeByProjetoAndUsuario(
       projetoId,
-      colaboradorId,
+      usuarioId,
     );
   }
 
   async countUserProjects(usuarioId: number): Promise<number> {
-    return this.projetoRepository
-      .createQueryBuilder('projeto')
-      .leftJoinAndSelect('projeto.colaboradores', 'colaborador')
-      .leftJoinAndSelect('colaborador.usuario', 'usuario')
-      .where('usuario.USU_ID = :usuarioId', { usuarioId })
-      .getCount();
+    return this.projetoRepository.count({
+      where: {
+        usuariosProjetos: { usuario: { id: usuarioId } },
+      },
+      relations: ['usuariosProjetos'],
+    });
   }
 }

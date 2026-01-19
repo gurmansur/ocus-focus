@@ -24,11 +24,11 @@ export class ColaboradorProjeto {
   @JoinColumn({ name: 'FK_COLABORADORES_COL_ID' })
   colaborador: Colaborador;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.projetos)
+  @ManyToOne(() => Usuario)
   @JoinColumn({ name: 'FK_COLABORADORES_FK_USUARIOS_USU_ID' })
   usuario: Usuario;
 
-  @ManyToOne(() => Projeto, (projeto) => projeto.colaboradores)
+  @ManyToOne(() => Projeto)
   @JoinColumn({ name: 'FK_PROJETOS_PRO_ID' })
   projeto: Projeto;
 }

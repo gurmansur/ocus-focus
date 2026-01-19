@@ -11,6 +11,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { GetUsuarioQueryDto } from './dto/get-usuario-query.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { UsuarioService } from './usuario.service';
 
@@ -28,9 +29,10 @@ export class UsuarioController extends BaseController {
 
   @Get()
   findAll(
-    @Query() { paginated, page }: { paginated?: boolean; page?: number },
+    @Query()
+    query: GetUsuarioQueryDto,
   ) {
-    return this.usuarioService.findAll(paginated, page);
+    return this.usuarioService.findAll(query);
   }
 
   @Get(':id')

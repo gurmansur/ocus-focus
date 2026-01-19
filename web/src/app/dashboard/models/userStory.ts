@@ -23,5 +23,7 @@ export class UserStory {
     public sprints?: any[],
 
     public casosDeUso?: any[],
+
+    public commentCount?: number,
   ) {}
 }

@@ -16,10 +16,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
-import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
 import { Serialize } from '../../decorators/serialize.decorator';
+import { UsuarioAtual } from '../../decorators/usuario-atual.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
-import { Colaborador } from '../colaborador/entities/colaborador.entity';
+import { Usuario } from '../usuario/entities/usuario.entity';
 import { BillingService } from './billing.service';
 import { AssinaturaDto } from './dto/assinatura.dto';
 import { CreateAssinaturaDto } from './dto/create-assinatura.dto';
@@ -86,30 +86,27 @@ export class BillingController extends BaseController {
   @Post('assinaturas')
   async createAssinatura(
     @Body() createAssinaturaDto: CreateAssinaturaDto,
-    @ColaboradorAtual() colaborador: Colaborador,
+    @UsuarioAtual() usuario: Usuario,
   ): Promise<AssinaturaDto> {
-    return this.billingService.createAssinatura(
-      createAssinaturaDto,
-      colaborador.usuario,
-    );
+    return this.billingService.createAssinatura(createAssinaturaDto, usuario);
   }
 
   @ApiOperation({ summary: 'Listar minhas assinaturas' })
   @ApiResponse({ status: 200, type: [AssinaturaDto] })
   @Get('assinaturas/minhas')
   async findMinhasAssinaturas(
-    @ColaboradorAtual() colaborador: Colaborador,
+    @UsuarioAtual() usuario: Usuario,
   ): Promise<AssinaturaDto[]> {
-    return this.billingService.findAssinaturasByUsuario(colaborador.usuario);
+    return this.billingService.findAssinaturasByUsuario(usuario);
   }
 
   @ApiOperation({ summary: 'Buscar assinatura ativa' })
   @ApiResponse({ status: 200, type: AssinaturaDto })
   @Get('assinaturas/ativa')
   async findAssinaturaAtiva(
-    @ColaboradorAtual() colaborador: Colaborador,
+    @UsuarioAtual() usuario: Usuario,
   ): Promise<AssinaturaDto | null> {
-    return this.billingService.findAssinaturaAtiva(colaborador.usuario);
+    return this.billingService.findAssinaturaAtiva(usuario);
   }
 
   @ApiOperation({ summary: 'Buscar assinatura por ID' })
@@ -146,7 +143,7 @@ export class BillingController extends BaseController {
   @ApiOperation({ summary: 'Verificar limites da assinatura atual' })
   @ApiResponse({ status: 200 })
   @Get('limites')
-  async verificarLimites(@ColaboradorAtual() colaborador: Colaborador) {
-    return this.billingService.verificarLimitesAssinatura(colaborador.usuario);
+  async verificarLimites(@UsuarioAtual() usuario: Usuario) {
+    return this.billingService.verificarLimitesAssinatura(usuario);
   }
 }

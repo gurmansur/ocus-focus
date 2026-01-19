@@ -1,9 +1,12 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Usuario } from '../../usuario/entities/usuario.entity';
 import { UserStory } from './user-story.entity';
@@ -16,11 +19,14 @@ export class Comentario {
   @Column({ type: 'varchar', name: 'CMN_COMENTARIO' })
   comentario: string;
 
-  @Column({ type: 'datetime', name: 'CMN_CRIADO_EM' })
-  criado_em: Date;
+  @CreateDateColumn({ name: 'CMN_CRIADO_EM' })
+  createdAt: Date;
 
-  @Column({ type: 'datetime', name: 'CMN_MODIFICADO_EM' })
-  modificado_em: Date;
+  @UpdateDateColumn({ name: 'CMN_MODIFICADO_EM' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'CMN_DATA_EXCLUSAO' })
+  deletedAt: Date;
 
   @ManyToOne(() => Usuario, (usuario) => usuario.id)
   @JoinColumn({ name: 'FK_USUARIO_ID' })

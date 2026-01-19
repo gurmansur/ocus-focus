@@ -36,6 +36,7 @@ import { StakeholderModule } from './modules/stakeholder/stakeholder.module';
 import { StatusPriorizacaoModule } from './modules/status-priorizacao/status-priorizacao.module';
 import { SuiteDeTesteModule } from './modules/suite-de-teste/suite-de-teste.module';
 import { UserStoryModule } from './modules/user-story/user-story.module';
+import { UsuarioProjetoModule } from './modules/usuario-projeto/usuario-projeto.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
 
 @Module({
@@ -67,6 +68,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
     RequisitoModule,
     StakeholderModule,
     UsuarioModule,
+    UsuarioProjetoModule,
     FatorTecnicoProjetoModule,
     FatorAmbientalProjetoModule,
     ColaboradorProjetoModule,

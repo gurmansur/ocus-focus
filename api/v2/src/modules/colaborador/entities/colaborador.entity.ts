@@ -48,7 +48,7 @@ export class Colaborador {
     | 'Product Owner'
     | 'Scrum Master';
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.colaboradores)
+  @ManyToOne(() => Usuario)
   @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
   usuario: Usuario;
 
