@@ -279,15 +279,14 @@ export class ProjetoService {
       pageSize ? pageSize : undefined,
     );
 
-    return {
-      items: items,
-      page: {
-        size: pageSize,
-        number: page,
-        totalElements: items.length || 1,
-        totalPages: Math.ceil(items.length / pageSize) || 1,
-      },
-    };
+    // Return just the users array for the colaboradores endpoint
+    // Map UsuarioProjeto to just the usuario data with their role
+    return items.map((up) => ({
+      id: up.usuario.id,
+      nome: up.usuario.nome,
+      email: up.usuario.email,
+      papel: up.role,
+    }));
   }
 
   async findUsuariosByNome(
