@@ -46,6 +46,14 @@ export class AuthService {
       // Don't fail signup if billing fails, just log it
     }
 
+    // Generate JWT token
+    const accessToken = this.jwtService.sign({
+      usu_email: newUser.email,
+      usu_name: newUser.nome,
+      usu_id: newUser.id,
+      usu_role: newUser.tipo,
+    });
+
     this.logger.log(`SignUp successful for email: ${signUpDto.email}`);
     return {
       id: newUser.id,
@@ -63,6 +71,11 @@ export class AuthService {
         cargo: newUser.cargo,
         dataCadastro: newUser.dataCadastro,
       },
+      accessToken,
+      usu_email: newUser.email,
+      usu_name: newUser.nome,
+      usu_id: newUser.id,
+      usu_role: newUser.tipo as 'stakeholder' | 'colaborador',
     };
   }
 
