@@ -66,16 +66,24 @@ export class DashboardService {
         ? Math.round((testsPassed / recentExecutions.length) * 100)
         : 0;
 
-    // Pending user stories (not in done swimlane)
+    // Pending user stories (not in final swimlane)
+    // First, get all swimlanes ordered by ordem to find the final one
+    const allSwimlanes = await this.swimlaneRepository.find({
+      where: { kanban: { projeto: { id: projetoId } } },
+      relations: ['kanban', 'kanban.projeto'],
+      order: { ordem: 'ASC' },
+    });
+
+    const finalSwimlane =
+      allSwimlanes.length > 0 ? allSwimlanes[allSwimlanes.length - 1] : null;
+
     const userStoriesWithSwimlane = await this.userStoryRepository.find({
       where: { projeto: { id: projetoId } },
       relations: ['swimlane'],
     });
 
     const pendingUserStories = userStoriesWithSwimlane.filter(
-      (story) =>
-        !story.swimlane?.nome?.toLowerCase().includes('done') &&
-        !story.swimlane?.nome?.toLowerCase().includes('concluído'),
+      (story) => !story.swimlane || story.swimlane.id !== finalSwimlane?.id,
     ).length;
 
     // Estimated hours
@@ -140,16 +148,24 @@ export class DashboardService {
         ? Math.round((testsPassed / recentExecutions.length) * 100)
         : 0;
 
-    // Pending user stories (not in done swimlane)
+    // Pending user stories (not in final swimlane)
+    // First, get all swimlanes ordered by ordem to find the final one
+    const allSwimlanes = await this.swimlaneRepository.find({
+      where: { kanban: { projeto: { id: projetoId } } },
+      relations: ['kanban', 'kanban.projeto'],
+      order: { ordem: 'ASC' },
+    });
+
+    const finalSwimlane =
+      allSwimlanes.length > 0 ? allSwimlanes[allSwimlanes.length - 1] : null;
+
     const userStoriesWithSwimlane = await this.userStoryRepository.find({
       where: { projeto: { id: projetoId } },
       relations: ['swimlane'],
     });
 
     const pendingUserStories = userStoriesWithSwimlane.filter(
-      (story) =>
-        !story.swimlane?.nome?.toLowerCase().includes('done') &&
-        !story.swimlane?.nome?.toLowerCase().includes('concluído'),
+      (story) => !story.swimlane || story.swimlane.id !== finalSwimlane?.id,
     ).length;
 
     // Estimated hours
