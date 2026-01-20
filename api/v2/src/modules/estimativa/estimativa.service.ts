@@ -10,11 +10,11 @@ import { Repository } from 'typeorm';
 import { ILogger } from '../../common/interfaces/logger.interface';
 import { Ator } from '../ator/entities/ator.entity';
 import { CasoUso } from '../caso-uso/entities/caso-uso.entity';
-import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { FatorAmbientalProjeto } from '../fator-ambiental-projeto/entities/fator-ambiental-projeto.entity';
 import { FatorTecnicoProjeto } from '../fator-tecnico-projeto/entities/fator-tecnico-projeto.entity';
 import { Projeto } from '../projeto/entities/projeto.entity';
 import { ProjetoService } from '../projeto/projeto.service';
+import { Usuario } from '../usuario';
 import { CreateEstimativaSessionDto } from './dto/create-estimativa-session.dto';
 import {
   ActorWeightDto,
@@ -173,13 +173,13 @@ export class EstimativaService {
   async createSession(
     dto: CreateEstimativaSessionDto,
     projeto: Projeto,
-    colaborador: Colaborador,
+    usuario: Usuario,
   ): Promise<EstimativaSessionDto> {
     const estimativa = this.estimativaRepository.create({
       name: dto.name,
       description: dto.description,
       projeto,
-      createdBy: colaborador,
+      createdBy: usuario,
       // TypeORM auto-serializes JSON columns, pass objects directly
       useCaseWeights: [] as any,
       actorWeights: [] as any,

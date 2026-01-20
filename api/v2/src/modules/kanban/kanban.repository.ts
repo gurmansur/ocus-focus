@@ -14,6 +14,7 @@ interface FindBoardRow {
   userStoryEstimativaTempo: number | null;
   userStoryPrioridade: string | null;
   userStoryDataVencimento: Date | null;
+  userStorySprintId: number | null;
   responsavelId: number | null;
   responsavelNome: string | null;
   commentCount: number | null;
@@ -40,6 +41,7 @@ export class KanbanRepository {
         us.UST_ESTIMATIVA_TEMPO AS userStoryEstimativaTempo,
         us.UST_PRIORIDADE     AS userStoryPrioridade,
         us.UST_DATA_VENCIMENTO AS userStoryDataVencimento,
+        sprint_data.sprintId  AS userStorySprintId,
         u.USU_ID              AS responsavelId,
         u.USU_NOME            AS responsavelNome,
         COALESCE(cmt.commentCount, 0) AS commentCount
@@ -47,6 +49,16 @@ export class KanbanRepository {
       INNER JOIN KANBANS k ON k.FK_PRO_ID = p.PRO_ID
       INNER JOIN SWIMLANES s ON s.FK_KAN_ID = k.KAN_ID
       LEFT JOIN USER_STORIES us ON us.FK_SWI_ID = s.SWI_ID AND us.UST_DATA_EXCLUSAO IS NULL
+      LEFT JOIN (
+        SELECT uSERSTORIESUSTID, MIN(sPRINTSSPRID) as sprintId
+        FROM SPRINTS_USERS_STORIES
+        GROUP BY uSERSTORIESUSTID
+      ) sprint_data ON sprint_data.uSERSTORIESUSTID = us.UST_ID
+      ${
+        sprintId
+          ? 'LEFT JOIN SPRINTS_USERS_STORIES sus ON sus.uSERSTORIESUSTID = us.UST_ID'
+          : ''
+      }
       LEFT JOIN USUARIOS u ON u.USU_ID = us.FK_USUARIO_USU_RES_ID
       LEFT JOIN (
         SELECT FK_USER_STORY, COUNT(*) AS commentCount
@@ -54,13 +66,13 @@ export class KanbanRepository {
         WHERE CMN_DATA_EXCLUSAO IS NULL
         GROUP BY FK_USER_STORY
       ) cmt ON cmt.FK_USER_STORY = us.UST_ID
-      ${sprintId ? 'INNER JOIN SPRINTS_USERS_STORIES sus ON sus.userStoriesUstId = us.UST_ID AND sus.sprintsSpriId = ?' : ''}
       WHERE p.PRO_ID = ?
+      ${sprintId ? 'AND (sus.sPRINTSSPRID = ? OR us.UST_ID IS NULL)' : ''}
       ORDER BY s.SWI_ORDEM ASC, s.SWI_ID ASC, us.UST_ID ASC
     `;
 
     if (sprintId) {
-      params.unshift(sprintId);
+      params.push(sprintId);
     }
 
     const rows = (await this.dataSource.manager.query(
@@ -94,6 +106,7 @@ export class KanbanRepository {
           estimativa_tempo: row.userStoryEstimativaTempo,
           prioridade: row.userStoryPrioridade,
           dataVencimento: row.userStoryDataVencimento,
+          sprintId: row.userStorySprintId,
           responsavel: row.responsavelId
             ? {
                 id: row.responsavelId,

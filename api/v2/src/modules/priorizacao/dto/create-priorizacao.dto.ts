@@ -1,6 +1,8 @@
+import { Type } from 'class-transformer';
 import { IsEnum, IsNumber } from 'class-validator';
 
 export class CreatePriorizacaoDto {
+  @Type(() => Number)
   @IsNumber()
   requisito: number;
 

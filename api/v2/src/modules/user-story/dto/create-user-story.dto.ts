@@ -33,4 +33,8 @@ export class CreateUserStoryDto {
   @IsOptional()
   @IsString()
   dataVencimento?: string;
+
+  @IsOptional()
+  @IsNumber()
+  sprintId?: number;
 }

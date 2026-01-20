@@ -71,14 +71,21 @@ export class UserStoryService {
       where: {
         id,
       },
-      relations: ['swimlane', 'responsavel'],
+      relations: ['swimlane', 'responsavel', 'sprints'],
     });
 
-    return {
+    const response: any = {
       ...us,
       responsavel: us.responsavel.id,
       swimlane: us.swimlane.id,
     };
+
+    // Add sprintId convenience field for frontend compatibility
+    if (us.sprints && us.sprints.length > 0) {
+      response.sprintId = us.sprints[0].id;
+    }
+
+    return response;
   }
 
   async findFromSwimlane(swimlane: number, sprintId?: number) {
@@ -105,6 +112,8 @@ export class UserStoryService {
         ? { id: us.responsavel.id, nome: us.responsavel.nome }
         : null,
       requisitos: us['requisitos'] || [],
+      // Add sprintId convenience field for frontend compatibility
+      sprintId: us.sprints && us.sprints.length > 0 ? us.sprints[0].id : null,
     }));
   }
 
@@ -164,11 +173,42 @@ export class UserStoryService {
     const userStory = this.userStoryRepository.create(updateData);
     const savedUserStory = await this.userStoryRepository.save(userStory);
 
-    // Reload with relations to return full objects (especially responsavel with nome)
+    // Handle sprint assignment if provided
+    if (
+      createUserStoryDto.sprintId !== undefined &&
+      createUserStoryDto.sprintId !== null
+    ) {
+      const userStoryWithSprints = await this.userStoryRepository.findOne({
+        where: { id: (savedUserStory as any).id },
+        relations: ['sprints'],
+      });
+
+      if (userStoryWithSprints) {
+        const sprint = await this.sprintRepository.findOne({
+          where: { id: createUserStoryDto.sprintId },
+        });
+
+        if (sprint) {
+          userStoryWithSprints.sprints = [sprint];
+          await this.userStoryRepository.save(userStoryWithSprints);
+        }
+      }
+    }
+
+    // Reload with relations to return full objects (especially responsavel with nome and sprints)
     const completeUserStory = await this.userStoryRepository.findOne({
       where: { id: (savedUserStory as any).id },
-      relations: ['responsavel', 'criador', 'swimlane', 'kanban'],
+      relations: ['responsavel', 'criador', 'swimlane', 'kanban', 'sprints'],
     });
+
+    // Add sprintId convenience field for frontend compatibility
+    if (
+      completeUserStory &&
+      completeUserStory.sprints &&
+      completeUserStory.sprints.length > 0
+    ) {
+      (completeUserStory as any).sprintId = completeUserStory.sprints[0].id;
+    }
 
     return completeUserStory;
   }
@@ -205,11 +245,46 @@ export class UserStoryService {
 
     await this.userStoryRepository.update(id, updateData);
 
-    // Reload with relations to return full objects (especially responsavel with nome)
+    // Handle sprint assignment separately if provided
+    if (updateUserStoryDto.sprintId !== undefined) {
+      const userStory = await this.userStoryRepository.findOne({
+        where: { id },
+        relations: ['sprints'],
+      });
+
+      if (userStory) {
+        if (updateUserStoryDto.sprintId === null) {
+          // Remove all sprint assignments
+          userStory.sprints = [];
+          await this.userStoryRepository.save(userStory);
+        } else {
+          // Assign to the specified sprint
+          const sprint = await this.sprintRepository.findOne({
+            where: { id: updateUserStoryDto.sprintId },
+          });
+
+          if (sprint) {
+            userStory.sprints = [sprint];
+            await this.userStoryRepository.save(userStory);
+          }
+        }
+      }
+    }
+
+    // Reload with relations to return full objects (especially responsavel with nome and sprints)
     const completeUserStory = await this.userStoryRepository.findOne({
       where: { id },
-      relations: ['responsavel', 'criador', 'swimlane', 'kanban'],
+      relations: ['responsavel', 'criador', 'swimlane', 'kanban', 'sprints'],
     });
+
+    // Add sprintId convenience field for frontend compatibility
+    if (
+      completeUserStory &&
+      completeUserStory.sprints &&
+      completeUserStory.sprints.length > 0
+    ) {
+      (completeUserStory as any).sprintId = completeUserStory.sprints[0].id;
+    }
 
     return completeUserStory;
   }

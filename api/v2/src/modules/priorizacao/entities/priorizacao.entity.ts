@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RequisitoFuncional } from '../../requisito/entities/requisito-funcional.entity';
-import { Stakeholder } from '../../stakeholder/entities/stakeholder.entity';
 import { Usuario } from '../../usuario/entities/usuario.entity';
 
 @Entity('PRIORIZACAO_STAKEHOLDERS')
@@ -67,12 +66,8 @@ export class Priorizacao {
     | 'CONVIVO COM ISSO'
     | 'NAO GOSTARIA';
 
-  @ManyToOne(() => Stakeholder, (stakeholder) => stakeholder.priorizacoes)
-  @JoinColumn({ name: 'FK_STAKEHOLDERS_STA_ID' })
-  stakeholder: Stakeholder;
-
   @ManyToOne(() => Usuario, (usuario) => usuario.priorizacoes)
-  @JoinColumn({ name: 'FK_STAKEHOLDERS_FK_USUARIOS_USU_ID' })
+  @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
   usuario: Usuario;
 
   @ManyToOne(

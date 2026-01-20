@@ -64,7 +64,7 @@ export class StakeholderService {
       projeto,
     );
 
-    this.statusPriorizacaoService.create(usuario);
+    this.statusPriorizacaoService.create(usuario, projeto);
 
     return this.stakeholderRepository.save(stakeholderEntity);
   }
@@ -120,7 +120,7 @@ export class StakeholderService {
     return {
       items: items.map((item) => {
         const status = item.statusPriorizacao.find(
-          (status) => status?.stakeholder?.id === item.id,
+          (status) => status?.usuario?.id === item.id,
         );
 
         return {

@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Colaborador } from '../../colaborador/entities/colaborador.entity';
 import { Projeto } from '../../projeto/entities/projeto.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 
 @Entity('ESTIMATIVAS_ESFORCOS')
 export class Estimativa {
@@ -100,9 +100,9 @@ export class Estimativa {
   @JoinColumn({ name: 'FK_PROJETOS_PRO_ID' })
   projeto: Projeto;
 
-  @ManyToOne(() => Colaborador, { nullable: true })
-  @JoinColumn({ name: 'FK_COLABORADORES_COL_ID' })
-  createdBy: Colaborador;
+  @ManyToOne(() => Usuario, { nullable: true })
+  @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
+  createdBy: Usuario;
 
   // Legacy columns kept for backward compatibility
   @Column('double', {

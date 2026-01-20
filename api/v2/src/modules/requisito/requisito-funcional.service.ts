@@ -207,10 +207,8 @@ export class RequisitoService {
     const [items, count] = await this.requisitoRepository.findAndCount({
       where: {
         projeto: { id: projetoId },
-        // ? Faz sentido filtrar por stakeholderId?
-        // priorizacoes: { stakeholder: { id: stakeholderId } },
       },
-      relations: ['projeto', 'priorizacoes', 'priorizacoes.requisitoFuncional'],
+      relations: ['projeto', 'priorizacoes', 'priorizacoes.usuario'],
       loadEagerRelations: true,
       take: take,
       skip: skip,
@@ -218,8 +216,9 @@ export class RequisitoService {
 
     return {
       items: items.map((item) => {
+        // Find the specific stakeholder's response for this requirement
         const priorizacao = item.priorizacoes.find(
-          (priorizacao) => priorizacao?.requisitoFuncional?.id === item.id,
+          (p) => p?.usuario?.id === stakeholderId,
         );
 
         return {
@@ -227,9 +226,9 @@ export class RequisitoService {
           nome: item.nome,
           especificacao: item.especificacao,
           numeroIdentificador: item.numeroIdentificador,
-          respostaPositiva: priorizacao?.respostaPositiva,
-          respostaNegativa: priorizacao?.respostaNegativa,
-          classificacaoRequisito: priorizacao?.classificacaoRequisito,
+          respostaPositiva: priorizacao?.respostaPositiva || null,
+          respostaNegativa: priorizacao?.respostaNegativa || null,
+          classificacaoRequisito: priorizacao?.classificacaoRequisito || null,
         };
       }),
       page: {
@@ -254,10 +253,8 @@ export class RequisitoService {
       where: {
         nome: Like(`%${nome}%`),
         projeto: { id: projetoId },
-        // ? Faz sentido filtrar por stakeholderId?
-        // priorizacoes: { stakeholder: { id: stakeholderId } },
       },
-      relations: ['projeto', 'priorizacoes', 'priorizacoes.requisitoFuncional'],
+      relations: ['projeto', 'priorizacoes', 'priorizacoes.usuario'],
       loadEagerRelations: true,
       take: take,
       skip: skip,
@@ -265,8 +262,9 @@ export class RequisitoService {
 
     return {
       items: items.map((item) => {
+        // Find the specific stakeholder's response for this requirement
         const priorizacao = item.priorizacoes.find(
-          (priorizacao) => priorizacao?.requisitoFuncional?.id === item.id,
+          (p) => p?.usuario?.id === stakeholderId,
         );
 
         return {
@@ -274,9 +272,9 @@ export class RequisitoService {
           nome: item.nome,
           especificacao: item.especificacao,
           numeroIdentificador: item.numeroIdentificador,
-          respostaPositiva: priorizacao?.respostaPositiva,
-          respostaNegativa: priorizacao?.respostaNegativa,
-          classificacaoRequisito: priorizacao?.classificacaoRequisito,
+          respostaPositiva: priorizacao?.respostaPositiva || null,
+          respostaNegativa: priorizacao?.respostaNegativa || null,
+          classificacaoRequisito: priorizacao?.classificacaoRequisito || null,
         };
       }),
       page: {

@@ -59,22 +59,121 @@ export class PriorizacaoService {
       where: {
         requisitoFuncional: { projeto: { id: projetoId } },
       },
+      relations: ['usuario', 'requisitoFuncional'],
     });
 
-    return {
-      items: priorizacoes.map((priorizacao) => {
-        return {
+    // Group responses by requirement
+    const groupedByRequirement = priorizacoes.reduce(
+      (acc, priorizacao) => {
+        const reqId = priorizacao.requisitoFuncional.id;
+        if (!acc[reqId]) {
+          acc[reqId] = [];
+        }
+        acc[reqId].push(priorizacao);
+        return acc;
+      },
+      {} as Record<number, Priorizacao[]>,
+    );
+
+    // Transform to frontend expected format
+    const items = Object.entries(groupedByRequirement).map(
+      ([requirementId, responses]) => {
+        const mappedResponses = responses.map((priorizacao) => ({
           id: priorizacao.id,
-          classificacaoRequisito: priorizacao.classificacaoRequisito,
-          respostaPositiva: priorizacao.respostaPositiva,
-          respostaNegativa: priorizacao.respostaNegativa,
-          stakeholder: {
-            id: priorizacao.stakeholder.id,
-            nome: priorizacao.stakeholder.nome,
+          requirementId: String(requirementId),
+          stakeholderId: String(priorizacao.usuario.id),
+          stakeholderName: priorizacao.usuario.nome,
+          // Map backend enum values to frontend answers (1-5)
+          functionalAnswer: this.mapBackendAnswerToFrontend(
+            priorizacao.respostaPositiva,
+          ),
+          dysfunctionalAnswer: this.mapBackendAnswerToFrontend(
+            priorizacao.respostaNegativa,
+          ),
+          // Map backend classification to frontend category
+          category: this.mapBackendCategoryToFrontend(
+            priorizacao.classificacaoRequisito,
+          ),
+          answeredAt: new Date(),
+        }));
+
+        // Count categories
+        const categoryCounts = mappedResponses.reduce(
+          (counts, response) => {
+            counts[response.category] = (counts[response.category] || 0) + 1;
+            return counts;
           },
+          {
+            'must-be': 0,
+            'one-dimensional': 0,
+            attractive: 0,
+            indifferent: 0,
+            reverse: 0,
+            questionable: 0,
+          },
+        );
+
+        // Find dominant category
+        const dominantCategory = Object.entries(categoryCounts).reduce(
+          (max, [category, count]) =>
+            count > categoryCounts[max] ? category : max,
+          'indifferent',
+        ) as any;
+
+        return {
+          requirementId: String(requirementId),
+          responses: mappedResponses,
+          categoryCounts,
+          dominantCategory,
         };
-      }),
+      },
+    );
+
+    return items;
+  }
+
+  private mapBackendAnswerToFrontend(
+    answer:
+      | 'GOSTARIA'
+      | 'ESPERADO'
+      | 'NAO IMPORTA'
+      | 'CONVIVO COM ISSO'
+      | 'NAO GOSTARIA',
+  ): 1 | 2 | 3 | 4 | 5 {
+    const mapping = {
+      GOSTARIA: 1,
+      ESPERADO: 2,
+      'NAO IMPORTA': 3,
+      'CONVIVO COM ISSO': 4,
+      'NAO GOSTARIA': 5,
     };
+    return mapping[answer] as 1 | 2 | 3 | 4 | 5;
+  }
+
+  private mapBackendCategoryToFrontend(
+    category:
+      | 'DEVE SER FEITO'
+      | 'PERFORMANCE'
+      | 'ATRATIVO'
+      | 'INDIFERENTE'
+      | 'QUESTIONAVEL'
+      | 'REVERSO',
+  ):
+    | 'must-be'
+    | 'one-dimensional'
+    | 'attractive'
+    | 'indifferent'
+    | 'reverse'
+    | 'questionable' {
+    const mapping = {
+      'DEVE SER FEITO': 'must-be',
+      PERFORMANCE: 'one-dimensional',
+      ATRATIVO: 'attractive',
+      INDIFERENTE: 'indifferent',
+      QUESTIONAVEL: 'questionable',
+      REVERSO: 'reverse',
+    };
+    return mapping[category] as any;
   }
 
   update(stakeholderId: number) {

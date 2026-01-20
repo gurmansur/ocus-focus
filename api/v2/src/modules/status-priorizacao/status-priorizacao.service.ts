@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Projeto } from '../projeto/entities/projeto.entity';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { StatusPriorizacao } from './entities/status-priorizacao.entity';
 
@@ -11,9 +12,10 @@ export class StatusPriorizacaoService {
     private readonly statusPriorizacaoRepository: Repository<StatusPriorizacao>,
   ) {}
 
-  create(usuario: Usuario) {
+  create(usuario: Usuario, projeto?: Projeto) {
     return this.statusPriorizacaoRepository.save({
       usuario: usuario,
+      projeto: projeto,
     });
   }
 
@@ -54,9 +56,8 @@ export class StatusPriorizacaoService {
 
   verifyParticipation(projetoId: number) {
     return this.statusPriorizacaoRepository.find({
-      relations: ['stakeholder'],
       where: {
-        stakeholder: { projeto: { id: projetoId } },
+        projeto: { id: projetoId },
         participacaoRealizada: false,
       },
     });

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Stakeholder } from '../../stakeholder/entities/stakeholder.entity';
+import { Projeto } from '../../projeto/entities/projeto.entity';
 import { Usuario } from '../../usuario/entities/usuario.entity';
 
 @Entity('STATUS_PRIORIZACAO')
@@ -19,11 +19,11 @@ export class StatusPriorizacao {
   @Column('boolean', { name: 'SPA_ALERTA_EMITIDO', default: false })
   alertaEmitido: boolean;
 
-  @ManyToOne(() => Stakeholder, (stakeholder) => stakeholder.statusPriorizacao)
-  @JoinColumn({ name: 'FK_STAKEHOLDERS_STA_ID' })
-  stakeholder: Stakeholder;
-
   @ManyToOne(() => Usuario, (usuario) => usuario.statusPriorizacao)
-  @JoinColumn({ name: 'FK_STAKEHOLDERS_FK_USUARIOS_USU_ID' })
+  @JoinColumn({ name: 'FK_USUARIOS_USU_ID' })
   usuario: Usuario;
+
+  @ManyToOne(() => Projeto)
+  @JoinColumn({ name: 'FK_PROJETOS_PRO_ID' })
+  projeto: Projeto;
 }

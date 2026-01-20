@@ -90,6 +90,9 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
       useValue: new ValidationPipe({
         whitelist: true,
         transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
       }),
     },
   ],

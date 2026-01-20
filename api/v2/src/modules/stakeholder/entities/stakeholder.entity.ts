@@ -42,12 +42,12 @@ export class Stakeholder {
   @JoinColumn({ name: 'FK_PROJETOS_PRO_ID' })
   projeto: Projeto;
 
-  @OneToMany(() => Priorizacao, (priorizacao) => priorizacao.stakeholder)
+  @OneToMany(() => Priorizacao, (priorizacao) => priorizacao.usuario)
   priorizacoes: Priorizacao[];
 
   @OneToMany(
     () => StatusPriorizacao,
-    (statusPriorizacao) => statusPriorizacao.stakeholder,
+    (statusPriorizacao) => statusPriorizacao.usuario,
   )
   statusPriorizacao: StatusPriorizacao[];
 }

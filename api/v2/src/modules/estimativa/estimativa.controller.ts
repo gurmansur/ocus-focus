@@ -18,14 +18,14 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { BaseController } from '../../common/base/base.controller';
-import { ColaboradorAtual } from '../../decorators/colaborador-atual.decorator';
 import { ProjetoAtual } from '../../decorators/projeto-atual.decorator';
 import { RequiredTool } from '../../decorators/required-tool.decorator';
 import { Serialize } from '../../decorators/serialize.decorator';
+import { UsuarioAtual } from '../../decorators/usuario-atual.decorator';
 import { AuthGuard } from '../../guards/auth.guard';
 import { SubscriptionToolsGuard } from '../../guards/subscription-tools.guard';
-import { Colaborador } from '../colaborador/entities/colaborador.entity';
 import { Projeto } from '../projeto/entities/projeto.entity';
+import { Usuario } from '../usuario';
 import { CreateEstimativaSessionDto } from './dto/create-estimativa-session.dto';
 import { EstimativaSessionDto } from './dto/estimativa-session.dto';
 import { UpdateEstimativaSessionDto } from './dto/update-estimativa-session.dto';
@@ -85,12 +85,12 @@ export class EstimativaController extends BaseController {
   create(
     @Body() createEstimativaSessionDto: CreateEstimativaSessionDto,
     @ProjetoAtual() projeto: Projeto,
-    @ColaboradorAtual() colaborador: Colaborador,
+    @UsuarioAtual() usuario: Usuario,
   ) {
     return this.estimativaService.createSession(
       createEstimativaSessionDto,
       projeto,
-      colaborador,
+      usuario,
     );
   }
 
